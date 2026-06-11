@@ -66,17 +66,20 @@ h1 .hl::after{content:"";position:absolute;left:-2px;right:-2px;bottom:5px;heigh
 .btn-primary.btn-lg{box-shadow:0 12px 26px color-mix(in srgb,var(--accent) 26%,transparent)}
 .btn-primary.btn-lg:hover{transform:translateY(-2px)}
 /* hero visual */
-.hero-visual{position:relative;padding:14px 8px 40px}
-.laptop{position:relative;width:100%;max-width:540px;margin:0 auto;animation:floaty 7s ease-in-out infinite}
-.laptop .scr{background:#2b2d30;border-radius:16px;padding:11px;box-shadow:0 32px 60px rgba(40,44,50,.20)}
-.laptop .scr img{width:100%;display:block;border-radius:6px}
-.laptop .base{position:relative;height:13px;width:116%;left:-8%;background:linear-gradient(#e6e9ed,#c7ccd2);border-radius:0 0 14px 14px;box-shadow:0 10px 16px rgba(40,44,50,.12)}
-.laptop .base::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:88px;height:6px;background:#b3b9c0;border-radius:0 0 7px 7px}
-.mock-phone{position:absolute;right:-12px;bottom:-14px;width:118px;border:5px solid #2b2d30;border-radius:24px;overflow:hidden;box-shadow:0 18px 40px rgba(40,44,50,.26);background:#fff;animation:floaty 7s ease-in-out infinite .9s}
-.mock-phone::before{content:"";position:absolute;top:6px;left:50%;transform:translateX(-50%);width:36px;height:5px;background:#2b2d30;border-radius:6px;z-index:2}
+.hero-visual{position:relative;padding:30px 14px 56px}
+.tablet{position:relative;width:100%;max-width:500px;margin:0 auto;background:#23262a;border-radius:28px;padding:14px;box-shadow:0 40px 70px rgba(40,44,50,.24);transform:rotate(-3deg);animation:floatT 7s ease-in-out infinite}
+.tablet::after{content:"";position:absolute;top:7px;left:50%;transform:translateX(-50%);width:6px;height:6px;border-radius:50%;background:#454a50}
+.tablet img{width:100%;display:block;border-radius:11px}
+.mock-phone{position:absolute;right:-20px;bottom:-30px;width:124px;border:6px solid #23262a;border-radius:28px;overflow:hidden;box-shadow:0 22px 44px rgba(40,44,50,.3);background:#fff;transform:rotate(6deg);animation:floatP 7s ease-in-out infinite .8s;z-index:2}
+.mock-phone::before{content:"";position:absolute;top:8px;left:50%;transform:translateX(-50%);width:34px;height:5px;background:#23262a;border-radius:6px;z-index:3}
 .mock-phone img{width:100%;display:block}
-@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
-@media(prefers-reduced-motion:reduce){.laptop,.mock-phone{animation:none}}
+.tap{position:absolute;width:36px;height:36px;border-radius:50%;border:2px solid rgba(195,47,28,.55);background:rgba(195,47,28,.14);z-index:5;pointer-events:none;opacity:0;animation:tap 3.4s ease-out infinite}
+.tap1{top:55%;left:33%;animation-delay:.6s}
+.tap2{top:40%;left:50%;animation-delay:2s}
+@keyframes tap{0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}10%{opacity:1}45%{opacity:0;transform:translate(-50%,-50%) scale(1.7)}100%{opacity:0}}
+@keyframes floatT{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-9px) rotate(-3deg)}}
+@keyframes floatP{0%,100%{transform:translateY(0) rotate(6deg)}50%{transform:translateY(-11px) rotate(6deg)}}
+@media(prefers-reduced-motion:reduce){.tablet,.mock-phone{animation:none}.tap{display:none}}
 /* hero stats */
 .hero-stats{border-top:1px solid var(--line);margin-top:6px}
 .hero-stats .wrap{padding:22px 28px 30px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
@@ -246,11 +249,14 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
       </div>
     </div>
     <div class="hero-visual">
-      <div class="laptop">
-        <div class="scr"><img src="assets/shot-report.png" alt="月次業績レポートのダッシュボード"></div>
-        <div class="base"></div>
+      <div class="tablet">
+        <img src="assets/shot-report.png" alt="月次業績レポートのダッシュボード">
+        <span class="tap tap1"></span>
       </div>
-      <div class="mock-phone"><img src="assets/shot-instagram.png" alt="Instagram分析ダッシュボード"></div>
+      <div class="mock-phone">
+        <img src="assets/shot-instagram.png" alt="Instagram分析ダッシュボード">
+        <span class="tap tap2"></span>
+      </div>
     </div>
   </div>
   <div class="hero-stats">
