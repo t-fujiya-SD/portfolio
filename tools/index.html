@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ツール解説｜株式会社スパイシーデバイス</title>
+<meta name="description" content="飲食店向けWebツールの「何が楽になるか」を、超かんたんに解説。デモはそのまま操作できます。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Noto+Sans+JP:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#2f3133;--ink2:#5b6066;--muted:#8a9099;--line:#e8eaed;--bg:#fff;--soft:#f7f8fa;--accent:#C32F1C;--accent-d:#9E2415;--accent-soft:#fbeeec;--accent-line:#eccfc9;--mono:"Chakra Petch",sans-serif;--sans:"Noto Sans JP",-apple-system,BlinkMacSystemFont,"Hiragino Sans",Meiryo,sans-serif;--sb:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.8;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:840px;margin:0 auto;padding:0 22px}
+header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.86);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hd{display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo-img{height:23px;width:auto;display:block}
+.back{font-size:13px;font-weight:700;color:var(--ink2);display:inline-flex;align-items:center;gap:6px}
+.back:hover{color:var(--accent)}
+.btn{display:inline-flex;align-items:center;gap:8px;font-weight:800;border-radius:11px;transition:transform .15s,box-shadow .15s,background .15s,border-color .15s;cursor:pointer}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 10px 22px rgba(195,47,28,.24)}
+.btn-primary:hover{background:var(--accent-d);transform:translateY(-2px)}
+.btn-ghost{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+.btn-lg{font-size:15px;padding:14px 24px}
+/* hero */
+.thero{padding:36px 0 8px}
+.crumb{font-size:12.5px;color:var(--muted);margin-bottom:14px}
+.crumb a:hover{color:var(--accent)}
+.forlabel{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent-line);padding:6px 14px;border-radius:30px;margin-bottom:16px}
+h1{font-size:30px;font-weight:900;letter-spacing:-.02em;line-height:1.4}
+.tlead{font-size:15.5px;color:var(--ink2);margin-top:14px}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:16px}
+.chips span{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent-line);padding:3px 11px;border-radius:20px}
+.chips .own{color:#1c7c3f;background:#e9f7ee;border-color:#c4e8d1}
+/* shot */
+.shot{margin:26px 0 8px;border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 20px 44px rgba(40,44,50,.1)}
+.shot img{width:100%;display:block}
+/* actions */
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin:22px 0 6px}
+/* sections */
+section{padding:30px 0}
+.shead{font-size:19px;font-weight:800;letter-spacing:-.01em;margin-bottom:16px;display:flex;align-items:center;gap:9px}
+.shead .em{font-size:21px}
+.dolist{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dolist li{display:flex;gap:9px;font-size:14px;align-items:flex-start;background:var(--soft);border:1px solid var(--line);border-radius:11px;padding:13px 15px}
+.dolist li::before{content:"";flex:none;width:7px;height:7px;border-radius:2px;background:var(--accent);transform:rotate(45deg);margin-top:8px}
+@media(max-width:600px){.dolist{grid-template-columns:1fr}}
+/* before/after */
+.ba{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center}
+.bacard{border:1px solid var(--line);border-radius:14px;padding:18px}
+.bacard.bf{background:var(--soft)}
+.bacard.af{background:var(--accent-soft);border-color:var(--accent-line)}
+.bacard .bt{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.06em;margin-bottom:8px;display:inline-block;padding:3px 10px;border-radius:20px}
+.bf .bt{background:#eceef1;color:var(--ink2)}
+.af .bt{background:var(--accent);color:#fff}
+.bacard p{font-size:13.8px;color:var(--ink);line-height:1.7}
+.baarrow{font-size:22px;color:var(--accent);font-weight:800}
+@media(max-width:600px){.ba{grid-template-columns:1fr;gap:8px}.baarrow{transform:rotate(90deg);justify-self:center}}
+/* steps */
+.steps{display:flex;flex-direction:column;gap:12px}
+.step{display:flex;gap:15px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.step .n{flex:none;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;font-family:var(--mono);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:14px}
+.step b{font-size:15px}
+.step p{font-size:13.5px;color:var(--ink2);margin-top:2px}
+/* more links */
+.more{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+.morechip{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;border:1.5px solid var(--line);border-radius:10px;padding:10px 15px;color:var(--ink2)}
+.morechip.dis{opacity:.55;cursor:default}
+.morechip:not(.dis):hover{border-color:var(--accent);color:var(--accent)}
+/* cta */
+.ctabox{background:linear-gradient(150deg,#fff,var(--accent-soft));border:1px solid var(--accent-line);border-radius:18px;padding:30px;text-align:center;margin:14px 0 0}
+.ctabox h2{font-size:21px;font-weight:900;margin-bottom:8px;letter-spacing:-.01em}
+.ctabox p{font-size:14px;color:var(--ink2);margin-bottom:20px}
+.ctarow{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+/* other tools */
+.otools{border-top:1px solid var(--line);margin-top:18px}
+.otgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.ot{display:block;border:1px solid var(--line);border-radius:12px;padding:13px 15px;transition:transform .14s,box-shadow .14s,border-color .14s}
+.ot:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(40,44,50,.09);border-color:var(--accent-line)}
+.ot .otf{font-size:11px;color:var(--accent);font-weight:700;margin-bottom:3px}
+.ot .otn{font-size:13.5px;font-weight:700;color:var(--ink)}
+@media(max-width:700px){.otgrid{grid-template-columns:1fr}}
+footer{background:#23262a;color:#8a9099;font-size:12px;text-align:center;padding:24px 0;margin-top:34px}
+.notfound{text-align:center;padding:80px 22px}
+.notfound a{color:var(--accent);font-weight:700}
+</style>
+</head>
+<body>
+<header><div class="wrap hd">
+  <a href="../" class="logo" aria-label="SPICY DEVICE"><img src="../assets/logo.png" alt="SPICY DEVICE" class="logo-img"></a>
+  <a href="../#works" class="back">← 制作デモ一覧へ</a>
+</div></header>
+
+<main id="main"></main>
+
+<footer>© 2026 株式会社スパイシーデバイス ／ 掲載デモはすべてサンプルデータで動作しています</footer>
+
+<script>
+const TOOLS={
+  instagram:{
+    name:'Instagram分析ダッシュボード', for:'SNS投稿を「数字」で改善したい方へ',
+    lead:'「いいね」を眺めるだけだった投稿を、保存率・発見リーチで“伸びる型”が見えるように。来店につながる投稿づくりを後押しします。',
+    chips:['SNS分析','Instagram','自店データOK'], shot:'../assets/shot-instagram.png', demo:'../instagram-analytics/',
+    aim:'投稿を「予約・来店」につなげる',
+    before:'感覚で投稿し、反応はいいね数を眺めるだけ。何が効いたのか分からない。',
+    after:'保存率・発見リーチ・投稿時間帯が見え、伸びる投稿の型が分かる。来店導線まで追える。',
+    does:['保存率・発見リーチで「伸びる投稿」を可視化','曜日×時間帯ヒートマップで投稿の最適タイミング','発見→プロフ訪問→予約リンクの来店導線を分析','スクショ取込や手入力で、連携なしでも始められる'],
+    steps:[['デモを開く','サンプルの投稿データが入った状態で、すぐ触れます。'],['自分の数字を入れてみる','インサイトのスクショ取込か手入力で、自店の投稿を登録。'],['伸びる型を見つける','保存率の高い投稿・刺さる時間帯を見て、次の投稿に活かす。']],
+  },
+  checklist:{
+    name:'開店・閉店チェックリスト', for:'開店・閉店の抜け漏れを減らしたい方へ',
+    lead:'紙のチェック表と口頭の申し送りを、スマホでの記録に。誰がやっても同じ品質で、責任者はリモートでも確認できます。',
+    chips:['オペレーション','チェックリスト','多言語','自店データOK'], shot:'../assets/shot-checklist.png', demo:'../opening-checklist/',
+    aim:'開閉店の品質を、誰がやっても同じに',
+    before:'紙のチェック表と口頭の申し送りで、抜け漏れや引き継ぎミスが起きる。',
+    after:'スマホで記録→翌日へ自動引き継ぎ。HACCP温度も記録でき、責任者はリモート確認。',
+    does:['開店／閉店のシフト切替・項目は自由に編集','HACCP温度記録・写真報告に対応','閉店の申し送りを翌朝の開店チェックへ自動引き継ぎ','日本語・英語・中国語の3言語に対応'],
+    steps:[['デモを開く','サンプル店舗のチェックリストがすぐ触れます。'],['自店の項目に書き換える','お店の開店・閉店作業に合わせて項目を編集。'],['現場で記録・リモートで確認','スタッフはスマホで記録、責任者は完了状況を確認。']],
+  },
+  monthly:{
+    name:'月次業績レポート', for:'月次報告を「1枚」にまとめたい方へ',
+    lead:'毎月のExcel転記と資料づくりをゼロに。売上・原価・客数・SNS・店舗を自動集計し、会議は「打ち手」の話から始められます。',
+    chips:['売上管理','月次レポート'], shot:'../assets/shot-report.png', demo:'../monthly-report/',
+    aim:'集計をゼロにして、改善の議論から始める',
+    before:'毎月、各所からデータを集めてExcelへ転記。資料づくりに数時間。',
+    after:'自動集計で資料づくり0分。グラフ・前月比つきの1枚で、会議は改善の話から。',
+    does:['売上・客単価・原価率・営業利益を自動集計','WEB媒体／SNSの効果も一元化','メニューABC分析・PL明細つき','HTML・PDF・スライドで出力'],
+    steps:[['デモを開く','サンプル店舗の月次レポートがすぐ見られます。'],['見たい数字をすり合わせる','お店の帳票・媒体に合わせて項目をカスタム。'],['毎月ワンクリックで出力','データを入れれば、報告資料が自動でまとまります。']],
+  },
+  opening:{
+    name:'出店シミュレーションツール', for:'出店の判断を「数字」でしたい方へ',
+    lead:'ざっくりした収支メモと感覚ではなく、5年PL・損益分岐・投資回収で出店を比較。融資資料にも使えます。',
+    chips:['出店計画','シミュレーション','自店データOK'], shot:'../assets/shot-opening.png', demo:'../opening-simulator/',
+    aim:'出店の意思決定を「数字」でする',
+    before:'物件や席数のイメージと、ざっくりした収支メモで判断してしまう。',
+    after:'集客チャネル別の売上から5年PL・損益分岐・回収期間を試算。条件を変えて比較できる。',
+    does:['集客チャネル別の売上から月次PLを自動試算','立ち上げ・季節・年成長を反映した5年シミュ','損益分岐点・投資回収期間を可視化','外部環境・内部分析メモ付きExcel（4シート）出力'],
+    steps:[['デモを開く','サンプルの出店計画がすぐ触れます。'],['自分の前提を入れる','家賃・席数・客単価・集客チャネルなどを入力。'],['条件を変えて比較する','強気／弱気の前提で並べて、出店判断の材料に。']],
+  },
+  media:{
+    name:'グルメ媒体効果測定ダッシュボード', for:'媒体ごとの効果を比較したい方へ',
+    lead:'食べログ・ぐるなび・一休・OZmallなど、媒体ごとの管理画面を行き来する手間をなくし、1画面で費用対効果を比較できます。',
+    chips:['媒体分析','効果測定'], shot:'../assets/shot-media.png', demo:'../media-dashboard/',
+    aim:'掲載費の費用対効果を見える化する',
+    before:'媒体ごとに管理画面を見に行く必要があり、横並びで比較できない。',
+    after:'7媒体のPV・前月比を1画面で比較。掲載プランの見直し判断ができる。',
+    does:['7媒体（ぐるなび・食べログ・オズモール・一休 ほか）対応','媒体別PVの推移グラフ・前月比','CSV自動取込／スクショOCR／手動入力で更新','店舗ごとにデータを管理'],
+    steps:[['デモを開く','サンプル店舗の媒体データがすぐ見られます。'],['媒体の数字を入れる','各媒体のPVをCSVやスクショ、手入力で登録。'],['効きの良い媒体を見極める','前月比・推移を見て、掲載プランの判断に。']],
+  },
+  drink:{
+    name:'ドリンク売上トラッカー', for:'ドリンクで客単価を上げたい方へ',
+    lead:'施策の効果がレジ締めの感覚でしか分からなかったドリンク売上を、1人あたり杯数・単価で日次に可視化します。',
+    chips:['ドリンク管理','売上分析','自店データOK'], shot:'../assets/shot-drink.png', demo:'../drink-tracker/',
+    aim:'ドリンクで客単価を上げる',
+    before:'ドリンク施策の効果が、レジ締めのなんとなくの感覚でしか分からない。',
+    after:'1人あたり杯数・単価を日次で可視化。施策の効果が数字ではっきり分かる。',
+    does:['レシート撮影→AIが内訳を自動抽出','週次・月次・曜日別レポート','1人あたり単価・杯数・目標達成率を可視化','具体施策の達成率トラッキング'],
+    steps:[['デモを開く','サンプルデータ入りで、すぐ触れます。'],['売上を記録する','レシートを撮るか、数字を手入力で記録。'],['施策の効果を確かめる','1人あたり杯数・単価の変化で、施策の良し悪しを判断。']],
+  },
+};
+const ORDER=['instagram','checklist','monthly','opening','media','drink'];
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+const id=new URLSearchParams(location.search).get('t');
+const t=TOOLS[id];
+const main=document.getElementById('main');
+if(!t){
+  main.innerHTML='<div class="notfound"><h1>ツールが見つかりませんでした</h1><p style="margin-top:12px"><a href="../#works">制作デモ一覧へ戻る →</a></p></div>';
+}else{
+  document.title=t.name+'｜株式会社スパイシーデバイス';
+  const subj=encodeURIComponent('【'+t.name+'】自店用の相談');
+  const others=ORDER.filter(k=>k!==id).map(k=>`<a class="ot" href="?t=${k}"><div class="otf">${esc(TOOLS[k].for)}</div><div class="otn">${esc(TOOLS[k].name)} →</div></a>`).join('');
+  main.innerHTML=`
+  <div class="thero"><div class="wrap">
+    <div class="crumb"><a href="../">ホーム</a> ／ <a href="../#works">制作デモ</a> ／ ${esc(t.name)}</div>
+    <span class="forlabel">🎯 ${esc(t.for)}</span>
+    <h1>${esc(t.name)}</h1>
+    <p class="tlead">${esc(t.lead)}</p>
+    <div class="chips">${t.chips.map(c=>`<span class="${c==='自店データOK'?'own':''}">${esc(c)}</span>`).join('')}</div>
+    <div class="shot"><img src="${t.shot}" alt="${esc(t.name)}の画面"></div>
+    <div class="actions">
+      <a class="btn btn-primary btn-lg" href="${t.demo}">🖥 デモを触ってみる</a>
+      <a class="btn btn-ghost btn-lg" href="mailto:t-fujiya@spicydevice.com?subject=${subj}">このデモを自店用にできるか相談する</a>
+    </div>
+  </div></div>
+
+  <section><div class="wrap">
+    <div class="shead"><span class="em">🎯</span>このツールの目的</div>
+    <div class="ba">
+      <div class="bacard bf"><span class="bt">BEFORE</span><p>${esc(t.before)}</p></div>
+      <div class="baarrow">→</div>
+      <div class="bacard af"><span class="bt">AFTER</span><p>${esc(t.after)}</p></div>
+    </div>
+  </div></section>
+
+  <section><div class="wrap">
+    <div class="shead"><span class="em">✨</span>何が楽になる？</div>
+    <ul class="dolist">${t.does.map(d=>`<li>${esc(d)}</li>`).join('')}</ul>
+  </div></section>
+
+  <section><div class="wrap">
+    <div class="shead"><span class="em">📖</span>使い方は3ステップ</div>
+    <div class="steps">${t.steps.map((s,i)=>`<div class="step"><div class="n">${i+1}</div><div><b>${esc(s[0])}</b><p>${esc(s[1])}</p></div></div>`).join('')}</div>
+    <div class="more">
+      <a class="morechip" href="${t.demo}">🖥 デモを開く</a>
+      <span class="morechip dis">📝 詳しい解説（note・準備中）</span>
+      <span class="morechip dis">🎬 操作の様子（Instagram・準備中）</span>
+    </div>
+  </div></section>
+
+  <section><div class="wrap">
+    <div class="ctabox">
+      <h2>このデモ、自店用にできます。</h2>
+      <p>「うちのお店だとこう使いたい」をお聞かせください。1機能だけの小さな試作からご相談いただけます。</p>
+      <div class="ctarow">
+        <a class="btn btn-primary btn-lg" href="mailto:t-fujiya@spicydevice.com?subject=${subj}">⚡ 自店用にできるか相談する</a>
+        <a class="btn btn-ghost btn-lg" href="../#contact">今の管理方法を相談する</a>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="otools"><div class="wrap">
+    <div class="shead" style="font-size:16px"><span class="em">🧩</span>ほかのツールも見る</div>
+    <div class="otgrid">${others}</div>
+  </div></section>`;
+}
+</script>
+</body>
+</html>

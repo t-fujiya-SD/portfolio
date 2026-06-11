@@ -205,6 +205,48 @@ section{padding:76px 0}
 .cta-box p{font-size:15px;color:var(--ink2);margin-bottom:30px}
 .cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
 
+/* FV theme tags */
+.ftags{margin-top:24px}
+.ftags .ftl{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:9px}
+.ftags .ftrow{display:flex;gap:8px;flex-wrap:wrap}
+.ftag{font-size:12.5px;font-weight:700;color:var(--ink2);background:#fff;border:1.5px solid var(--line);border-radius:30px;padding:7px 14px}
+/* demo card 課題ラベル */
+.forlabel{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent-line);padding:5px 12px;border-radius:30px;margin-bottom:11px;align-self:flex-start}
+/* compare */
+#compare{background:var(--soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.cmp{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.cmpc{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px}
+.cmpc .ct{font-size:14.5px;font-weight:800;margin-bottom:6px}
+.cmpc .cx{font-size:13px;color:var(--ink2);line-height:1.7}
+.cmpc .cx .ng{color:#b3360f;font-weight:700}
+.cmpc.win{grid-column:1/-1;background:linear-gradient(150deg,#fff,var(--accent-soft));border:1.5px solid var(--accent-line)}
+.cmpc.win .ct{color:var(--accent);font-size:16px;display:flex;align-items:center;gap:8px}
+.cmpc.win .wl{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.cmpc.win .wl li{display:flex;gap:8px;font-size:13px;align-items:flex-start;color:var(--ink)}
+.cmpc.win .wl li::before{content:"✓";color:var(--accent);font-weight:800;flex:none}
+@media(max-width:680px){.cmp{grid-template-columns:1fr}.cmpc.win .wl{grid-template-columns:1fr}}
+/* pricing */
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.plan{background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px 24px;display:flex;flex-direction:column}
+.plan.feat{border:1.5px solid var(--accent);box-shadow:0 16px 38px rgba(195,47,28,.1)}
+.plan .pbadge{align-self:flex-start;font-family:var(--mono);font-size:10.5px;font-weight:700;color:#fff;background:var(--accent);padding:3px 10px;border-radius:20px;margin-bottom:12px}
+.plan h3{font-size:17px;font-weight:800;margin-bottom:6px}
+.plan .pp{font-size:13px;color:var(--ink2);margin-bottom:14px;min-height:42px}
+.plan .pmoney{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--ink);margin-bottom:14px;letter-spacing:-.01em}
+.plan .pmoney small{font-size:12px;color:var(--muted);font-weight:600}
+.plan ul{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.plan ul li{display:flex;gap:8px;font-size:13px;align-items:flex-start}
+.plan ul li::before{content:"✓";color:var(--accent);font-weight:800;flex:none}
+.plan .pa{margin-top:auto}
+.price-note{text-align:center;font-size:13px;color:var(--ink2);margin-top:24px;background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:12px;padding:14px}
+@media(max-width:760px){.plans{grid-template-columns:1fr}}
+/* relay (こんな相談でOK) */
+.relay{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+.rl{display:flex;gap:12px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 18px}
+.rl .rc{flex:none;width:30px;height:30px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px}
+.rl p{font-size:14px}
+.rl .q{color:var(--accent);font-weight:800}
+
 /* voice / try section */
 .voice-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
 .vcard{background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px}
@@ -275,6 +317,13 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
       <div class="btns">
         <a class="btn btn-primary btn-lg" href="#cta">⚡ 無料で相談する</a>
         <a class="btn btn-ghost btn-lg" href="#works">🖥 デモを見てみる</a>
+      </div>
+      <div class="ftags">
+        <div class="ftl">こんなテーマ、相談できます</div>
+        <div class="ftrow">
+          <span class="ftag">月次レポート</span><span class="ftag">媒体分析</span><span class="ftag">原価管理</span>
+          <span class="ftag">日報・チェック効率化</span><span class="ftag">SNS分析</span><span class="ftag">仕入れ改善</span><span class="ftag">客単価アップ</span>
+        </div>
       </div>
     </div>
     <div class="hero-visual">
@@ -369,131 +418,160 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
 <section id="works">
   <div class="wrap">
     <div class="sec-head reveal"><div class="seclabel">WORKS</div><div class="sectitle"><span class="u">制作デモ（公開中のツール）</span></div>
-      <p class="secdesc">実店舗向けに開発したツールを、サンプルデータでそのまま触れるデモに。各カードの「課題と効果」で導入前後の変化が分かります。<br>
-      <span style="color:#1c7c3f;font-weight:700">自店データOK</span> のツールは、ご自身のお店の数値を入れてそのまま試せます（データはお使いの端末内にのみ保存され、外部には送信されません）。</p></div>
+      <p class="secdesc">「こんな課題ありませんか？」から選べる、課題解決メニューです。「詳しく見る」で、何が楽になるか・使い方・導入前後の変化が分かります。<br>
+      <span style="color:#1c7c3f;font-weight:700">自店データOK</span> のツールは、ご自身のお店の数値を入れてそのまま試せます（データは端末内にのみ保存され、外部には送信されません）。</p></div>
     <div class="dcards">
 
       <div class="dcard reveal d1">
-        <a class="dthumb" href="instagram-analytics/"><img src="assets/shot-instagram.png" alt="Instagram分析ダッシュボード" loading="lazy"></a>
+        <a class="dthumb" href="tools/?t=instagram"><img src="assets/shot-instagram.png" alt="Instagram分析ダッシュボード" loading="lazy"></a>
         <div class="dbody">
+          <span class="forlabel">🎯 SNS投稿を数字で改善したい方へ</span>
           <h3>Instagram分析ダッシュボード</h3>
-          <p>投稿の分析からエンゲージメントを可視化。投稿時間帯の最適化や来店導線の分析をサポート。</p>
+          <p>「いいね」を眺めるだけの投稿を、保存率・発見リーチで“伸びる型”が見えるように。来店につながる投稿づくりへ。</p>
           <div class="chips"><span>SNS分析</span><span>Instagram</span><span class="own">自店データOK</span></div>
-          <details class="dmore"><summary>💡 課題と効果</summary><div class="dmb">
-            <p class="aim"><b>ねらい：</b>投稿を「予約・来店」につなげる</p>
-            <div class="ba">
-              <div class="before"><span class="bt">導入前</span><span>感覚で投稿し、反応は「いいね」を眺めるだけ</span></div>
-              <div class="after"><span class="bt">導入後</span><span>保存率・発見リーチで「伸びる型」が見え、投稿が予約につながる</span></div>
-            </div></div></details>
           <div class="dactions">
-            <a class="dlink" href="instagram-analytics/">デモを見る →</a>
+            <a class="dlink" href="tools/?t=instagram">詳しく見る →</a>
             <button class="fav" data-id="instagram" data-base="86" aria-label="気になる"><span class="fheart">♡</span><span class="favn">86</span></button>
-            <button class="share-demo" data-url="instagram-analytics/" data-title="Instagram分析ダッシュボード" aria-label="このデモを共有">⤴</button>
+            <button class="share-demo" data-url="tools/?t=instagram" data-title="Instagram分析ダッシュボード" aria-label="このツールを共有">⤴</button>
           </div>
         </div>
       </div>
 
       <div class="dcard reveal d2">
-        <a class="dthumb" href="opening-checklist/"><img src="assets/shot-checklist.png" alt="開店・閉店チェックリスト" loading="lazy"></a>
+        <a class="dthumb" href="tools/?t=checklist"><img src="assets/shot-checklist.png" alt="開店・閉店チェックリスト" loading="lazy"></a>
         <div class="dbody">
+          <span class="forlabel">🎯 開店・閉店の抜け漏れを減らしたい方へ</span>
           <h3>開店・閉店チェックリスト</h3>
-          <p>開店・閉店作業の抜け漏れを防ぎ、標準化されたオペレーションを実現。日英中の3言語に対応。</p>
+          <p>紙のチェック表と口頭の申し送りを、スマホ記録に。誰がやっても同じ品質で、責任者はリモートでも確認できます。</p>
           <div class="chips"><span>オペレーション</span><span>チェックリスト</span><span class="own">自店データOK</span></div>
-          <details class="dmore"><summary>💡 課題と効果</summary><div class="dmb">
-            <p class="aim"><b>ねらい：</b>開閉店の品質を、誰がやっても同じに</p>
-            <div class="ba">
-              <div class="before"><span class="bt">導入前</span><span>紙のチェック表と口頭の申し送りで、抜け漏れが発生</span></div>
-              <div class="after"><span class="bt">導入後</span><span>スマホで記録・翌日へ自動引き継ぎ。責任者はリモートで確認</span></div>
-            </div></div></details>
           <div class="dactions">
-            <a class="dlink" href="opening-checklist/">デモを見る →</a>
+            <a class="dlink" href="tools/?t=checklist">詳しく見る →</a>
             <button class="fav" data-id="checklist" data-base="64" aria-label="気になる"><span class="fheart">♡</span><span class="favn">64</span></button>
-            <button class="share-demo" data-url="opening-checklist/" data-title="開店・閉店チェックリスト" aria-label="このデモを共有">⤴</button>
+            <button class="share-demo" data-url="tools/?t=checklist" data-title="開店・閉店チェックリスト" aria-label="このツールを共有">⤴</button>
           </div>
         </div>
       </div>
 
       <div class="dcard reveal d3">
-        <a class="dthumb" href="monthly-report/"><img src="assets/shot-report.png" alt="月次業績レポート" loading="lazy"></a>
+        <a class="dthumb" href="tools/?t=monthly"><img src="assets/shot-report.png" alt="月次業績レポート" loading="lazy"></a>
         <div class="dbody">
+          <span class="forlabel">🎯 月次報告を1枚にまとめたい方へ</span>
           <h3>月次業績レポート</h3>
-          <p>売上・原価・客数・SNS・店舗を自動集計し、わかりやすく1枚にまとめます。会議資料づくりを時短。</p>
+          <p>毎月のExcel転記と資料づくりをゼロに。売上・原価・客数・SNS・店舗を自動集計し、会議は「打ち手」の話から。</p>
           <div class="chips"><span>売上管理</span><span>月次レポート</span></div>
-          <details class="dmore"><summary>💡 課題と効果</summary><div class="dmb">
-            <p class="aim"><b>ねらい：</b>集計をゼロにして、改善の議論から始める</p>
-            <div class="ba">
-              <div class="before"><span class="bt">導入前</span><span>毎月Excelへ転記し、資料づくりに数時間</span></div>
-              <div class="after"><span class="bt">導入後</span><span>自動集計で資料づくり0分。会議は「打ち手」の話から始まる</span></div>
-            </div></div></details>
           <div class="dactions">
-            <a class="dlink" href="monthly-report/">デモを見る →</a>
+            <a class="dlink" href="tools/?t=monthly">詳しく見る →</a>
             <button class="fav" data-id="monthly" data-base="73" aria-label="気になる"><span class="fheart">♡</span><span class="favn">73</span></button>
-            <button class="share-demo" data-url="monthly-report/" data-title="月次業績レポート" aria-label="このデモを共有">⤴</button>
+            <button class="share-demo" data-url="tools/?t=monthly" data-title="月次業績レポート" aria-label="このツールを共有">⤴</button>
           </div>
         </div>
       </div>
 
       <div class="dcard reveal d1">
-        <a class="dthumb" href="opening-simulator/"><img src="assets/shot-opening.png" alt="出店シミュレーションツール" loading="lazy"></a>
+        <a class="dthumb" href="tools/?t=opening"><img src="assets/shot-opening.png" alt="出店シミュレーションツール" loading="lazy"></a>
         <div class="dbody">
+          <span class="forlabel">🎯 出店の判断を数字でしたい方へ</span>
           <h3>出店シミュレーションツール</h3>
-          <p>出店計画の売上・原価・投資回収をシミュレーションし、判断材料を提供。5年計画をExcel出力。</p>
+          <p>収支メモと感覚ではなく、5年PL・損益分岐・投資回収で出店を比較。融資資料にも使えます。</p>
           <div class="chips"><span>出店計画</span><span>シミュレーション</span><span class="own">自店データOK</span></div>
-          <details class="dmore"><summary>💡 課題と効果</summary><div class="dmb">
-            <p class="aim"><b>ねらい：</b>出店の意思決定を「数字」でする</p>
-            <div class="ba">
-              <div class="before"><span class="bt">導入前</span><span>ざっくりした収支メモと感覚で判断</span></div>
-              <div class="after"><span class="bt">導入後</span><span>5年PL・損益分岐・回収期間で比較。融資資料にも使える</span></div>
-            </div></div></details>
           <div class="dactions">
-            <a class="dlink" href="opening-simulator/">デモを見る →</a>
+            <a class="dlink" href="tools/?t=opening">詳しく見る →</a>
             <button class="fav" data-id="opening" data-base="41" aria-label="気になる"><span class="fheart">♡</span><span class="favn">41</span></button>
-            <button class="share-demo" data-url="opening-simulator/" data-title="出店シミュレーションツール" aria-label="このデモを共有">⤴</button>
+            <button class="share-demo" data-url="tools/?t=opening" data-title="出店シミュレーションツール" aria-label="このツールを共有">⤴</button>
           </div>
         </div>
       </div>
 
       <div class="dcard reveal d2">
-        <a class="dthumb" href="media-dashboard/"><img src="assets/shot-media.png" alt="グルメ媒体効果測定ダッシュボード" loading="lazy"></a>
+        <a class="dthumb" href="tools/?t=media"><img src="assets/shot-media.png" alt="グルメ媒体効果測定ダッシュボード" loading="lazy"></a>
         <div class="dbody">
+          <span class="forlabel">🎯 媒体ごとの効果を比較したい方へ</span>
           <h3>グルメ媒体効果測定ダッシュボード</h3>
-          <p>食べログ・ぐるなび・一休・OZmallなどの成果を比較・分析。媒体別の伸び・前月比をひと目で。</p>
+          <p>媒体ごとの管理画面を行き来する手間をなくし、食べログ・ぐるなび・一休・OZmallなどを1画面で費用対効果比較。</p>
           <div class="chips"><span>媒体分析</span><span>効果測定</span></div>
-          <details class="dmore"><summary>💡 課題と効果</summary><div class="dmb">
-            <p class="aim"><b>ねらい：</b>掲載費の費用対効果を見える化する</p>
-            <div class="ba">
-              <div class="before"><span class="bt">導入前</span><span>媒体ごとの管理画面を行き来して、比較ができない</span></div>
-              <div class="after"><span class="bt">導入後</span><span>7媒体を1画面で比較。掲載プラン見直しの判断材料に</span></div>
-            </div></div></details>
           <div class="dactions">
-            <a class="dlink" href="media-dashboard/">デモを見る →</a>
+            <a class="dlink" href="tools/?t=media">詳しく見る →</a>
             <button class="fav" data-id="media" data-base="58" aria-label="気になる"><span class="fheart">♡</span><span class="favn">58</span></button>
-            <button class="share-demo" data-url="media-dashboard/" data-title="グルメ媒体効果測定ダッシュボード" aria-label="このデモを共有">⤴</button>
+            <button class="share-demo" data-url="tools/?t=media" data-title="グルメ媒体効果測定ダッシュボード" aria-label="このツールを共有">⤴</button>
           </div>
         </div>
       </div>
 
       <div class="dcard reveal d3">
-        <a class="dthumb" href="drink-tracker/"><img src="assets/shot-drink.png" alt="ドリンク売上トラッカー" loading="lazy"></a>
+        <a class="dthumb" href="tools/?t=drink"><img src="assets/shot-drink.png" alt="ドリンク売上トラッカー" loading="lazy"></a>
         <div class="dbody">
+          <span class="forlabel">🎯 ドリンクで客単価を上げたい方へ</span>
           <h3>ドリンク売上トラッカー</h3>
-          <p>ドリンク売上・原価・粗利を可視化し、メニュー改善につなげる。レシート撮影でAIが自動集計。</p>
+          <p>感覚でしか分からなかったドリンク売上を、1人あたり杯数・単価で日次に可視化。施策の効果が数字で分かります。</p>
           <div class="chips"><span>ドリンク管理</span><span>売上分析</span><span class="own">自店データOK</span></div>
-          <details class="dmore"><summary>💡 課題と効果</summary><div class="dmb">
-            <p class="aim"><b>ねらい：</b>ドリンクで客単価を上げる</p>
-            <div class="ba">
-              <div class="before"><span class="bt">導入前</span><span>施策の効果がレジ締めの感覚でしか分からない</span></div>
-              <div class="after"><span class="bt">導入後</span><span>1人あたり杯数・単価を日次で可視化。施策の効果が数字で分かる</span></div>
-            </div></div></details>
           <div class="dactions">
-            <a class="dlink" href="drink-tracker/">デモを見る →</a>
+            <a class="dlink" href="tools/?t=drink">詳しく見る →</a>
             <button class="fav" data-id="drink" data-base="49" aria-label="気になる"><span class="fheart">♡</span><span class="favn">49</span></button>
-            <button class="share-demo" data-url="drink-tracker/" data-title="ドリンク売上トラッカー" aria-label="このデモを共有">⤴</button>
+            <button class="share-demo" data-url="tools/?t=drink" data-title="ドリンク売上トラッカー" aria-label="このツールを共有">⤴</button>
           </div>
         </div>
       </div>
 
     </div>
+  </div>
+</section>
+
+<!-- COMPARE -->
+<section id="compare">
+  <div class="wrap">
+    <div class="sec-head reveal"><div class="seclabel">WHY US</div><div class="sectitle"><span class="u">既製ツールでも、ふつうの制作会社でもありません</span></div>
+      <p class="secdesc">「お店に合う」「数字が集まる」「改善まで伴走」「小さく始められる」——このすべてを満たせるのが強みです。</p></div>
+    <div class="cmp">
+      <div class="cmpc reveal d1"><div class="ct">既製のSaaS</div><div class="cx">多機能でも<span class="ng">お店の運用に噛み合わない</span>部分が残り、結局使われなくなりがち。</div></div>
+      <div class="cmpc reveal d2"><div class="ct">Excel・手作業</div><div class="cx">自由だけど<span class="ng">集計と更新が属人化</span>。毎月の転記に時間がかかり、引き継ぎも大変。</div></div>
+      <div class="cmpc reveal d1"><div class="ct">ふつうの制作会社</div><div class="cx">作って納品して終わり。<span class="ng">飲食の現場や数字の意味が分からず</span>、改善まで踏み込めない。</div></div>
+      <div class="cmpc reveal d2"><div class="ct">コンサルだけ</div><div class="cx">提案は出るが<span class="ng">手を動かす仕組みがない</span>。現場が回せず、絵に描いた餅になりがち。</div></div>
+      <div class="cmpc win reveal">
+        <div class="ct">⚡ スパイシーデバイス</div>
+        <div class="cx">飲食店の現場を分かったうえで、お店に合わせたツールを作り、数字を見ながら改善まで伴走します。</div>
+        <ul class="wl">
+          <li>お店の運用に合わせてオーダーメイド</li>
+          <li>数字が自動で集まる・見える</li>
+          <li>作って終わりでなく改善まで伴走</li>
+          <li>1機能から小さく始められる</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" style="background:var(--soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="sec-head reveal"><div class="seclabel">PLANS</div><div class="sectitle"><span class="u">まずは小さく試せます</span></div>
+      <p class="secdesc">いきなり大きな契約は不要です。1機能の試作から、運用・改善まで段階的に。</p></div>
+    <div class="plans">
+      <div class="plan reveal d1">
+        <span class="pbadge">STEP 1</span>
+        <h3>小さく試すプラン</h3>
+        <p class="pp">「これ便利かも」を、まず1機能だけ形にして試すところから。</p>
+        <div class="pmoney">1機能の試作から<br><small>内容により個別見積もり</small></div>
+        <ul><li>困りごとのヒアリング</li><li>1機能のたたき台を試作</li><li>実際に触って手ごたえ確認</li></ul>
+        <a class="btn btn-ghost btn-lg pa" href="#cta" style="justify-content:center">1機能だけ試してみる</a>
+      </div>
+      <div class="plan feat reveal d2">
+        <span class="pbadge">STEP 2</span>
+        <h3>月次運用プラン</h3>
+        <p class="pp">作ったツールを現場で回しながら、小さな改善を続けます。</p>
+        <div class="pmoney">月額制<br><small>内容により個別見積もり</small></div>
+        <ul><li>ツールの運用サポート</li><li>毎月の数字の振り返り</li><li>小さな改善・項目追加</li></ul>
+        <a class="btn btn-primary btn-lg pa" href="#cta" style="justify-content:center">運用について相談する</a>
+      </div>
+      <div class="plan reveal d3">
+        <span class="pbadge">STEP 3</span>
+        <h3>個別改善プラン</h3>
+        <p class="pp">原価・媒体・集客など、テーマを決めて成果づくりに踏み込みます。</p>
+        <div class="pmoney">プロジェクト制<br><small>内容により個別見積もり</small></div>
+        <ul><li>テーマ別の分析・改善提案</li><li>仕入れ・原価の見直し</li><li>集客・客単価の改善</li></ul>
+        <a class="btn btn-ghost btn-lg pa" href="#cta" style="justify-content:center">改善テーマを相談する</a>
+      </div>
+    </div>
+    <div class="price-note reveal">料金は内容により個別お見積もりです。まずは <b>1機能だけの小さな試作</b> からご相談いただけます。無理な提案はしません。</div>
   </div>
 </section>
 
@@ -575,18 +653,31 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
   </div>
 </section>
 
+<!-- RELAY: こんな相談でOK -->
+<section id="relay" style="background:var(--soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="sec-head reveal"><div class="seclabel">ASK</div><div class="sectitle"><span class="u">たとえば、こんな相談でOKです</span></div>
+      <p class="secdesc">きれいにまとまっていなくて大丈夫。「困っていること」だけ教えてください。</p></div>
+    <div class="relay">
+      <div class="rl reveal d1"><span class="rc">Q</span><p>毎月の売上・原価・媒体の数字を<b>1枚にまとめたい</b></p></div>
+      <div class="rl reveal d1"><span class="rc">Q</span><p>食べログ・ぐるなび・一休・OZmallの<b>効果を比較したい</b></p></div>
+      <div class="rl reveal d2"><span class="rc">Q</span><p>店長の日報や開店チェックを<b>スマホで管理したい</b></p></div>
+      <div class="rl reveal d2"><span class="rc">Q</span><p>Instagram投稿の効果を<b>見える化したい</b></p></div>
+      <div class="rl reveal d3"><span class="rc">Q</span><p>仕入れや原価の見直しも<b>あわせて相談したい</b></p></div>
+    </div>
+  </div>
+</section>
+
 <!-- FINAL CTA -->
 <section id="cta">
   <div class="wrap">
     <div class="cta-box reveal">
-      <h2>「これ作れる？」を相談してみませんか？</h2>
-      <p>現状の管理方法を見せていただければ、改善のヒントを一緒に整理します。<br>ざっくりした段階で構いません。お気軽にどうぞ。</p>
+      <h2>まずは「今の管理方法」を見せてください。</h2>
+      <p>現状を見せていただければ、何が楽になり・どこで成果が出せそうかを一緒に整理します。<br>ざっくりした段階で構いません。1機能だけの小さな試作からご相談いただけます。</p>
       <div class="cta-row">
-        <a class="btn btn-primary btn-lg" href="mailto:t-fujiya@spicydevice.com?subject=Web%E3%83%84%E3%83%BC%E3%83%AB%E3%81%AE%E3%81%94%E7%9B%B8%E8%AB%87">⚡ 無料で相談する</a>
+        <a class="btn btn-primary btn-lg" href="mailto:t-fujiya@spicydevice.com?subject=%E4%BB%8A%E3%81%AE%E7%AE%A1%E7%90%86%E6%96%B9%E6%B3%95%E3%81%AE%E7%9B%B8%E8%AB%87">⚡ 今の管理方法を相談する</a>
+        <a class="btn btn-ghost btn-lg" href="mailto:t-fujiya@spicydevice.com?subject=1%E6%A9%9F%E8%83%BD%E3%81%A0%E3%81%91%E8%A9%A6%E3%81%97%E3%81%9F%E3%81%84">🧩 1機能だけ試してみる</a>
         <a class="btn btn-ghost btn-lg" href="#works">🖥 デモを見てみる</a>
-        <!-- 資料が用意でき次第、有効化する仮ボタン
-        <a class="btn btn-ghost btn-lg" href="#">📄 資料をダウンロードする</a>
-        -->
       </div>
     </div>
   </div>
