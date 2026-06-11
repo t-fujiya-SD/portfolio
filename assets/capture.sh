@@ -13,10 +13,11 @@ shot(){ "$CHROME" --headless=new --disable-gpu --hide-scrollbars \
   --force-device-scale-factor=2 --window-size=1280,840 --virtual-time-budget=6000 \
   --screenshot="$DIR/$2" "$1" >/dev/null 2>&1; echo "[OK] $2"; }
 
-shot "$BASE/drink-tracker/index.html"      shot-drink.png
 shot "$BASE/monthly-report/index.html"    shot-report.png
 shot "$BASE/media-dashboard/"             shot-media.png
 shot "$BASE/opening-simulator/index.html"   shot-opening.png
 shot "$BASE/opening-checklist/index.html"  shot-checklist.png
 shot "$BASE/instagram-analytics/index.html" shot-instagram.png
+shot "$BASE/procurement-report/index.html" shot-procurement.png
+# shot "$BASE/drink-tracker/index.html"      shot-drink.png  # ポートフォリオから外したため停止
 echo "done."
