@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>開店・閉店チェックリスト｜デモ</title>
+<style>
+:root{--navy:#1c3a5e;--navy2:#27496d;--gold:#c9a84a;--ink:#1f2733;--sub:#5b6675;--bg:#f4f6f8;--card:#fff;--border:#e3e9f0;--green:#16a34a;--amber:#d97706;--red:#dc2626;--blue:#2563eb;--sb:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",Meiryo,sans-serif;color:var(--ink);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased;padding-bottom:calc(80px + var(--sb))}
+.wrap{max-width:640px;margin:0 auto;padding:0 16px}
+header{background:linear-gradient(120deg,var(--navy),var(--navy2));color:#fff;padding:13px 0;position:sticky;top:0;z-index:50}
+.hd{display:flex;align-items:center;gap:8px}
+.hd h1{font-size:15px;font-weight:800;flex:1}
+.badge{font-size:10px;font-weight:700;background:var(--gold);color:#1c2a3a;padding:2px 8px;border-radius:20px;flex:none}
+.shift-tabs{display:flex;background:#fff;border-bottom:2px solid var(--border);position:sticky;top:49px;z-index:40}
+.st{flex:1;padding:11px 4px;font-size:14px;font-weight:700;border:none;background:none;cursor:pointer;color:var(--sub);border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .12s,border-color .12s}
+.st.on{color:var(--navy);border-bottom-color:var(--navy)}
+.demo-note{background:var(--card);border-left:4px solid var(--gold);border-radius:10px;padding:10px 14px;margin:12px 0 0;font-size:12.5px;color:#3a4658}
+/* carry-over */
+.co-banner{background:#fffbeb;border:1px solid #fde68a;border-left:4px solid var(--amber);border-radius:10px;padding:12px 14px;margin:12px 0 0}
+.co-title{font-size:13px;font-weight:800;color:#92400e;margin-bottom:6px}
+.co-row{font-size:12.5px;color:#78350f;margin-bottom:3px;display:flex;gap:6px}
+.co-lbl{font-weight:700;flex:none}
+/* staff name */
+.staff-fld{display:flex;align-items:center;gap:10px;padding:11px 14px}
+.staff-fld label{font-size:13px;font-weight:800;color:var(--navy);flex:none}
+.staff-fld input{flex:1;border:1px solid var(--border);border-radius:9px;padding:9px 11px;font-size:14px;font-family:inherit;outline:none}
+.staff-fld input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+/* category */
+.cat{background:var(--card);border:1px solid var(--border);border-radius:14px;margin:12px 0;overflow:hidden}
+.cat-head{display:flex;align-items:center;gap:7px;padding:11px 14px;background:#f8fafc;border-bottom:1px solid var(--border)}
+.cat-icon{font-size:16px}
+.cat-title{font-size:13.5px;font-weight:800;color:var(--navy);flex:1}
+.cat-prog{font-size:12px;font-weight:700;color:var(--sub)}
+.edit-btn{background:none;border:1px solid var(--border);border-radius:7px;padding:3px 9px;font-size:11px;font-weight:700;color:var(--sub);cursor:pointer;flex:none}
+.edit-btn.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+/* items */
+.item{display:flex;align-items:flex-start;border-bottom:1px solid var(--border)}
+.item:last-child{border-bottom:none}
+.item label{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;flex:1;cursor:pointer;min-width:0;-webkit-tap-highlight-color:transparent}
+.cb{width:22px;height:22px;border:2px solid var(--border);border-radius:6px;flex:none;display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s;margin-top:1px}
+.item.ck .cb{background:var(--green);border-color:var(--green)}
+.item.ck .cb::after{content:"";display:block;width:6px;height:11px;border:2.5px solid #fff;border-top:none;border-left:none;transform:rotate(42deg) translateY(-2px)}
+.item-text{font-size:14px;flex:1;line-height:1.4}
+.item.ck .item-text{color:#94a3b8;text-decoration:line-through}
+.ph-badge{font-size:11px;text-decoration:none;margin-left:2px}
+.item-acts{display:flex;align-items:center;gap:4px;padding:9px 10px 0 0;flex:none}
+.how-btn,.cam-btn{width:30px;height:30px;border:1.5px solid var(--border);border-radius:50%;background:#fff;cursor:pointer;font-size:14px;font-weight:800;color:var(--sub);display:flex;align-items:center;justify-content:center;line-height:1;padding:0}
+.how-btn{color:var(--blue);border-color:#bfdbfe}
+.how-btn:active,.cam-btn:active{background:#eef4ff}
+.photo-thumb{display:flex;align-items:center;gap:10px;padding:0 14px 12px 46px}
+.photo-thumb img{width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid var(--border)}
+.ph-acts{display:flex;flex-direction:column;gap:5px}
+.ph-acts button{border:1px solid var(--border);background:#fff;border-radius:7px;padding:5px 10px;font-size:11.5px;font-weight:700;cursor:pointer;color:var(--sub)}
+.ph-acts .ph-rm:hover{color:var(--red);border-color:#fecaca}
+.qty-row{padding:2px 14px 11px 46px;display:flex;align-items:center;gap:6px}
+.qty-inp{width:80px;border:1px solid var(--border);border-radius:8px;padding:6px 8px;font-size:14px;font-family:inherit;outline:none;text-align:right}
+.qty-inp:focus,.edit-inp:focus,.unit-inp:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.unit-sel,.unit-inp{border:1px solid var(--border);border-radius:8px;padding:6px 8px;font-size:13px;font-family:inherit;background:#fff;outline:none;width:70px}
+/* temp */
+.temp-row{display:flex;align-items:center;gap:8px;padding:11px 14px;border-bottom:1px solid var(--border)}
+.temp-row:last-child{border-bottom:none}
+.temp-lbl{font-size:14px;flex:1;display:flex;align-items:center;gap:6px}
+.temp-wrap{display:flex;align-items:center;gap:5px}
+.temp-inp{width:70px;border:1px solid var(--border);border-radius:8px;padding:7px 8px;font-size:14px;text-align:right;font-family:inherit;outline:none}
+.temp-inp:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.temp-u{font-size:12px;color:var(--sub);font-weight:600}
+.temp-how{width:24px;height:24px;border:1.5px solid #bfdbfe;border-radius:50%;background:#fff;color:var(--blue);font-size:12px;font-weight:800;cursor:pointer;flex:none;line-height:1}
+.tbadge{font-size:11px;font-weight:700;padding:2px 7px;border-radius:12px;white-space:nowrap}
+.tok{background:#dcfce7;color:#166534}.tng{background:#fee2e2;color:#991b1b}
+/* reservation */
+.resv-body{padding:10px 14px;display:flex;flex-direction:column;gap:10px}
+.resv-empty{font-size:12.5px;color:var(--sub);padding:6px 0}
+.resv-card{position:relative;border:1px solid var(--border);border-radius:10px;padding:11px 34px 11px 11px;background:#fcfdfe}
+.resv-grid{display:grid;grid-template-columns:1.4fr .8fr;gap:8px}
+.resv-course{margin-top:8px}
+.resv-course .resv-fld select{margin-bottom:7px}
+.course-free{width:100%;border:1px solid var(--blue);border-radius:8px;padding:7px 9px;font-size:13.5px;font-family:inherit;outline:none}
+.course-row{display:flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:9px;padding:7px 8px 7px 11px;margin-bottom:8px}
+.course-row input{flex:1;border:none;font-size:14px;font-family:inherit;outline:none;background:none}
+.course-row .crm{border:none;background:none;color:#cbd5e1;font-size:19px;cursor:pointer;line-height:1;padding:2px 4px;flex:none}
+.course-row .crm:hover{color:var(--red)}
+.resv-fld label{font-size:10.5px;font-weight:700;color:var(--sub);display:block;margin-bottom:3px}
+.resv-fld input,.resv-fld select{width:100%;border:1px solid var(--border);border-radius:8px;padding:7px 9px;font-size:13.5px;font-family:inherit;outline:none;background:#fff}
+.resv-fld input:focus,.resv-fld select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.resv-del{position:absolute;top:6px;right:6px;border:none;background:none;color:#cbd5e1;font-size:19px;cursor:pointer;line-height:1;padding:4px}
+.resv-del:hover{color:var(--red)}
+/* handover */
+.ho-body{padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.ho-fld label{font-size:12px;font-weight:700;color:var(--sub);display:block;margin-bottom:4px}
+.ho-fld input,.ho-fld textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:14px;font-family:inherit;outline:none;resize:vertical}
+.ho-fld textarea{min-height:60px}
+.ho-fld input:focus,.ho-fld textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+/* edit mode */
+.reorder{display:flex;flex-direction:column;gap:2px;padding:8px 2px 8px 8px;flex:none}
+.reorder button{width:26px;height:20px;border:1px solid var(--border);background:#fff;border-radius:5px;font-size:9px;color:var(--sub);cursor:pointer;line-height:1;padding:0}
+.reorder button:active{background:#eef4ff}
+.del-btn{background:none;border:none;color:#cbd5e1;font-size:20px;padding:8px 12px 8px 4px;cursor:pointer;line-height:1;flex:none;align-self:center}
+.del-btn:hover{color:var(--red)}
+.man-edit-btn{background:none;border:1px solid var(--border);border-radius:7px;font-size:14px;padding:5px 8px;cursor:pointer;flex:none;align-self:center}
+.edit-inp{flex:1;border:1px solid var(--blue);border-radius:7px;padding:7px 9px;font-size:14px;font-family:inherit;outline:none;min-width:0}
+.add-form{display:flex;gap:6px;padding:10px 14px;border-top:1px dashed var(--border);align-items:center;flex-wrap:wrap}
+.add-form .ai{flex:1;min-width:120px;border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:13.5px;font-family:inherit;outline:none}
+.add-form .ai:focus{border-color:var(--blue)}
+.add-form select{border:1px solid var(--border);border-radius:8px;padding:7px 8px;font-size:13px;font-family:inherit;background:#fff;outline:none}
+.add-form .unit-ai{width:65px;border:1px solid var(--border);border-radius:8px;padding:8px 6px;font-size:13px;font-family:inherit;outline:none;text-align:center}
+.add-form .unit-ai:focus{border-color:var(--blue)}
+.addbtn{background:var(--navy);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+/* modal */
+.modal-ov{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:100;display:flex;align-items:flex-end;justify-content:center;padding:0}
+.modal-box{background:#fff;width:100%;max-width:640px;border-radius:18px 18px 0 0;padding:18px 18px calc(20px + var(--sb));max-height:84vh;overflow:auto;animation:slideup .22s ease}
+@keyframes slideup{from{transform:translateY(40px);opacity:.4}to{transform:translateY(0);opacity:1}}
+.modal-h{display:flex;align-items:flex-start;gap:8px;margin-bottom:4px}
+.modal-tag{font-size:11px;font-weight:800;color:var(--blue);background:#eff6ff;border-radius:20px;padding:3px 10px;flex:none}
+.modal-title{font-size:16px;font-weight:800;color:var(--ink);flex:1;line-height:1.4}
+.man-text{font-size:13.5px;line-height:1.75;color:#374151;white-space:pre-wrap;background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:13px 14px;margin:12px 0}
+.man-empty{font-size:13px;color:var(--sub);background:#f8fafc;border:1px dashed var(--border);border-radius:10px;padding:16px 14px;margin:12px 0;text-align:center}
+.modal-ta{width:100%;min-height:140px;border:1px solid var(--blue);border-radius:10px;padding:12px;font-size:14px;font-family:inherit;line-height:1.7;outline:none;resize:vertical;margin:12px 0}
+.modal-btns{display:flex;gap:8px}
+.mbtn{flex:1;border-radius:10px;padding:11px;font-size:14px;font-weight:700;cursor:pointer;border:1.5px solid var(--border);background:#fff;color:var(--sub)}
+.mbtn.pri{background:var(--navy);color:#fff;border-color:var(--navy)}
+/* progress */
+.prog-wrap{padding:12px 14px;background:#f8fafc;border-top:1px solid var(--border)}
+.prog-bar{height:7px;background:#e2e8f0;border-radius:4px;overflow:hidden;margin-top:5px}
+.prog-fill{height:100%;border-radius:4px;transition:width .3s;background:linear-gradient(90deg,var(--green),#22c55e)}
+.prog-lbl{display:flex;justify-content:space-between;font-size:12px;color:var(--sub)}
+/* submit */
+.submit-area{padding:14px 0 4px;display:flex;flex-direction:column;gap:8px}
+.submit-btn{width:100%;background:var(--navy);color:#fff;border:none;border-radius:12px;padding:14px;font-size:15.5px;font-weight:800;cursor:pointer}
+.submit-btn:hover{background:#142b45}
+.print-btn{width:100%;background:#fff;color:var(--navy);border:1.5px solid var(--border);border-radius:12px;padding:12px;font-size:14px;font-weight:700;cursor:pointer}
+.print-btn:hover{background:#f0f6ff}
+.copy-done{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:600;text-align:center;display:none}
+/* manager */
+.mgr-today{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:15px;margin:12px 0}
+.mgr-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.shift-card{border:1px solid var(--border);border-radius:10px;padding:11px;display:flex;flex-direction:column}
+.shift-card .slbl{font-size:11.5px;font-weight:700;color:var(--sub);margin-bottom:4px}
+.shift-card .srate{font-size:26px;font-weight:800;line-height:1}
+.srate-bar{height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden;margin-top:7px}
+.srate-fill{height:100%;border-radius:3px}
+.smiss{font-size:12px;color:var(--red);margin-top:5px}
+.sall{font-size:12px;color:var(--green);font-weight:700;margin-top:5px}
+.scard-staff{font-size:11.5px;color:var(--sub);margin-top:7px;padding-top:7px;border-top:1px dashed var(--border)}
+.approve-btn{margin-top:8px;width:100%;background:var(--blue);color:#fff;border:none;border-radius:9px;padding:9px;font-size:12.5px;font-weight:800;cursor:pointer}
+.approve-btn:hover{background:#1d4ed8}
+.approved-tag{margin-top:8px;background:#ecfdf5;border:1px solid #a7f3d0;color:#047857;border-radius:9px;padding:7px 9px;font-size:11.5px;font-weight:700;text-align:center;line-height:1.4}
+/* calendar */
+.cal-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin:12px 0}
+.cal-title{font-size:13px;font-weight:800;color:var(--navy);margin-bottom:10px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.cal-cell{border-radius:8px;padding:6px 2px;text-align:center;cursor:pointer;border:2px solid transparent}
+.cal-cell.sel{border-color:var(--navy)}
+.cal-cell .dow{font-size:9.5px;color:var(--sub);font-weight:600;margin-bottom:3px}
+.cal-cell .cbar{width:28px;height:12px;border-radius:3px;margin:0 auto 2px;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.bg{background:#dcfce7;color:#166534}.ba{background:#fef3c7;color:#92400e}.br{background:#fee2e2;color:#991b1b}.be{background:#f1f5f9;color:#94a3b8}
+.cal-cell .cdl{font-size:9.5px;color:var(--sub);margin-top:2px}
+/* detail */
+.det-panel{background:#f8fafc;border:1px solid var(--border);border-radius:12px;padding:14px;margin:0 0 12px}
+.det-hd{font-size:12px;font-weight:700;color:var(--sub);margin-bottom:10px}
+.det-meta{font-size:12px;color:var(--sub);margin:2px 0}
+.det-approved{font-size:12px;font-weight:700;color:#047857;margin:3px 0 2px}
+.det-cat{margin-bottom:8px}
+.det-cn{font-size:12px;font-weight:700;color:var(--navy);margin:8px 0 4px}
+.det-item{font-size:13px;display:flex;align-items:center;gap:5px;padding:1px 0}
+.dok::before{content:"✓";color:var(--green);font-weight:700}
+.dng::before{content:"✗";color:var(--red);font-weight:700}
+.dng{color:var(--red);font-weight:600}
+/* footer */
+.footer-bar{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);padding:10px 16px calc(10px + var(--sb));display:flex;gap:8px;z-index:60}
+.f-view{flex:2;display:flex;gap:6px}
+.f-lang{flex:1;display:flex;gap:4px}
+.view-btn,.f-lang button{flex:1;font-size:12.5px;font-weight:700;border:1.5px solid var(--border);border-radius:9px;padding:9px 4px;background:#fff;cursor:pointer;color:var(--sub)}
+.view-btn.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.f-lang button.on{border-color:var(--navy);color:var(--navy);background:#f0f4ff}
+@media print{
+  header,.shift-tabs,.demo-note,.footer-bar,.submit-area,.item-acts,.reorder,.man-edit-btn,.modal-ov,.how-btn,.cam-btn,.temp-how{display:none!important}
+  body{padding:0;background:#fff}
+  .cat{border:1px solid #ccc;page-break-inside:avoid;border-radius:0}
+  #view-manager,.co-banner{display:none!important}
+  .edit-btn,.del-btn,.add-form{display:none!important}
+}
+</style>
+</head>
+<body>
+<header><div class="wrap hd"><h1 id="hd-title">開店・閉店チェックリスト</h1><span class="badge">DEMO</span></div></header>
+<div class="shift-tabs" id="shift-tabs">
+  <button class="st on" id="st-open" onclick="setShift('open')"><span id="st-open-lbl">🌅 開店チェック</span></button>
+  <button class="st" id="st-close" onclick="setShift('close')"><span id="st-close-lbl">🌙 閉店チェック</span></button>
+</div>
+<div class="wrap">
+  <div class="demo-note" id="demo-note"></div>
+  <div id="view-staff">
+    <div id="co-banner"></div>
+    <div id="checklist-body"></div>
+    <div class="submit-area" id="submit-area"></div>
+  </div>
+  <div id="view-manager" style="display:none">
+    <div class="mgr-today" id="mgr-today"></div>
+    <div class="cal-section"><div class="cal-title" id="cal-title"></div><div class="cal-grid" id="cal-grid"></div></div>
+    <div class="det-panel" id="det-panel" style="display:none"></div>
+  </div>
+</div>
+<div class="footer-bar">
+  <div class="f-view">
+    <button class="view-btn on" id="fb-staff" onclick="switchView('staff')"><span id="fb-sl">📋 記録</span></button>
+    <button class="view-btn" id="fb-mgr" onclick="switchView('manager')"><span id="fb-ml">👔 確認</span></button>
+  </div>
+  <div class="f-lang">
+    <button class="on" onclick="setLang('ja')">日</button>
+    <button onclick="setLang('en')">EN</button>
+    <button onclick="setLang('zh')">中</button>
+  </div>
+</div>
+<div class="modal-ov" id="manual-modal" style="display:none"><div class="modal-box" id="manual-box"></div></div>
+<div class="modal-ov" id="course-modal" style="display:none"><div class="modal-box" id="course-box"></div></div>
+<script>
+// ── UI strings ────────────────────────────────────────────────
+const UI={
+ja:{title:'開店・閉店チェックリスト',shiftO:'🌅 開店チェック',shiftC:'🌙 閉店チェック',
+  demo:'<b style="color:var(--navy)">サンプルデータのデモです。</b>架空の店舗「中華ダイニング 鳳来（デモ）」。',
+  vStaff:'📋 記録',vMgr:'👔 確認',subO:'✅ 開店チェックを送信',subC:'✅ 閉店チェックを送信',
+  print:'🖨 HACCP記録として印刷',copied:'報告を送信しました！管理者の確認待ちです（テキストもコピー済み）。',
+  calT:'過去7日間の記録',today:'今日',miss:'未チェック',allOk:'全項目チェック済み ✓',
+  norec:'記録なし',prog:'完了',rate:'完了率',editBtn:'✏ 編集',doneBtn:'✓ 完了',
+  addItem:'＋ 項目追加',addPh:'項目名を入力',typeC:'チェック',typeQ:'数量あり',
+  unitPh:'単位',hoRes:'明日の予約状況',hoMemo:'スタッフへの申し送り',hoMiss:'未完了・懸念事項',
+  coTitle:'前日閉店からの引き継ぎ',coRes:'予約状況',coMemo:'申し送り',coMiss:'前日未完了',
+  staffLbl:'担当者',staffPh:'記入者の名前を入力',
+  howBtn:'やり方を見る',photoBtn:'写真で報告',photoRetake:'撮り直し',photoRemove:'取消',
+  manTag:'やり方',manClose:'閉じる',manEdit:'✏ 手順を編集',manSave:'保存',manCancel:'キャンセル',
+  manEmpty:'この項目の手順メモはまだありません。「手順を編集」から追加できます。',manPh:'手順・コツ・注意点を入力してください',
+  resAdd:'＋ 予約を追加',resName:'予約名',resPeople:'人数',resType:'内容',resCh:'予約媒体',
+  resAla:'アラカルト',resCourse:'コース',resNamePh:'例：田中様',resEmpty:'予約はまだありません。「予約を追加」で登録できます。',resPpl:'名',resCnt:'件',
+  coursePick:'コース名',courseSelPh:'コースを選択',courseOther:'その他（手入力）',coursePh:'コース名を入力',
+  courseMgr:'コース編集',courseMgrTitle:'コース内容の登録',courseAdd:'＋ コースを追加',courseEmpty:'コースが登録されていません。',coursePlace:'例：特選コース 8,000円',
+  channels:['電話','食べログ','ぐるなび','一休','ホットペッパー','HP','その他'],
+  approveBtn:'✓ 確認する（管理者）',approvedLbl:'確認済み',byLbl:'担当',
+  units:['g','kg','ml','L','本','個','枚','合','人前','ポーション','皿'],
+  cats:{hygiene:'衛生管理',haccp:'HACCP温度記録',reservation:'予約状況',kitchen:'キッチン',drink:'ドリンク',hall:'ホール',facility:'設備・外観',handover:'明日の予約・申し送り'}},
+en:{title:'Opening & Closing Checklist',shiftO:'🌅 Opening',shiftC:'🌙 Closing',
+  demo:'<b style="color:var(--navy)">Demo with sample data.</b> Fictional store "Chinese Dining Hourai (Demo)".',
+  vStaff:'📋 Staff',vMgr:'👔 Manager',subO:'✅ Submit Opening Report',subC:'✅ Submit Closing Report',
+  print:'🖨 Print as HACCP Record',copied:'Report submitted! Awaiting manager approval (text also copied).',
+  calT:'Last 7 Days',today:'Today',miss:'Unchecked',allOk:'All items checked ✓',
+  norec:'No record',prog:'Done',rate:'Completion',editBtn:'✏ Edit',doneBtn:'✓ Done',
+  addItem:'＋ Add Item',addPh:'Item name',typeC:'Check',typeQ:'With Qty',
+  unitPh:'Unit',hoRes:"Tomorrow's reservations",hoMemo:'Staff handover notes',hoMiss:'Unfinished / Concerns',
+  coTitle:'Handover from Last Night',coRes:'Reservations',coMemo:'Notes',coMiss:'Unfinished items',
+  staffLbl:'In charge',staffPh:'Enter your name',
+  howBtn:'View how-to',photoBtn:'Report with photo',photoRetake:'Retake',photoRemove:'Remove',
+  manTag:'How-to',manClose:'Close',manEdit:'✏ Edit steps',manSave:'Save',manCancel:'Cancel',
+  manEmpty:'No how-to notes yet. Add them via "Edit steps".',manPh:'Enter steps, tips, and cautions',
+  resAdd:'＋ Add reservation',resName:'Name',resPeople:'Party',resType:'Type',resCh:'Channel',
+  resAla:'A la carte',resCourse:'Course',resNamePh:'e.g. Tanaka',resEmpty:'No reservations yet. Use "Add reservation".',resPpl:' ppl',resCnt:'',
+  coursePick:'Course',courseSelPh:'Select course',courseOther:'Other (type)',coursePh:'Enter course name',
+  courseMgr:'Edit courses',courseMgrTitle:'Course presets',courseAdd:'＋ Add course',courseEmpty:'No courses registered.',coursePlace:'e.g. Premium Course ¥8,000',
+  channels:['Phone','Tabelog','Gurunavi','Ikyu','HotPepper','Website','Other'],
+  approveBtn:'✓ Approve (Manager)',approvedLbl:'Approved',byLbl:'By',
+  units:['g','kg','ml','L','pcs','bottles','sheets','portions'],
+  cats:{hygiene:'Hygiene',haccp:'HACCP Temp Log',reservation:'Reservations',kitchen:'Kitchen',drink:'Drinks',hall:'Hall',facility:'Facilities',handover:'Tomorrow & Handover'}},
+zh:{title:'营业前后检查清单',shiftO:'🌅 开店检查',shiftC:'🌙 关店检查',
+  demo:'<b style="color:var(--navy)">示例数据演示版本。</b>虚构店铺"中华餐厅 凤来（演示）"。',
+  vStaff:'📋 记录',vMgr:'👔 确认',subO:'✅ 提交开店报告',subC:'✅ 提交关店报告',
+  print:'🖨 打印为HACCP记录',copied:'报告已提交！等待管理者确认（文本也已复制）。',
+  calT:'最近7天记录',today:'今天',miss:'未确认',allOk:'所有项目已确认 ✓',
+  norec:'暂无记录',prog:'已完成',rate:'完成率',editBtn:'✏ 编辑',doneBtn:'✓ 完成',
+  addItem:'＋ 添加项目',addPh:'输入项目名称',typeC:'确认项',typeQ:'含数量',
+  unitPh:'单位',hoRes:'明日预约情况',hoMemo:'员工交接事项',hoMiss:'未完成·注意事项',
+  coTitle:'昨日关店交接内容',coRes:'预约情况',coMemo:'交接事项',coMiss:'未完成项目',
+  staffLbl:'负责人',staffPh:'请输入记录人姓名',
+  howBtn:'查看操作说明',photoBtn:'拍照报告',photoRetake:'重拍',photoRemove:'取消',
+  manTag:'操作说明',manClose:'关闭',manEdit:'✏ 编辑步骤',manSave:'保存',manCancel:'取消',
+  manEmpty:'该项目暂无操作说明。可通过"编辑步骤"添加。',manPh:'请输入步骤、要点和注意事项',
+  resAdd:'＋ 添加预约',resName:'预约名',resPeople:'人数',resType:'内容',resCh:'预约媒体',
+  resAla:'单点',resCourse:'套餐',resNamePh:'例：田中先生',resEmpty:'暂无预约。请用"添加预约"登记。',resPpl:'人',resCnt:'件',
+  coursePick:'套餐名称',courseSelPh:'选择套餐',courseOther:'其他（手动输入）',coursePh:'请输入套餐名称',
+  courseMgr:'编辑套餐',courseMgrTitle:'套餐内容登记',courseAdd:'＋ 添加套餐',courseEmpty:'未登记套餐。',coursePlace:'例：特选套餐 8,000日元',
+  channels:['电话','Tabelog','Gurunavi','一休','HotPepper','官网','其他'],
+  approveBtn:'✓ 确认（管理者）',approvedLbl:'已确认',byLbl:'负责',
+  units:['g','kg','ml','L','个','瓶','张','份'],
+  cats:{hygiene:'卫生管理',haccp:'HACCP温度记录',reservation:'预约情况',kitchen:'厨房',drink:'饮料',hall:'大厅',facility:'设施·外观',handover:'明日预约·交接'}}
+};
+
+// ── Item translations ─────────────────────────────────────────
+const IT={
+oh1:{ja:'手洗い・消毒の実施確認',en:'Handwashing & sanitizing confirmed',zh:'洗手消毒确认'},
+oh2:{ja:'スタッフの健康状態チェック',en:'Staff health check',zh:'员工健康状态检查'},
+oh3:{ja:'ユニフォーム・身だしなみ確認',en:'Uniform & appearance check',zh:'制服及仪容检查'},
+oa1:{ja:'冷蔵庫温度',en:'Refrigerator temp',zh:'冰箱温度'},
+oa2:{ja:'冷凍庫温度',en:'Freezer temp',zh:'冷冻库温度'},
+oa3:{ja:'加熱調理の中心温度',en:'Core cooking temp',zh:'加热中心温度'},
+oa4:{ja:'食材の賞味期限チェック',en:'Ingredient expiry check',zh:'食材保质期检查'},
+ok1:{ja:'調理器具・まな板の洗浄確認',en:'Utensils & cutting boards cleaned',zh:'炊具及砧板清洁确认'},
+ok2:{ja:'スープ・だしの仕込み',en:'Soup / stock prep',zh:'汤底·高汤备料'},
+ok3:{ja:'ライス・米の炊き出し',en:'Rice prep',zh:'米饭备料'},
+ok4:{ja:'冷蔵庫・冷凍庫の整理確認',en:'Fridge & freezer organized',zh:'冰箱整理确认'},
+ok5:{ja:'食材の在庫・発注状況確認',en:'Stock & orders checked',zh:'食材库存及订货确认'},
+od1:{ja:'製氷機・氷の確認',en:'Ice machine & ice check',zh:'制冰机及冰块确认'},
+od2:{ja:'ドリンク仕込み（シロップ・割材等）',en:'Drink prep (syrups, mixers)',zh:'饮料备料（糖浆等）'},
+od3:{ja:'グラス・カトラリーの補充確認',en:'Glasses & cutlery replenished',zh:'杯具及餐具补充确认'},
+od4:{ja:'アルコール類・冷蔵在庫の確認',en:'Alcohol & chilled stock check',zh:'酒类及冷藏库存确认'},
+ol1:{ja:'テーブルセット・席の整備',en:'Tables set & arranged',zh:'餐桌摆设整理'},
+ol2:{ja:'メニュー・POPの確認・補充',en:'Menus & POP materials checked',zh:'菜单及宣传品确认'},
+ol3:{ja:'レジ釣り銭の確認（¥10,000〜）',en:'Cash register float checked',zh:'收银机备用金确认'},
+ol4:{ja:'本日の予約確認・席割り',en:"Today's reservations & seating confirmed",zh:'当日预约及座位安排确认'},
+ol5:{ja:'BGM・照明の設定',en:'BGM & lighting set',zh:'背景音乐及照明设置'},
+of1:{ja:'開錠・外観・看板の確認',en:'Unlocked & exterior / signage checked',zh:'开锁及外观招牌确认'},
+of2:{ja:'POSシステムの起動確認',en:'POS system started',zh:'POS系统启动确认'},
+of3:{ja:'換気・空調の確認',en:'Ventilation & AC checked',zh:'通风及空调确认'},
+of4:{ja:'トイレ清掃・備品補充確認',en:'Restroom cleaned & supplies replenished',zh:'洗手间清洁及备品补充'},
+ch1:{ja:'残食・廃棄物の処理確認',en:'Food waste & garbage disposed',zh:'剩食及废弃物处理确认'},
+ch2:{ja:'手洗い・消毒設備の補充確認',en:'Sanitizer supplies replenished',zh:'洗手消毒用品补充确认'},
+ch3:{ja:'アレルゲン食材の保管確認',en:'Allergen ingredient storage confirmed',zh:'过敏原食材保存确认'},
+ca1:{ja:'冷蔵庫温度（最終確認）',en:'Refrigerator temp (final)',zh:'冰箱温度（最终确认）'},
+ca2:{ja:'冷凍庫温度（最終確認）',en:'Freezer temp (final)',zh:'冷冻库温度（最终确认）'},
+ca3:{ja:'食材のラベル・日付記入確認',en:'Ingredient labels & dates confirmed',zh:'食材标签及日期确认'},
+ca4:{ja:'賞味期限切れ食材の処理確認',en:'Expired ingredients disposed',zh:'过期食材处理确认'},
+ck1:{ja:'調理器具・まな板の洗浄・消毒',en:'Utensils & boards washed & sanitized',zh:'炊具及砧板清洗消毒'},
+ck2:{ja:'厨房床・壁の清掃',en:'Kitchen floor & walls cleaned',zh:'厨房地板及墙壁清扫'},
+ck3:{ja:'グリーストラップの確認',en:'Grease trap checked',zh:'油脂分离器确认'},
+ck4:{ja:'翌日仕込み食材（品目・数量）',en:'Prep needed tomorrow (item & qty)',zh:'明日备料（品名·数量）'},
+ck5:{ja:'ガスコンロ・フライヤーの消火確認',en:'Gas stove & fryer turned off',zh:'煤气炉及炸炉熄火确认'},
+cd1:{ja:'ドリンクカウンターの清掃',en:'Drink counter cleaned',zh:'饮料台清洁'},
+cd2:{ja:'翌日のドリンク仕込み（品目・数量）',en:'Drink prep for tomorrow (item & qty)',zh:'明日饮料备料（品名·数量）'},
+cd3:{ja:'製氷機の清掃・電源確認',en:'Ice machine cleaned & power checked',zh:'制冰机清洁及电源确认'},
+cd4:{ja:'ボトル類の在庫確認・補充',en:'Bottle stock checked & replenished',zh:'瓶装库存确认及补充'},
+cl1:{ja:'テーブル・椅子の清拭',en:'Tables & chairs wiped down',zh:'桌椅擦拭'},
+cl2:{ja:'床清掃（掃除機・モップ）',en:'Floor vacuumed & mopped',zh:'地板清扫（吸尘器·拖把）'},
+cl3:{ja:'窓・鏡の汚れ確認',en:'Windows & mirrors checked',zh:'窗户及镜子污迹检查'},
+cl4:{ja:'トイレの最終清掃・備品補充',en:'Restroom final clean & top-up',zh:'洗手间最终清洁及备品补充'},
+cf1:{ja:'消灯確認（厨房・ホール・トイレ）',en:'Lights off (kitchen, hall, restroom)',zh:'关灯确认（厨房·大厅·洗手间）'},
+cf2:{ja:'ガス元栓の確認',en:'Gas main valve off',zh:'煤气总阀关闭确认'},
+cf3:{ja:'空調・換気扇のOFF確認',en:'AC & ventilation off',zh:'空调及通风扇关闭确认'},
+cf4:{ja:'POS締め・売上確認',en:'POS closed & sales confirmed',zh:'POS结算及销售额确认'},
+cf5:{ja:'施錠確認（全ドア・窓）',en:'All doors & windows locked',zh:'全部门窗上锁确认'},
+cf6:{ja:'防犯設備の確認',en:'Security system checked',zh:'防盗设备确认'},
+};
+
+// ── How-to manuals (seed) ──────────────────────────────────────
+const MAN={
+oh1:{ja:'① 手首・指の間・爪・親指まで石けんで30秒以上洗う\n② 流水でしっかりすすぐ\n③ ペーパータオルで拭く\n④ アルコールを手全体に擦り込む\n\n※ トイレ後・生肉に触れた後・休憩明けは必ず再度実施',
+     en:'1. Wash with soap 30s+ (wrists, between fingers, nails, thumbs)\n2. Rinse under running water\n3. Dry with a paper towel\n4. Rub alcohol over the whole hand\n\nRepeat after restroom, raw meat, or breaks.',
+     zh:'① 用肥皂洗手30秒以上（手腕、指缝、指甲、拇指）\n② 流水彻底冲洗\n③ 用纸巾擦干\n④ 酒精消毒全手\n\n※ 如厕后、接触生肉后、休息后务必再次执行'},
+oa1:{ja:'冷蔵庫は 10℃以下（推奨3〜5℃）が基準。\n① 庫内温度計の数字を読む\n② ドアを長く開けない\n③ 10℃を超える場合はすぐ管理者へ連絡',
+     en:'Fridge must be ≤10℃ (ideal 3–5℃).\n1. Read the in-fridge thermometer\n2. Don’t leave the door open\n3. If over 10℃, contact the manager immediately',
+     zh:'冰箱基准为10℃以下（推荐3〜5℃）。\n① 读取箱内温度计数值\n② 不要长时间开门\n③ 超过10℃立即联系管理者'},
+oa3:{ja:'加熱の中心温度は 75℃で1分以上 が基準\n（二枚貝など85〜90℃で90秒以上）。\n\n食品の中心部に温度計を刺して計測する。',
+     en:'Core temp must reach 75℃ for 1min+ (bivalves 85–90℃ for 90s+).\n\nInsert the probe into the center of the food.',
+     zh:'加热中心温度基准为75℃持续1分钟以上\n（贝类85〜90℃持续90秒以上）。\n\n将温度计插入食品中心测量。'},
+ok2:{ja:'① 前日の残量を確認\n② 当日の予約・客数から必要量を逆算\n③ 寸胴で炊き出す\n④ 仕込んだ量を数量欄に記録',
+     en:'1. Check yesterday’s leftover\n2. Estimate the needed amount from today’s bookings\n3. Cook in the stockpot\n4. Log the prepped amount in the qty field',
+     zh:'① 确认前日剩余量\n② 根据当日预约人数估算所需量\n③ 用汤桶熬制\n④ 在数量栏记录备料量'},
+ol3:{ja:'釣り銭は合計 ¥10,000 を基準に金種を確認。\n千円札・小銭が不足していれば、開店前に両替しておく。',
+     en:'Register float should total ¥10,000.\nExchange for small bills/coins before opening if short.',
+     zh:'收银备用金合计基准为¥10,000。\n千元钞或零钱不足时，开店前提前兑换。'},
+of2:{ja:'① 本体の電源を入れる\n② レジアプリを起動\n③ 前日の締めが完了しているか確認\n④ ドロワーに釣り銭をセット',
+     en:'1. Power on the terminal\n2. Launch the POS app\n3. Confirm the previous day was closed out\n4. Set the cash float in the drawer',
+     zh:'① 开启主机电源\n② 启动收银应用\n③ 确认前日已结算\n④ 在钱箱中放入备用金'},
+cf2:{ja:'厨房の元栓レバーを「閉」（配管と直角）にする。\nコンロ・フライヤーの個別栓も合わせて確認。',
+     en:'Turn the kitchen gas main lever to OFF (perpendicular to the pipe).\nAlso check individual stove / fryer valves.',
+     zh:'将厨房燃气总阀拉杆置于"关"（与管道垂直）。\n同时确认炉灶、炸炉的独立阀门。'},
+cf5:{ja:'施錠は 裏口 → 厨房窓 → 客席窓 → 正面入口 の順で。\n最後にシャッターを下ろして確認する。',
+     en:'Lock in order: back door → kitchen window → dining windows → front entrance.\nLower the shutter last and confirm.',
+     zh:'上锁顺序：后门 → 厨房窗 → 客席窗 → 正门。\n最后拉下卷帘门并确认。'},
+};
+
+// ── Default items ──────────────────────────────────────────────
+const DI={
+open:{
+  hygiene:[{id:'oh1',t:'c'},{id:'oh2',t:'c'},{id:'oh3',t:'c'}],
+  haccp:[{id:'oa1',t:'t',ok:10,rev:false},{id:'oa2',t:'t',ok:-15,rev:false},{id:'oa3',t:'t',ok:75,rev:true},{id:'oa4',t:'c'}],
+  kitchen:[{id:'ok1',t:'c'},{id:'ok2',t:'q',unit:'L'},{id:'ok3',t:'q',unit:'合'},{id:'ok4',t:'c'},{id:'ok5',t:'c'}],
+  drink:[{id:'od1',t:'c'},{id:'od2',t:'q',unit:'ml'},{id:'od3',t:'c'},{id:'od4',t:'c'}],
+  hall:[{id:'ol1',t:'c'},{id:'ol2',t:'c'},{id:'ol3',t:'c'},{id:'ol4',t:'c'},{id:'ol5',t:'c'}],
+  facility:[{id:'of1',t:'c'},{id:'of2',t:'c'},{id:'of3',t:'c'},{id:'of4',t:'c'}],
+},
+close:{
+  hygiene:[{id:'ch1',t:'c'},{id:'ch2',t:'c'},{id:'ch3',t:'c'}],
+  haccp:[{id:'ca1',t:'t',ok:10,rev:false},{id:'ca2',t:'t',ok:-15,rev:false},{id:'ca3',t:'c'},{id:'ca4',t:'c'}],
+  kitchen:[{id:'ck1',t:'c'},{id:'ck2',t:'c'},{id:'ck3',t:'c'},{id:'ck4',t:'q',unit:'g'},{id:'ck5',t:'c'}],
+  drink:[{id:'cd1',t:'c'},{id:'cd2',t:'q',unit:'本'},{id:'cd3',t:'c'},{id:'cd4',t:'c'}],
+  hall:[{id:'cl1',t:'c'},{id:'cl2',t:'c'},{id:'cl3',t:'c'},{id:'cl4',t:'c'}],
+  facility:[{id:'cf1',t:'c'},{id:'cf2',t:'c'},{id:'cf3',t:'c'},{id:'cf4',t:'c'},{id:'cf5',t:'c'},{id:'cf6',t:'c'}],
+  handover:[],
+},
+};
+const CAT_OPEN=['hygiene','haccp','reservation','kitchen','drink','hall','facility'];
+const CAT_CLOSE=['hygiene','haccp','kitchen','drink','hall','facility','handover'];
+const CAT_ICON={hygiene:'🧼',haccp:'🌡',reservation:'📅',kitchen:'🍳',drink:'🍶',hall:'🍽',facility:'🔑',handover:'📋'};
+const DEFAULT_COURSES=['特選コース 8,000円','宴会コース 6,500円（飲み放題付）','スタンダードコース 5,000円','ランチコース 2,800円'];
+const DEFAULT_RESV=[{name:'田中様',people:'4',type:'c',course:'特選コース 8,000円',chI:1},{name:'鈴木会社様',people:'6',type:'c',course:'宴会コース 6,500円（飲み放題付）',chI:0},{name:'佐藤様',people:'2',type:'a',course:'',chI:3}];
+
+// ── State ─────────────────────────────────────────────────────
+let lang=localStorage.getItem('cl-lang')||'ja';
+let shift='open', view='staff';
+let editModes={}, checked={}, tempVals={}, qtyVals={}, photos={};
+let hoVals={res:'',memo:'',concerns:''};
+let staffName='', resList=[];
+let selDate=null, manualCtx=null;
+
+const u=()=>UI[lang];
+function itxt(item){
+  if(item.customText) return item.customText;
+  return IT[item.id]?.[lang]||IT[item.id]?.ja||item.id;
+}
+function manText(item){
+  if(!item) return '';
+  if(item.manual!==undefined) return item.manual;
+  return MAN[item.id]?.[lang]||MAN[item.id]?.ja||'';
+}
+function getItems(s){
+  const raw=localStorage.getItem('cl-items-'+s);
+  return raw?JSON.parse(raw):JSON.parse(JSON.stringify(DI[s]));
+}
+function saveItems(s,items){localStorage.setItem('cl-items-'+s,JSON.stringify(items));}
+function getCourses(){const raw=localStorage.getItem('cl-courses');return raw?JSON.parse(raw):DEFAULT_COURSES.slice();}
+function saveCourses(arr){localStorage.setItem('cl-courses',JSON.stringify(arr));}
+function todayKey(){return new Date().toISOString().slice(0,10);}
+function dateStr(n){const d=new Date();d.setDate(d.getDate()-n);return d.toISOString().slice(0,10);}
+function fmtTime(iso){try{return new Date(iso).toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});}catch(e){return'';}}
+function fmtDate(k){
+  const d=new Date(k+'T00:00:00'),m=d.getMonth()+1,dd=d.getDate();
+  if(lang==='en'){const mn=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return mn[d.getMonth()]+' '+dd;}
+  if(lang==='zh') return m+'月'+dd+'日';
+  return m+'/'+dd;
+}
+function dow(k){
+  const d=new Date(k+'T00:00:00'),w=d.getDay();
+  if(lang==='en') return ['Su','Mo','Tu','We','Th','Fr','Sa'][w];
+  if(lang==='zh') return ['日','一','二','三','四','五','六'][w];
+  return ['日','月','火','水','木','金','土'][w];
+}
+function getRecord(s,k){const r=localStorage.getItem('cl-rec-'+s+'-'+k);return r?JSON.parse(r):null;}
+function checkCats(s){return (s==='open'?CAT_OPEN:CAT_CLOSE).filter(c=>c!=='handover'&&c!=='reservation');}
+function getRateData(s,k){
+  const rec=getRecord(s,k); if(!rec) return null;
+  const items=getItems(s);
+  const allIds=[]; checkCats(s).forEach(c=>(items[c]||[]).forEach(i=>{if(i.t==='c'||i.t==='q') allIds.push(i.id);}));
+  const total=allIds.length, done=allIds.filter(id=>rec.checked?.[id]).length;
+  return {pct:total?Math.round(done/total*100):100, done, total, missing:allIds.filter(id=>!rec.checked?.[id])};
+}
+
+// ── Render ─────────────────────────────────────────────────────
+function renderAll(){
+  document.getElementById('hd-title').textContent=u().title;
+  document.getElementById('demo-note').innerHTML=u().demo;
+  document.getElementById('st-open-lbl').textContent=u().shiftO;
+  document.getElementById('st-close-lbl').textContent=u().shiftC;
+  document.getElementById('fb-sl').textContent=u().vStaff;
+  document.getElementById('fb-ml').textContent=u().vMgr;
+  document.getElementById('st-open').classList.toggle('on',shift==='open');
+  document.getElementById('st-close').classList.toggle('on',shift==='close');
+  document.getElementById('fb-staff').classList.toggle('on',view==='staff');
+  document.getElementById('fb-mgr').classList.toggle('on',view==='manager');
+  document.querySelector('#view-staff').style.display=view==='staff'?'':'none';
+  document.querySelector('#view-manager').style.display=view==='manager'?'':'none';
+  document.querySelectorAll('.f-lang button').forEach((b,i)=>b.classList.toggle('on',['ja','en','zh'][i]===lang));
+  if(view==='staff') renderStaff();
+  else renderManager();
+  if(manualCtx) renderManualModal();
+  if(document.getElementById('course-modal').style.display==='flex') renderCourseModal();
+}
+
+function renderStaff(){
+  // carry-over banner (opening only)
+  const coBanner=document.getElementById('co-banner');
+  if(shift==='open'){
+    const yest=dateStr(1), co=localStorage.getItem('cl-co-'+yest);
+    if(co){
+      const d=JSON.parse(co), t2=fmtTime(d.submittedAt);
+      let html=`<div class="co-banner"><div class="co-title">⚠ ${u().coTitle}（${fmtDate(yest)} ${t2}）</div>`;
+      if(d.reservations) html+=`<div class="co-row"><span class="co-lbl">${u().coRes}：</span>${esc(d.reservations)}</div>`;
+      if(d.memo) html+=`<div class="co-row"><span class="co-lbl">${u().coMemo}：</span>${esc(d.memo)}</div>`;
+      if(d.concerns) html+=`<div class="co-row"><span class="co-lbl">${u().coMiss}：</span>${esc(d.concerns)}</div>`;
+      html+='</div>'; coBanner.innerHTML=html;
+    } else coBanner.innerHTML='';
+  } else coBanner.innerHTML='';
+
+  const body=document.getElementById('checklist-body'); body.innerHTML='';
+  const cats=shift==='open'?CAT_OPEN:CAT_CLOSE;
+  const items=getItems(shift);
+  let totCheck=0,doneCheck=0;
+
+  // staff name field
+  const sf=document.createElement('div'); sf.className='cat';
+  sf.innerHTML=`<div class="staff-fld"><label>${u().staffLbl}</label><input id="staff-name" value="${esc(staffName)}" placeholder="${u().staffPh}"></div>`;
+  sf.querySelector('#staff-name').oninput=e=>staffName=e.target.value;
+  body.appendChild(sf);
+
+  cats.forEach(catKey=>{
+    if(catKey==='handover'){renderHandover(body);return;}
+    if(catKey==='reservation'){renderReservation(body);return;}
+    const catItems=items[catKey]||[];
+    const checkItems=catItems.filter(i=>i.t==='c'||i.t==='q');
+    const catDone=checkItems.filter(i=>checked[i.id]).length;
+    totCheck+=checkItems.length; doneCheck+=catDone;
+    const tempItems=catItems.filter(i=>i.t==='t');
+    const div=document.createElement('div'); div.className='cat';
+    const inEdit=!!editModes[shift+'-'+catKey];
+    div.innerHTML=`<div class="cat-head">
+      <span class="cat-icon">${CAT_ICON[catKey]}</span>
+      <span class="cat-title">${u().cats[catKey]}</span>
+      ${checkItems.length?`<span class="cat-prog">${catDone}/${checkItems.length}</span>`:''}
+      <button class="edit-btn${inEdit?' on':''}" onclick="toggleEdit('${catKey}')">${inEdit?u().doneBtn:u().editBtn}</button>
+    </div>`;
+
+    // temp items
+    if(tempItems.length){
+      const td=document.createElement('div');
+      tempItems.forEach(ti=>{
+        const v=tempVals[ti.id]||'';
+        const nv=parseFloat(v); let badge='';
+        if(v!==''){const ok=ti.rev?nv>=ti.ok:nv<=ti.ok;badge=`<span class="tbadge ${ok?'tok':'tng'}">${ok?'OK':'NG'}</span>`;}
+        const hasMan=manText(ti)||MAN[ti.id];
+        const row=document.createElement('div'); row.className='temp-row';
+        row.innerHTML=`<span class="temp-lbl">${esc(itxt(ti))}${hasMan?'<button class="temp-how" title="'+u().howBtn+'">?</button>':''}</span><div class="temp-wrap">
+          <input class="temp-inp" type="number" inputmode="decimal" step="0.1" value="${esc(v)}" placeholder="${ti.rev?80:5}">
+          <span class="temp-u">℃</span>${badge}</div>`;
+        row.querySelector('input').oninput=e=>{tempVals[ti.id]=e.target.value;renderStaff();};
+        row.querySelector('input').onfocus=e=>e.target.select();
+        const hb=row.querySelector('.temp-how'); if(hb) hb.onclick=()=>openManual(catKey,ti.id);
+        td.appendChild(row);
+      });
+      div.appendChild(td);
+    }
+
+    // check/qty items
+    catItems.forEach(item=>{
+      if(item.t==='t') return;
+      const isCheck=!!checked[item.id];
+      const row=document.createElement('div'); row.className='item'+(isCheck?' ck':'');
+
+      if(inEdit){
+        const txt=itxt(item);
+        row.innerHTML=`<div class="reorder"><button class="ru" title="↑">▲</button><button class="rd" title="↓">▼</button></div>
+          <label style="cursor:default;padding-left:6px"><input class="edit-inp" value="${esc(txt)}" placeholder="${u().addPh}">
+          ${item.t==='q'?`<input class="unit-inp" style="width:60px;flex:none" value="${esc(item.unit||'g')}" placeholder="${u().unitPh}">`:''}</label>
+          <button class="man-edit-btn" title="${u().manTag}">📖</button>
+          <button class="del-btn" title="削除">×</button>`;
+        row.querySelector('.ru').onclick=()=>moveItem(catKey,item.id,-1);
+        row.querySelector('.rd').onclick=()=>moveItem(catKey,item.id,1);
+        row.querySelector('.edit-inp').oninput=e=>saveItemText(catKey,item.id,e.target.value);
+        if(item.t==='q') row.querySelector('.unit-inp').oninput=e=>saveItemUnit(catKey,item.id,e.target.value);
+        row.querySelector('.man-edit-btn').onclick=()=>openManual(catKey,item.id);
+        row.querySelector('.del-btn').onclick=()=>deleteItem(catKey,item.id);
+      } else {
+        const phb=photos[item.id]?'<span class="ph-badge">📷</span>':'';
+        row.innerHTML=`<label><span class="cb"></span><span class="item-text">${esc(itxt(item))}${phb}</span></label>
+          <div class="item-acts">
+            <button class="how-btn" title="${u().howBtn}">?</button>
+            <button class="cam-btn" title="${u().photoBtn}">📷</button>
+          </div>`;
+        row.querySelector('label').onclick=()=>{checked[item.id]=!checked[item.id];renderStaff();};
+        row.querySelector('.how-btn').onclick=e=>{e.stopPropagation();openManual(catKey,item.id);};
+        row.querySelector('.cam-btn').onclick=e=>{e.stopPropagation();takePhoto(item.id);};
+      }
+      div.appendChild(row);
+
+      // qty row
+      if(item.t==='q' && !inEdit){
+        const qr=document.createElement('div'); qr.className='qty-row';
+        const qv=qtyVals[item.id]||{v:'',u:item.unit||'g'};
+        const unitOpts=u().units.map(un=>`<option${un===qv.u?' selected':''}>${un}</option>`).join('');
+        qr.innerHTML=`<input class="qty-inp" type="number" inputmode="decimal" value="${esc(qv.v)}" placeholder="0">
+          <select class="unit-sel">${unitOpts}</select>`;
+        qr.querySelector('.qty-inp').oninput=e=>setQty(item.id,e.target.value,null);
+        qr.querySelector('.unit-sel').onchange=e=>setQty(item.id,null,e.target.value);
+        div.appendChild(qr);
+      }
+
+      // photo thumb
+      if(photos[item.id] && !inEdit){
+        const pt=document.createElement('div'); pt.className='photo-thumb';
+        pt.innerHTML=`<img src="${photos[item.id]}" alt="report photo">
+          <div class="ph-acts"><button class="ph-re">${u().photoRetake}</button><button class="ph-rm">${u().photoRemove}</button></div>`;
+        pt.querySelector('.ph-re').onclick=()=>takePhoto(item.id);
+        pt.querySelector('.ph-rm').onclick=()=>{delete photos[item.id];checked[item.id]=false;renderStaff();};
+        div.appendChild(pt);
+      }
+    });
+
+    // add form in edit mode
+    if(inEdit){
+      const af=document.createElement('div'); af.className='add-form';
+      af.innerHTML=`<input class="ai" placeholder="${u().addPh}" id="ai-${catKey}">
+        <select id="at-${catKey}"><option value="c">${u().typeC}</option><option value="q">${u().typeQ}</option></select>
+        <input class="unit-ai" id="au-${catKey}" placeholder="${u().unitPh}" style="display:none">
+        <button class="addbtn" onclick="addItem('${catKey}')">${u().addItem}</button>`;
+      af.querySelector(`#at-${catKey}`).onchange=e=>{af.querySelector(`#au-${catKey}`).style.display=e.target.value==='q'?'':'none';};
+      div.appendChild(af);
+    }
+    body.appendChild(div);
+  });
+
+  // progress bar
+  if(totCheck>0){
+    const pct=Math.round(doneCheck/totCheck*100);
+    const pg=document.createElement('div'); pg.className='cat';
+    pg.innerHTML=`<div class="prog-wrap"><div class="prog-lbl"><span>${u().prog}：${doneCheck}/${totCheck}</span><span>${pct}%</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div></div>`;
+    body.appendChild(pg);
+  }
+
+  // submit area
+  const sa=document.getElementById('submit-area');
+  sa.innerHTML=`<button class="submit-btn">${shift==='open'?u().subO:u().subC}</button>
+    <div class="copy-done" id="copy-done">${u().copied}</div>
+    <button class="print-btn" onclick="window.print()">${u().print}</button>`;
+  sa.querySelector('.submit-btn').onclick=doSubmit;
+}
+
+function renderReservation(body){
+  const div=document.createElement('div'); div.className='cat';
+  const courses=getCourses();
+  let rows='';
+  resList.forEach((r,i)=>{
+    let courseRow='';
+    if(r.type==='c'){
+      const isOther=!!r.courseOther||(r.course&&!courses.includes(r.course));
+      const opts=`<option value=""${!r.course&&!isOther?' selected':''} disabled>${u().courseSelPh}</option>`
+        +courses.map(c=>`<option value="${esc(c)}"${!isOther&&r.course===c?' selected':''}>${esc(c)}</option>`).join('')
+        +`<option value="__other__"${isOther?' selected':''}>${u().courseOther}</option>`;
+      courseRow=`<div class="resv-course"><div class="resv-fld"><label>${u().coursePick}</label>
+        <select data-i="${i}" data-f="courseSel">${opts}</select>
+        ${isOther?`<input class="course-free" data-i="${i}" data-f="course" value="${esc(r.course)}" placeholder="${u().coursePh}">`:''}</div></div>`;
+    }
+    rows+=`<div class="resv-card">
+      <div class="resv-grid">
+        <div class="resv-fld"><label>${u().resName}</label><input data-i="${i}" data-f="name" value="${esc(r.name)}" placeholder="${u().resNamePh}"></div>
+        <div class="resv-fld"><label>${u().resPeople}</label><input data-i="${i}" data-f="people" type="number" inputmode="numeric" value="${esc(r.people)}" placeholder="0"></div>
+        <div class="resv-fld"><label>${u().resType}</label><select data-i="${i}" data-f="type"><option value="a"${r.type==='a'?' selected':''}>${u().resAla}</option><option value="c"${r.type==='c'?' selected':''}>${u().resCourse}</option></select></div>
+        <div class="resv-fld"><label>${u().resCh}</label><select data-i="${i}" data-f="chI">${u().channels.map((c,ci)=>`<option value="${ci}"${r.chI===ci?' selected':''}>${esc(c)}</option>`).join('')}</select></div>
+      </div>
+      ${courseRow}
+      <button class="resv-del" data-i="${i}" title="削除">×</button>
+    </div>`;
+  });
+  div.innerHTML=`<div class="cat-head"><span class="cat-icon">${CAT_ICON.reservation}</span><span class="cat-title">${u().cats.reservation}</span>
+      <button class="edit-btn" onclick="openCourseModal()">🍽 ${u().courseMgr}</button>
+      <span class="cat-prog">${resList.length}${u().resCnt}</span></div>
+    <div class="resv-body">${rows||`<div class="resv-empty">${u().resEmpty}</div>`}</div>
+    <div class="add-form"><button class="addbtn" style="width:100%" onclick="addResv()">${u().resAdd}</button></div>`;
+  div.querySelectorAll('input[data-i],select[data-i]').forEach(el=>{
+    const i=+el.dataset.i, f=el.dataset.f;
+    if(f==='type'){el.onchange=()=>{resList[i].type=el.value;if(el.value==='a'){resList[i].course='';resList[i].courseOther=false;}renderStaff();};}
+    else if(f==='courseSel'){el.onchange=()=>{
+      if(el.value==='__other__'){resList[i].courseOther=true;resList[i].course='';}
+      else{resList[i].courseOther=false;resList[i].course=el.value;}
+      renderStaff();};}
+    else if(el.tagName==='SELECT'){el.onchange=()=>{resList[i][f]=f==='chI'?+el.value:el.value;};}
+    else{el.oninput=()=>{resList[i][f]=el.value;};}
+  });
+  div.querySelectorAll('.resv-del').forEach(b=>b.onclick=()=>{resList.splice(+b.dataset.i,1);renderStaff();});
+  body.appendChild(div);
+}
+function addResv(){resList.push({name:'',people:'',type:'a',course:'',courseOther:false,chI:0});renderStaff();}
+function courseLabel(r){return r.type==='c'?(r.course||u().resCourse):u().resAla;}
+
+function renderHandover(body){
+  const div=document.createElement('div'); div.className='cat';
+  div.innerHTML=`<div class="cat-head"><span class="cat-icon">📋</span><span class="cat-title">${u().cats.handover}</span></div>
+    <div class="ho-body">
+      <div class="ho-fld"><label>${u().hoRes}</label><input type="text" id="ho-res" value="${esc(hoVals.res)}" placeholder="例：12:00 4名 田中様、19:00 2名 佐藤様"></div>
+      <div class="ho-fld"><label>${u().hoMemo}</label><textarea id="ho-memo" placeholder="例：冷凍庫のドアの閉まりが悪い。翌朝確認を。">${esc(hoVals.memo)}</textarea></div>
+      <div class="ho-fld"><label>${u().hoMiss}</label><textarea id="ho-concerns" placeholder="例：グリーストラップの清掃が未完了">${esc(hoVals.concerns)}</textarea></div>
+    </div>`;
+  div.querySelector('#ho-res').oninput=e=>hoVals.res=e.target.value;
+  div.querySelector('#ho-memo').oninput=e=>hoVals.memo=e.target.value;
+  div.querySelector('#ho-concerns').oninput=e=>hoVals.concerns=e.target.value;
+  body.appendChild(div);
+}
+
+// ── Manual modal ───────────────────────────────────────────────
+function openManual(catKey,itemId){manualCtx={catKey,id:itemId,editing:false};document.getElementById('manual-modal').style.display='flex';renderManualModal();}
+function closeManual(){manualCtx=null;document.getElementById('manual-modal').style.display='none';}
+function renderManualModal(){
+  if(!manualCtx) return;
+  const box=document.getElementById('manual-box');
+  const item=getItems(shift)[manualCtx.catKey]?.find(i=>i.id===manualCtx.id);
+  if(!item){closeManual();return;}
+  const name=itxt(item), text=manText(item);
+  if(manualCtx.editing){
+    box.innerHTML=`<div class="modal-h"><span class="modal-tag">${u().manTag}</span><span class="modal-title">${esc(name)}</span></div>
+      <textarea class="modal-ta" id="man-ta" placeholder="${u().manPh}">${esc(text)}</textarea>
+      <div class="modal-btns"><button class="mbtn" id="man-cancel">${u().manCancel}</button><button class="mbtn pri" id="man-save">${u().manSave}</button></div>`;
+    box.querySelector('#man-cancel').onclick=()=>{manualCtx.editing=false;renderManualModal();};
+    box.querySelector('#man-save').onclick=()=>{saveManual(box.querySelector('#man-ta').value);};
+    setTimeout(()=>box.querySelector('#man-ta').focus(),50);
+  } else {
+    box.innerHTML=`<div class="modal-h"><span class="modal-tag">${u().manTag}</span><span class="modal-title">${esc(name)}</span></div>
+      ${text?`<div class="man-text">${esc(text)}</div>`:`<div class="man-empty">${u().manEmpty}</div>`}
+      <div class="modal-btns"><button class="mbtn" id="man-edit">${u().manEdit}</button><button class="mbtn pri" id="man-close">${u().manClose}</button></div>`;
+    box.querySelector('#man-edit').onclick=()=>{manualCtx.editing=true;renderManualModal();};
+    box.querySelector('#man-close').onclick=closeManual;
+  }
+}
+function saveManual(text){
+  const items=getItems(shift);
+  const item=items[manualCtx.catKey]?.find(i=>i.id===manualCtx.id);
+  if(item){item.manual=text;saveItems(shift,items);}
+  manualCtx.editing=false;renderManualModal();
+}
+
+// ── Course presets modal ──────────────────────────────────────
+function openCourseModal(){document.getElementById('course-modal').style.display='flex';renderCourseModal();}
+function closeCourseModal(){document.getElementById('course-modal').style.display='none';renderStaff();}
+function renderCourseModal(){
+  const box=document.getElementById('course-box');
+  const courses=getCourses();
+  const rows=courses.map((c,i)=>`<div class="course-row"><input data-i="${i}" value="${esc(c)}" placeholder="${u().coursePlace}"><button class="crm" data-i="${i}" title="削除">×</button></div>`).join('');
+  box.innerHTML=`<div class="modal-h"><span class="modal-tag">🍽</span><span class="modal-title">${u().courseMgrTitle}</span></div>
+    <div style="margin:12px 0">${rows||`<div class="man-empty">${u().courseEmpty}</div>`}</div>
+    <div class="add-form" style="border-top:none;padding:0 0 12px"><button class="addbtn" style="width:100%" id="course-add">${u().courseAdd}</button></div>
+    <div class="modal-btns"><button class="mbtn pri" id="course-close">${u().manClose}</button></div>`;
+  box.querySelectorAll('.course-row input').forEach(el=>{el.oninput=()=>{const arr=getCourses();arr[+el.dataset.i]=el.value;saveCourses(arr);};});
+  box.querySelectorAll('.crm').forEach(b=>b.onclick=()=>{const arr=getCourses();arr.splice(+b.dataset.i,1);saveCourses(arr);renderCourseModal();});
+  box.querySelector('#course-add').onclick=()=>{const arr=getCourses();arr.push('');saveCourses(arr);renderCourseModal();};
+  box.querySelector('#course-close').onclick=closeCourseModal;
+}
+
+// ── Photo ──────────────────────────────────────────────────────
+function takePhoto(id){
+  const inp=document.createElement('input');
+  inp.type='file'; inp.accept='image/*'; inp.capture='environment';
+  inp.onchange=e=>{const f=e.target.files&&e.target.files[0]; if(f) handlePhoto(id,f);};
+  inp.click();
+}
+function handlePhoto(id,file){
+  const r=new FileReader();
+  r.onload=e=>{
+    const img=new Image();
+    img.onload=()=>{
+      const max=640; let w=img.width,h=img.height;
+      if(w>h&&w>max){h=Math.round(h*max/w);w=max;} else if(h>=w&&h>max){w=Math.round(w*max/h);h=max;}
+      const c=document.createElement('canvas'); c.width=w; c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      photos[id]=c.toDataURL('image/jpeg',0.6);
+      checked[id]=true; renderStaff();
+    };
+    img.src=e.target.result;
+  };
+  r.readAsDataURL(file);
+}
+
+// ── Edit mode ──────────────────────────────────────────────────
+function toggleEdit(catKey){const k=shift+'-'+catKey;editModes[k]=!editModes[k];renderStaff();}
+function moveItem(catKey,id,dir){
+  const items=getItems(shift); const arr=items[catKey]; if(!arr) return;
+  const i=arr.findIndex(x=>x.id===id); if(i<0) return;
+  const j=i+dir; if(j<0||j>=arr.length) return;
+  [arr[i],arr[j]]=[arr[j],arr[i]]; saveItems(shift,items); renderStaff();
+}
+function saveItemText(catKey,itemId,text){
+  const items=getItems(shift); const item=items[catKey]?.find(i=>i.id===itemId);
+  if(item){item.customText=text;saveItems(shift,items);}
+}
+function saveItemUnit(catKey,itemId,unit){
+  const items=getItems(shift); const item=items[catKey]?.find(i=>i.id===itemId);
+  if(item){item.unit=unit;saveItems(shift,items);}
+}
+function deleteItem(catKey,itemId){
+  const items=getItems(shift);
+  if(items[catKey]) items[catKey]=items[catKey].filter(i=>i.id!==itemId);
+  saveItems(shift,items); delete checked[itemId]; delete photos[itemId]; renderStaff();
+}
+function addItem(catKey){
+  const txt=document.getElementById('ai-'+catKey)?.value.trim();
+  if(!txt) return;
+  const type=document.getElementById('at-'+catKey)?.value||'c';
+  const unit=document.getElementById('au-'+catKey)?.value.trim()||'g';
+  const items=getItems(shift);
+  if(!items[catKey]) items[catKey]=[];
+  const id='cx-'+Date.now();
+  const item={id,t:type,customText:txt}; if(type==='q') item.unit=unit;
+  items[catKey].push(item); saveItems(shift,items); renderStaff();
+}
+function setQty(id,v,u2){
+  if(!qtyVals[id]) qtyVals[id]={v:'',u:'g'};
+  if(v!==null) qtyVals[id].v=v;
+  if(u2!==null) qtyVals[id].u=u2;
+}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// ── Submit ─────────────────────────────────────────────────────
+function doSubmit(){
+  const phIds=Object.keys(photos);
+  const rec={checked:{...checked},temps:{...tempVals},qtys:{...qtyVals},photos:{...photos},staff:staffName,submittedAt:new Date().toISOString(),approved:null};
+  if(shift==='open') rec.resList=JSON.parse(JSON.stringify(resList));
+  localStorage.setItem('cl-rec-'+shift+'-'+todayKey(),JSON.stringify(rec));
+  // carry-over for closing
+  if(shift==='close'){
+    const co={reservations:hoVals.res,memo:hoVals.memo,concerns:hoVals.concerns,submittedAt:new Date().toISOString()};
+    localStorage.setItem('cl-co-'+todayKey(),JSON.stringify(co));
+  }
+  // copy text
+  let txt=`【${lang==='zh'?'中华餐厅 凤来（演示）':lang==='en'?'Hourai Demo':'中華ダイニング 鳳来（デモ）'}】\n`;
+  txt+=`${shift==='open'?u().shiftO:u().shiftC} ${fmtDate(todayKey())} ${fmtTime(new Date().toISOString())}\n`;
+  if(staffName) txt+=`${u().staffLbl}: ${staffName}\n`;
+  txt+='\n';
+  const cats=shift==='open'?CAT_OPEN:CAT_CLOSE;
+  const items=getItems(shift);
+  cats.forEach(c=>{
+    if(c==='reservation'){
+      if(!resList.length) return;
+      txt+=`▌${u().cats.reservation}\n`;
+      resList.forEach(r=>{txt+=`  ・${r.name||'-'} / ${r.people||'?'}${u().resPpl} / ${courseLabel(r)} / ${u().channels[r.chI]||''}\n`;});
+      return;
+    }
+    if(c==='handover'){txt+=`\n▌${u().cats.handover}\n`;
+      if(hoVals.res) txt+=`${u().hoRes}: ${hoVals.res}\n`;
+      if(hoVals.memo) txt+=`${u().hoMemo}: ${hoVals.memo}\n`;
+      if(hoVals.concerns) txt+=`${u().hoMiss}: ${hoVals.concerns}\n`;
+      return;}
+    txt+=`▌${u().cats[c]}\n`;
+    (items[c]||[]).forEach(i=>{
+      if(i.t==='t'){const v=tempVals[i.id]||'—'; txt+=`  📊 ${itxt(i)}: ${v}℃\n`;}
+      else{const q=qtyVals[i.id]; const ph=photos[i.id]?' 📷':''; txt+=`  ${checked[i.id]?'✅':'❌'} ${itxt(i)}${q&&q.v?` (${q.v}${q.u})`:''}${ph}\n`;}
+    });
+  });
+  navigator.clipboard.writeText(txt).catch(()=>{});
+  const el=document.getElementById('copy-done');
+  if(el){el.style.display='block';setTimeout(()=>{el.style.display='none';},4000);}
+}
+
+// ── Manager view ───────────────────────────────────────────────
+function renderManager(){
+  document.getElementById('cal-title').textContent=u().calT;
+  const td=document.getElementById('mgr-today');
+  const ro=getRateData('open',todayKey()), rc=getRateData('close',todayKey());
+  td.innerHTML=`<div class="mgr-pair">${shiftCard(u().shiftO,ro,'open',todayKey())}${shiftCard(u().shiftC,rc,'close',todayKey())}</div>`;
+
+  const grid=document.getElementById('cal-grid'); grid.innerHTML='';
+  for(let i=6;i>=0;i--){
+    const k=dateStr(i), ro2=getRateData('open',k), rc2=getRateData('close',k);
+    const cell=document.createElement('div');
+    cell.className='cal-cell'+(selDate===k?' sel':'');
+    const lbl=i===0?u().today:fmtDate(k);
+    cell.innerHTML=`<div class="dow">${dow(k)}</div><div class="cbar ${dotCls(ro2)}">${ro2?ro2.pct+'%':'—'}</div>
+      <div class="cbar ${dotCls(rc2)}">${rc2?rc2.pct+'%':'—'}</div>
+      <div class="cdl">${lbl}</div>`;
+    cell.onclick=()=>{selDate=selDate===k?null:k;renderManager();};
+    grid.appendChild(cell);
+  }
+  const dp=document.getElementById('det-panel');
+  if(selDate){
+    dp.style.display='block';
+    const ro3=getRecord('open',selDate), rc3=getRecord('close',selDate);
+    let html=`<div class="det-hd">${fmtDate(selDate)}</div>`;
+    if(ro3||rc3){
+      if(ro3) html+=recDetail('open',ro3,selDate);
+      if(rc3) html+=recDetail('close',rc3,selDate);
+    } else html+=`<div style="font-size:13px;color:var(--sub)">${u().norec}</div>`;
+    dp.innerHTML=html;
+  } else dp.style.display='none';
+}
+function shiftCard(label,rd,s,k){
+  if(!rd) return `<div class="shift-card"><div class="slbl">${label}</div><div class="srate" style="color:var(--sub);font-size:15px">${u().norec}</div></div>`;
+  const col=rd.pct===100?'var(--green)':rd.pct>=80?'var(--amber)':'var(--red)';
+  const rec=getRecord(s,k);
+  let extra='';
+  if(rec&&rec.staff) extra+=`<div class="scard-staff">${u().byLbl}：${esc(rec.staff)}</div>`;
+  if(rec){
+    if(rec.approved) extra+=`<div class="approved-tag">✓ ${u().approvedLbl}<br>${esc(rec.approved.by)} ${fmtTime(rec.approved.at)}</div>`;
+    else extra+=`<button class="approve-btn" onclick="approveRecord('${s}','${k}')">${u().approveBtn}</button>`;
+  }
+  return `<div class="shift-card"><div class="slbl">${label}</div><div class="srate" style="color:${col}">${rd.pct}%</div>
+    <div class="srate-bar"><div class="srate-fill" style="width:${rd.pct}%;background:${col}"></div></div>
+    ${rd.pct===100?`<div class="sall">${u().allOk}</div>`:`<div class="smiss">${u().miss}: ${rd.total-rd.done}</div>`}${extra}</div>`;
+}
+function approveRecord(s,k){
+  const rec=getRecord(s,k); if(!rec) return;
+  const by=lang==='zh'?'区域经理（演示）':lang==='en'?'Area Manager (Demo)':'エリアマネージャー（デモ）';
+  rec.approved={by,at:new Date().toISOString()};
+  localStorage.setItem('cl-rec-'+s+'-'+k,JSON.stringify(rec));
+  renderManager();
+}
+function dotCls(rd){if(!rd) return 'be'; return rd.pct===100?'bg':rd.pct>=80?'ba':'br';}
+function recDetail(s,rec,k){
+  const items=getItems(s);
+  const cats=s==='open'?CAT_OPEN:CAT_CLOSE;
+  let html=`<div style="font-size:12px;font-weight:700;color:var(--navy);margin:10px 0 2px">${s==='open'?u().shiftO:u().shiftC}</div>`;
+  if(rec.staff) html+=`<div class="det-meta">${u().byLbl}：${esc(rec.staff)}　${fmtTime(rec.submittedAt)}</div>`;
+  if(rec.approved) html+=`<div class="det-approved">✓ ${u().approvedLbl}（${esc(rec.approved.by)} ${fmtTime(rec.approved.at)}）</div>`;
+  cats.forEach(c=>{
+    if(c==='handover'||c==='reservation') return;
+    const ci=items[c]||[];
+    if(!ci.length) return;
+    html+=`<div class="det-cat"><div class="det-cn">${CAT_ICON[c]} ${u().cats[c]}</div><div class="det-items">`;
+    ci.forEach(i=>{
+      if(i.t==='t'){const v=rec.temps?.[i.id]||'—';html+=`<div class="det-item dok">${esc(itxt(i))}: ${v}℃</div>`;}
+      else{const ok=!!rec.checked?.[i.id];const ph=rec.photos?.[i.id]?' 📷':'';html+=`<div class="det-item ${ok?'dok':'dng'}">${esc(itxt(i))}${ph}</div>`;}
+    });
+    html+='</div></div>';
+  });
+  if(s==='open'&&rec.resList&&rec.resList.length){
+    html+=`<div class="det-cat"><div class="det-cn">${CAT_ICON.reservation} ${u().cats.reservation}</div>`;
+    rec.resList.forEach(r=>{html+=`<div class="det-item dok">${esc(r.name||'-')} / ${esc(r.people||'?')}${u().resPpl} / ${esc(courseLabel(r))} / ${esc(u().channels[r.chI]||'')}</div>`;});
+    html+='</div>';
+  }
+  return html;
+}
+
+// ── Switch ─────────────────────────────────────────────────────
+function freshState(){
+  editModes={};checked={};tempVals={};qtyVals={};photos={};
+  hoVals={res:'',memo:'',concerns:''};staffName='';
+  resList=shift==='open'?JSON.parse(JSON.stringify(DEFAULT_RESV)):[];
+}
+function setShift(s){shift=s;freshState();renderAll();}
+function switchView(v){view=v;renderAll();}
+function setLang(l){lang=l;localStorage.setItem('cl-lang',l);renderAll();}
+
+// ── Demo seed ──────────────────────────────────────────────────
+const STAFF_NAMES=['山田','佐藤','王','グエン','鈴木','チャン'];
+function seedDemo(){
+  ['open','close'].forEach(s=>{
+    const items=getItems(s);
+    const allIds=[],tids=[];
+    checkCats(s).forEach(c=>(items[c]||[]).forEach(i=>{if(i.t==='c'||i.t==='q')allIds.push(i.id);else if(i.t==='t')tids.push(i.id);}));
+    const endD=s==='open'?0:1; // open includes today (awaiting approval)
+    for(let d=6;d>=endD;d--){
+      const k=dateStr(d);
+      if(localStorage.getItem('cl-rec-'+s+'-'+k)) continue;
+      const rate=d===0?1:(0.85+Math.random()*0.15);
+      const rec={checked:{},temps:{},qtys:{},photos:{},staff:STAFF_NAMES[Math.floor(Math.random()*STAFF_NAMES.length)],
+        submittedAt:k+'T'+(s==='open'?'08':'22')+':'+(10+Math.floor(Math.random()*15)).toString().padStart(2,'0')+':00',approved:null};
+      allIds.forEach(id=>rec.checked[id]=Math.random()<rate);
+      if(d!==0&&rate<0.95){const got=allIds.filter(id=>rec.checked[id]).sort(()=>Math.random()-.5).slice(0,2);got.forEach(id=>rec.checked[id]=false);}
+      else if(d===0) allIds.forEach(id=>rec.checked[id]=true);
+      tids.forEach(id=>rec.temps[id]=s==='open'?String(3+Math.floor(Math.random()*3)):(id.indexOf('2')>=0?String(-18-Math.floor(Math.random()*4)):String(3+Math.floor(Math.random()*3))));
+      if(s==='open') rec.resList=d===0?JSON.parse(JSON.stringify(DEFAULT_RESV)):[{name:STAFF_NAMES[d%STAFF_NAMES.length]+'様',people:String(2+d%5),type:d%2?'c':'a',chI:d%6}];
+      if(d>=1) rec.approved={by:'エリアマネージャー（デモ）',at:k+'T'+(s==='open'?'09':'23')+':05:00'};
+      localStorage.setItem('cl-rec-'+s+'-'+k,JSON.stringify(rec));
+      if(s==='close'&&!localStorage.getItem('cl-co-'+k)){
+        localStorage.setItem('cl-co-'+k,JSON.stringify({reservations:d===1?'明日12:00 4名 田中様、18:30 6名 鈴木会社様':'',memo:d===2?'冷凍庫のドアが閉まりにくい。翌朝要確認。':'',concerns:'',submittedAt:k+'T22:30:00'}));
+      }
+    }
+  });
+}
+
+// ── Init ──────────────────────────────────────────────────────
+freshState();
+seedDemo();
+renderAll();
+</script>
+</body>
+</html>

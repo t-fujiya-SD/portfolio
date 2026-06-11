@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>出店シミュレーション｜デモ</title>
+<meta name="description" content="集客チャネル別の売上から月次PL・損益分岐・投資回収を試算し、立ち上げ/季節/成長を加味した5年シミュレーションをExcel出力できる出店可否シミュレーター（サンプルデータのデモ版）">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root{
+    --navy:#1c3a5e;--navy2:#27496d;--gold:#c9a84a;--ink:#1f2733;--sub:#5b6675;
+    --bg:#f4f6f8;--card:#fff;--border:#e3e9f0;--green:#1e7a3e;--amber:#b45309;--red:#c0392b;--blue:#2563eb;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",Meiryo,sans-serif;color:var(--ink);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 18px}
+  header{background:linear-gradient(120deg,var(--navy),var(--navy2));color:#fff;padding:18px 0}
+  .hd{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .hd h1{font-size:19px;font-weight:800;letter-spacing:-.01em;display:flex;align-items:center;gap:8px}
+  .badge{font-size:10.5px;font-weight:700;background:var(--gold);color:#1c2a3a;padding:3px 9px;border-radius:20px;letter-spacing:.04em}
+  .hd p{font-size:12px;color:#cdd9e8;width:100%;margin-top:2px}
+  .grid{display:grid;grid-template-columns:1.25fr 1fr;gap:20px;align-items:start;padding:22px 0 60px}
+  @media(max-width:860px){.grid{grid-template-columns:1fr}}
+  .panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px}
+  .panel + .panel{margin-top:16px}
+  .ph{font-size:13px;font-weight:800;color:var(--navy);display:flex;align-items:center;gap:7px;margin-bottom:12px}
+  .ph .n{min-width:20px;height:20px;padding:0 4px;border-radius:6px;background:var(--navy);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center}
+  .fld{margin-bottom:11px}
+  .fld:last-child{margin-bottom:0}
+  label{display:block;font-size:12px;color:var(--sub);margin-bottom:4px;font-weight:600}
+  input[type=number],input[type=text],select{width:100%;border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:14px;font-family:inherit;outline:none;background:#fff}
+  input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  .row4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .hint{font-size:11px;color:#8b95a3;margin-top:3px}
+  .toggle{display:inline-flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-left:auto}
+  .toggle button{font-size:11px;font-weight:700;padding:4px 11px;background:#fff;border:none;cursor:pointer;color:var(--sub)}
+  .toggle button.on{background:var(--navy);color:#fff}
+  .grp-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .grp-head .gt,.gt{font-size:12.5px;font-weight:700;color:var(--ink)}
+  .li-row{display:grid;grid-template-columns:1fr 116px 30px;gap:7px;margin-bottom:6px;align-items:center}
+  .iv-row{display:grid;grid-template-columns:1fr 104px 14px 52px 30px;gap:6px;margin-bottom:6px;align-items:center}
+  .iv-row .x{text-align:center;color:#9aa6b4;font-size:13px}
+  .li-row input,.iv-row input{padding:6px 8px;font-size:13px}
+  .li-del{border:none;background:#f1f3f6;color:#9aa6b4;border-radius:7px;height:30px;cursor:pointer;font-size:15px;line-height:1}
+  .li-del:hover{background:#fde8e8;color:var(--red)}
+  .addbtn{margin-top:4px;font-size:12px;font-weight:700;color:var(--blue);background:none;border:1px dashed #c7d2e0;border-radius:8px;padding:6px 12px;cursor:pointer;width:100%}
+  .addbtn:hover{background:#f0f6ff}
+  .subtotal{text-align:right;font-size:12px;color:var(--sub);margin-top:6px}
+  .subtotal b{color:var(--ink);font-size:14px}
+  /* 指数 */
+  .seas{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:6px}
+  .seas .c label{font-size:10px;margin-bottom:2px;text-align:center}
+  .seas .c input{padding:5px 2px;text-align:center;font-size:12px}
+  .ramp{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .ramp label,.seas label,.row4 label{font-weight:600}
+  /* PL table */
+  .pl{width:100%;font-size:13px;border-collapse:collapse}
+  .pl td{padding:4.5px 2px}
+  .pl td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+  .pl td.ind{color:var(--sub);padding-left:12px}
+  .pl tr.sub td{border-top:1px solid var(--border);font-weight:700}
+  .pl tr.op td{border-top:2px solid var(--navy);font-weight:800;color:var(--navy);font-size:15px;padding-top:7px}
+  /* verdict */
+  .verdict{border-radius:12px;padding:15px 17px;color:#fff;margin-bottom:14px}
+  .verdict .vt{font-size:12px;font-weight:700;opacity:.9}
+  .verdict .vm{font-size:21px;font-weight:800;margin-top:2px}
+  .verdict .vs{font-size:12.5px;margin-top:4px;opacity:.95}
+  .v-go{background:linear-gradient(120deg,#1e7a3e,#2a9d54)}
+  .v-amber{background:linear-gradient(120deg,#b45309,#d97706)}
+  .v-red{background:linear-gradient(120deg,#b3261e,#d23b30)}
+  .kpis{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
+  .kpi{border:1px solid var(--border);border-radius:10px;padding:9px 10px}
+  .kpi .l{font-size:10.5px;color:var(--sub)}
+  .kpi .v{font-size:15px;font-weight:800;letter-spacing:-.01em;margin-top:2px}
+  .pos{color:var(--green)}.neg{color:var(--red)}
+  .bar{position:relative;height:28px;background:#eef2f7;border-radius:7px;margin-top:8px;overflow:hidden}
+  .bar-fill{position:absolute;left:0;top:0;bottom:0;border-radius:7px;transition:width .25s}
+  .bar-bep{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--navy)}
+  .bar-bep span{position:absolute;top:-15px;left:50%;transform:translateX(-50%);font-size:9.5px;color:var(--navy);white-space:nowrap;font-weight:700}
+  .barwrap{margin-top:18px}
+  .barlbl{display:flex;justify-content:space-between;font-size:11px;color:var(--sub)}
+  .warn{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:12px;border-radius:9px;padding:9px 11px;margin-top:12px;display:flex;gap:7px;align-items:flex-start}
+  .warn.ok{background:#f0fdf4;border-color:#bbf7d0;color:#166534}
+  /* 5yr */
+  .yr{width:100%;font-size:12.5px;border-collapse:collapse}
+  .yr th,.yr td{padding:6px 4px;text-align:right;border-bottom:1px solid var(--border);font-variant-numeric:tabular-nums}
+  .yr th:first-child,.yr td:first-child{text-align:left}
+  .yr th{color:var(--sub);font-weight:600;font-size:11px}
+  .recov{font-size:12.5px;background:#f1f5f9;border-radius:8px;padding:8px 11px;margin-top:10px;color:#334155}
+  .dlbtn{width:100%;background:var(--navy);color:#fff;border:none;border-radius:9px;padding:11px;font-size:14px;font-weight:700;cursor:pointer;margin-top:12px}
+  .dlbtn:hover{background:#142b45}
+  .note{font-size:11.5px;color:#8b95a3;margin-top:12px;line-height:1.6}
+  .tools{display:flex;gap:8px;margin-top:10px}
+  .tools button{font-size:11.5px;font-weight:700;border:1px solid var(--border);background:#fff;border-radius:8px;padding:6px 12px;cursor:pointer;color:var(--sub)}
+  .tools button:hover{border-color:var(--navy);color:var(--navy)}
+  .demo-note{background:#fff;border:1px solid var(--border);border-left:4px solid var(--gold);border-radius:10px;padding:11px 15px;margin:18px 0 0;font-size:12.5px;color:#3a4658}
+  /* 事業計画メモ */
+  .memo-sec{padding:4px 0 56px}
+  .memo-sec>.sec-t{font-size:15px;font-weight:800;color:var(--navy);margin-bottom:4px;display:flex;align-items:center;gap:10px}
+  .memo-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:16px}
+  @media(max-width:860px){.memo-grid{grid-template-columns:1fr}}
+  textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit;outline:none;background:#fff;resize:vertical;min-height:68px;line-height:1.5}
+  textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+  .opt-tag{background:#f1f5f9;border:1px solid var(--border);border-radius:20px;font-size:11px;color:var(--sub);padding:2px 9px;font-weight:600}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap hd">
+    <h1>出店シミュレーション <span class="badge">DEMO</span></h1>
+    <p>集客チャネル別の売上から月次PL・損益分岐・投資回収を試算。立ち上げ／季節／成長を加味した5年シミュレーションをExcel出力できます。</p>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="demo-note"><b style="color:var(--navy)">これはサンプルデータで動作するデモです。</b>各項目は自由に書き換えられます。金額は「合計でざっくり」か「内訳で1行ずつ」を切替可能。表示中の数値はすべて架空の例です。</div>
+
+  <div class="grid">
+    <!-- LEFT -->
+    <div>
+      <!-- 1. 集客チャネル別売上 -->
+      <div class="panel">
+        <div class="ph"><span class="n">1</span>想定月商（集客チャネル別）</div>
+        <div class="grp-head"><span class="gt">どこから売上を取るか</span>
+          <span class="toggle" data-group="rev"><button data-mode="list" class="on">内訳</button><button data-mode="total">合計</button></span></div>
+        <div data-list="rev"></div>
+        <button class="addbtn" data-add="rev">＋ チャネルを追加</button>
+        <div data-total-wrap="rev" style="display:none"><label>想定月商（合計）</label><input type="number" data-total="rev" value="4950000" step="10000"></div>
+        <div class="subtotal">合計（標準月の想定月商）：<b data-sum="rev">¥0</b></div>
+      </div>
+
+      <!-- 2. キャパ前提 -->
+      <div class="panel">
+        <div class="ph"><span class="n">2</span>客単価・席数（捌けるかの確認）</div>
+        <div class="row2">
+          <div class="fld"><label>客単価（円）</label><input type="number" id="spend" value="3400" step="100"></div>
+          <div class="fld"><label>席数</label><input type="number" id="seats" value="30" step="1"></div>
+        </div>
+        <div class="row3">
+          <div class="fld"><label>満席率(%)</label><input type="number" id="occ" value="72" step="1"></div>
+          <div class="fld"><label>回転数/日</label><input type="number" id="turns" value="2.6" step="0.1"></div>
+          <div class="fld"><label>営業日数/月</label><input type="number" id="days" value="26" step="1"></div>
+        </div>
+        <div class="hint">※ 席数×満席率×回転×営業日 ＝ 物理的に捌ける客数。想定月商から逆算した客数と比べてチェックします。</div>
+      </div>
+
+      <!-- 3. コスト -->
+      <div class="panel">
+        <div class="ph"><span class="n">3</span>コスト（標準月）</div>
+        <div class="row2">
+          <div class="fld"><label>原価率(%)</label><input type="number" id="cogs" value="31" step="1"></div>
+          <div class="fld"><label>その他変動費率(%)</label><input type="number" id="varc" value="3" step="1"></div>
+        </div>
+        <div class="fld"><label>家賃（月）</label><input type="number" id="rent" value="600000" step="10000"></div>
+
+        <div class="grp-head" style="margin-top:6px"><span class="gt">人件費（月）</span>
+          <span class="toggle" data-group="labor"><button data-mode="list" class="on">内訳</button><button data-mode="total">合計</button></span></div>
+        <div data-list="labor"></div>
+        <button class="addbtn" data-add="labor">＋ 人件費の行を追加</button>
+        <div data-total-wrap="labor" style="display:none"><input type="number" data-total="labor" value="1750000" step="10000"></div>
+        <div class="subtotal">人件費 計：<b data-sum="labor">¥0</b></div>
+
+        <div class="fld" style="margin-top:11px"><label>水道光熱費（月）</label><input type="number" id="util" value="250000" step="10000"></div>
+        <div class="fld"><label>販促費（月）<span class="hint" style="display:inline">／ 立ち上げ期は自動で増えます</span></label><input type="number" id="promo" value="120000" step="10000"></div>
+
+        <div class="grp-head" style="margin-top:6px"><span class="gt">その他固定費（月）</span>
+          <span class="toggle" data-group="fixed"><button data-mode="list" class="on">内訳</button><button data-mode="total">合計</button></span></div>
+        <div data-list="fixed"></div>
+        <button class="addbtn" data-add="fixed">＋ その他固定費の行を追加</button>
+        <div data-total-wrap="fixed" style="display:none"><input type="number" data-total="fixed" value="130000" step="10000"></div>
+        <div class="subtotal">その他固定費 計：<b data-sum="fixed">¥0</b></div>
+      </div>
+
+      <!-- 4. 初期投資 -->
+      <div class="panel">
+        <div class="ph"><span class="n">4</span>開業時投資額</div>
+        <div class="grp-head"><span class="gt">何にいくらかかるか</span>
+          <span class="toggle" data-group="invest"><button data-mode="list" class="on">内訳</button><button data-mode="total">合計</button></span></div>
+        <div data-list="invest"></div>
+        <button class="addbtn" data-add="invest">＋ 品目を追加</button>
+        <div data-total-wrap="invest" style="display:none"><label>開業時投資額（合計）</label><input type="number" data-total="invest" value="18000000" step="100000"></div>
+        <div class="subtotal">初期投資 計：<b data-sum="invest">¥0</b></div>
+      </div>
+
+      <!-- 5. 時間変動の指数 -->
+      <div class="panel">
+        <div class="ph"><span class="n">5</span>時間による変動（立ち上げ・季節・成長）</div>
+        <p class="hint" style="margin-bottom:10px">「平均して5年間ずっと同じ」を脱して、現実的な月ごとの波を反映します（融資資料向け）。</p>
+
+        <div class="gt" style="margin-bottom:6px">① 立ち上げ（開業〜3ヶ月）</div>
+        <label style="font-weight:600">売上の立ち上がり（標準月比 %）</label>
+        <div class="ramp">
+          <div><label>1ヶ月目</label><input type="number" id="r1" value="60"></div>
+          <div><label>2ヶ月目</label><input type="number" id="r2" value="75"></div>
+          <div><label>3ヶ月目</label><input type="number" id="r3" value="90"></div>
+        </div>
+        <div class="row2" style="margin-top:8px">
+          <div class="fld"><label>立ち上げ期の販促費（標準比%）</label><input type="number" id="rPromo" value="150"></div>
+          <div class="fld"><label>立ち上げ期の人件費（標準比%）</label><input type="number" id="rLabor" value="110"></div>
+        </div>
+
+        <div class="gt" style="margin:14px 0 6px">② 季節（月別の売上係数 %）</div>
+        <select id="seasonPreset">
+          <option value="izakaya">酒類・ディナー主体（歓送迎会・忘年会で3・4・11・12月が繁忙）</option>
+          <option value="cafe">カフェ・喫茶（変動小さめ）</option>
+          <option value="lunch">ランチ主体（平日型）</option>
+          <option value="flat">平準（変動なし）</option>
+        </select>
+        <div class="seas" id="seasGrid"></div>
+        <div class="hint">平均が100%になるよう自動調整して計算します。</div>
+
+        <div class="gt" style="margin:14px 0 6px">③ 年成長率（対前年 %）</div>
+        <div class="row4">
+          <div class="fld"><label>2年目</label><input type="number" id="g2" value="8"></div>
+          <div class="fld"><label>3年目</label><input type="number" id="g3" value="5"></div>
+          <div class="fld"><label>4年目</label><input type="number" id="g4" value="3"></div>
+          <div class="fld"><label>5年目</label><input type="number" id="g5" value="2"></div>
+        </div>
+        <div class="tools"><button id="resetBtn">サンプル初期値に戻す</button></div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div>
+      <!-- 月次PL -->
+      <div class="panel">
+        <div class="ph"><span class="n">PL</span>月次損益計算書（標準月）</div>
+        <table class="pl"><tbody id="plBody"></tbody></table>
+      </div>
+
+      <!-- 判定 -->
+      <div class="panel">
+        <div class="ph"><span class="n">＝</span>判定</div>
+        <div class="verdict" id="verdict"><div class="vt">判定</div><div class="vm" id="verdictMsg">—</div><div class="vs" id="verdictSub"></div></div>
+        <div class="kpis">
+          <div class="kpi"><div class="l">標準月 営業利益</div><div class="v" id="oProfit">¥0</div></div>
+          <div class="kpi"><div class="l">営業利益率</div><div class="v" id="oMargin">—</div></div>
+          <div class="kpi"><div class="l">投資回収</div><div class="v" id="oPayback">—</div></div>
+        </div>
+        <div class="barwrap">
+          <div class="barlbl"><span>損益分岐 と 標準月商</span><span id="barNote"></span></div>
+          <div class="bar"><div class="bar-fill" id="barFill"></div><div class="bar-bep" id="barBep"><span>損益分岐</span></div></div>
+        </div>
+        <div class="warn" id="capWarn"></div>
+      </div>
+
+      <!-- 5年シミュレーション -->
+      <div class="panel">
+        <div class="ph"><span class="n">5y</span>5年シミュレーション</div>
+        <p class="hint" style="margin-bottom:8px">立ち上げ・季節・年成長を反映した年次サマリー（60ヶ月を集計）。</p>
+        <table class="yr"><thead><tr><th>年度</th><th>売上</th><th>営業利益</th><th>利益率</th><th>累積利益</th></tr></thead><tbody id="yrBody"></tbody></table>
+        <div class="recov" id="recovNote"></div>
+        <button class="dlbtn" id="xlsxBtn">⬇ Excelでダウンロード（5年シミュ＋事業計画メモ）</button>
+        <div class="note">計算式：売上＝標準月商×季節指数×立ち上げ指数×年成長係数／粗利＝売上×(1−原価率−変動費率)／営業利益＝粗利−固定費（立ち上げ期は販促・人件費に上乗せ）。判定の目安（5年内に投資回収＝GO 等）は業態に合わせ調整できます。Excel出力は月次明細・年次サマリー・前提条件・事業計画メモの4シート。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="memo-sec">
+    <div class="sec-t">📋 事業計画メモ<span class="opt-tag">任意 · Excelに出力</span></div>
+    <p class="hint">シミュレーション数値には影響しません。融資書類・計画書の下書きとしてお使いください。Excelダウンロード時に「事業計画メモ」シートとして含まれます。</p>
+    <div class="memo-grid">
+      <div class="panel">
+        <div class="ph"><span class="n">外</span>外部環境・商圏分析</div>
+        <div class="fld"><label>出店エリア・商圏</label><input type="text" id="m-area" placeholder="例：渋谷区神南 / 駅徒歩3分圏内"></div>
+        <div class="row2">
+          <div class="fld"><label>直接競合の店舗数（近隣）</label><input type="number" id="m-comp" placeholder="5" step="1" min="0"></div>
+          <div class="fld"><label>推定通行量 / 日（人）</label><input type="number" id="m-traffic" placeholder="8000" step="500" min="0"></div>
+        </div>
+        <div class="fld"><label>主な客層・ボリューム感</label><input type="text" id="m-demo" placeholder="例：会社員・30〜40代・ランチ需要が厚い"></div>
+        <div class="fld"><label>エリアの機会・リスク（自由記述）</label><textarea id="m-risk" placeholder="例：再開発で人流増加中。大型競合が近くにある。"></textarea></div>
+      </div>
+      <div class="panel">
+        <div class="ph"><span class="n">内</span>内部分析・差別化メモ</div>
+        <div class="row2">
+          <div class="fld"><label>うちの強み</label><textarea id="m-str" placeholder="例：10年の調理経験、地元ネットワーク、独自レシピ"></textarea></div>
+          <div class="fld"><label>弱み・課題</label><textarea id="m-wk" placeholder="例：初出店で知名度ゼロ、自己資金が薄い"></textarea></div>
+        </div>
+        <div class="row2">
+          <div class="fld"><label>市場・トレンドの追い風</label><textarea id="m-opp" placeholder="例：健康志向の高まり、テイクアウト需要の定着"></textarea></div>
+          <div class="fld"><label>向かい風・リスク</label><textarea id="m-thr" placeholder="例：大手チェーンの出店、食材コスト上昇"></textarea></div>
+        </div>
+        <div class="fld"><label>ターゲットとなるお客さん</label><input type="text" id="m-target" placeholder="例：近隣オフィス勤務・30〜50代・週2〜3回のリピーター"></div>
+        <div class="fld"><label>他店にはない価値・違い</label><textarea id="m-value" placeholder="例：産地直送食材 × 低価格ランチ。15分で満足できる体験を提供。"></textarea></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const fmt = n => '¥' + Math.round(n||0).toLocaleString();
+const channelsDefault = [
+  ['フリー（新規ウォークイン）',400000],['リピート・常連',1800000],['食べログ',900000],
+  ['ぐるなび',350000],['Google・MEO',700000],['Instagram・SNS',300000],['予約サイト（一休 等）',500000],
+];
+const laborDefault = [['社員（店長）',350000],['社員（調理）',320000],['アルバイト（月合計）',880000],['社会保険・まかない等',200000]];
+const fixedDefault = [['通信・POS・システム',30000],['消耗品',50000],['リース・保険・雑費',50000]];
+const investDefault = [
+  ['内装工事',8000000,1],['厨房機器一式',3500000,1],['冷蔵庫',120000,2],['電子レンジ',50000,1],
+  ['物件取得（保証金・礼金）',4000000,1],['家具・食器',800000,1],['看板・サイン',600000,1],['開業備品・その他',810000,1],
+];
+const seasonPresets = {
+  izakaya:[0.85,0.80,1.20,1.15,0.95,0.90,1.00,0.95,0.95,1.00,1.15,1.30],
+  cafe:[0.95,0.92,1.05,1.08,1.05,0.98,1.02,1.00,0.98,1.00,1.02,0.95],
+  lunch:[0.98,0.96,1.04,1.05,1.02,0.98,1.00,0.95,1.00,1.02,1.02,0.98],
+  flat:[1,1,1,1,1,1,1,1,1,1,1,1],
+};
+const mode = {rev:'list',labor:'list',fixed:'list',invest:'list'};
+
+function amtRow(name, amt){
+  const d=document.createElement('div'); d.className='li-row';
+  d.innerHTML=`<input type="text" class="li-name" value="${name}"><input type="number" data-amt value="${amt}" step="10000"><button class="li-del" title="削除">×</button>`;
+  d.querySelector('.li-del').onclick=()=>{d.remove();recompute();};
+  return d;
+}
+function invRow(name, unit, qty){
+  const d=document.createElement('div'); d.className='iv-row';
+  d.innerHTML=`<input type="text" class="iv-name" value="${name}"><input type="number" data-unit value="${unit}" step="10000"><span class="x">×</span><input type="number" data-qty value="${qty}" step="1"><button class="li-del" title="削除">×</button>`;
+  d.querySelector('.li-del').onclick=()=>{d.remove();recompute();};
+  return d;
+}
+function fillList(key, defs){
+  const c=document.querySelector(`[data-list="${key}"]`); c.innerHTML='';
+  defs.forEach(r=> c.appendChild(key==='invest'? invRow(r[0],r[1],r[2]) : amtRow(r[0],r[1])));
+}
+function listSum(key){
+  const c=document.querySelector(`[data-list="${key}"]`);
+  if(key==='invest'){let s=0;c.querySelectorAll('.iv-row').forEach(r=>{s+=(parseFloat(r.querySelector('[data-unit]').value)||0)*(parseFloat(r.querySelector('[data-qty]').value)||0)});return s;}
+  let s=0;c.querySelectorAll('[data-amt]').forEach(i=>s+=parseFloat(i.value)||0);return s;
+}
+function groupValue(key){
+  if(mode[key]==='total') return parseFloat(document.querySelector(`[data-total="${key}"]`).value)||0;
+  return listSum(key);
+}
+const val = id => parseFloat(document.getElementById(id).value)||0;
+
+function seasonRaw(){const a=[];for(let i=0;i<12;i++)a.push(val('se'+i));return a;}
+function seasonNorm(){const a=seasonRaw().map(x=>x/100);const avg=a.reduce((x,y)=>x+y,0)/12||1;return a.map(x=>x/avg);}
+function yearFactors(){const g=[0,val('g2')/100,val('g3')/100,val('g4')/100,val('g5')/100];const f=[1];for(let i=1;i<5;i++)f.push(f[i-1]*(1+g[i]));return f;}
+
+function inputs(){
+  return {
+    rev:groupValue('rev'), labor:groupValue('labor'), other:groupValue('fixed'), invest:groupValue('invest'),
+    spend:val('spend'),seats:val('seats'),occ:val('occ')/100,turns:val('turns'),days:val('days'),
+    cogs:val('cogs')/100,varc:val('varc')/100,rent:val('rent'),util:val('util'),promo:val('promo'),
+    ramp:[val('r1')/100,val('r2')/100,val('r3')/100], promoMult:val('rPromo')/100, laborMult:val('rLabor')/100,
+    season:seasonNorm(), yf:yearFactors(),
+  };
+}
+function buildSeries(I){
+  const cm=Math.max(0.01,1-I.cogs-I.varc);
+  const out=[];
+  for(let m=1;m<=60;m++){
+    const yi=Math.floor((m-1)/12), mo=(m-1)%12;
+    const rampSales = m<=3? I.ramp[m-1] : 1;
+    const sales = I.rev * I.season[mo] * rampSales * I.yf[yi];
+    const cogsV=sales*I.cogs, varcV=sales*I.varc, gross=sales-cogsV-varcV;
+    const rampOn = m<=3;
+    const labor = I.labor*(rampOn?I.laborMult:1);
+    const promo = I.promo*(rampOn?I.promoMult:1);
+    const op = gross - labor - I.rent - I.util - promo - I.other;
+    out.push({m,year:yi+1,month:mo+1,sales,cogs:cogsV,varc:varcV,gross,labor,rent:I.rent,util:I.util,promo,other:I.other,op});
+  }
+  return out;
+}
+
+function recompute(){
+  const I=inputs();
+  document.querySelector('[data-sum="rev"]').textContent=fmt(I.rev);
+  document.querySelector('[data-sum="labor"]').textContent=fmt(I.labor);
+  document.querySelector('[data-sum="fixed"]').textContent=fmt(I.other);
+  document.querySelector('[data-sum="invest"]').textContent=fmt(I.invest);
+
+  const cm=Math.max(0.01,1-I.cogs-I.varc);
+  const sCogs=I.rev*I.cogs, sVarc=I.rev*I.varc, gross=I.rev-sCogs-sVarc;
+  const fixedTotal=I.labor+I.rent+I.util+I.promo+I.other;
+  const profit=gross-fixedTotal;
+  const margin=I.rev>0?profit/I.rev:0;
+  const bep=fixedTotal/cm;
+
+  // PL table
+  const line=(l,v,ind,cls)=>`<tr class="${cls||''}"><td class="${ind?'ind':''}">${l}</td><td>${v}</td></tr>`;
+  document.getElementById('plBody').innerHTML =
+    line('売上高', fmt(I.rev)) +
+    line('売上原価', '−'+fmt(sCogs).slice(1), true) +
+    line('その他変動費', '−'+fmt(sVarc).slice(1), true) +
+    line('売上総利益（粗利）', fmt(gross), false, 'sub') +
+    line('人件費', '−'+fmt(I.labor).slice(1), true) +
+    line('家賃', '−'+fmt(I.rent).slice(1), true) +
+    line('水道光熱費', '−'+fmt(I.util).slice(1), true) +
+    line('販促費', '−'+fmt(I.promo).slice(1), true) +
+    line('その他固定費', '−'+fmt(I.other).slice(1), true) +
+    line('営業利益', fmt(profit)+'（'+(margin*100).toFixed(1)+'%）', false, 'op');
+
+  const pe=document.getElementById('oProfit'); pe.textContent=fmt(profit); pe.className='v '+(profit>=0?'pos':'neg');
+  document.getElementById('oMargin').textContent=(margin*100).toFixed(1)+'%';
+
+  // 5yr
+  const series=buildSeries(I);
+  let cum=0, recov=null; const yr={1:{s:0,o:0},2:{s:0,o:0},3:{s:0,o:0},4:{s:0,o:0},5:{s:0,o:0}};
+  series.forEach(s=>{cum+=s.op; if(recov===null&&cum>=I.invest)recov=s.m; yr[s.year].s+=s.sales; yr[s.year].o+=s.op;});
+  let cumOp=0;
+  document.getElementById('yrBody').innerHTML=[1,2,3,4,5].map(y=>{cumOp+=yr[y].o;
+    return `<tr><td>${y}年目</td><td>${fmt(yr[y].s)}</td><td class="${yr[y].o>=0?'pos':'neg'}">${fmt(yr[y].o)}</td><td>${(yr[y].s>0?yr[y].o/yr[y].s*100:0).toFixed(1)}%</td><td>${fmt(cumOp)}</td></tr>`;}).join('');
+  document.getElementById('recovNote').innerHTML = recov
+    ? `初期投資 <b>${fmt(I.invest)}</b> の累積回収：<b>${Math.ceil(recov/12)}年目（${recov}ヶ月目）</b>`
+    : `初期投資 <b>${fmt(I.invest)}</b> は、5年（60ヶ月）以内には回収しきれない試算です`;
+  document.getElementById('oPayback').textContent = recov? recov+'ヶ月目' : '5年内未回収';
+
+  // verdict
+  const v=document.getElementById('verdict'), vm=document.getElementById('verdictMsg'), vs=document.getElementById('verdictSub');
+  if(profit<=0){ v.className='verdict v-red'; vm.textContent='🔴 危険（赤字）'; vs.textContent='標準月で '+fmt(-profit)+' の赤字。売上構成かコストの見直しが必要です。'; }
+  else if(!recov){ v.className='verdict v-amber'; vm.textContent='🟡 要検討'; vs.textContent='黒字ですが、5年以内に初期投資を回収しきれない試算です。投資額か収益性の見直しを。'; }
+  else { v.className='verdict v-go'; vm.textContent='🟢 GO（回収 '+Math.ceil(recov/12)+'年目）'; vs.textContent='標準月の営業利益 '+fmt(profit)+'（利益率'+(margin*100).toFixed(1)+'%）。立ち上げ・季節を加味して約'+recov+'ヶ月目で初期投資を回収する試算です。'; }
+
+  // bep bar
+  const trackMax=Math.max(I.rev,bep)*1.15 || 1;
+  const fill=document.getElementById('barFill');
+  fill.style.width=Math.min(100,I.rev/trackMax*100)+'%';
+  fill.style.background = I.rev>=bep ? 'linear-gradient(90deg,#2a9d54,#1e7a3e)' : 'linear-gradient(90deg,#d23b30,#b3261e)';
+  document.getElementById('barBep').style.left=(bep/trackMax*100)+'%';
+  document.getElementById('barNote').textContent='標準月商 '+fmt(I.rev)+' ／ 損益分岐 '+fmt(bep);
+
+  // capacity
+  const demand=I.spend>0?I.rev/I.spend:0, cap=I.seats*I.occ*I.turns*I.days;
+  const cw=document.getElementById('capWarn');
+  if(cap>0 && demand>cap){ cw.className='warn';
+    cw.innerHTML='⚠️ <div>想定客数 <b>約'+Math.round(demand).toLocaleString()+'人/月</b> が席数キャパ <b>約'+Math.round(cap).toLocaleString()+'人/月</b> を上回っています。席数・回転・客単価か売上計画の見直しを。</div>';
+  } else { cw.className='warn ok';
+    cw.innerHTML='✓ <div>想定客数 約'+Math.round(demand).toLocaleString()+'人/月 は、席数キャパ 約'+Math.round(cap).toLocaleString()+'人/月 の範囲内です（稼働率 約'+Math.round(cap>0?demand/cap*100:0)+'%）。</div>';
+  }
+}
+
+function buildExcel(){
+  if(typeof XLSX==='undefined'){alert('Excelライブラリを読み込み中です。数秒おいて再度お試しください。');return;}
+  const I=inputs(); const series=buildSeries(I); const r=Math.round;
+  const head=['通算月','年度','月','売上','売上原価','その他変動費','粗利','人件費','家賃','水道光熱費','販促費','その他固定費','営業利益','営業利益率(%)','累積営業利益'];
+  let cum=0; const m1=[head];
+  series.forEach(s=>{cum+=s.op; m1.push([s.m,s.year+'年目',s.month+'月',r(s.sales),r(s.cogs),r(s.varc),r(s.gross),r(s.labor),r(s.rent),r(s.util),r(s.promo),r(s.other),r(s.op),+(s.sales>0?s.op/s.sales*100:0).toFixed(1),r(cum)]);});
+  const yr={}; series.forEach(s=>{const y=yr[s.year]||(yr[s.year]={sales:0,cogs:0,varc:0,gross:0,fix:0,op:0});y.sales+=s.sales;y.cogs+=s.cogs;y.varc+=s.varc;y.gross+=s.gross;y.fix+=(s.labor+s.rent+s.util+s.promo+s.other);y.op+=s.op;});
+  let c2=0; const m2=[['年度','売上','売上原価','粗利','固定費計','営業利益','営業利益率(%)','累積営業利益']];
+  [1,2,3,4,5].forEach(y=>{c2+=yr[y].op; m2.push([y+'年目',r(yr[y].sales),r(yr[y].cogs),r(yr[y].gross),r(yr[y].fix),r(yr[y].op),+(yr[y].sales>0?yr[y].op/yr[y].sales*100:0).toFixed(1),r(c2)]);});
+  const m3=[['前提条件',''],
+    ['標準月商（集客チャネル合計）',r(I.rev)],['客単価',I.spend],['席数',I.seats],['満席率(%)',r(I.occ*100)],['回転数/日',I.turns],['営業日数/月',I.days],
+    ['原価率(%)',r(I.cogs*100)],['その他変動費率(%)',r(I.varc*100)],
+    ['家賃（月）',I.rent],['人件費（月・標準）',I.labor],['水道光熱費（月）',I.util],['販促費（月・標準）',I.promo],['その他固定費（月）',I.other],
+    ['初期投資',I.invest],['',''],
+    ['立ち上げ 1ヶ月目 売上%',val('r1')],['立ち上げ 2ヶ月目 売上%',val('r2')],['立ち上げ 3ヶ月目 売上%',val('r3')],
+    ['立ち上げ期 販促費(標準比%)',val('rPromo')],['立ち上げ期 人件費(標準比%)',val('rLabor')],['',''],
+    ['季節指数(%) 1〜12月',seasonRaw().join(' / ')],
+    ['年成長率(%) 2〜5年目',[val('g2'),val('g3'),val('g4'),val('g5')].join(' / ')],
+    ['',''],['※ サンプルデータによるデモ出力。実在の店舗・数値ではありません。','']];
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(m1),'月次明細');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(m2),'年次サマリー');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(m3),'前提条件');
+  const gm=id=>(document.getElementById(id)?.value||'').trim()||'（未入力）';
+  const m4=[
+    ['■ 外部環境・商圏分析',''],
+    ['出店エリア・商圏',gm('m-area')],
+    ['直接競合の店舗数（近隣）',gm('m-comp')],
+    ['推定通行量/日（人）',gm('m-traffic')],
+    ['主な客層・ボリューム感',gm('m-demo')],
+    ['エリアの機会・リスク',gm('m-risk')],
+    ['',''],
+    ['■ 内部分析・差別化メモ',''],
+    ['うちの強み',gm('m-str')],
+    ['弱み・課題',gm('m-wk')],
+    ['市場・トレンドの追い風',gm('m-opp')],
+    ['向かい風・リスク',gm('m-thr')],
+    ['ターゲットとなるお客さん',gm('m-target')],
+    ['他店にはない価値・違い',gm('m-value')],
+    ['',''],
+    ['※ このシートはメモです。シミュレーション計算には影響しません。',''],
+  ];
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(m4),'事業計画メモ');
+  XLSX.writeFile(wb,'出店シミュレーション_5年計画.xlsx');
+}
+
+function setMode(key,m){
+  mode[key]=m;
+  document.querySelectorAll(`[data-group="${key}"] button`).forEach(b=>b.classList.toggle('on',b.dataset.mode===m));
+  document.querySelector(`[data-list="${key}"]`).style.display=m==='list'?'':'none';
+  const addb=document.querySelector(`[data-add="${key}"]`); if(addb)addb.style.display=m==='list'?'':'none';
+  document.querySelector(`[data-total-wrap="${key}"]`).style.display=m==='total'?'':'none';
+  recompute();
+}
+function renderSeasonGrid(){const g=document.getElementById('seasGrid');g.innerHTML='';const mn=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  for(let i=0;i<12;i++){const c=document.createElement('div');c.className='c';c.innerHTML=`<label>${mn[i]}</label><input type="number" id="se${i}" value="100">`;g.appendChild(c);}}
+function fillSeason(key){const p=seasonPresets[key]||seasonPresets.flat;for(let i=0;i<12;i++)document.getElementById('se'+i).value=Math.round(p[i]*100);recompute();}
+function loadDefaults(){fillList('rev',channelsDefault);fillList('labor',laborDefault);fillList('fixed',fixedDefault);fillList('invest',investDefault);}
+
+// init
+renderSeasonGrid();
+loadDefaults();
+fillSeason('izakaya');
+document.querySelectorAll('.toggle').forEach(t=>{const key=t.dataset.group;t.querySelectorAll('button').forEach(b=>b.onclick=()=>setMode(key,b.dataset.mode));});
+document.querySelectorAll('[data-add]').forEach(b=>{b.onclick=()=>{const key=b.dataset.add;const c=document.querySelector(`[data-list="${key}"]`);c.appendChild(key==='invest'?invRow('',0,1):amtRow('',0));recompute();};});
+document.getElementById('seasonPreset').onchange=e=>fillSeason(e.target.value);
+document.getElementById('xlsxBtn').onclick=buildExcel;
+document.getElementById('resetBtn').onclick=()=>{
+  ['rev','labor','fixed','invest'].forEach(k=>{mode[k]='list';});
+  document.querySelectorAll('.toggle button').forEach(b=>b.classList.toggle('on',b.dataset.mode==='list'));
+  document.querySelectorAll('[data-list]').forEach(el=>el.style.display='');
+  document.querySelectorAll('[data-add]').forEach(el=>el.style.display='');
+  document.querySelectorAll('[data-total-wrap]').forEach(el=>el.style.display='none');
+  loadDefaults();
+  const sc={spend:3400,seats:30,occ:72,turns:2.6,days:26,cogs:31,varc:3,rent:600000,util:250000,promo:120000,r1:60,r2:75,r3:90,rPromo:150,rLabor:110,g2:8,g3:5,g4:3,g5:2};
+  for(const k in sc) document.getElementById(k).value=sc[k];
+  document.getElementById('seasonPreset').value='izakaya'; fillSeason('izakaya');
+};
+document.body.addEventListener('input',recompute);
+recompute();
+</script>
+</body>
+</html>

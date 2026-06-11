@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>飲食店向け オーダーメイドWebツール｜ポートフォリオ</title>
+<meta name="description" content="飲食店・食材業者の現場課題を解決するオーダーメイドWebツールの制作実績。ドリンク売上トラッカー・月次業績レポート・グルメ媒体効果測定のデモを公開中。">
+<style>
+  :root{
+    --navy:#1c3a5e; --navy2:#27496d; --gold:#c9a84a; --ink:#1f2733; --sub:#5b6675;
+    --bg:#f6f8fa; --card:#fff; --border:#e6eaf0; --accent:#2563eb;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",Meiryo,sans-serif;
+    color:var(--ink);background:var(--bg);line-height:1.7;-webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 22px}
+
+  /* header */
+  header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+  .hd{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .brand{font-weight:800;letter-spacing:-.01em;font-size:16px;display:flex;align-items:center;gap:9px}
+  .brand .dot{width:11px;height:11px;border-radius:3px;background:var(--gold);transform:rotate(45deg)}
+  .nav{display:flex;gap:22px;font-size:13.5px;color:var(--sub);font-weight:600}
+  .nav a:hover{color:var(--ink)}
+  .nav .cta{background:var(--navy);color:#fff;padding:8px 15px;border-radius:8px}
+  @media(max-width:620px){.nav a:not(.cta){display:none}}
+
+  /* hero */
+  .hero{background:linear-gradient(160deg,#1c3a5e 0%,#27496d 55%,#2f5a82 100%);color:#fff;position:relative;overflow:hidden}
+  .hero::after{content:"";position:absolute;right:-120px;top:-120px;width:380px;height:380px;background:radial-gradient(circle,rgba(201,168,74,.28),transparent 70%);border-radius:50%}
+  .hero .wrap{padding:74px 22px 80px;position:relative;z-index:1}
+  .eyebrow{display:inline-block;font-size:12.5px;font-weight:700;letter-spacing:.08em;color:var(--gold);background:rgba(201,168,74,.12);border:1px solid rgba(201,168,74,.35);padding:5px 13px;border-radius:30px;margin-bottom:20px}
+  .hero h1{font-size:38px;line-height:1.32;font-weight:800;letter-spacing:-.02em;margin-bottom:18px}
+  .hero h1 .hl{color:var(--gold)}
+  .hero p{font-size:16px;color:#d6e0ec;max-width:640px;margin-bottom:30px}
+  .hero .btns{display:flex;gap:12px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:14.5px;padding:12px 22px;border-radius:10px;transition:transform .12s,box-shadow .12s}
+  .btn:hover{transform:translateY(-1px)}
+  .btn-gold{background:var(--gold);color:#1c2a3a;box-shadow:0 6px 18px rgba(201,168,74,.32)}
+  .btn-ghost{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.28)}
+  @media(max-width:620px){.hero h1{font-size:28px}.hero .wrap{padding:54px 22px 58px}}
+
+  /* sections */
+  section{padding:64px 0}
+  .seclabel{font-size:12.5px;font-weight:700;letter-spacing:.08em;color:var(--accent);margin-bottom:8px}
+  .sectitle{font-size:26px;font-weight:800;letter-spacing:-.02em;margin-bottom:10px}
+  .secdesc{color:var(--sub);font-size:15px;max-width:620px;margin-bottom:36px}
+
+  /* value props */
+  .vals{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .val{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px}
+  .val .ic{font-size:22px;margin-bottom:10px}
+  .val h3{font-size:15.5px;margin-bottom:6px}
+  .val p{font-size:13.5px;color:var(--sub)}
+  @media(max-width:760px){.vals{grid-template-columns:1fr}}
+
+  /* tool cards */
+  #tools{background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  @media(max-width:860px){.cards{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:transform .14s,box-shadow .14s}
+  .card:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(28,58,94,.12)}
+  .thumb{height:176px;position:relative;overflow:hidden;background:#eef2f7;border-bottom:1px solid var(--border)}
+  .thumb img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block;transition:transform .4s ease}
+  .card:hover .thumb img{transform:scale(1.03)}
+  .tag{position:absolute;top:12px;left:12px;z-index:1;font-size:10.5px;font-weight:700;color:#fff;background:rgba(20,30,45,.62);backdrop-filter:blur(3px);padding:4px 10px;border-radius:20px;letter-spacing:.03em}
+  .cbody{padding:20px 20px 22px;display:flex;flex-direction:column;flex:1}
+  .cbody h3{font-size:17px;margin-bottom:7px}
+  .cbody .lead{font-size:13.5px;color:var(--sub);margin-bottom:12px}
+  .meta{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
+  .meta .row{display:flex;gap:8px;font-size:12.3px;line-height:1.55;align-items:flex-start}
+  .meta .ml{flex:none;width:42px;font-weight:700;font-size:10.5px;color:#fff;text-align:center;padding:2px 0;border-radius:5px;margin-top:1px}
+  .meta .ml.t{background:var(--navy)}
+  .meta .ml.p{background:#b3360f}
+  .meta .row span:last-child{color:#475061}
+  .feat{list-style:none;font-size:12.8px;color:var(--ink);margin-bottom:18px;display:flex;flex-direction:column;gap:6px}
+  .feat li{display:flex;gap:8px;align-items:flex-start}
+  .feat li::before{content:"";flex:none;width:6px;height:6px;border-radius:50%;background:var(--gold);margin-top:7px}
+  .stack{font-size:11.5px;color:#8b95a3;margin-bottom:16px}
+  .clink{margin-top:auto;display:inline-flex;align-items:center;gap:7px;font-weight:700;font-size:14px;color:#fff;background:var(--navy);padding:10px 16px;border-radius:9px;justify-content:center;transition:background .12s}
+  .clink:hover{background:#142b45}
+
+  /* contact */
+  #contact{background:linear-gradient(160deg,#1c3a5e,#27496d);color:#fff;text-align:center}
+  #contact .sectitle{color:#fff}
+  #contact .secdesc{color:#cdd9e8;margin:0 auto 28px}
+  .mail{display:inline-flex;align-items:center;gap:10px;font-size:19px;font-weight:800;color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.28);padding:14px 26px;border-radius:12px}
+  .mail:hover{background:rgba(255,255,255,.14)}
+
+  footer{background:#13243a;color:#8ea0b6;font-size:12.5px;text-align:center;padding:26px 22px}
+  .note{font-size:12px;color:#9aa6b4;margin-top:14px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap hd">
+    <div class="brand"><span class="dot"></span>飲食店向け Webツール制作</div>
+    <nav class="nav">
+      <a href="#tools">制作実績</a>
+      <a href="#flow">進め方</a>
+      <a href="#contact" class="cta">相談する</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="wrap">
+    <span class="eyebrow">飲食店・食材業者向け｜オーダーメイドWebツール</span>
+    <h1>お店の「めんどくさい」を、<br><span class="hl">ちょうどいいツール</span>で軽くする。</h1>
+    <p>レジ・予約媒体・SNS・収支——バラバラな数字を、現場が毎日使える1枚のツールにまとめます。
+       既製のSaaSでは噛み合わない部分を、お店のオペレーションに合わせてオーダーメイドで。下は実際に作って動いているツールのデモです。</p>
+    <div class="btns">
+      <a href="#tools" class="btn btn-gold">制作実績を見る</a>
+      <a href="#contact" class="btn btn-ghost">無料で相談する</a>
+    </div>
+  </div>
+</div>
+
+<!-- VALUE -->
+<section>
+  <div class="wrap">
+    <div class="seclabel">WHY</div>
+    <h2 class="sectitle">「現場で続く」ことを最優先に</h2>
+    <p class="secdesc">高機能より、毎日無理なく使えること。スマホ1台・コピペ1回で回るくらいの軽さで設計します。</p>
+    <div class="vals">
+      <div class="val"><div class="ic">📱</div><h3>現場ファースト</h3><p>営業中でもスマホでサッと入力。難しい操作・研修は不要。続けられる手触りにこだわります。</p></div>
+      <div class="val"><div class="ic">🧩</div><h3>オーダーメイド</h3><p>お店のメニュー・帳票・媒体に合わせて専用設計。既製ツールの「惜しい」を埋めます。</p></div>
+      <div class="val"><div class="ic">📊</div><h3>数字が動く</h3><p>入力した先で売上・客単価・PVが自動で集計・可視化。会議資料やオーナー報告まで一気通貫。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section id="tools">
+  <div class="wrap">
+    <div class="seclabel">WORKS</div>
+    <h2 class="sectitle">制作実績（デモ）</h2>
+    <p class="secdesc">実店舗向けに開発したツールを、サンプルデータでそのまま触れるデモにしています。クリックで実際に操作できます。<br>
+    掲載しているのはあくまで一例です。<strong style="color:var(--ink)">あなたの「こう改善したい」というイメージをすり合わせながら、お店専用のツールを1から作るお手伝いをします。</strong></p>
+    <div class="cards">
+
+      <!-- 1 -->
+      <div class="card">
+        <div class="thumb"><span class="tag">売上分析 / モバイル</span><img src="assets/shot-drink.png" alt="ドリンク売上トラッカーの画面" loading="lazy"></div>
+        <div class="cbody">
+          <h3>ドリンク売上トラッカー</h3>
+          <p class="lead">レシートを撮るだけでドリンク売上を記録・分析。1人あたり単価や目標達成率を可視化。</p>
+          <div class="meta">
+            <div class="row"><span class="ml t">対象</span><span>店長・現場スタッフ</span></div>
+            <div class="row"><span class="ml p">課題</span><span>ドリンクの伸びしろが感覚頼り。施策をやっても効果が数字で見えない</span></div>
+          </div>
+          <ul class="feat">
+            <li>レシート撮影→AIが内訳を自動抽出</li>
+            <li>週次・月次・曜日別レポート</li>
+            <li>具体施策の達成率トラッキング</li>
+          </ul>
+          <div class="stack">React / シングルHTML / Claude Vision</div>
+          <a class="clink" href="drink-tracker/">デモを見る →</a>
+        </div>
+      </div>
+
+      <!-- 2 -->
+      <div class="card">
+        <div class="thumb"><span class="tag">月次レポート / 自動集計</span><img src="assets/shot-report.png" alt="月次業績レポートの画面" loading="lazy"></div>
+        <div class="cbody">
+          <h3>月次業績レポート</h3>
+          <p class="lead">POS・予約媒体・SNS・収支を自動集計し、1枚のダッシュボードに。会議資料の作成時間をゼロに。</p>
+          <div class="meta">
+            <div class="row"><span class="ml t">対象</span><span>オーナー・店長</span></div>
+            <div class="row"><span class="ml p">課題</span><span>毎月の数字集計と会議資料づくりに何時間もかかり、分析まで手が回らない</span></div>
+          </div>
+          <ul class="feat">
+            <li>売上・客単価・ドリンク・原価率・営業利益</li>
+            <li>WEB媒体／SNSの効果も一元化</li>
+            <li>メニューABC分析・PL明細つき</li>
+          </ul>
+          <div class="stack">Python / Chart.js / HTML・PDF・スライド出力</div>
+          <a class="clink" href="monthly-report/">デモを見る →</a>
+        </div>
+      </div>
+
+      <!-- 3 -->
+      <div class="card">
+        <div class="thumb"><span class="tag">媒体PV / 効果測定</span><img src="assets/shot-media.png" alt="グルメ媒体 効果測定の画面" loading="lazy"></div>
+        <div class="cbody">
+          <h3>グルメ媒体 効果測定</h3>
+          <p class="lead">ぐるなび・食べログ・Retty等のPVを一元管理。媒体別の伸び・前月比をひと目で把握。</p>
+          <div class="meta">
+            <div class="row"><span class="ml t">対象</span><span>集客・販促担当／店長</span></div>
+            <div class="row"><span class="ml p">課題</span><span>媒体ごとに管理画面を見るのが面倒で、どこが効いているか分からない</span></div>
+          </div>
+          <ul class="feat">
+            <li>媒体別PVの推移グラフ・前月比</li>
+            <li>CSVアップロード／手動入力で更新</li>
+            <li>店舗ごとにデータを管理</li>
+          </ul>
+          <div class="stack">Next.js / React / Recharts</div>
+          <a class="clink" href="media-dashboard/">デモを見る →</a>
+        </div>
+      </div>
+
+      <!-- 4 -->
+      <div class="card">
+        <div class="thumb"><span class="tag">衛生管理 / HACCP / 多言語</span><img src="assets/shot-checklist.png" alt="開店・閉店チェックリストの画面" loading="lazy"></div>
+        <div class="cbody">
+          <h3>開店・閉店チェックリスト</h3>
+          <p class="lead">開店前・閉店後の作業をスタッフが記録し、オーナー・管理職がリモートで確認。閉店の申し送りが翌日の開店チェックに自動引き継ぎ。</p>
+          <div class="meta">
+            <div class="row"><span class="ml t">対象</span><span>現場に常駐できない多店舗オーナー・エリアマネージャー</span></div>
+            <div class="row"><span class="ml p">課題</span><span>準備・片付けの抜け・もれが現場任せで、問題が起きるまで気づけない</span></div>
+          </div>
+          <ul class="feat">
+            <li>開店／閉店 シフト切替・HACCP温度記録</li>
+            <li>閉店の予約・申し送りを翌朝に自動キャリーオーバー</li>
+            <li>過去7日間カレンダー・日英中 3言語対応</li>
+          </ul>
+          <div class="stack">シングルHTML / Vanilla JS / 日英中 3言語</div>
+          <a class="clink" href="opening-checklist/">デモを見る →</a>
+        </div>
+      </div>
+
+      <!-- 6 -->
+      <div class="card">
+        <div class="thumb"><span class="tag">SNS分析 / Instagram</span><img src="assets/shot-instagram.png" alt="Instagram分析ダッシュボードの画面" loading="lazy"></div>
+        <div class="cbody">
+          <h3>Instagram分析ダッシュボード</h3>
+          <p class="lead">投稿の数字をスクショ取込か手入力するだけで、来店につながる指標を自動分析。連携不要・スマホ完結。</p>
+          <div class="meta">
+            <div class="row"><span class="ml t">対象</span><span>自分で集客したい個人店オーナー・SNS担当</span></div>
+            <div class="row"><span class="ml p">課題</span><span>インスタの数字は見られても、次に何を投稿すべきかの判断につながらない</span></div>
+          </div>
+          <ul class="feat">
+            <li>保存率・発見リーチなど「伸びる投稿の法則」を可視化</li>
+            <li>投稿タイプ別・曜日×時間帯ヒートマップで最適タイミング</li>
+            <li>発見→プロフ訪問→予約クリックの来店導線を分析</li>
+          </ul>
+          <div class="stack">シングルHTML / Vanilla JS / Chart.js</div>
+          <a class="clink" href="instagram-analytics/">デモを見る →</a>
+        </div>
+      </div>
+
+      <!-- 5 -->
+      <div class="card">
+        <div class="thumb"><span class="tag">開業計画 / 収益シミュ</span><img src="assets/shot-opening.png" alt="出店シミュレーションの画面" loading="lazy"></div>
+        <div class="cbody">
+          <h3>出店シミュレーション</h3>
+          <p class="lead">集客チャネル別の売上から月次PL・損益分岐・投資回収を試算。立ち上げ・季節・成長を加味した5年計画をExcelで出力。</p>
+          <div class="meta">
+            <div class="row"><span class="ml t">対象</span><span>開業検討中のオーナー・経営者</span></div>
+            <div class="row"><span class="ml p">課題</span><span>収支計画を感覚で立てており、融資資料や投資回収のシミュレーションが手薄になりがち</span></div>
+          </div>
+          <ul class="feat">
+            <li>集客チャネル別の売上から月次PLを自動試算</li>
+            <li>立ち上げ・季節・年成長の指数を反映した5年シミュ</li>
+            <li>外部環境・内部分析のメモ付きExcel（4シート）出力</li>
+          </ul>
+          <div class="stack">シングルHTML / Vanilla JS / SheetJS</div>
+          <a class="clink" href="opening-simulator/">デモを見る →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FLOW -->
+<section id="flow">
+  <div class="wrap">
+    <div class="seclabel">FLOW</div>
+    <h2 class="sectitle">進め方</h2>
+    <p class="secdesc">小さく作って、現場で試しながら育てます。まずは1機能・1か月から。</p>
+    <div class="vals">
+      <div class="val"><div class="ic">①</div><h3>ヒアリング</h3><p>今の運用と困りごとを伺い、ツールにするポイントを一緒に整理します。</p></div>
+      <div class="val"><div class="ic">②</div><h3>試作・お試し導入</h3><p>たたき台を素早く作って実際に使ってみる。手触りを確かめてから本格化。</p></div>
+      <div class="val"><div class="ic">③</div><h3>改善・運用</h3><p>使いながら微調整。月次の分析・改善提案まで継続的にサポートします。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="wrap">
+    <div class="seclabel" style="color:var(--gold)">CONTACT</div>
+    <h2 class="sectitle">「これ作れる？」のご相談から</h2>
+    <p class="secdesc">こんな作業を楽にしたい、こんな数字を見たい——ざっくりした段階で構いません。お気軽にどうぞ。</p>
+    <a class="mail" href="mailto:t-fujiya@spicydevice.com?subject=Web%E3%83%84%E3%83%BC%E3%83%AB%E3%81%AE%E7%9B%B8%E8%AB%87">✉ t-fujiya@spicydevice.com</a>
+  </div>
+</section>
+
+<footer>
+  <div>飲食店向け オーダーメイドWebツール制作 — 制作実績ポートフォリオ</div>
+  <div class="note">※ 掲載中のデモはすべてサンプルデータで動作しています。実店舗・実顧客のデータは含まれません。</div>
+</footer>
+
+</body>
+</html>
