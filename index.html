@@ -32,11 +32,9 @@ a{color:inherit;text-decoration:none}
 header{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.82);backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:border-color .25s,box-shadow .25s}
 header.scrolled{border-bottom-color:var(--line);box-shadow:0 4px 22px rgba(40,44,50,.05)}
 .hd{display:flex;align-items:center;justify-content:space-between;height:66px}
-.logo{display:flex;align-items:center;gap:12px}
-.logo svg{display:block}
-.logo .wm{font-family:var(--mono);font-weight:600;font-size:19px;letter-spacing:.17em;color:var(--ink)}
-.logo .bolt{fill:var(--accent);transition:transform .3s}
-.logo:hover .bolt{transform:translateY(-1px) scale(1.06)}
+.logo{display:flex;align-items:center}
+.logo-img{height:25px;width:auto;display:block;transition:transform .25s,opacity .25s}
+.logo:hover .logo-img{transform:translateY(-1px);opacity:.82}
 .nav{display:flex;align-items:center;gap:28px;font-size:13.5px;font-weight:700;color:var(--ink2)}
 .nav a:not(.cta){position:relative;padding:4px 0}
 .nav a:not(.cta)::after{content:"";position:absolute;left:0;bottom:-2px;width:0;height:2px;background:var(--accent);transition:width .25s}
@@ -159,7 +157,7 @@ section{padding:78px 0}
 /* footer */
 footer{background:#181a1b;color:#8a9099;font-size:12.5px;padding:30px 0}
 footer .fwrap{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
-footer .flogo{font-family:var(--mono);font-weight:600;letter-spacing:.16em;color:#cfd3d8;font-size:14px}
+footer .flogo-img{height:20px;width:auto;display:block;opacity:.9;margin-bottom:4px}
 .fnote{font-size:11.5px;color:#6c7177;margin-top:8px}
 </style>
 </head>
@@ -168,12 +166,7 @@ footer .flogo{font-family:var(--mono);font-weight:600;letter-spacing:.16em;color
 <header id="hdr">
   <div class="wrap hd">
     <a href="#top" class="logo" aria-label="SPICY DEVICE">
-      <svg width="38" height="32" viewBox="0 0 40 34" fill="none" aria-hidden="true">
-        <rect x="2" y="6" width="30" height="22" rx="7" stroke="var(--ink)" stroke-width="2.4"/>
-        <rect x="34" y="13" width="4" height="8" rx="2" fill="var(--ink)"/>
-        <path class="bolt" d="M19 4 L11 19 L17 19 L15 30 L25 14 L18.5 14 Z" stroke="#fff" stroke-width="1.1" stroke-linejoin="round"/>
-      </svg>
-      <span class="wm">SPICY DEVICE</span>
+      <img src="assets/logo.png" alt="SPICY DEVICE" class="logo-img">
     </a>
     <nav class="nav">
       <a href="#works">制作実績</a>
@@ -425,7 +418,7 @@ footer .flogo{font-family:var(--mono);font-weight:600;letter-spacing:.16em;color
 <footer>
   <div class="wrap fwrap">
     <div>
-      <div class="flogo">SPICY DEVICE</div>
+      <img src="assets/logo-white.png" alt="SPICY DEVICE" class="flogo-img">
       <div class="fnote">※ 掲載中のデモはすべてサンプルデータで動作しています。実店舗・実顧客のデータは含まれません。</div>
     </div>
     <div>© 2026 株式会社スパイシーデバイス</div>
