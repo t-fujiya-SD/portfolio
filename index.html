@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>株式会社スパイシーデバイス｜飲食店向けオーダーメイドWebツール制作</title>
-<meta name="description" content="飲食店の現場課題を解決するオーダーメイドWebツールを制作。売上トラッカー・月次レポート・グルメ媒体分析・Instagram分析・チェックリスト・出店シミュレーションのデモを公開中。コスト改善・購買代行も。">
+<title>株式会社スパイシーデバイス｜飲食店の数字とめんどうな業務を、現場で続く仕組みに</title>
+<meta name="description" content="飲食店向けのオーダーメイドWebツール制作・購買/原価改善・媒体分析。売上・原価・媒体・SNSのバラバラな数字を、現場で使える形に整理・可視化します。実際に動くデモを公開中。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Noto+Sans+JP:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:#2f3133; --ink2:#5b6066; --muted:#8a9099; --line:#e8eaed; --bg:#ffffff; --soft:#f6f7f8;
+  --ink:#2f3133; --ink2:#5b6066; --muted:#8a9099; --line:#e8eaed; --bg:#ffffff; --soft:#f7f8fa;
   --accent:#C32F1C; --accent-d:#9E2415; --accent-soft:#fbeeec; --accent-line:#eccfc9;
   --mono:"Chakra Petch",sans-serif; --sans:"Noto Sans JP",-apple-system,BlinkMacSystemFont,"Hiragino Sans",Meiryo,sans-serif;
   --sb:env(safe-area-inset-bottom,0px);
@@ -19,227 +19,272 @@
 html{scroll-behavior:smooth}
 body{font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.78;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
-.wrap{max-width:1080px;margin:0 auto;padding:0 28px}
-@media(max-width:560px){.wrap{padding:0 20px}}
+.wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+@media(max-width:560px){.wrap{padding:0 18px}}
 
-/* ── reveal animation ── */
+/* reveal */
 .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
 .reveal.in{opacity:1;transform:none}
-.reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.16s}.reveal.d3{transition-delay:.24s}
+.reveal.d1{transition-delay:.07s}.reveal.d2{transition-delay:.14s}.reveal.d3{transition-delay:.21s}.reveal.d4{transition-delay:.28s}
 @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
 
-/* ── header ── */
-header{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.82);backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:border-color .25s,box-shadow .25s}
+/* header */
+header{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.85);backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:border-color .25s,box-shadow .25s}
 header.scrolled{border-bottom-color:var(--line);box-shadow:0 4px 22px rgba(40,44,50,.05)}
-.hd{display:flex;align-items:center;justify-content:space-between;height:66px}
-.logo{display:flex;align-items:center}
-.logo-img{height:25px;width:auto;display:block;transition:transform .25s,opacity .25s}
+.hd{display:flex;align-items:center;justify-content:space-between;height:66px;gap:18px}
+.logo{display:flex;align-items:center;flex:none}
+.logo-img{height:24px;width:auto;display:block;transition:transform .25s,opacity .25s}
 .logo:hover .logo-img{transform:translateY(-1px);opacity:.82}
-.nav{display:flex;align-items:center;gap:28px;font-size:13.5px;font-weight:700;color:var(--ink2)}
-.nav a:not(.cta){position:relative;padding:4px 0}
-.nav a:not(.cta)::after{content:"";position:absolute;left:0;bottom:-2px;width:0;height:2px;background:var(--accent);transition:width .25s}
-.nav a:not(.cta):hover{color:var(--ink)}
-.nav a:not(.cta):hover::after{width:100%}
-.cta{display:inline-flex;align-items:center;gap:7px;background:var(--accent);color:#fff;padding:9px 17px;border-radius:9px;font-size:13px;font-weight:700;transition:transform .15s,box-shadow .15s,background .15s}
-.cta:hover{background:var(--accent-d);transform:translateY(-1px);box-shadow:0 8px 18px rgba(195,47,28,.28)}
-@media(max-width:720px){.nav a:not(.cta){display:none}}
-
-/* ── hero ── */
-.hero{position:relative;overflow:hidden;padding:88px 0 72px}
-.hero::before{content:"";position:absolute;right:-160px;top:-120px;width:460px;height:460px;background:radial-gradient(circle,var(--accent-soft),transparent 68%);z-index:0}
-.hero .wrap{position:relative;z-index:1}
-.eyebrow{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:12.5px;font-weight:600;letter-spacing:.1em;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent-line);padding:7px 16px;border-radius:30px;margin-bottom:26px}
-.eyebrow .zap{animation:flicker 3.4s ease-in-out infinite}
-@keyframes flicker{0%,92%,100%{opacity:1}94%{opacity:.35}96%{opacity:1}97%{opacity:.5}98%{opacity:1}}
-h1{font-size:48px;line-height:1.34;font-weight:900;letter-spacing:-.02em}
-h1 .hl{position:relative;color:var(--accent);white-space:nowrap}
-h1 .hl::after{content:"";position:absolute;left:-2px;right:-2px;bottom:6px;height:9px;background:var(--accent-soft);z-index:-1;transform:scaleX(0);transform-origin:left;animation:draw 1s .35s cubic-bezier(.2,.7,.2,1) forwards}
-@keyframes draw{to{transform:scaleX(1)}}
-.hero p.lead{font-size:17px;color:var(--ink2);max-width:660px;margin:24px 0 36px}
-.btns{display:flex;gap:13px;flex-wrap:wrap}
-.btn{display:inline-flex;align-items:center;gap:9px;font-weight:800;font-size:15px;padding:15px 28px;border-radius:12px;transition:transform .15s,box-shadow .15s,background .15s}
-.btn-primary{background:var(--accent);color:#fff;box-shadow:0 12px 26px rgba(195,47,28,.26)}
-.btn-primary:hover{background:var(--accent-d);transform:translateY(-2px);box-shadow:0 16px 32px rgba(195,47,28,.32)}
+.nav{display:flex;align-items:center;gap:24px;font-size:13.5px;font-weight:700;color:var(--ink2)}
+.nav .nl{position:relative;padding:4px 0}
+.nav .nl::after{content:"";position:absolute;left:0;bottom:-2px;width:0;height:2px;background:var(--accent);transition:width .25s}
+.nav .nl:hover{color:var(--ink)}.nav .nl:hover::after{width:100%}
+.nav-cta{display:flex;gap:9px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:7px;font-weight:700;border-radius:9px;transition:transform .15s,box-shadow .15s,background .15s,border-color .15s;cursor:pointer;white-space:nowrap}
+.btn-sm{font-size:13px;padding:9px 15px}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-d);transform:translateY(-1px);box-shadow:0 8px 18px color-mix(in srgb,var(--accent) 30%,transparent)}
 .btn-ghost{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
-.btn-ghost:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
-.hero-meta{display:flex;gap:26px;margin-top:40px;flex-wrap:wrap}
-.hero-meta div{font-size:13px;color:var(--muted)}
-.hero-meta b{display:block;font-family:var(--mono);font-size:23px;font-weight:700;color:var(--ink);letter-spacing:.02em}
-@media(max-width:560px){h1{font-size:32px}.hero{padding:54px 0 50px}}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px)}
+@media(max-width:900px){.nav .nl{display:none}}
+@media(max-width:560px){.nav-cta .btn-ghost{display:none}}
 
-/* ── sections ── */
-section{padding:78px 0}
-.seclabel{font-family:var(--mono);font-size:12.5px;font-weight:600;letter-spacing:.14em;color:var(--accent);margin-bottom:9px}
-.sectitle{font-size:29px;font-weight:800;letter-spacing:-.02em;margin-bottom:12px}
-.secdesc{color:var(--ink2);font-size:15.5px;max-width:640px;margin-bottom:42px}
+/* hero */
+.hero{position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;right:-12%;top:-30%;width:620px;height:620px;background:radial-gradient(circle,var(--accent-soft),transparent 66%);z-index:0}
+.hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1.04fr .96fr;gap:46px;align-items:center;padding:70px 28px 30px}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:12.5px;font-weight:600;letter-spacing:.09em;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent-line);padding:7px 16px;border-radius:30px;margin-bottom:24px}
+.eyebrow .zap{animation:flicker 3.6s ease-in-out infinite}
+@keyframes flicker{0%,92%,100%{opacity:1}94%{opacity:.4}96%{opacity:1}97%{opacity:.55}98%{opacity:1}}
+h1{font-size:43px;line-height:1.36;font-weight:900;letter-spacing:-.02em}
+h1 .hl{position:relative;color:var(--accent);white-space:nowrap}
+h1 .hl::after{content:"";position:absolute;left:-2px;right:-2px;bottom:5px;height:9px;background:var(--accent-soft);z-index:-1;transform:scaleX(0);transform-origin:left;animation:draw 1s .4s cubic-bezier(.2,.7,.2,1) forwards}
+@keyframes draw{to{transform:scaleX(1)}}
+.hero p.lead{font-size:15.5px;color:var(--ink2);max-width:560px;margin:22px 0 30px}
+.btns{display:flex;gap:13px;flex-wrap:wrap}
+.btn-lg{font-size:15.5px;padding:15px 26px;border-radius:12px}
+.btn-primary.btn-lg{box-shadow:0 12px 26px color-mix(in srgb,var(--accent) 26%,transparent)}
+.btn-primary.btn-lg:hover{transform:translateY(-2px)}
+/* hero visual */
+.hero-visual{position:relative;padding:10px 6px 30px}
+.mock-browser{border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 34px 64px rgba(40,44,50,.17);background:#fff;transform:rotate(-1.2deg);animation:floaty 7s ease-in-out infinite}
+.mock-browser .bar{height:30px;background:#f1f3f6;display:flex;align-items:center;gap:6px;padding:0 13px;border-bottom:1px solid var(--line)}
+.mock-browser .bar i{width:9px;height:9px;border-radius:50%;background:#d6dbe1;flex:none}
+.mock-browser img{width:100%;display:block}
+.mock-phone{position:absolute;right:-6px;bottom:6px;width:124px;border:5px solid #2f3133;border-radius:22px;overflow:hidden;box-shadow:0 18px 38px rgba(40,44,50,.24);background:#fff;animation:floaty 7s ease-in-out infinite .9s}
+.mock-phone img{width:100%;display:block}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(-1.2deg)}50%{transform:translateY(-10px) rotate(-1.2deg)}}
+@media(prefers-reduced-motion:reduce){.mock-browser,.mock-phone{animation:none}}
+/* hero stats */
+.hero-stats{border-top:1px solid var(--line);margin-top:6px}
+.hero-stats .wrap{padding:22px 28px 30px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.hstats{display:flex;gap:30px;flex-wrap:wrap}
+.hs{display:flex;align-items:center;gap:10px}
+.hs .hsi{width:38px;height:38px;flex:none;border-radius:10px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:18px}
+.hs b{display:block;font-family:var(--mono);font-size:17px;font-weight:700;color:var(--ink);line-height:1.2}
+.hs span{font-size:11.5px;color:var(--muted)}
+.hnote{font-size:11px;color:var(--muted);max-width:230px;line-height:1.6}
+@media(max-width:880px){.hero .wrap{grid-template-columns:1fr;padding-top:48px}.hero-visual{order:2;max-width:480px;margin:6px auto 0}.hero::before{width:380px;height:380px}}
+@media(max-width:560px){h1{font-size:30px}.mock-phone{width:96px}}
 
-/* value */
-.vals{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.val{background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:26px;transition:transform .18s,box-shadow .18s,border-color .18s}
-.val:hover{transform:translateY(-4px);box-shadow:0 16px 38px rgba(40,44,50,.08);border-color:var(--accent-line)}
-.val .ic{display:inline-flex;width:46px;height:46px;align-items:center;justify-content:center;border-radius:12px;background:var(--accent-soft);color:var(--accent);font-size:22px;margin-bottom:14px}
-.val h3{font-size:16.5px;margin-bottom:7px}
-.val p{font-size:13.8px;color:var(--ink2)}
-@media(max-width:760px){.vals{grid-template-columns:1fr}}
+/* section */
+section{padding:76px 0}
+.sec-head{text-align:center;margin-bottom:44px}
+.seclabel{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.14em;color:var(--accent);margin-bottom:9px}
+.sectitle{font-size:27px;font-weight:800;letter-spacing:-.02em}
+.sectitle .u{position:relative;display:inline-block}
+.sectitle .u::after{content:"";position:absolute;left:50%;transform:translateX(-50%);bottom:-9px;width:34px;height:3px;border-radius:2px;background:var(--accent)}
+.secdesc{color:var(--ink2);font-size:14.5px;margin-top:16px}
 
-/* services 2 pillars */
-#service{background:var(--soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.pillars{display:grid;grid-template-columns:1.25fr 1fr;gap:22px}
-.pillar{background:#fff;border:1px solid var(--line);border-radius:20px;padding:32px;position:relative;overflow:hidden;transition:transform .18s,box-shadow .18s}
-.pillar:hover{transform:translateY(-3px);box-shadow:0 18px 44px rgba(40,44,50,.09)}
-.pillar.main{border-top:3px solid var(--accent)}
-.pillar .ptag{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.08em;padding:4px 11px;border-radius:20px;margin-bottom:14px}
-.pillar.main .ptag{background:var(--accent);color:#fff}
-.pillar.sub .ptag{background:#eceef1;color:var(--ink2)}
-.pillar h3{font-size:21px;font-weight:800;margin-bottom:10px;letter-spacing:-.01em}
-.pillar p{font-size:14px;color:var(--ink2);margin-bottom:18px}
-.plist{list-style:none;display:flex;flex-direction:column;gap:9px}
-.plist li{display:flex;gap:10px;font-size:13.8px;align-items:flex-start}
-.plist li::before{content:"";flex:none;width:7px;height:7px;border-radius:2px;background:var(--accent);transform:rotate(45deg);margin-top:8px}
-.pillar.sub .plist li::before{background:var(--muted)}
-.pillar .pnote{margin-top:18px;font-size:12px;color:var(--muted)}
-@media(max-width:760px){.pillars{grid-template-columns:1fr}}
+/* pains */
+#pain{background:var(--soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.pains{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+.pain{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px 16px;text-align:center;transition:transform .16s,box-shadow .16s}
+.pain:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(40,44,50,.07)}
+.pain .pi{width:48px;height:48px;margin:0 auto 13px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px}
+.pain p{font-size:13px;color:var(--ink2);line-height:1.65}
+@media(max-width:900px){.pains{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.pains{grid-template-columns:1fr}}
 
-/* works */
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-@media(max-width:860px){.cards{grid-template-columns:1fr}}
-.card{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:transform .16s,box-shadow .16s}
-.card:hover{transform:translateY(-5px);box-shadow:0 20px 44px rgba(40,44,50,.12)}
-.thumb{height:172px;position:relative;overflow:hidden;background:#eef1f4;border-bottom:1px solid var(--line)}
-.thumb img{width:100%;height:100%;object-fit:cover;object-position:top center;transition:transform .45s ease}
-.card:hover .thumb img{transform:scale(1.04)}
-.tag{position:absolute;top:12px;left:12px;z-index:1;font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.04em;color:#fff;background:rgba(47,49,51,.72);backdrop-filter:blur(3px);padding:4px 11px;border-radius:20px}
-.cbody{padding:20px 20px 22px;display:flex;flex-direction:column;flex:1}
-.cbody h3{font-size:17px;margin-bottom:7px}
-.cbody .clead{font-size:13.3px;color:var(--ink2);margin-bottom:14px}
-.meta{display:flex;flex-direction:column;gap:7px;margin-bottom:15px}
-.meta .row{display:flex;gap:8px;font-size:12.2px;line-height:1.55;align-items:flex-start}
-.meta .ml{flex:none;width:40px;font-family:var(--mono);font-weight:600;font-size:10px;color:#fff;text-align:center;padding:3px 0;border-radius:5px;margin-top:1px}
-.meta .ml.t{background:var(--ink)}
-.meta .ml.p{background:var(--accent)}
-.meta .row span:last-child{color:#525a64}
-.feat{list-style:none;font-size:12.6px;color:var(--ink);margin-bottom:18px;display:flex;flex-direction:column;gap:6px}
-.feat li{display:flex;gap:8px;align-items:flex-start}
-.feat li::before{content:"";flex:none;width:6px;height:6px;border-radius:50%;background:var(--accent);margin-top:7px}
-.stack{font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:16px;letter-spacing:.02em}
-.clink{margin-top:auto;display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:14px;color:#fff;background:var(--ink);padding:11px 16px;border-radius:10px;justify-content:center;transition:background .15s,gap .15s}
-.clink:hover{background:var(--accent);gap:12px}
+/* can-do (3 cards) */
+.cando{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.cd{background:#fff;border:1px solid var(--line);border-radius:18px;padding:30px 26px;transition:transform .18s,box-shadow .18s,border-color .18s}
+.cd:hover{transform:translateY(-4px);box-shadow:0 18px 42px rgba(40,44,50,.09);border-color:var(--accent-line)}
+.cd .cdi{width:54px;height:54px;border-radius:14px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:16px}
+.cd h3{font-size:18px;font-weight:800;margin-bottom:11px;letter-spacing:-.01em}
+.cd p{font-size:13.6px;color:var(--ink2);margin-bottom:17px}
+.cdlist{list-style:none;display:flex;flex-direction:column;gap:9px}
+.cdlist li{display:flex;gap:9px;font-size:13.2px;align-items:flex-start;color:var(--ink)}
+.cdlist li::before{content:"";flex:none;width:7px;height:7px;border-radius:2px;background:var(--accent);transform:rotate(45deg);margin-top:8px}
+@media(max-width:860px){.cando{grid-template-columns:1fr}}
 
-/* flow */
-.flow{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.step{position:relative;background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px}
-.step .num{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.1em;margin-bottom:10px}
-.step h3{font-size:16.5px;margin-bottom:7px}
-.step p{font-size:13.6px;color:var(--ink2)}
-@media(max-width:760px){.flow{grid-template-columns:1fr}}
+/* works (light demo cards) */
+#works{background:var(--soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.dcards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.dcard{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:transform .16s,box-shadow .16s}
+.dcard:hover{transform:translateY(-5px);box-shadow:0 20px 44px rgba(40,44,50,.12)}
+.dthumb{height:150px;overflow:hidden;background:#eef1f4;border-bottom:1px solid var(--line)}
+.dthumb img{width:100%;height:100%;object-fit:cover;object-position:top center;transition:transform .45s ease}
+.dcard:hover .dthumb img{transform:scale(1.05)}
+.dbody{padding:17px 18px 18px;display:flex;flex-direction:column;flex:1}
+.dbody h3{font-size:16px;margin-bottom:6px}
+.dbody p{font-size:12.8px;color:var(--ink2);margin-bottom:13px;flex:1}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:15px}
+.chips span{font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent-line);padding:3px 10px;border-radius:20px}
+.dlink{display:inline-flex;align-items:center;gap:7px;font-weight:800;font-size:13.5px;color:#fff;background:var(--ink);padding:10px 15px;border-radius:9px;justify-content:center;transition:background .15s,gap .15s}
+.dcard:hover .dlink{background:var(--accent);gap:11px}
+@media(max-width:860px){.dcards{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.dcards{grid-template-columns:1fr}}
+
+/* flow (5 steps) */
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;align-items:stretch}
+.step{position:relative;background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px 16px;text-align:center}
+.step .snum{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--accent);letter-spacing:.1em;margin-bottom:9px}
+.step .sic{width:46px;height:46px;margin:0 auto 12px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:21px}
+.step h3{font-size:14.5px;margin-bottom:6px}
+.step p{font-size:12px;color:var(--ink2);line-height:1.6}
+.flow-note{margin-top:24px;text-align:center;background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:12px;padding:15px;font-size:14px;font-weight:700;color:var(--accent-d)}
+@media(max-width:900px){.flow{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.flow{grid-template-columns:1fr}}
 
 /* company */
 #company{background:var(--soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.ctable{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden}
-.ctable .crow{display:grid;grid-template-columns:170px 1fr;border-bottom:1px solid var(--line)}
+.ctable{max-width:760px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.ctable .crow{display:grid;grid-template-columns:160px 1fr;border-bottom:1px solid var(--line)}
 .ctable .crow:last-child{border-bottom:none}
-.ctable .ck{background:#fafbfc;padding:15px 20px;font-size:13px;font-weight:700;color:var(--ink2);font-family:var(--mono);letter-spacing:.03em}
+.ctable .ck{background:#fafbfc;padding:15px 20px;font-size:12.5px;font-weight:700;color:var(--ink2);font-family:var(--mono);letter-spacing:.03em}
 .ctable .cv{padding:15px 20px;font-size:14px}
 @media(max-width:560px){.ctable .crow{grid-template-columns:1fr}.ctable .ck{padding:11px 16px 2px}.ctable .cv{padding:4px 16px 13px}}
 
-/* contact */
-#contact{background:linear-gradient(150deg,#2a2c2e,#1d1f21);color:#fff;text-align:center}
-#contact .seclabel{color:var(--accent)}
-#contact .sectitle{color:#fff}
-#contact .secdesc{color:#c3c8ce;margin:0 auto 32px}
-.contact-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-.cbtn{display:inline-flex;align-items:center;gap:11px;font-size:17px;font-weight:800;padding:16px 28px;border-radius:13px;transition:transform .15s,box-shadow .15s}
-.cbtn.mail{background:var(--accent);color:#fff;box-shadow:0 12px 28px rgba(195,47,28,.36)}
-.cbtn.mail:hover{background:var(--accent-d);transform:translateY(-2px)}
-.cbtn.tel{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.26)}
-.cbtn.tel:hover{background:rgba(255,255,255,.15);transform:translateY(-2px)}
+/* final cta */
+#cta{background:linear-gradient(150deg,#fff,var(--accent-soft));border-top:1px solid var(--line)}
+.cta-box{text-align:center;max-width:680px;margin:0 auto}
+.cta-box h2{font-size:27px;font-weight:900;letter-spacing:-.02em;margin-bottom:14px}
+.cta-box p{font-size:15px;color:var(--ink2);margin-bottom:30px}
+.cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
 
 /* footer */
-footer{background:#181a1b;color:#8a9099;font-size:12.5px;padding:30px 0}
-footer .fwrap{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
-footer .flogo-img{height:20px;width:auto;display:block;opacity:.9;margin-bottom:4px}
-.fnote{font-size:11.5px;color:#6c7177;margin-top:8px}
+footer{background:#23262a;color:#a7adb4;font-size:13px}
+.fmain{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr auto;gap:30px;padding:46px 0 34px}
+.fcol .fh{font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.1em;color:#e7e9ec;margin-bottom:13px}
+.fcol a{display:block;font-size:12.8px;color:#a7adb4;padding:4px 0;transition:color .15s}
+.fcol a:hover{color:#fff}
+.fcol .flogo-img{height:19px;width:auto;display:block;opacity:.92;margin-bottom:12px}
+.fcol .fabout{font-size:12px;color:#878d94;line-height:1.7}
+.fcontact{text-align:right}
+.ftel{font-size:21px;font-weight:800;color:#fff;font-family:var(--mono);letter-spacing:.02em;display:inline-flex;align-items:center;gap:8px}
+.fhours{font-size:11.5px;color:#878d94;margin:3px 0 13px}
+.fbtn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;padding:11px 20px;border-radius:10px;font-weight:700;font-size:13.5px;transition:background .15s,transform .15s}
+.fbtn:hover{background:var(--accent-d);transform:translateY(-1px)}
+.fbottom{border-top:1px solid #34383d;padding:16px 0;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:11.5px;color:#787e85}
+@media(max-width:880px){.fmain{grid-template-columns:1fr 1fr;gap:24px}.fcontact{text-align:left;grid-column:1/-1}}
+@media(max-width:480px){.fmain{grid-template-columns:1fr}}
 </style>
 </head>
-<body>
+<body id="top">
 
 <header id="hdr">
   <div class="wrap hd">
-    <a href="#top" class="logo" aria-label="SPICY DEVICE">
-      <img src="assets/logo.png" alt="SPICY DEVICE" class="logo-img">
-    </a>
+    <a href="#top" class="logo" aria-label="SPICY DEVICE"><img src="assets/logo.png" alt="SPICY DEVICE" class="logo-img"></a>
     <nav class="nav">
-      <a href="#works">制作実績</a>
-      <a href="#service">サービス</a>
-      <a href="#company">会社概要</a>
-      <a href="#contact" class="cta"><span class="zap">⚡</span>お問い合わせ</a>
+      <a class="nl" href="#service">サービス</a>
+      <a class="nl" href="#works">制作デモ</a>
+      <a class="nl" href="#">導入事例</a>
+      <a class="nl" href="https://spicy-device.com/blog/">ブログ</a>
+      <a class="nl" href="#company">会社概要</a>
+      <span class="nav-cta">
+        <a class="btn btn-ghost btn-sm" href="#works">🖥 デモを見る</a>
+        <a class="btn btn-primary btn-sm" href="#cta">無料で相談する</a>
+      </span>
     </nav>
   </div>
 </header>
 
 <!-- HERO -->
-<div class="hero" id="top">
+<div class="hero">
   <div class="wrap">
-    <span class="eyebrow"><span class="zap">⚡</span>飲食店向け オーダーメイドWebツール制作</span>
-    <h1>お店の「めんどくさい」を、<br><span class="hl">ちょうどいいツール</span>で軽くする。</h1>
-    <p class="lead">レジ・予約媒体・SNS・収支——バラバラな数字を、現場が毎日使える1枚のツールにまとめます。
-      既製のSaaSでは噛み合わない部分を、お店のオペレーションに合わせてオーダーメイドで。下は実際に作って動いているツールのデモです。</p>
-    <div class="btns">
-      <a href="#works" class="btn btn-primary"><span>⚡</span> 制作実績を見る</a>
-      <a href="#contact" class="btn btn-ghost">無料で相談する</a>
+    <div class="hero-copy">
+      <span class="eyebrow"><span class="zap">⚡</span>飲食店の業績改善・数字管理・販促改善を支援</span>
+      <h1>飲食店の「数字」と<br>「めんどうな業務」を、<br><span class="hl">現場で続く仕組み</span>に。</h1>
+      <p class="lead">レジ、予約媒体、SNS、仕入れ、原価、日報。バラバラな情報を、お店ごとの運用に合わせて整理・可視化します。Webツール制作から、仕入れ・原価改善、媒体分析まで、現場で使える形に落とし込みます。</p>
+      <div class="btns">
+        <a class="btn btn-primary btn-lg" href="#cta">⚡ 無料で相談する</a>
+        <a class="btn btn-ghost btn-lg" href="#works">🖥 デモを見てみる</a>
+      </div>
     </div>
-    <div class="hero-meta">
-      <div><b>6+</b>公開中のツール</div>
-      <div><b>2020-</b>飲食店支援の実績</div>
-      <div><b>1機能〜</b>小さく始められる</div>
+    <div class="hero-visual">
+      <div class="mock-browser">
+        <div class="bar"><i></i><i></i><i></i></div>
+        <img src="assets/shot-report.png" alt="月次業績レポートのダッシュボード">
+      </div>
+      <div class="mock-phone"><img src="assets/shot-instagram.png" alt="Instagram分析ダッシュボード"></div>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="wrap">
+      <div class="hstats">
+        <div class="hs"><span class="hsi">📈</span><div><b>2020年〜</b><span>飲食店支援</span></div></div>
+        <div class="hs"><span class="hsi">🖥</span><div><b>6件以上</b><span>公開中のデモ</span></div></div>
+        <div class="hs"><span class="hsi">🏪</span><div><b>1店舗から</b><span>小さく始められる</span></div></div>
+        <div class="hs"><span class="hsi">🛡</span><div><b>サンプルデータで</b><span>安心して閲覧可能</span></div></div>
+      </div>
+      <p class="hnote">※ 掲載中のデモはすべてサンプルデータで動作しています。実店舗・実顧客のデータは含まれません。</p>
     </div>
   </div>
 </div>
 
-<!-- VALUE -->
-<section id="why">
+<!-- PAIN -->
+<section id="pain">
   <div class="wrap">
-    <div class="seclabel reveal">WHY</div>
-    <h2 class="sectitle reveal">「現場で続く」ことを最優先に</h2>
-    <p class="secdesc reveal">高機能より、毎日無理なく使えること。スマホ1台・コピペ1回で回るくらいの軽さで設計します。</p>
-    <div class="vals">
-      <div class="val reveal d1"><div class="ic">📱</div><h3>現場ファースト</h3><p>営業中でもスマホでサッと入力。難しい操作・研修は不要。続けられる手触りにこだわります。</p></div>
-      <div class="val reveal d2"><div class="ic">🧩</div><h3>オーダーメイド</h3><p>お店のメニュー・帳票・媒体に合わせて専用設計。既製ツールの「惜しい」を埋めます。</p></div>
-      <div class="val reveal d3"><div class="ic">⚡</div><h3>数字が動く</h3><p>入力した先で売上・客単価・PVが自動で集計・可視化。会議資料やオーナー報告まで一気通貫。</p></div>
+    <div class="sec-head reveal"><div class="sectitle"><span class="u">こんなお悩み、ありませんか？</span></div></div>
+    <div class="pains">
+      <div class="pain reveal d1"><div class="pi">📊</div><p>売上・原価・媒体の数字がバラバラで、全体が見えない</p></div>
+      <div class="pain reveal d2"><div class="pi">🧮</div><p>毎月の集計がExcel頼みで、時間がかかる</p></div>
+      <div class="pain reveal d3"><div class="pi">🔍</div><p>食べログ・ぐるなび・一休・OZmallの効果がよくわからない</p></div>
+      <div class="pain reveal d4"><div class="pi">💸</div><p>仕入れや原価の改善ポイントが見えない</p></div>
+      <div class="pain reveal d4"><div class="pi">🔁</div><p>店長報告や月次資料が属人化していて、引き継ぎが大変</p></div>
     </div>
   </div>
 </section>
 
-<!-- SERVICE (2 pillars) -->
+<!-- CAN DO -->
 <section id="service">
   <div class="wrap">
-    <div class="seclabel reveal">SERVICE</div>
-    <h2 class="sectitle reveal">2つの柱で、お店の利益を底上げ</h2>
-    <p class="secdesc reveal">「仕組み（Webツール）」と「仕入れ（コスト改善）」の両面から、飲食店の現場をまるごと支援します。</p>
-    <div class="pillars">
-      <div class="pillar main reveal d1">
-        <span class="ptag">主役のサービス</span>
-        <h3>オーダーメイドWebツール制作</h3>
-        <p>レジ・予約媒体・SNS・収支などバラバラな数字を、お店専用のツールに。現場が毎日使える軽さで設計し、運用しながら育てます。</p>
-        <ul class="plist">
-          <li>売上・原価・ドリンク・PVなどの記録＆自動集計</li>
-          <li>スクショ・CSV・スマホ入力からAIで数値抽出</li>
-          <li>月次レポート／チェックリスト／分析ダッシュボード等</li>
-          <li>まずは1機能・1か月のお試しから</li>
+    <div class="sec-head reveal"><div class="seclabel">SERVICE</div><div class="sectitle"><span class="u">Spicy Device ができること</span></div>
+      <p class="secdesc">「仕組み（Webツール）」と「仕入れ（コスト）」と「集客（媒体）」の3方向から、お店の利益を底上げします。</p></div>
+    <div class="cando">
+      <div class="cd reveal d1">
+        <div class="cdi">🖥</div>
+        <h3>飲食店向けWebツール制作</h3>
+        <p>売上管理、媒体分析、月次レポート、チェックリスト、SNS分析など、お店ごとの運用に合わせた専用ツールをオーダーメイドで制作します。</p>
+        <ul class="cdlist">
+          <li>売上・原価・粗利管理</li>
+          <li>媒体・予約データの可視化</li>
+          <li>日報・チェックリストの効率化</li>
+          <li>SNS分析・販促効果の可視化</li>
         </ul>
-        <div class="pnote">▼ 実際に動くツールのデモは「制作実績」で触れます。</div>
       </div>
-      <div class="pillar sub reveal d2">
-        <span class="ptag">もう一つの柱</span>
-        <h3>コスト改善・購買代行</h3>
-        <p>「利益は、仕入れから変えられる。」原価の見直し・取引先交渉・購買代行で、利益体質づくりを支援します。</p>
-        <ul class="plist">
-          <li>原価・仕入れの棚卸しと見直し</li>
-          <li>取引先の比較・交渉・購買代行</li>
-          <li>メニュー別・カテゴリ別の粗利分析</li>
-          <li>改善の実行まで継続サポート</li>
+      <div class="cd reveal d2">
+        <div class="cdi">🛒</div>
+        <h3>購買・原価改善支援</h3>
+        <p>仕入れの見直し、業者比較、原価分析、粗利改善まで。コストを下げて、利益を残す仕組みを一緒につくります。</p>
+        <ul class="cdlist">
+          <li>仕入れ棚卸し・業者比較</li>
+          <li>原価率・粗利率の改善</li>
+          <li>メニュー別粗利分析</li>
+          <li>継続的な購買改善サポート</li>
         </ul>
-        <div class="pnote">飲食店のコスト・生産性改善コンサルティング。</div>
+      </div>
+      <div class="cd reveal d3">
+        <div class="cdi">📈</div>
+        <h3>媒体・売上改善支援</h3>
+        <p>食べログ、ぐるなび、一休、OZmall、Instagramなどのデータを整理し、予約・売上につながる改善ポイントを見える化します。</p>
+        <ul class="cdlist">
+          <li>グルメ媒体の効果測定</li>
+          <li>予約率・PV・転換率の改善</li>
+          <li>ドリンク売上・客単価の改善</li>
+          <li>月次会議資料の作成サポート</li>
+        </ul>
       </div>
     </div>
   </div>
@@ -248,193 +293,173 @@ footer .flogo-img{height:20px;width:auto;display:block;opacity:.9;margin-bottom:
 <!-- WORKS -->
 <section id="works">
   <div class="wrap">
-    <div class="seclabel reveal">WORKS</div>
-    <h2 class="sectitle reveal">制作実績（デモ）</h2>
-    <p class="secdesc reveal">実店舗向けに開発したツールを、サンプルデータでそのまま触れるデモにしています。クリックで実際に操作できます。<br>
-      掲載は一例です。<strong style="color:var(--ink)">「こう改善したい」のイメージをすり合わせながら、お店専用のツールを1から作ります。</strong></p>
-    <div class="cards">
+    <div class="sec-head reveal"><div class="seclabel">WORKS</div><div class="sectitle"><span class="u">制作デモ（公開中のツール）</span></div>
+      <p class="secdesc">実店舗向けに開発したツールを、サンプルデータでそのまま触れるデモに。クリックで実際に操作できます。</p></div>
+    <div class="dcards">
 
-      <div class="card reveal d1">
-        <div class="thumb"><span class="tag">SNS分析 / Instagram</span><img src="assets/shot-instagram.png" alt="Instagram分析ダッシュボードの画面" loading="lazy"></div>
-        <div class="cbody">
+      <a class="dcard reveal d1" href="instagram-analytics/">
+        <div class="dthumb"><img src="assets/shot-instagram.png" alt="Instagram分析ダッシュボード" loading="lazy"></div>
+        <div class="dbody">
           <h3>Instagram分析ダッシュボード</h3>
-          <p class="clead">投稿の数字をスクショ取込か手入力するだけで、来店につながる指標を自動分析。連携不要・スマホ完結。</p>
-          <div class="meta">
-            <div class="row"><span class="ml t">対象</span><span>自分で集客したい個人店オーナー・SNS担当</span></div>
-            <div class="row"><span class="ml p">課題</span><span>数字は見られても、次に何を投稿すべきか判断につながらない</span></div>
-          </div>
-          <ul class="feat">
-            <li>保存率・発見リーチなど「伸びる投稿の法則」を可視化</li>
-            <li>曜日×時間帯ヒートマップで最適タイミング</li>
-            <li>発見→プロフ訪問→予約クリックの来店導線を分析</li>
-          </ul>
-          <div class="stack">Single HTML / Vanilla JS / Chart.js</div>
-          <a class="clink" href="instagram-analytics/">デモを見る →</a>
+          <p>投稿の分析からエンゲージメントを可視化。投稿時間帯の最適化や来店導線の分析をサポート。</p>
+          <div class="chips"><span>SNS分析</span><span>Instagram</span></div>
+          <span class="dlink">デモを見る →</span>
         </div>
-      </div>
+      </a>
 
-      <div class="card reveal d2">
-        <div class="thumb"><span class="tag">衛生管理 / HACCP / 多言語</span><img src="assets/shot-checklist.png" alt="開店・閉店チェックリストの画面" loading="lazy"></div>
-        <div class="cbody">
+      <a class="dcard reveal d2" href="opening-checklist/">
+        <div class="dthumb"><img src="assets/shot-checklist.png" alt="開店・閉店チェックリスト" loading="lazy"></div>
+        <div class="dbody">
           <h3>開店・閉店チェックリスト</h3>
-          <p class="clead">開店前・閉店後の作業をスタッフが記録し、オーナー・管理職がリモートで確認。閉店の申し送りが翌日へ自動引き継ぎ。</p>
-          <div class="meta">
-            <div class="row"><span class="ml t">対象</span><span>現場に常駐できない多店舗オーナー・エリアマネージャー</span></div>
-            <div class="row"><span class="ml p">課題</span><span>準備・片付けの抜け・もれが現場任せで気づけない</span></div>
-          </div>
-          <ul class="feat">
-            <li>開店／閉店 シフト切替・HACCP温度記録</li>
-            <li>閉店の予約・申し送りを翌朝に自動キャリーオーバー</li>
-            <li>過去7日間カレンダー・日英中 3言語対応</li>
-          </ul>
-          <div class="stack">Single HTML / Vanilla JS / 日英中</div>
-          <a class="clink" href="opening-checklist/">デモを見る →</a>
+          <p>開店・閉店作業の抜け漏れを防ぎ、標準化されたオペレーションを実現。日英中の3言語に対応。</p>
+          <div class="chips"><span>オペレーション</span><span>チェックリスト</span></div>
+          <span class="dlink">デモを見る →</span>
         </div>
-      </div>
+      </a>
 
-      <div class="card reveal d3">
-        <div class="thumb"><span class="tag">月次レポート / 自動集計</span><img src="assets/shot-report.png" alt="月次業績レポートの画面" loading="lazy"></div>
-        <div class="cbody">
+      <a class="dcard reveal d3" href="monthly-report/">
+        <div class="dthumb"><img src="assets/shot-report.png" alt="月次業績レポート" loading="lazy"></div>
+        <div class="dbody">
           <h3>月次業績レポート</h3>
-          <p class="clead">POS・予約媒体・SNS・収支を自動集計し、1枚のダッシュボードに。会議資料の作成時間をゼロに。</p>
-          <div class="meta">
-            <div class="row"><span class="ml t">対象</span><span>オーナー・店長</span></div>
-            <div class="row"><span class="ml p">課題</span><span>毎月の集計と資料づくりに時間がかかり分析まで手が回らない</span></div>
-          </div>
-          <ul class="feat">
-            <li>売上・客単価・ドリンク・原価率・営業利益</li>
-            <li>WEB媒体／SNSの効果も一元化</li>
-            <li>メニューABC分析・PL明細つき</li>
-          </ul>
-          <div class="stack">Python / Chart.js / HTML・PDF・スライド</div>
-          <a class="clink" href="monthly-report/">デモを見る →</a>
+          <p>売上・原価・客数・SNS・店舗を自動集計し、わかりやすく1枚にまとめます。会議資料づくりを時短。</p>
+          <div class="chips"><span>売上管理</span><span>月次レポート</span></div>
+          <span class="dlink">デモを見る →</span>
         </div>
-      </div>
+      </a>
 
-      <div class="card reveal d1">
-        <div class="thumb"><span class="tag">開業計画 / 収益シミュ</span><img src="assets/shot-opening.png" alt="出店シミュレーションの画面" loading="lazy"></div>
-        <div class="cbody">
-          <h3>出店シミュレーション</h3>
-          <p class="clead">集客チャネル別の売上から月次PL・損益分岐・投資回収を試算。5年計画をExcelで出力。</p>
-          <div class="meta">
-            <div class="row"><span class="ml t">対象</span><span>開業検討中のオーナー・経営者</span></div>
-            <div class="row"><span class="ml p">課題</span><span>収支計画が感覚頼りで、融資資料・投資回収が手薄になりがち</span></div>
-          </div>
-          <ul class="feat">
-            <li>集客チャネル別の売上から月次PLを自動試算</li>
-            <li>立ち上げ・季節・年成長を反映した5年シミュ</li>
-            <li>外部環境・内部分析メモ付きExcel（4シート）出力</li>
-          </ul>
-          <div class="stack">Single HTML / Vanilla JS / SheetJS</div>
-          <a class="clink" href="opening-simulator/">デモを見る →</a>
+      <a class="dcard reveal d1" href="opening-simulator/">
+        <div class="dthumb"><img src="assets/shot-opening.png" alt="出店シミュレーションツール" loading="lazy"></div>
+        <div class="dbody">
+          <h3>出店シミュレーションツール</h3>
+          <p>出店計画の売上・原価・投資回収をシミュレーションし、判断材料を提供。5年計画をExcel出力。</p>
+          <div class="chips"><span>出店計画</span><span>シミュレーション</span></div>
+          <span class="dlink">デモを見る →</span>
         </div>
-      </div>
+      </a>
 
-      <div class="card reveal d2">
-        <div class="thumb"><span class="tag">媒体PV / 効果測定</span><img src="assets/shot-media.png" alt="グルメ媒体 効果測定の画面" loading="lazy"></div>
-        <div class="cbody">
-          <h3>グルメ媒体 効果測定</h3>
-          <p class="clead">ぐるなび・食べログ・オズモール・一休など各グルメ媒体のPVを一元管理。媒体別の伸び・前月比をひと目で。</p>
-          <div class="meta">
-            <div class="row"><span class="ml t">対象</span><span>集客・販促担当／店長</span></div>
-            <div class="row"><span class="ml p">課題</span><span>媒体ごとに管理画面を見るのが面倒で、どこが効いているか分からない</span></div>
-          </div>
-          <ul class="feat">
-            <li>7媒体対応（ぐるなび・食べログ・オズモール・一休 ほか）</li>
-            <li>CSV自動取込／スクショOCR／手動入力で更新</li>
-            <li>媒体別PVの推移グラフ・前月比・店舗別管理</li>
-          </ul>
-          <div class="stack">Next.js / React / Recharts</div>
-          <a class="clink" href="media-dashboard/">デモを見る →</a>
+      <a class="dcard reveal d2" href="media-dashboard/">
+        <div class="dthumb"><img src="assets/shot-media.png" alt="グルメ媒体効果測定ダッシュボード" loading="lazy"></div>
+        <div class="dbody">
+          <h3>グルメ媒体効果測定ダッシュボード</h3>
+          <p>食べログ・ぐるなび・一休・OZmallなどの成果を比較・分析。媒体別の伸び・前月比をひと目で。</p>
+          <div class="chips"><span>媒体分析</span><span>効果測定</span></div>
+          <span class="dlink">デモを見る →</span>
         </div>
-      </div>
+      </a>
 
-      <div class="card reveal d3">
-        <div class="thumb"><span class="tag">売上分析 / モバイル</span><img src="assets/shot-drink.png" alt="ドリンク売上トラッカーの画面" loading="lazy"></div>
-        <div class="cbody">
+      <a class="dcard reveal d3" href="drink-tracker/">
+        <div class="dthumb"><img src="assets/shot-drink.png" alt="ドリンク売上トラッカー" loading="lazy"></div>
+        <div class="dbody">
           <h3>ドリンク売上トラッカー</h3>
-          <p class="clead">レシートを撮るだけでドリンク売上を記録・分析。1人あたり単価や目標達成率を可視化。</p>
-          <div class="meta">
-            <div class="row"><span class="ml t">対象</span><span>店長・現場スタッフ</span></div>
-            <div class="row"><span class="ml p">課題</span><span>ドリンクの伸びしろが感覚頼り。施策の効果が数字で見えない</span></div>
-          </div>
-          <ul class="feat">
-            <li>レシート撮影→AIが内訳を自動抽出</li>
-            <li>週次・月次・曜日別レポート</li>
-            <li>具体施策の達成率トラッキング</li>
-          </ul>
-          <div class="stack">React / Single HTML / Claude Vision</div>
-          <a class="clink" href="drink-tracker/">デモを見る →</a>
+          <p>ドリンク売上・原価・粗利を可視化し、メニュー改善につなげる。レシート撮影でAIが自動集計。</p>
+          <div class="chips"><span>ドリンク管理</span><span>売上分析</span></div>
+          <span class="dlink">デモを見る →</span>
         </div>
-      </div>
+      </a>
 
     </div>
   </div>
 </section>
 
 <!-- FLOW -->
-<section id="flow" style="background:var(--soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+<section id="flow">
   <div class="wrap">
-    <div class="seclabel reveal">FLOW</div>
-    <h2 class="sectitle reveal">進め方</h2>
-    <p class="secdesc reveal">小さく作って、現場で試しながら育てます。まずは1機能・1か月から。</p>
+    <div class="sec-head reveal"><div class="seclabel">FLOW</div><div class="sectitle"><span class="u">導入までの流れ</span></div>
+      <p class="secdesc">最初から大きなシステムは作りません。まずは1機能から、現場で使いながら育てます。</p></div>
     <div class="flow">
-      <div class="step reveal d1"><div class="num">STEP 01</div><h3>ヒアリング</h3><p>今の運用と困りごとを伺い、ツールにするポイントを一緒に整理します。</p></div>
-      <div class="step reveal d2"><div class="num">STEP 02</div><h3>試作・お試し導入</h3><p>たたき台を素早く作って実際に使ってみる。手触りを確かめてから本格化。</p></div>
-      <div class="step reveal d3"><div class="num">STEP 03</div><h3>改善・運用</h3><p>使いながら微調整。月次の分析・改善提案まで継続的にサポートします。</p></div>
+      <div class="step reveal d1"><div class="snum">STEP 01</div><div class="sic">💬</div><h3>ヒアリング</h3><p>お店の状況や課題を丁寧にヒアリングします。</p></div>
+      <div class="step reveal d2"><div class="snum">STEP 02</div><div class="sic">✏️</div><h3>試作・お試し導入</h3><p>必要な機能を小さく試作し、実際に使ってもらいます。</p></div>
+      <div class="step reveal d3"><div class="snum">STEP 03</div><div class="sic">🔧</div><h3>改善・調整</h3><p>現場のフィードバックをもとに改善を重ねます。</p></div>
+      <div class="step reveal d4"><div class="snum">STEP 04</div><div class="sic">🚀</div><h3>本格導入</h3><p>お店の運用に合わせて本格的に導入します。</p></div>
+      <div class="step reveal d4"><div class="snum">STEP 05</div><div class="sic">🎧</div><h3>運用サポート</h3><p>運用後の改善提案やサポートも継続して行います。</p></div>
     </div>
+    <div class="flow-note reveal">まずは1機能からのお試しも可能です。お気軽にご相談ください。</div>
   </div>
 </section>
 
 <!-- COMPANY -->
 <section id="company">
   <div class="wrap">
-    <div class="seclabel reveal">COMPANY</div>
-    <h2 class="sectitle reveal">会社概要</h2>
+    <div class="sec-head reveal"><div class="seclabel">COMPANY</div><div class="sectitle"><span class="u">会社概要</span></div></div>
     <div class="ctable reveal d1">
       <div class="crow"><div class="ck">会社名</div><div class="cv">株式会社スパイシーデバイス</div></div>
       <div class="crow"><div class="ck">代表者</div><div class="cv">代表取締役　藤谷 拓文</div></div>
       <div class="crow"><div class="ck">設立</div><div class="cv">2020年2月5日</div></div>
       <div class="crow"><div class="ck">所在地</div><div class="cv">〒171-0021　東京都豊島区西池袋3-29-3 梅本ビル4階（co-ba IKEBUKURO）</div></div>
-      <div class="crow"><div class="ck">事業内容</div><div class="cv">飲食店向けオーダーメイドWebツール制作／コスト改善・購買代行コンサルティング／採用・人事支援</div></div>
-      <div class="crow"><div class="ck">電話</div><div class="cv">03-6822-4544</div></div>
+      <div class="crow"><div class="ck">事業内容</div><div class="cv">飲食店向けオーダーメイドWebツール制作／購買・原価改善コンサルティング／媒体・売上改善支援／採用・人事支援</div></div>
+      <div class="crow"><div class="ck">電話</div><div class="cv">03-6822-4544（平日 10:00〜18:00）</div></div>
     </div>
   </div>
 </section>
 
-<!-- CONTACT -->
-<section id="contact">
+<!-- FINAL CTA -->
+<section id="cta">
   <div class="wrap">
-    <div class="seclabel reveal">CONTACT</div>
-    <h2 class="sectitle reveal">「これ作れる？」のご相談から</h2>
-    <p class="secdesc reveal">こんな作業を楽にしたい、こんな数字を見たい——ざっくりした段階で構いません。お気軽にどうぞ。</p>
-    <div class="contact-row reveal d1">
-      <a class="cbtn mail" href="mailto:t-fujiya@spicydevice.com?subject=Web%E3%83%84%E3%83%BC%E3%83%AB%E3%81%AE%E3%81%94%E7%9B%B8%E8%AB%87">✉ t-fujiya@spicydevice.com</a>
-      <a class="cbtn tel" href="tel:0368224544">☎ 03-6822-4544</a>
+    <div class="cta-box reveal">
+      <h2>「これ作れる？」を相談してみませんか？</h2>
+      <p>現状の管理方法を見せていただければ、改善のヒントを一緒に整理します。<br>ざっくりした段階で構いません。お気軽にどうぞ。</p>
+      <div class="cta-row">
+        <a class="btn btn-primary btn-lg" href="mailto:t-fujiya@spicydevice.com?subject=Web%E3%83%84%E3%83%BC%E3%83%AB%E3%81%AE%E3%81%94%E7%9B%B8%E8%AB%87">⚡ 無料で相談する</a>
+        <a class="btn btn-ghost btn-lg" href="#works">🖥 デモを見てみる</a>
+        <!-- 資料が用意でき次第、有効化する仮ボタン
+        <a class="btn btn-ghost btn-lg" href="#">📄 資料をダウンロードする</a>
+        -->
+      </div>
     </div>
   </div>
 </section>
 
 <footer>
-  <div class="wrap fwrap">
-    <div>
-      <img src="assets/logo-white.png" alt="SPICY DEVICE" class="flogo-img">
-      <div class="fnote">※ 掲載中のデモはすべてサンプルデータで動作しています。実店舗・実顧客のデータは含まれません。</div>
+  <div class="wrap">
+    <div class="fmain">
+      <div class="fcol">
+        <img src="assets/logo-white.png" alt="SPICY DEVICE" class="flogo-img">
+        <p class="fabout">飲食店の業績改善・数字管理・販促改善を支援する会社</p>
+      </div>
+      <div class="fcol">
+        <div class="fh">サービス</div>
+        <a href="#service">飲食店向けWebツール制作</a>
+        <a href="#service">購買・原価改善支援</a>
+        <a href="#service">媒体・売上改善支援</a>
+      </div>
+      <div class="fcol">
+        <div class="fh">制作デモ</div>
+        <a href="#works">デモ一覧</a>
+        <a href="instagram-analytics/">Instagram分析</a>
+        <a href="monthly-report/">月次業績レポート</a>
+      </div>
+      <div class="fcol">
+        <div class="fh">会社情報</div>
+        <a href="#company">会社概要</a>
+        <a href="https://spicy-device.com/blog/">ブログ</a>
+        <a href="#cta">お問い合わせ</a>
+      </div>
+      <div class="fcol fcontact">
+        <a class="ftel" href="tel:0368224544">☎ 03-6822-4544</a>
+        <div class="fhours">受付時間：平日 10:00〜18:00</div>
+        <a class="fbtn" href="mailto:t-fujiya@spicydevice.com?subject=Web%E3%83%84%E3%83%BC%E3%83%AB%E3%81%AE%E3%81%94%E7%9B%B8%E8%AB%87">お問い合わせフォーム</a>
+      </div>
     </div>
-    <div>© 2026 株式会社スパイシーデバイス</div>
+    <div class="fbottom">
+      <div>※ 掲載中のデモはすべてサンプルデータで動作しています。実店舗・実顧客のデータは含まれません。</div>
+      <div>© 2026 株式会社スパイシーデバイス</div>
+    </div>
   </div>
 </footer>
 
 <script>
-// header shadow on scroll
+// header shadow
 const hdr=document.getElementById('hdr');
 const onScroll=()=>hdr.classList.toggle('scrolled',window.scrollY>8);
 onScroll(); window.addEventListener('scroll',onScroll,{passive:true});
-// reveal on scroll
-const io=new IntersectionObserver((entries)=>{
-  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
-},{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+// reveal
+const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.12,rootMargin:'0px 0px -7% 0px'});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+// accent preview switch (?accent=blue) — 本番では無視される任意機能
+const ac=new URLSearchParams(location.search).get('accent');
+if(ac==='blue'){const r=document.documentElement.style;
+  r.setProperty('--accent','#2f6fe0');r.setProperty('--accent-d','#2456c4');
+  r.setProperty('--accent-soft','#eef4fe');r.setProperty('--accent-line','#cfe0fa');}
 </script>
 </body>
 </html>
