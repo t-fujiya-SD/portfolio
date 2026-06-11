@@ -66,15 +66,17 @@ h1 .hl::after{content:"";position:absolute;left:-2px;right:-2px;bottom:5px;heigh
 .btn-primary.btn-lg{box-shadow:0 12px 26px color-mix(in srgb,var(--accent) 26%,transparent)}
 .btn-primary.btn-lg:hover{transform:translateY(-2px)}
 /* hero visual */
-.hero-visual{position:relative;padding:10px 6px 30px}
-.mock-browser{border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 34px 64px rgba(40,44,50,.17);background:#fff;transform:rotate(-1.2deg);animation:floaty 7s ease-in-out infinite}
-.mock-browser .bar{height:30px;background:#f1f3f6;display:flex;align-items:center;gap:6px;padding:0 13px;border-bottom:1px solid var(--line)}
-.mock-browser .bar i{width:9px;height:9px;border-radius:50%;background:#d6dbe1;flex:none}
-.mock-browser img{width:100%;display:block}
-.mock-phone{position:absolute;right:-6px;bottom:6px;width:124px;border:5px solid #2f3133;border-radius:22px;overflow:hidden;box-shadow:0 18px 38px rgba(40,44,50,.24);background:#fff;animation:floaty 7s ease-in-out infinite .9s}
+.hero-visual{position:relative;padding:14px 8px 40px}
+.laptop{position:relative;width:100%;max-width:540px;margin:0 auto;animation:floaty 7s ease-in-out infinite}
+.laptop .scr{background:#2b2d30;border-radius:16px;padding:11px;box-shadow:0 32px 60px rgba(40,44,50,.20)}
+.laptop .scr img{width:100%;display:block;border-radius:6px}
+.laptop .base{position:relative;height:13px;width:116%;left:-8%;background:linear-gradient(#e6e9ed,#c7ccd2);border-radius:0 0 14px 14px;box-shadow:0 10px 16px rgba(40,44,50,.12)}
+.laptop .base::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:88px;height:6px;background:#b3b9c0;border-radius:0 0 7px 7px}
+.mock-phone{position:absolute;right:-12px;bottom:-14px;width:118px;border:5px solid #2b2d30;border-radius:24px;overflow:hidden;box-shadow:0 18px 40px rgba(40,44,50,.26);background:#fff;animation:floaty 7s ease-in-out infinite .9s}
+.mock-phone::before{content:"";position:absolute;top:6px;left:50%;transform:translateX(-50%);width:36px;height:5px;background:#2b2d30;border-radius:6px;z-index:2}
 .mock-phone img{width:100%;display:block}
-@keyframes floaty{0%,100%{transform:translateY(0) rotate(-1.2deg)}50%{transform:translateY(-10px) rotate(-1.2deg)}}
-@media(prefers-reduced-motion:reduce){.mock-browser,.mock-phone{animation:none}}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@media(prefers-reduced-motion:reduce){.laptop,.mock-phone{animation:none}}
 /* hero stats */
 .hero-stats{border-top:1px solid var(--line);margin-top:6px}
 .hero-stats .wrap{padding:22px 28px 30px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
@@ -112,11 +114,11 @@ section{padding:76px 0}
 .cd:hover{transform:translateY(-4px);box-shadow:0 18px 42px rgba(40,44,50,.09);border-color:var(--accent-line)}
 .cd .cdi{width:54px;height:54px;border-radius:14px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:16px}
 .cd h3{font-size:18px;font-weight:800;margin-bottom:11px;letter-spacing:-.01em}
-.cd p{font-size:13.6px;color:var(--ink2);margin-bottom:17px}
+.cd p{font-size:13.6px;color:var(--ink2);margin-bottom:17px;min-height:96px}
 .cdlist{list-style:none;display:flex;flex-direction:column;gap:9px}
 .cdlist li{display:flex;gap:9px;font-size:13.2px;align-items:flex-start;color:var(--ink)}
 .cdlist li::before{content:"";flex:none;width:7px;height:7px;border-radius:2px;background:var(--accent);transform:rotate(45deg);margin-top:8px}
-@media(max-width:860px){.cando{grid-template-columns:1fr}}
+@media(max-width:860px){.cando{grid-template-columns:1fr}.cd p{min-height:0}}
 
 /* works (light demo cards) */
 #works{background:var(--soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
@@ -213,9 +215,9 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
       </div>
     </div>
     <div class="hero-visual">
-      <div class="mock-browser">
-        <div class="bar"><i></i><i></i><i></i></div>
-        <img src="assets/shot-report.png" alt="月次業績レポートのダッシュボード">
+      <div class="laptop">
+        <div class="scr"><img src="assets/shot-report.png" alt="月次業績レポートのダッシュボード"></div>
+        <div class="base"></div>
       </div>
       <div class="mock-phone"><img src="assets/shot-instagram.png" alt="Instagram分析ダッシュボード"></div>
     </div>
@@ -262,6 +264,7 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
           <li>媒体・予約データの可視化</li>
           <li>日報・チェックリストの効率化</li>
           <li>SNS分析・販促効果の可視化</li>
+          <li>多言語対応マニュアルの整備</li>
         </ul>
       </div>
       <div class="cd reveal d2">
@@ -272,16 +275,18 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
           <li>仕入れ棚卸し・業者比較</li>
           <li>原価率・粗利率の改善</li>
           <li>メニュー別粗利分析</li>
+          <li>月次レポートの作成</li>
           <li>継続的な購買改善サポート</li>
         </ul>
       </div>
       <div class="cd reveal d3">
         <div class="cdi">📈</div>
-        <h3>媒体・売上改善支援</h3>
-        <p>食べログ、ぐるなび、一休、OZmall、Instagramなどのデータを整理し、予約・売上につながる改善ポイントを見える化します。</p>
+        <h3>集客・売上改善支援</h3>
+        <p>グルメ媒体やInstagramのデータを分析し、予約・売上につながる改善点を見える化。相性の良いグルメインフルエンサーの派遣にも対応します。</p>
         <ul class="cdlist">
           <li>グルメ媒体の効果測定</li>
           <li>予約率・PV・転換率の改善</li>
+          <li>グルメインフルエンサー派遣</li>
           <li>ドリンク売上・客単価の改善</li>
           <li>月次会議資料の作成サポート</li>
         </ul>
@@ -386,7 +391,7 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
       <div class="crow"><div class="ck">代表者</div><div class="cv">代表取締役　藤谷 拓文</div></div>
       <div class="crow"><div class="ck">設立</div><div class="cv">2020年2月5日</div></div>
       <div class="crow"><div class="ck">所在地</div><div class="cv">〒171-0021　東京都豊島区西池袋3-29-3 梅本ビル4階（co-ba IKEBUKURO）</div></div>
-      <div class="crow"><div class="ck">事業内容</div><div class="cv">飲食店向けオーダーメイドWebツール制作／購買・原価改善コンサルティング／媒体・売上改善支援／採用・人事支援</div></div>
+      <div class="crow"><div class="ck">事業内容</div><div class="cv">飲食店向けオーダーメイドWebツール制作／購買・原価改善コンサルティング／集客・売上改善支援／採用・人事支援</div></div>
       <div class="crow"><div class="ck">電話</div><div class="cv">03-6822-4544（平日 10:00〜18:00）</div></div>
     </div>
   </div>
