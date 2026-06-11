@@ -14,3 +14,6 @@ monthly-report/_build/
 # ローカル開発設定
 .claude/
 CLAUDE.md
+
+# 仕入れレポート生成スクリプト（実名マッピングを含むため非公開）
+**/build_demo.py
