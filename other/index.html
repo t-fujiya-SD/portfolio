@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>他業種向け｜食の現場のツール — 株式会社スパイシーデバイス</title>
+<meta name="description" content="飲食店だけでなく、卸・小売・食品メーカーなど「食」に関わる現場のオーダーメイドWebツールも制作。現在、青果卸向けツールを開発中です。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Noto+Sans+JP:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#2f3133;--ink2:#5b6066;--muted:#8a9099;--line:#e8eaed;--bg:#fff;--soft:#f7f8fa;--accent:#C32F1C;--accent-d:#9E2415;--accent-soft:#fbeeec;--accent-line:#eccfc9;--green:#1c7c3f;--green-soft:#e9f7ee;--green-line:#c4e8d1;--mono:"Chakra Petch",sans-serif;--sans:"Noto Sans JP",-apple-system,BlinkMacSystemFont,"Hiragino Sans",Meiryo,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.8;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:880px;margin:0 auto;padding:0 22px}
+header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.86);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hd{display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo-img{height:23px;width:auto;display:block}
+.back{font-size:13px;font-weight:700;color:var(--ink2)}
+.back:hover{color:var(--accent)}
+.btn{display:inline-flex;align-items:center;gap:8px;font-weight:800;border-radius:11px;transition:transform .15s,box-shadow .15s,background .15s,border-color .15s;cursor:pointer}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 10px 22px rgba(195,47,28,.24)}
+.btn-primary:hover{background:var(--accent-d);transform:translateY(-2px)}
+.btn-ghost{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+.btn-lg{font-size:15px;padding:14px 24px}
+/* hero */
+.hero{padding:48px 0 18px;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;right:-12%;top:-40%;width:460px;height:460px;background:radial-gradient(circle,var(--green-soft),transparent 68%);z-index:0}
+.hero .wrap{position:relative;z-index:1}
+.crumb{font-size:12.5px;color:var(--muted);margin-bottom:16px}
+.crumb a:hover{color:var(--accent)}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12.5px;font-weight:600;letter-spacing:.08em;color:var(--green);background:var(--green-soft);border:1px solid var(--green-line);padding:7px 15px;border-radius:30px;margin-bottom:18px}
+h1{font-size:31px;font-weight:900;letter-spacing:-.02em;line-height:1.42}
+h1 .hl{color:var(--accent)}
+.lead{font-size:15.5px;color:var(--ink2);margin-top:16px;max-width:680px}
+.hactions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+/* sections */
+section{padding:30px 0}
+.shead{font-size:20px;font-weight:800;letter-spacing:-.01em;margin-bottom:6px}
+.sdesc{font-size:14px;color:var(--ink2);margin-bottom:22px}
+/* industry cards */
+.inds{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.ind{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;position:relative}
+.ind.dev{border-color:var(--green-line);background:linear-gradient(160deg,#fff,var(--green-soft))}
+.ind .badge{position:absolute;top:16px;right:16px;font-family:var(--mono);font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px}
+.ind.dev .badge{background:var(--green);color:#fff}
+.ind.plan .badge{background:#eceef1;color:var(--muted)}
+.ind .ic{font-size:30px;margin-bottom:10px}
+.ind h3{font-size:16.5px;font-weight:800;margin-bottom:7px}
+.ind p{font-size:13.3px;color:var(--ink2);line-height:1.7}
+.ind ul{list-style:none;margin-top:11px;display:flex;flex-direction:column;gap:6px}
+.ind ul li{display:flex;gap:8px;font-size:12.8px;align-items:flex-start}
+.ind ul li::before{content:"";flex:none;width:6px;height:6px;border-radius:50%;background:var(--green);margin-top:7px}
+@media(max-width:640px){.inds{grid-template-columns:1fr}}
+/* why */
+.why{background:var(--soft);border:1px solid var(--line);border-radius:16px;padding:26px}
+.why h3{font-size:16px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.why .wrow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.why .wi{font-size:13.3px;color:var(--ink2);line-height:1.7}
+.why .wi b{color:var(--ink);display:block;margin-bottom:2px}
+@media(max-width:640px){.why .wrow{grid-template-columns:1fr}}
+/* relay */
+.relay{display:flex;flex-direction:column;gap:10px}
+.rl{display:flex;gap:12px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 17px}
+.rl .rc{flex:none;width:28px;height:28px;border-radius:50%;background:var(--green-soft);color:var(--green);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px}
+.rl p{font-size:13.8px}
+/* cta */
+.ctabox{background:linear-gradient(150deg,#fff,var(--accent-soft));border:1px solid var(--accent-line);border-radius:18px;padding:30px;text-align:center;margin-top:12px}
+.ctabox h2{font-size:21px;font-weight:900;margin-bottom:8px}
+.ctabox p{font-size:14px;color:var(--ink2);margin-bottom:20px}
+.ctarow{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+footer{background:#23262a;color:#8a9099;font-size:12px;text-align:center;padding:24px 0;margin-top:34px}
+</style>
+</head>
+<body>
+<header><div class="wrap hd">
+  <a href="../" class="logo" aria-label="SPICY DEVICE"><img src="../assets/logo.png" alt="SPICY DEVICE" class="logo-img"></a>
+  <a href="../" class="back">← ホームへ</a>
+</div></header>
+
+<div class="hero"><div class="wrap">
+  <div class="crumb"><a href="../">ホーム</a> ／ 他業種向け</div>
+  <span class="eyebrow">🥬 食の現場のツール</span>
+  <h1>飲食店だけじゃない。<br>「<span class="hl">食</span>」に関わる現場のツールを。</h1>
+  <p class="lead">飲食店で培った「現場が続く」設計と、仕入れ・原価の改善経験。その同じ作り方で、卸・小売・食品メーカーなど、食に関わる現場の「めんどうな業務」と「数字」を支援します。</p>
+  <div class="hactions">
+    <a class="btn btn-primary btn-lg" href="mailto:t-fujiya@spicydevice.com?subject=%E4%BB%96%E6%A5%AD%E7%A8%AE%E5%90%91%E3%81%91%E3%83%84%E3%83%BC%E3%83%AB%E3%81%AE%E7%9B%B8%E8%AB%87">⚡ 食の現場の相談をする</a>
+    <a class="btn btn-ghost btn-lg" href="../#works">🖥 飲食店向けデモを見る</a>
+  </div>
+</div></div>
+
+<section><div class="wrap">
+  <div class="shead">取り組んでいる業種</div>
+  <p class="sdesc">公開できるツールができ次第、ここに追加していきます。気になる業種があればお気軽にご相談ください。</p>
+  <div class="inds">
+    <div class="ind dev">
+      <span class="badge">開発中</span>
+      <div class="ic">🥬</div>
+      <h3>青果卸向け 業務ツール</h3>
+      <p>受発注・在庫・粗利など、卸の現場で毎日発生する数字とやりとりを、現場で回せる形に。</p>
+      <ul>
+        <li>受発注・伝票まわりの効率化</li>
+        <li>商品別・取引先別の粗利の見える化</li>
+        <li>在庫・ロスの管理</li>
+      </ul>
+    </div>
+    <div class="ind plan">
+      <span class="badge">相談歓迎</span>
+      <div class="ic">🍱</div>
+      <h3>食品小売・メーカー・その他</h3>
+      <p>食品小売、食品メーカー、セントラルキッチンなど。「数字がバラバラ」「集計がめんどう」を、現場に合わせて整理します。</p>
+      <ul>
+        <li>売上・原価・在庫の集計と可視化</li>
+        <li>日報・チェック業務の効率化</li>
+        <li>1機能から小さく試作</li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="why">
+    <h3>⚡ なぜ「食の現場」に強いのか</h3>
+    <div class="wrow">
+      <div class="wi"><b>現場が続く設計</b>飲食店の現場で「毎日無理なく使える」ツールを作ってきた経験。難しい操作・研修なしで回る軽さにこだわります。</div>
+      <div class="wi"><b>上流から店舗まで</b>仕入れ・購買・原価のコンサルもしているからこそ、卸（上流）から店舗まで、食の流れ全体を踏まえて設計できます。</div>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="shead">こんな現場のご相談もOK</div>
+  <p class="sdesc">業種が違っても、考え方は同じです。困っていることだけ教えてください。</p>
+  <div class="relay">
+    <div class="rl"><span class="rc">Q</span><p>取引先・商品ごとの<b>粗利を見える化したい</b>（卸・小売）</p></div>
+    <div class="rl"><span class="rc">Q</span><p>受発注や在庫の管理を<b>Excelから卒業したい</b></p></div>
+    <div class="rl"><span class="rc">Q</span><p>複数拠点の<b>数字を1か所にまとめたい</b></p></div>
+    <div class="rl"><span class="rc">Q</span><p>まずは<b>1機能だけ小さく試したい</b></p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="ctabox">
+    <h2>「うちの業種でもできる？」からどうぞ。</h2>
+    <p>食に関わる現場なら、まずはご相談ください。1機能だけの小さな試作からお話しできます。</p>
+    <div class="ctarow">
+      <a class="btn btn-primary btn-lg" href="mailto:t-fujiya@spicydevice.com?subject=%E4%BB%96%E6%A5%AD%E7%A8%AE%E5%90%91%E3%81%91%E3%83%84%E3%83%BC%E3%83%AB%E3%81%AE%E7%9B%B8%E8%AB%87">⚡ 相談する</a>
+      <a class="btn btn-ghost btn-lg" href="../">🏠 飲食店向けトップへ</a>
+    </div>
+  </div>
+</div></section>
+
+<footer>© 2026 株式会社スパイシーデバイス ／ 掲載デモはすべてサンプルデータで動作しています</footer>
+</body>
+</html>

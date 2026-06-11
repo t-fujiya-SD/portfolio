@@ -186,7 +186,9 @@ section{padding:76px 0}
 
 /* company */
 #company{background:var(--soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.beyond{max-width:760px;margin:0 auto 44px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px 26px;display:flex;gap:16px;align-items:flex-start}
+.beyond{max-width:760px;margin:0 auto 44px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px 26px;display:flex;gap:16px;align-items:flex-start;transition:transform .15s,box-shadow .15s,border-color .15s}
+.beyond:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(40,44,50,.08);border-color:#c4e8d1}
+.beyond:hover b{color:#1c7c3f}
 .beyond .bi{flex:none;width:46px;height:46px;border-radius:12px;background:#e9f7ee;display:flex;align-items:center;justify-content:center;font-size:23px}
 .beyond b{display:block;font-size:15.5px;margin-bottom:4px}
 .beyond p{font-size:13.3px;color:var(--ink2);line-height:1.7}
@@ -296,7 +298,7 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
     <nav class="nav">
       <a class="nl" href="#service">サービス</a>
       <a class="nl" href="#works">制作デモ</a>
-      <a class="nl" href="#">導入事例</a>
+      <a class="nl" href="other/">他業種向け</a>
       <a class="nl" href="https://spicy-device.com/blog/">ブログ</a>
       <a class="nl" href="#company">会社概要</a>
       <span class="nav-cta">
@@ -594,13 +596,13 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
 <!-- COMPANY -->
 <section id="company">
   <div class="wrap">
-    <div class="beyond reveal">
+    <a class="beyond reveal" href="other/">
       <span class="bi">🥬</span>
       <div>
-        <b>飲食店のほかにも、「食」の現場のツールを作っています。</b>
-        <p>現在、青果卸事業者向けの業務ツールを開発中。食品卸・小売など、食に関わる現場の「めんどうな業務」と「数字」のご相談も歓迎です。</p>
+        <b>飲食店のほかにも、「食」の現場のツールを作っています　→</b>
+        <p>青果卸向けツールを開発中。卸・小売・食品メーカーなど、食に関わる現場のご相談も歓迎です。</p>
       </div>
-    </div>
+    </a>
     <div class="sec-head reveal"><div class="seclabel">COMPANY</div><div class="sectitle"><span class="u">会社概要</span></div></div>
     <div class="ctable reveal d1">
       <div class="crow"><div class="ck">会社名</div><div class="cv">株式会社スパイシーデバイス</div></div>
@@ -695,6 +697,7 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
         <a href="#service">飲食店向けWebツール制作</a>
         <a href="#service">購買・原価改善支援</a>
         <a href="#service">集客・売上改善支援</a>
+        <a href="other/">他業種向け（食の現場）</a>
       </div>
       <div class="fcol">
         <div class="fh">制作デモ</div>
