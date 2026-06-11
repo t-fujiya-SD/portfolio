@@ -3,234 +3,345 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>飲食店向け オーダーメイドWebツール｜ポートフォリオ</title>
-<meta name="description" content="飲食店・食材業者の現場課題を解決するオーダーメイドWebツールの制作実績。ドリンク売上トラッカー・月次業績レポート・グルメ媒体効果測定のデモを公開中。">
+<title>株式会社スパイシーデバイス｜飲食店向けオーダーメイドWebツール制作</title>
+<meta name="description" content="飲食店の現場課題を解決するオーダーメイドWebツールを制作。売上トラッカー・月次レポート・グルメ媒体分析・Instagram分析・チェックリスト・出店シミュレーションのデモを公開中。コスト改善・購買代行も。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Noto+Sans+JP:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --navy:#1c3a5e; --navy2:#27496d; --gold:#c9a84a; --ink:#1f2733; --sub:#5b6675;
-    --bg:#f6f8fa; --card:#fff; --border:#e6eaf0; --accent:#2563eb;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{
-    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",Meiryo,sans-serif;
-    color:var(--ink);background:var(--bg);line-height:1.7;-webkit-font-smoothing:antialiased;
-  }
-  a{color:inherit;text-decoration:none}
-  .wrap{max-width:1040px;margin:0 auto;padding:0 22px}
+:root{
+  --ink:#2f3133; --ink2:#5b6066; --muted:#8a9099; --line:#e8eaed; --bg:#ffffff; --soft:#f6f7f8;
+  --accent:#C32F1C; --accent-d:#9E2415; --accent-soft:#fbeeec; --accent-line:#eccfc9;
+  --mono:"Chakra Petch",sans-serif; --sans:"Noto Sans JP",-apple-system,BlinkMacSystemFont,"Hiragino Sans",Meiryo,sans-serif;
+  --sb:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.78;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+@media(max-width:560px){.wrap{padding:0 20px}}
 
-  /* header */
-  header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
-  .hd{display:flex;align-items:center;justify-content:space-between;height:60px}
-  .brand{font-weight:800;letter-spacing:-.01em;font-size:16px;display:flex;align-items:center;gap:9px}
-  .brand .dot{width:11px;height:11px;border-radius:3px;background:var(--gold);transform:rotate(45deg)}
-  .nav{display:flex;gap:22px;font-size:13.5px;color:var(--sub);font-weight:600}
-  .nav a:hover{color:var(--ink)}
-  .nav .cta{background:var(--navy);color:#fff;padding:8px 15px;border-radius:8px}
-  @media(max-width:620px){.nav a:not(.cta){display:none}}
+/* ── reveal animation ── */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.16s}.reveal.d3{transition-delay:.24s}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
 
-  /* hero */
-  .hero{background:linear-gradient(160deg,#1c3a5e 0%,#27496d 55%,#2f5a82 100%);color:#fff;position:relative;overflow:hidden}
-  .hero::after{content:"";position:absolute;right:-120px;top:-120px;width:380px;height:380px;background:radial-gradient(circle,rgba(201,168,74,.28),transparent 70%);border-radius:50%}
-  .hero .wrap{padding:74px 22px 80px;position:relative;z-index:1}
-  .eyebrow{display:inline-block;font-size:12.5px;font-weight:700;letter-spacing:.08em;color:var(--gold);background:rgba(201,168,74,.12);border:1px solid rgba(201,168,74,.35);padding:5px 13px;border-radius:30px;margin-bottom:20px}
-  .hero h1{font-size:38px;line-height:1.32;font-weight:800;letter-spacing:-.02em;margin-bottom:18px}
-  .hero h1 .hl{color:var(--gold)}
-  .hero p{font-size:16px;color:#d6e0ec;max-width:640px;margin-bottom:30px}
-  .hero .btns{display:flex;gap:12px;flex-wrap:wrap}
-  .btn{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:14.5px;padding:12px 22px;border-radius:10px;transition:transform .12s,box-shadow .12s}
-  .btn:hover{transform:translateY(-1px)}
-  .btn-gold{background:var(--gold);color:#1c2a3a;box-shadow:0 6px 18px rgba(201,168,74,.32)}
-  .btn-ghost{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.28)}
-  @media(max-width:620px){.hero h1{font-size:28px}.hero .wrap{padding:54px 22px 58px}}
+/* ── header ── */
+header{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.82);backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:border-color .25s,box-shadow .25s}
+header.scrolled{border-bottom-color:var(--line);box-shadow:0 4px 22px rgba(40,44,50,.05)}
+.hd{display:flex;align-items:center;justify-content:space-between;height:66px}
+.logo{display:flex;align-items:center;gap:12px}
+.logo svg{display:block}
+.logo .wm{font-family:var(--mono);font-weight:600;font-size:19px;letter-spacing:.17em;color:var(--ink)}
+.logo .bolt{fill:var(--accent);transition:transform .3s}
+.logo:hover .bolt{transform:translateY(-1px) scale(1.06)}
+.nav{display:flex;align-items:center;gap:28px;font-size:13.5px;font-weight:700;color:var(--ink2)}
+.nav a:not(.cta){position:relative;padding:4px 0}
+.nav a:not(.cta)::after{content:"";position:absolute;left:0;bottom:-2px;width:0;height:2px;background:var(--accent);transition:width .25s}
+.nav a:not(.cta):hover{color:var(--ink)}
+.nav a:not(.cta):hover::after{width:100%}
+.cta{display:inline-flex;align-items:center;gap:7px;background:var(--accent);color:#fff;padding:9px 17px;border-radius:9px;font-size:13px;font-weight:700;transition:transform .15s,box-shadow .15s,background .15s}
+.cta:hover{background:var(--accent-d);transform:translateY(-1px);box-shadow:0 8px 18px rgba(195,47,28,.28)}
+@media(max-width:720px){.nav a:not(.cta){display:none}}
 
-  /* sections */
-  section{padding:64px 0}
-  .seclabel{font-size:12.5px;font-weight:700;letter-spacing:.08em;color:var(--accent);margin-bottom:8px}
-  .sectitle{font-size:26px;font-weight:800;letter-spacing:-.02em;margin-bottom:10px}
-  .secdesc{color:var(--sub);font-size:15px;max-width:620px;margin-bottom:36px}
+/* ── hero ── */
+.hero{position:relative;overflow:hidden;padding:88px 0 72px}
+.hero::before{content:"";position:absolute;right:-160px;top:-120px;width:460px;height:460px;background:radial-gradient(circle,var(--accent-soft),transparent 68%);z-index:0}
+.hero .wrap{position:relative;z-index:1}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:12.5px;font-weight:600;letter-spacing:.1em;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent-line);padding:7px 16px;border-radius:30px;margin-bottom:26px}
+.eyebrow .zap{animation:flicker 3.4s ease-in-out infinite}
+@keyframes flicker{0%,92%,100%{opacity:1}94%{opacity:.35}96%{opacity:1}97%{opacity:.5}98%{opacity:1}}
+h1{font-size:48px;line-height:1.34;font-weight:900;letter-spacing:-.02em}
+h1 .hl{position:relative;color:var(--accent);white-space:nowrap}
+h1 .hl::after{content:"";position:absolute;left:-2px;right:-2px;bottom:6px;height:9px;background:var(--accent-soft);z-index:-1;transform:scaleX(0);transform-origin:left;animation:draw 1s .35s cubic-bezier(.2,.7,.2,1) forwards}
+@keyframes draw{to{transform:scaleX(1)}}
+.hero p.lead{font-size:17px;color:var(--ink2);max-width:660px;margin:24px 0 36px}
+.btns{display:flex;gap:13px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:9px;font-weight:800;font-size:15px;padding:15px 28px;border-radius:12px;transition:transform .15s,box-shadow .15s,background .15s}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 12px 26px rgba(195,47,28,.26)}
+.btn-primary:hover{background:var(--accent-d);transform:translateY(-2px);box-shadow:0 16px 32px rgba(195,47,28,.32)}
+.btn-ghost{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+.hero-meta{display:flex;gap:26px;margin-top:40px;flex-wrap:wrap}
+.hero-meta div{font-size:13px;color:var(--muted)}
+.hero-meta b{display:block;font-family:var(--mono);font-size:23px;font-weight:700;color:var(--ink);letter-spacing:.02em}
+@media(max-width:560px){h1{font-size:32px}.hero{padding:54px 0 50px}}
 
-  /* value props */
-  .vals{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-  .val{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px}
-  .val .ic{font-size:22px;margin-bottom:10px}
-  .val h3{font-size:15.5px;margin-bottom:6px}
-  .val p{font-size:13.5px;color:var(--sub)}
-  @media(max-width:760px){.vals{grid-template-columns:1fr}}
+/* ── sections ── */
+section{padding:78px 0}
+.seclabel{font-family:var(--mono);font-size:12.5px;font-weight:600;letter-spacing:.14em;color:var(--accent);margin-bottom:9px}
+.sectitle{font-size:29px;font-weight:800;letter-spacing:-.02em;margin-bottom:12px}
+.secdesc{color:var(--ink2);font-size:15.5px;max-width:640px;margin-bottom:42px}
 
-  /* tool cards */
-  #tools{background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-  @media(max-width:860px){.cards{grid-template-columns:1fr}}
-  .card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:transform .14s,box-shadow .14s}
-  .card:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(28,58,94,.12)}
-  .thumb{height:176px;position:relative;overflow:hidden;background:#eef2f7;border-bottom:1px solid var(--border)}
-  .thumb img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block;transition:transform .4s ease}
-  .card:hover .thumb img{transform:scale(1.03)}
-  .tag{position:absolute;top:12px;left:12px;z-index:1;font-size:10.5px;font-weight:700;color:#fff;background:rgba(20,30,45,.62);backdrop-filter:blur(3px);padding:4px 10px;border-radius:20px;letter-spacing:.03em}
-  .cbody{padding:20px 20px 22px;display:flex;flex-direction:column;flex:1}
-  .cbody h3{font-size:17px;margin-bottom:7px}
-  .cbody .lead{font-size:13.5px;color:var(--sub);margin-bottom:12px}
-  .meta{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
-  .meta .row{display:flex;gap:8px;font-size:12.3px;line-height:1.55;align-items:flex-start}
-  .meta .ml{flex:none;width:42px;font-weight:700;font-size:10.5px;color:#fff;text-align:center;padding:2px 0;border-radius:5px;margin-top:1px}
-  .meta .ml.t{background:var(--navy)}
-  .meta .ml.p{background:#b3360f}
-  .meta .row span:last-child{color:#475061}
-  .feat{list-style:none;font-size:12.8px;color:var(--ink);margin-bottom:18px;display:flex;flex-direction:column;gap:6px}
-  .feat li{display:flex;gap:8px;align-items:flex-start}
-  .feat li::before{content:"";flex:none;width:6px;height:6px;border-radius:50%;background:var(--gold);margin-top:7px}
-  .stack{font-size:11.5px;color:#8b95a3;margin-bottom:16px}
-  .clink{margin-top:auto;display:inline-flex;align-items:center;gap:7px;font-weight:700;font-size:14px;color:#fff;background:var(--navy);padding:10px 16px;border-radius:9px;justify-content:center;transition:background .12s}
-  .clink:hover{background:#142b45}
+/* value */
+.vals{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.val{background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:26px;transition:transform .18s,box-shadow .18s,border-color .18s}
+.val:hover{transform:translateY(-4px);box-shadow:0 16px 38px rgba(40,44,50,.08);border-color:var(--accent-line)}
+.val .ic{display:inline-flex;width:46px;height:46px;align-items:center;justify-content:center;border-radius:12px;background:var(--accent-soft);color:var(--accent);font-size:22px;margin-bottom:14px}
+.val h3{font-size:16.5px;margin-bottom:7px}
+.val p{font-size:13.8px;color:var(--ink2)}
+@media(max-width:760px){.vals{grid-template-columns:1fr}}
 
-  /* contact */
-  #contact{background:linear-gradient(160deg,#1c3a5e,#27496d);color:#fff;text-align:center}
-  #contact .sectitle{color:#fff}
-  #contact .secdesc{color:#cdd9e8;margin:0 auto 28px}
-  .mail{display:inline-flex;align-items:center;gap:10px;font-size:19px;font-weight:800;color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.28);padding:14px 26px;border-radius:12px}
-  .mail:hover{background:rgba(255,255,255,.14)}
+/* services 2 pillars */
+#service{background:var(--soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.pillars{display:grid;grid-template-columns:1.25fr 1fr;gap:22px}
+.pillar{background:#fff;border:1px solid var(--line);border-radius:20px;padding:32px;position:relative;overflow:hidden;transition:transform .18s,box-shadow .18s}
+.pillar:hover{transform:translateY(-3px);box-shadow:0 18px 44px rgba(40,44,50,.09)}
+.pillar.main{border-top:3px solid var(--accent)}
+.pillar .ptag{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.08em;padding:4px 11px;border-radius:20px;margin-bottom:14px}
+.pillar.main .ptag{background:var(--accent);color:#fff}
+.pillar.sub .ptag{background:#eceef1;color:var(--ink2)}
+.pillar h3{font-size:21px;font-weight:800;margin-bottom:10px;letter-spacing:-.01em}
+.pillar p{font-size:14px;color:var(--ink2);margin-bottom:18px}
+.plist{list-style:none;display:flex;flex-direction:column;gap:9px}
+.plist li{display:flex;gap:10px;font-size:13.8px;align-items:flex-start}
+.plist li::before{content:"";flex:none;width:7px;height:7px;border-radius:2px;background:var(--accent);transform:rotate(45deg);margin-top:8px}
+.pillar.sub .plist li::before{background:var(--muted)}
+.pillar .pnote{margin-top:18px;font-size:12px;color:var(--muted)}
+@media(max-width:760px){.pillars{grid-template-columns:1fr}}
 
-  footer{background:#13243a;color:#8ea0b6;font-size:12.5px;text-align:center;padding:26px 22px}
-  .note{font-size:12px;color:#9aa6b4;margin-top:14px}
+/* works */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+@media(max-width:860px){.cards{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:transform .16s,box-shadow .16s}
+.card:hover{transform:translateY(-5px);box-shadow:0 20px 44px rgba(40,44,50,.12)}
+.thumb{height:172px;position:relative;overflow:hidden;background:#eef1f4;border-bottom:1px solid var(--line)}
+.thumb img{width:100%;height:100%;object-fit:cover;object-position:top center;transition:transform .45s ease}
+.card:hover .thumb img{transform:scale(1.04)}
+.tag{position:absolute;top:12px;left:12px;z-index:1;font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.04em;color:#fff;background:rgba(47,49,51,.72);backdrop-filter:blur(3px);padding:4px 11px;border-radius:20px}
+.cbody{padding:20px 20px 22px;display:flex;flex-direction:column;flex:1}
+.cbody h3{font-size:17px;margin-bottom:7px}
+.cbody .clead{font-size:13.3px;color:var(--ink2);margin-bottom:14px}
+.meta{display:flex;flex-direction:column;gap:7px;margin-bottom:15px}
+.meta .row{display:flex;gap:8px;font-size:12.2px;line-height:1.55;align-items:flex-start}
+.meta .ml{flex:none;width:40px;font-family:var(--mono);font-weight:600;font-size:10px;color:#fff;text-align:center;padding:3px 0;border-radius:5px;margin-top:1px}
+.meta .ml.t{background:var(--ink)}
+.meta .ml.p{background:var(--accent)}
+.meta .row span:last-child{color:#525a64}
+.feat{list-style:none;font-size:12.6px;color:var(--ink);margin-bottom:18px;display:flex;flex-direction:column;gap:6px}
+.feat li{display:flex;gap:8px;align-items:flex-start}
+.feat li::before{content:"";flex:none;width:6px;height:6px;border-radius:50%;background:var(--accent);margin-top:7px}
+.stack{font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:16px;letter-spacing:.02em}
+.clink{margin-top:auto;display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:14px;color:#fff;background:var(--ink);padding:11px 16px;border-radius:10px;justify-content:center;transition:background .15s,gap .15s}
+.clink:hover{background:var(--accent);gap:12px}
+
+/* flow */
+.flow{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.step{position:relative;background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px}
+.step .num{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.1em;margin-bottom:10px}
+.step h3{font-size:16.5px;margin-bottom:7px}
+.step p{font-size:13.6px;color:var(--ink2)}
+@media(max-width:760px){.flow{grid-template-columns:1fr}}
+
+/* company */
+#company{background:var(--soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.ctable{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.ctable .crow{display:grid;grid-template-columns:170px 1fr;border-bottom:1px solid var(--line)}
+.ctable .crow:last-child{border-bottom:none}
+.ctable .ck{background:#fafbfc;padding:15px 20px;font-size:13px;font-weight:700;color:var(--ink2);font-family:var(--mono);letter-spacing:.03em}
+.ctable .cv{padding:15px 20px;font-size:14px}
+@media(max-width:560px){.ctable .crow{grid-template-columns:1fr}.ctable .ck{padding:11px 16px 2px}.ctable .cv{padding:4px 16px 13px}}
+
+/* contact */
+#contact{background:linear-gradient(150deg,#2a2c2e,#1d1f21);color:#fff;text-align:center}
+#contact .seclabel{color:var(--accent)}
+#contact .sectitle{color:#fff}
+#contact .secdesc{color:#c3c8ce;margin:0 auto 32px}
+.contact-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.cbtn{display:inline-flex;align-items:center;gap:11px;font-size:17px;font-weight:800;padding:16px 28px;border-radius:13px;transition:transform .15s,box-shadow .15s}
+.cbtn.mail{background:var(--accent);color:#fff;box-shadow:0 12px 28px rgba(195,47,28,.36)}
+.cbtn.mail:hover{background:var(--accent-d);transform:translateY(-2px)}
+.cbtn.tel{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.26)}
+.cbtn.tel:hover{background:rgba(255,255,255,.15);transform:translateY(-2px)}
+
+/* footer */
+footer{background:#181a1b;color:#8a9099;font-size:12.5px;padding:30px 0}
+footer .fwrap{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+footer .flogo{font-family:var(--mono);font-weight:600;letter-spacing:.16em;color:#cfd3d8;font-size:14px}
+.fnote{font-size:11.5px;color:#6c7177;margin-top:8px}
 </style>
 </head>
 <body>
 
-<header>
+<header id="hdr">
   <div class="wrap hd">
-    <div class="brand"><span class="dot"></span>飲食店向け Webツール制作</div>
+    <a href="#top" class="logo" aria-label="SPICY DEVICE">
+      <svg width="38" height="32" viewBox="0 0 40 34" fill="none" aria-hidden="true">
+        <rect x="2" y="6" width="30" height="22" rx="7" stroke="var(--ink)" stroke-width="2.4"/>
+        <rect x="34" y="13" width="4" height="8" rx="2" fill="var(--ink)"/>
+        <path class="bolt" d="M19 4 L11 19 L17 19 L15 30 L25 14 L18.5 14 Z" stroke="#fff" stroke-width="1.1" stroke-linejoin="round"/>
+      </svg>
+      <span class="wm">SPICY DEVICE</span>
+    </a>
     <nav class="nav">
-      <a href="#tools">制作実績</a>
-      <a href="#flow">進め方</a>
-      <a href="#contact" class="cta">相談する</a>
+      <a href="#works">制作実績</a>
+      <a href="#service">サービス</a>
+      <a href="#company">会社概要</a>
+      <a href="#contact" class="cta"><span class="zap">⚡</span>お問い合わせ</a>
     </nav>
   </div>
 </header>
 
 <!-- HERO -->
-<div class="hero">
+<div class="hero" id="top">
   <div class="wrap">
-    <span class="eyebrow">飲食店・食材業者向け｜オーダーメイドWebツール</span>
+    <span class="eyebrow"><span class="zap">⚡</span>飲食店向け オーダーメイドWebツール制作</span>
     <h1>お店の「めんどくさい」を、<br><span class="hl">ちょうどいいツール</span>で軽くする。</h1>
-    <p>レジ・予約媒体・SNS・収支——バラバラな数字を、現場が毎日使える1枚のツールにまとめます。
-       既製のSaaSでは噛み合わない部分を、お店のオペレーションに合わせてオーダーメイドで。下は実際に作って動いているツールのデモです。</p>
+    <p class="lead">レジ・予約媒体・SNS・収支——バラバラな数字を、現場が毎日使える1枚のツールにまとめます。
+      既製のSaaSでは噛み合わない部分を、お店のオペレーションに合わせてオーダーメイドで。下は実際に作って動いているツールのデモです。</p>
     <div class="btns">
-      <a href="#tools" class="btn btn-gold">制作実績を見る</a>
+      <a href="#works" class="btn btn-primary"><span>⚡</span> 制作実績を見る</a>
       <a href="#contact" class="btn btn-ghost">無料で相談する</a>
+    </div>
+    <div class="hero-meta">
+      <div><b>6+</b>公開中のツール</div>
+      <div><b>2020-</b>飲食店支援の実績</div>
+      <div><b>1機能〜</b>小さく始められる</div>
     </div>
   </div>
 </div>
 
 <!-- VALUE -->
-<section>
+<section id="why">
   <div class="wrap">
-    <div class="seclabel">WHY</div>
-    <h2 class="sectitle">「現場で続く」ことを最優先に</h2>
-    <p class="secdesc">高機能より、毎日無理なく使えること。スマホ1台・コピペ1回で回るくらいの軽さで設計します。</p>
+    <div class="seclabel reveal">WHY</div>
+    <h2 class="sectitle reveal">「現場で続く」ことを最優先に</h2>
+    <p class="secdesc reveal">高機能より、毎日無理なく使えること。スマホ1台・コピペ1回で回るくらいの軽さで設計します。</p>
     <div class="vals">
-      <div class="val"><div class="ic">📱</div><h3>現場ファースト</h3><p>営業中でもスマホでサッと入力。難しい操作・研修は不要。続けられる手触りにこだわります。</p></div>
-      <div class="val"><div class="ic">🧩</div><h3>オーダーメイド</h3><p>お店のメニュー・帳票・媒体に合わせて専用設計。既製ツールの「惜しい」を埋めます。</p></div>
-      <div class="val"><div class="ic">📊</div><h3>数字が動く</h3><p>入力した先で売上・客単価・PVが自動で集計・可視化。会議資料やオーナー報告まで一気通貫。</p></div>
+      <div class="val reveal d1"><div class="ic">📱</div><h3>現場ファースト</h3><p>営業中でもスマホでサッと入力。難しい操作・研修は不要。続けられる手触りにこだわります。</p></div>
+      <div class="val reveal d2"><div class="ic">🧩</div><h3>オーダーメイド</h3><p>お店のメニュー・帳票・媒体に合わせて専用設計。既製ツールの「惜しい」を埋めます。</p></div>
+      <div class="val reveal d3"><div class="ic">⚡</div><h3>数字が動く</h3><p>入力した先で売上・客単価・PVが自動で集計・可視化。会議資料やオーナー報告まで一気通貫。</p></div>
     </div>
   </div>
 </section>
 
-<!-- TOOLS -->
-<section id="tools">
+<!-- SERVICE (2 pillars) -->
+<section id="service">
   <div class="wrap">
-    <div class="seclabel">WORKS</div>
-    <h2 class="sectitle">制作実績（デモ）</h2>
-    <p class="secdesc">実店舗向けに開発したツールを、サンプルデータでそのまま触れるデモにしています。クリックで実際に操作できます。<br>
-    掲載しているのはあくまで一例です。<strong style="color:var(--ink)">あなたの「こう改善したい」というイメージをすり合わせながら、お店専用のツールを1から作るお手伝いをします。</strong></p>
+    <div class="seclabel reveal">SERVICE</div>
+    <h2 class="sectitle reveal">2つの柱で、お店の利益を底上げ</h2>
+    <p class="secdesc reveal">「仕組み（Webツール）」と「仕入れ（コスト改善）」の両面から、飲食店の現場をまるごと支援します。</p>
+    <div class="pillars">
+      <div class="pillar main reveal d1">
+        <span class="ptag">主役のサービス</span>
+        <h3>オーダーメイドWebツール制作</h3>
+        <p>レジ・予約媒体・SNS・収支などバラバラな数字を、お店専用のツールに。現場が毎日使える軽さで設計し、運用しながら育てます。</p>
+        <ul class="plist">
+          <li>売上・原価・ドリンク・PVなどの記録＆自動集計</li>
+          <li>スクショ・CSV・スマホ入力からAIで数値抽出</li>
+          <li>月次レポート／チェックリスト／分析ダッシュボード等</li>
+          <li>まずは1機能・1か月のお試しから</li>
+        </ul>
+        <div class="pnote">▼ 実際に動くツールのデモは「制作実績」で触れます。</div>
+      </div>
+      <div class="pillar sub reveal d2">
+        <span class="ptag">もう一つの柱</span>
+        <h3>コスト改善・購買代行</h3>
+        <p>「利益は、仕入れから変えられる。」原価の見直し・取引先交渉・購買代行で、利益体質づくりを支援します。</p>
+        <ul class="plist">
+          <li>原価・仕入れの棚卸しと見直し</li>
+          <li>取引先の比較・交渉・購買代行</li>
+          <li>メニュー別・カテゴリ別の粗利分析</li>
+          <li>改善の実行まで継続サポート</li>
+        </ul>
+        <div class="pnote">飲食店のコスト・生産性改善コンサルティング。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORKS -->
+<section id="works">
+  <div class="wrap">
+    <div class="seclabel reveal">WORKS</div>
+    <h2 class="sectitle reveal">制作実績（デモ）</h2>
+    <p class="secdesc reveal">実店舗向けに開発したツールを、サンプルデータでそのまま触れるデモにしています。クリックで実際に操作できます。<br>
+      掲載は一例です。<strong style="color:var(--ink)">「こう改善したい」のイメージをすり合わせながら、お店専用のツールを1から作ります。</strong></p>
     <div class="cards">
 
-      <!-- 1 -->
-      <div class="card">
+      <div class="card reveal d1">
         <div class="thumb"><span class="tag">SNS分析 / Instagram</span><img src="assets/shot-instagram.png" alt="Instagram分析ダッシュボードの画面" loading="lazy"></div>
         <div class="cbody">
           <h3>Instagram分析ダッシュボード</h3>
-          <p class="lead">投稿の数字をスクショ取込か手入力するだけで、来店につながる指標を自動分析。連携不要・スマホ完結。</p>
+          <p class="clead">投稿の数字をスクショ取込か手入力するだけで、来店につながる指標を自動分析。連携不要・スマホ完結。</p>
           <div class="meta">
             <div class="row"><span class="ml t">対象</span><span>自分で集客したい個人店オーナー・SNS担当</span></div>
-            <div class="row"><span class="ml p">課題</span><span>インスタの数字は見られても、次に何を投稿すべきかの判断につながらない</span></div>
+            <div class="row"><span class="ml p">課題</span><span>数字は見られても、次に何を投稿すべきか判断につながらない</span></div>
           </div>
           <ul class="feat">
             <li>保存率・発見リーチなど「伸びる投稿の法則」を可視化</li>
-            <li>投稿タイプ別・曜日×時間帯ヒートマップで最適タイミング</li>
+            <li>曜日×時間帯ヒートマップで最適タイミング</li>
             <li>発見→プロフ訪問→予約クリックの来店導線を分析</li>
           </ul>
-          <div class="stack">シングルHTML / Vanilla JS / Chart.js</div>
+          <div class="stack">Single HTML / Vanilla JS / Chart.js</div>
           <a class="clink" href="instagram-analytics/">デモを見る →</a>
         </div>
       </div>
 
-      <!-- 2 -->
-      <div class="card">
+      <div class="card reveal d2">
         <div class="thumb"><span class="tag">衛生管理 / HACCP / 多言語</span><img src="assets/shot-checklist.png" alt="開店・閉店チェックリストの画面" loading="lazy"></div>
         <div class="cbody">
           <h3>開店・閉店チェックリスト</h3>
-          <p class="lead">開店前・閉店後の作業をスタッフが記録し、オーナー・管理職がリモートで確認。閉店の申し送りが翌日の開店チェックに自動引き継ぎ。</p>
+          <p class="clead">開店前・閉店後の作業をスタッフが記録し、オーナー・管理職がリモートで確認。閉店の申し送りが翌日へ自動引き継ぎ。</p>
           <div class="meta">
             <div class="row"><span class="ml t">対象</span><span>現場に常駐できない多店舗オーナー・エリアマネージャー</span></div>
-            <div class="row"><span class="ml p">課題</span><span>準備・片付けの抜け・もれが現場任せで、問題が起きるまで気づけない</span></div>
+            <div class="row"><span class="ml p">課題</span><span>準備・片付けの抜け・もれが現場任せで気づけない</span></div>
           </div>
           <ul class="feat">
             <li>開店／閉店 シフト切替・HACCP温度記録</li>
             <li>閉店の予約・申し送りを翌朝に自動キャリーオーバー</li>
             <li>過去7日間カレンダー・日英中 3言語対応</li>
           </ul>
-          <div class="stack">シングルHTML / Vanilla JS / 日英中 3言語</div>
+          <div class="stack">Single HTML / Vanilla JS / 日英中</div>
           <a class="clink" href="opening-checklist/">デモを見る →</a>
         </div>
       </div>
 
-      <!-- 3 -->
-      <div class="card">
+      <div class="card reveal d3">
         <div class="thumb"><span class="tag">月次レポート / 自動集計</span><img src="assets/shot-report.png" alt="月次業績レポートの画面" loading="lazy"></div>
         <div class="cbody">
           <h3>月次業績レポート</h3>
-          <p class="lead">POS・予約媒体・SNS・収支を自動集計し、1枚のダッシュボードに。会議資料の作成時間をゼロに。</p>
+          <p class="clead">POS・予約媒体・SNS・収支を自動集計し、1枚のダッシュボードに。会議資料の作成時間をゼロに。</p>
           <div class="meta">
             <div class="row"><span class="ml t">対象</span><span>オーナー・店長</span></div>
-            <div class="row"><span class="ml p">課題</span><span>毎月の数字集計と会議資料づくりに何時間もかかり、分析まで手が回らない</span></div>
+            <div class="row"><span class="ml p">課題</span><span>毎月の集計と資料づくりに時間がかかり分析まで手が回らない</span></div>
           </div>
           <ul class="feat">
             <li>売上・客単価・ドリンク・原価率・営業利益</li>
             <li>WEB媒体／SNSの効果も一元化</li>
             <li>メニューABC分析・PL明細つき</li>
           </ul>
-          <div class="stack">Python / Chart.js / HTML・PDF・スライド出力</div>
+          <div class="stack">Python / Chart.js / HTML・PDF・スライド</div>
           <a class="clink" href="monthly-report/">デモを見る →</a>
         </div>
       </div>
 
-      <!-- 4 -->
-      <div class="card">
+      <div class="card reveal d1">
         <div class="thumb"><span class="tag">開業計画 / 収益シミュ</span><img src="assets/shot-opening.png" alt="出店シミュレーションの画面" loading="lazy"></div>
         <div class="cbody">
           <h3>出店シミュレーション</h3>
-          <p class="lead">集客チャネル別の売上から月次PL・損益分岐・投資回収を試算。立ち上げ・季節・成長を加味した5年計画をExcelで出力。</p>
+          <p class="clead">集客チャネル別の売上から月次PL・損益分岐・投資回収を試算。5年計画をExcelで出力。</p>
           <div class="meta">
             <div class="row"><span class="ml t">対象</span><span>開業検討中のオーナー・経営者</span></div>
-            <div class="row"><span class="ml p">課題</span><span>収支計画を感覚で立てており、融資資料や投資回収のシミュレーションが手薄になりがち</span></div>
+            <div class="row"><span class="ml p">課題</span><span>収支計画が感覚頼りで、融資資料・投資回収が手薄になりがち</span></div>
           </div>
           <ul class="feat">
             <li>集客チャネル別の売上から月次PLを自動試算</li>
-            <li>立ち上げ・季節・年成長の指数を反映した5年シミュ</li>
-            <li>外部環境・内部分析のメモ付きExcel（4シート）出力</li>
+            <li>立ち上げ・季節・年成長を反映した5年シミュ</li>
+            <li>外部環境・内部分析メモ付きExcel（4シート）出力</li>
           </ul>
-          <div class="stack">シングルHTML / Vanilla JS / SheetJS</div>
+          <div class="stack">Single HTML / Vanilla JS / SheetJS</div>
           <a class="clink" href="opening-simulator/">デモを見る →</a>
         </div>
       </div>
 
-      <!-- 5 -->
-      <div class="card">
+      <div class="card reveal d2">
         <div class="thumb"><span class="tag">媒体PV / 効果測定</span><img src="assets/shot-media.png" alt="グルメ媒体 効果測定の画面" loading="lazy"></div>
         <div class="cbody">
           <h3>グルメ媒体 効果測定</h3>
-          <p class="lead">ぐるなび・食べログ・オズモール・一休など各グルメ媒体のPVを一元管理。媒体別の伸び・前月比をひと目で把握。</p>
+          <p class="clead">ぐるなび・食べログ・オズモール・一休など各グルメ媒体のPVを一元管理。媒体別の伸び・前月比をひと目で。</p>
           <div class="meta">
             <div class="row"><span class="ml t">対象</span><span>集客・販促担当／店長</span></div>
             <div class="row"><span class="ml p">課題</span><span>媒体ごとに管理画面を見るのが面倒で、どこが効いているか分からない</span></div>
@@ -245,22 +356,21 @@
         </div>
       </div>
 
-      <!-- 6 -->
-      <div class="card">
+      <div class="card reveal d3">
         <div class="thumb"><span class="tag">売上分析 / モバイル</span><img src="assets/shot-drink.png" alt="ドリンク売上トラッカーの画面" loading="lazy"></div>
         <div class="cbody">
           <h3>ドリンク売上トラッカー</h3>
-          <p class="lead">レシートを撮るだけでドリンク売上を記録・分析。1人あたり単価や目標達成率を可視化。</p>
+          <p class="clead">レシートを撮るだけでドリンク売上を記録・分析。1人あたり単価や目標達成率を可視化。</p>
           <div class="meta">
             <div class="row"><span class="ml t">対象</span><span>店長・現場スタッフ</span></div>
-            <div class="row"><span class="ml p">課題</span><span>ドリンクの伸びしろが感覚頼り。施策をやっても効果が数字で見えない</span></div>
+            <div class="row"><span class="ml p">課題</span><span>ドリンクの伸びしろが感覚頼り。施策の効果が数字で見えない</span></div>
           </div>
           <ul class="feat">
             <li>レシート撮影→AIが内訳を自動抽出</li>
             <li>週次・月次・曜日別レポート</li>
             <li>具体施策の達成率トラッキング</li>
           </ul>
-          <div class="stack">React / シングルHTML / Claude Vision</div>
+          <div class="stack">React / Single HTML / Claude Vision</div>
           <a class="clink" href="drink-tracker/">デモを見る →</a>
         </div>
       </div>
@@ -270,15 +380,31 @@
 </section>
 
 <!-- FLOW -->
-<section id="flow">
+<section id="flow" style="background:var(--soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
   <div class="wrap">
-    <div class="seclabel">FLOW</div>
-    <h2 class="sectitle">進め方</h2>
-    <p class="secdesc">小さく作って、現場で試しながら育てます。まずは1機能・1か月から。</p>
-    <div class="vals">
-      <div class="val"><div class="ic">①</div><h3>ヒアリング</h3><p>今の運用と困りごとを伺い、ツールにするポイントを一緒に整理します。</p></div>
-      <div class="val"><div class="ic">②</div><h3>試作・お試し導入</h3><p>たたき台を素早く作って実際に使ってみる。手触りを確かめてから本格化。</p></div>
-      <div class="val"><div class="ic">③</div><h3>改善・運用</h3><p>使いながら微調整。月次の分析・改善提案まで継続的にサポートします。</p></div>
+    <div class="seclabel reveal">FLOW</div>
+    <h2 class="sectitle reveal">進め方</h2>
+    <p class="secdesc reveal">小さく作って、現場で試しながら育てます。まずは1機能・1か月から。</p>
+    <div class="flow">
+      <div class="step reveal d1"><div class="num">STEP 01</div><h3>ヒアリング</h3><p>今の運用と困りごとを伺い、ツールにするポイントを一緒に整理します。</p></div>
+      <div class="step reveal d2"><div class="num">STEP 02</div><h3>試作・お試し導入</h3><p>たたき台を素早く作って実際に使ってみる。手触りを確かめてから本格化。</p></div>
+      <div class="step reveal d3"><div class="num">STEP 03</div><h3>改善・運用</h3><p>使いながら微調整。月次の分析・改善提案まで継続的にサポートします。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPANY -->
+<section id="company">
+  <div class="wrap">
+    <div class="seclabel reveal">COMPANY</div>
+    <h2 class="sectitle reveal">会社概要</h2>
+    <div class="ctable reveal d1">
+      <div class="crow"><div class="ck">会社名</div><div class="cv">株式会社スパイシーデバイス</div></div>
+      <div class="crow"><div class="ck">代表者</div><div class="cv">代表取締役　藤谷 拓文</div></div>
+      <div class="crow"><div class="ck">設立</div><div class="cv">2020年2月5日</div></div>
+      <div class="crow"><div class="ck">所在地</div><div class="cv">〒171-0021　東京都豊島区西池袋3-29-3 梅本ビル4階（co-ba IKEBUKURO）</div></div>
+      <div class="crow"><div class="ck">事業内容</div><div class="cv">飲食店向けオーダーメイドWebツール制作／コスト改善・購買代行コンサルティング／採用・人事支援</div></div>
+      <div class="crow"><div class="ck">電話</div><div class="cv">03-6822-4544</div></div>
     </div>
   </div>
 </section>
@@ -286,17 +412,36 @@
 <!-- CONTACT -->
 <section id="contact">
   <div class="wrap">
-    <div class="seclabel" style="color:var(--gold)">CONTACT</div>
-    <h2 class="sectitle">「これ作れる？」のご相談から</h2>
-    <p class="secdesc">こんな作業を楽にしたい、こんな数字を見たい——ざっくりした段階で構いません。お気軽にどうぞ。</p>
-    <a class="mail" href="mailto:t-fujiya@spicydevice.com?subject=Web%E3%83%84%E3%83%BC%E3%83%AB%E3%81%AE%E7%9B%B8%E8%AB%87">✉ t-fujiya@spicydevice.com</a>
+    <div class="seclabel reveal">CONTACT</div>
+    <h2 class="sectitle reveal">「これ作れる？」のご相談から</h2>
+    <p class="secdesc reveal">こんな作業を楽にしたい、こんな数字を見たい——ざっくりした段階で構いません。お気軽にどうぞ。</p>
+    <div class="contact-row reveal d1">
+      <a class="cbtn mail" href="mailto:t-fujiya@spicydevice.com?subject=Web%E3%83%84%E3%83%BC%E3%83%AB%E3%81%AE%E3%81%94%E7%9B%B8%E8%AB%87">✉ t-fujiya@spicydevice.com</a>
+      <a class="cbtn tel" href="tel:0368224544">☎ 03-6822-4544</a>
+    </div>
   </div>
 </section>
 
 <footer>
-  <div>飲食店向け オーダーメイドWebツール制作 — 制作実績ポートフォリオ</div>
-  <div class="note">※ 掲載中のデモはすべてサンプルデータで動作しています。実店舗・実顧客のデータは含まれません。</div>
+  <div class="wrap fwrap">
+    <div>
+      <div class="flogo">SPICY DEVICE</div>
+      <div class="fnote">※ 掲載中のデモはすべてサンプルデータで動作しています。実店舗・実顧客のデータは含まれません。</div>
+    </div>
+    <div>© 2026 株式会社スパイシーデバイス</div>
+  </div>
 </footer>
 
+<script>
+// header shadow on scroll
+const hdr=document.getElementById('hdr');
+const onScroll=()=>hdr.classList.toggle('scrolled',window.scrollY>8);
+onScroll(); window.addEventListener('scroll',onScroll,{passive:true});
+// reveal on scroll
+const io=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+},{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
 </body>
 </html>
