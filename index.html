@@ -133,8 +133,16 @@ section{padding:76px 0}
 .dbody p{font-size:12.8px;color:var(--ink2);margin-bottom:13px;flex:1}
 .chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:15px}
 .chips span{font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent-line);padding:3px 10px;border-radius:20px}
-.dlink{display:inline-flex;align-items:center;gap:7px;font-weight:800;font-size:13.5px;color:#fff;background:var(--ink);padding:10px 15px;border-radius:9px;justify-content:center;transition:background .15s,gap .15s}
-.dcard:hover .dlink{background:var(--accent);gap:11px}
+.dthumb{display:block;cursor:pointer}
+.dactions{display:flex;align-items:center;gap:10px;margin-top:auto}
+.dlink{flex:1;display:inline-flex;align-items:center;gap:7px;font-weight:800;font-size:13.5px;color:#fff;background:var(--ink);padding:10px 15px;border-radius:9px;justify-content:center;transition:background .15s,gap .15s}
+.dlink:hover{background:var(--accent);gap:11px}
+.fav{flex:none;display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:13px;font-weight:700;color:var(--ink2);background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:9px 12px;cursor:pointer;transition:color .15s,border-color .15s,background .15s,transform .1s}
+.fav .fheart{font-size:15px;line-height:1}
+.fav:hover{border-color:var(--accent-line);color:var(--accent)}
+.fav.on{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent)}
+.fav.pop{animation:pop .35s ease}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.2)}100%{transform:scale(1)}}
 @media(max-width:860px){.dcards{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){.dcards{grid-template-columns:1fr}}
 
@@ -164,6 +172,29 @@ section{padding:76px 0}
 .cta-box h2{font-size:27px;font-weight:900;letter-spacing:-.02em;margin-bottom:14px}
 .cta-box p{font-size:15px;color:var(--ink2);margin-bottom:30px}
 .cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+/* voice / try section */
+.voice-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.vcard{background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px}
+.vcard h3{font-size:17px;margin-bottom:16px}
+.vcard.guide{background:var(--soft)}
+#ideaText{width:100%;min-height:118px;border:1px solid var(--line);border-radius:12px;padding:13px;font-family:inherit;font-size:14px;outline:none;resize:vertical;line-height:1.7}
+#ideaText:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.vrow{display:flex;gap:10px;margin:12px 0 14px}
+.vrow input{flex:1;min-width:0;border:1px solid var(--line);border-radius:10px;padding:11px 13px;font-family:inherit;font-size:14px;outline:none}
+.vrow input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.vnote{font-size:11.5px;color:var(--muted);margin-top:11px;line-height:1.6}
+.vthanks{display:none;background:var(--accent-soft);border:1px solid var(--accent-line);color:var(--accent-d);border-radius:12px;padding:20px;font-weight:700;text-align:center}
+.guide-steps{margin:0 0 6px;padding:0;list-style:none;counter-reset:gs;display:flex;flex-direction:column;gap:14px}
+.guide-steps li{position:relative;padding-left:42px;font-size:13.5px;color:var(--ink2);line-height:1.7}
+.guide-steps li b{color:var(--ink)}
+.guide-steps li::before{counter-increment:gs;content:counter(gs);position:absolute;left:0;top:1px;width:27px;height:27px;border-radius:50%;background:var(--accent);color:#fff;font-family:var(--mono);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+.guide-steps li u{text-decoration-color:var(--accent);text-underline-offset:2px}
+.share-row{display:flex;align-items:center;gap:10px;justify-content:center;margin-top:42px;flex-wrap:wrap}
+.share-label{font-size:13px;color:var(--ink2);font-weight:700}
+.sbtn{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:9px 14px;cursor:pointer;transition:border-color .15s,color .15s,transform .12s}
+.sbtn:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px)}
+@media(max-width:760px){.voice-grid{grid-template-columns:1fr}}
 
 /* footer */
 footer{background:#23262a;color:#a7adb4;font-size:13px}
@@ -225,10 +256,9 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
   <div class="hero-stats">
     <div class="wrap">
       <div class="hstats">
-        <div class="hs"><span class="hsi">📈</span><div><b>2020年〜</b><span>飲食店支援</span></div></div>
-        <div class="hs"><span class="hsi">🖥</span><div><b>6件以上</b><span>公開中のデモ</span></div></div>
-        <div class="hs"><span class="hsi">🏪</span><div><b>1店舗から</b><span>小さく始められる</span></div></div>
-        <div class="hs"><span class="hsi">🛡</span><div><b>サンプルデータで</b><span>安心して閲覧可能</span></div></div>
+        <div class="hs"><span class="hsi">💬</span><div><b>初回相談・見積もり無料</b><span>まずは気軽に</span></div></div>
+        <div class="hs"><span class="hsi">🧩</span><div><b>1機能・1ツールから</b><span>小さく始められる</span></div></div>
+        <div class="hs"><span class="hsi">🖥</span><div><b>サンプルですぐ試せる</b><span>契約前に体験OK</span></div></div>
       </div>
       <p class="hnote">※ 掲載中のデモはすべてサンプルデータで動作しています。実店舗・実顧客のデータは含まれません。</p>
     </div>
@@ -302,65 +332,83 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
       <p class="secdesc">実店舗向けに開発したツールを、サンプルデータでそのまま触れるデモに。クリックで実際に操作できます。</p></div>
     <div class="dcards">
 
-      <a class="dcard reveal d1" href="instagram-analytics/">
-        <div class="dthumb"><img src="assets/shot-instagram.png" alt="Instagram分析ダッシュボード" loading="lazy"></div>
+      <div class="dcard reveal d1">
+        <a class="dthumb" href="instagram-analytics/"><img src="assets/shot-instagram.png" alt="Instagram分析ダッシュボード" loading="lazy"></a>
         <div class="dbody">
           <h3>Instagram分析ダッシュボード</h3>
           <p>投稿の分析からエンゲージメントを可視化。投稿時間帯の最適化や来店導線の分析をサポート。</p>
           <div class="chips"><span>SNS分析</span><span>Instagram</span></div>
-          <span class="dlink">デモを見る →</span>
+          <div class="dactions">
+            <a class="dlink" href="instagram-analytics/">デモを見る →</a>
+            <button class="fav" data-id="instagram" data-base="86" aria-label="気になる"><span class="fheart">♡</span><span class="favn">86</span></button>
+          </div>
         </div>
-      </a>
+      </div>
 
-      <a class="dcard reveal d2" href="opening-checklist/">
-        <div class="dthumb"><img src="assets/shot-checklist.png" alt="開店・閉店チェックリスト" loading="lazy"></div>
+      <div class="dcard reveal d2">
+        <a class="dthumb" href="opening-checklist/"><img src="assets/shot-checklist.png" alt="開店・閉店チェックリスト" loading="lazy"></a>
         <div class="dbody">
           <h3>開店・閉店チェックリスト</h3>
           <p>開店・閉店作業の抜け漏れを防ぎ、標準化されたオペレーションを実現。日英中の3言語に対応。</p>
           <div class="chips"><span>オペレーション</span><span>チェックリスト</span></div>
-          <span class="dlink">デモを見る →</span>
+          <div class="dactions">
+            <a class="dlink" href="opening-checklist/">デモを見る →</a>
+            <button class="fav" data-id="checklist" data-base="64" aria-label="気になる"><span class="fheart">♡</span><span class="favn">64</span></button>
+          </div>
         </div>
-      </a>
+      </div>
 
-      <a class="dcard reveal d3" href="monthly-report/">
-        <div class="dthumb"><img src="assets/shot-report.png" alt="月次業績レポート" loading="lazy"></div>
+      <div class="dcard reveal d3">
+        <a class="dthumb" href="monthly-report/"><img src="assets/shot-report.png" alt="月次業績レポート" loading="lazy"></a>
         <div class="dbody">
           <h3>月次業績レポート</h3>
           <p>売上・原価・客数・SNS・店舗を自動集計し、わかりやすく1枚にまとめます。会議資料づくりを時短。</p>
           <div class="chips"><span>売上管理</span><span>月次レポート</span></div>
-          <span class="dlink">デモを見る →</span>
+          <div class="dactions">
+            <a class="dlink" href="monthly-report/">デモを見る →</a>
+            <button class="fav" data-id="monthly" data-base="73" aria-label="気になる"><span class="fheart">♡</span><span class="favn">73</span></button>
+          </div>
         </div>
-      </a>
+      </div>
 
-      <a class="dcard reveal d1" href="opening-simulator/">
-        <div class="dthumb"><img src="assets/shot-opening.png" alt="出店シミュレーションツール" loading="lazy"></div>
+      <div class="dcard reveal d1">
+        <a class="dthumb" href="opening-simulator/"><img src="assets/shot-opening.png" alt="出店シミュレーションツール" loading="lazy"></a>
         <div class="dbody">
           <h3>出店シミュレーションツール</h3>
           <p>出店計画の売上・原価・投資回収をシミュレーションし、判断材料を提供。5年計画をExcel出力。</p>
           <div class="chips"><span>出店計画</span><span>シミュレーション</span></div>
-          <span class="dlink">デモを見る →</span>
+          <div class="dactions">
+            <a class="dlink" href="opening-simulator/">デモを見る →</a>
+            <button class="fav" data-id="opening" data-base="41" aria-label="気になる"><span class="fheart">♡</span><span class="favn">41</span></button>
+          </div>
         </div>
-      </a>
+      </div>
 
-      <a class="dcard reveal d2" href="media-dashboard/">
-        <div class="dthumb"><img src="assets/shot-media.png" alt="グルメ媒体効果測定ダッシュボード" loading="lazy"></div>
+      <div class="dcard reveal d2">
+        <a class="dthumb" href="media-dashboard/"><img src="assets/shot-media.png" alt="グルメ媒体効果測定ダッシュボード" loading="lazy"></a>
         <div class="dbody">
           <h3>グルメ媒体効果測定ダッシュボード</h3>
           <p>食べログ・ぐるなび・一休・OZmallなどの成果を比較・分析。媒体別の伸び・前月比をひと目で。</p>
           <div class="chips"><span>媒体分析</span><span>効果測定</span></div>
-          <span class="dlink">デモを見る →</span>
+          <div class="dactions">
+            <a class="dlink" href="media-dashboard/">デモを見る →</a>
+            <button class="fav" data-id="media" data-base="58" aria-label="気になる"><span class="fheart">♡</span><span class="favn">58</span></button>
+          </div>
         </div>
-      </a>
+      </div>
 
-      <a class="dcard reveal d3" href="drink-tracker/">
-        <div class="dthumb"><img src="assets/shot-drink.png" alt="ドリンク売上トラッカー" loading="lazy"></div>
+      <div class="dcard reveal d3">
+        <a class="dthumb" href="drink-tracker/"><img src="assets/shot-drink.png" alt="ドリンク売上トラッカー" loading="lazy"></a>
         <div class="dbody">
           <h3>ドリンク売上トラッカー</h3>
           <p>ドリンク売上・原価・粗利を可視化し、メニュー改善につなげる。レシート撮影でAIが自動集計。</p>
           <div class="chips"><span>ドリンク管理</span><span>売上分析</span></div>
-          <span class="dlink">デモを見る →</span>
+          <div class="dactions">
+            <a class="dlink" href="drink-tracker/">デモを見る →</a>
+            <button class="fav" data-id="drink" data-base="49" aria-label="気になる"><span class="fheart">♡</span><span class="favn">49</span></button>
+          </div>
         </div>
-      </a>
+      </div>
 
     </div>
   </div>
@@ -393,6 +441,46 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
       <div class="crow"><div class="ck">所在地</div><div class="cv">〒171-0021　東京都豊島区西池袋3-29-3 梅本ビル4階（co-ba IKEBUKURO）</div></div>
       <div class="crow"><div class="ck">事業内容</div><div class="cv">飲食店向けオーダーメイドWebツール制作／購買・原価改善コンサルティング／集客・売上改善支援／採用・人事支援</div></div>
       <div class="crow"><div class="ck">電話</div><div class="cv">03-6822-4544（平日 10:00〜18:00）</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- VOICE / TRY -->
+<section id="voice">
+  <div class="wrap">
+    <div class="sec-head reveal"><div class="seclabel">YOUR VOICE</div><div class="sectitle"><span class="u">「こんなの欲しい」を聞かせてください</span></div>
+      <p class="secdesc">デモを触って気になったこと、「うちはこんなことに困ってる」「こういうのが欲しい」を、匿名でも気軽に投稿できます。</p></div>
+    <div class="voice-grid">
+      <div class="vcard reveal d1">
+        <h3>💬 こんなツールが欲しい（匿名OK）</h3>
+        <form id="ideaForm">
+          <textarea id="ideaText" required placeholder="例）毎月の原価集計に時間がかかっている。スマホでサッと入力して、月末に自動でまとまると嬉しい…"></textarea>
+          <div class="vrow">
+            <input id="ideaName" placeholder="お名前（任意）" autocomplete="off">
+            <input id="ideaMail" type="email" placeholder="メール（任意・返信希望の方）" autocomplete="off">
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg" style="width:100%;justify-content:center">送信する（匿名で送れます）</button>
+          <p class="vnote">※ お名前・メールは任意です。いただいた内容は今後のツール改善・新作の参考にします。</p>
+        </form>
+        <div id="ideaThanks" class="vthanks">送信ありがとうございます！いただいた声を参考にします 🙌</div>
+      </div>
+      <div class="vcard guide reveal d2">
+        <h3>🖥 自分のお店で試してみたい方へ</h3>
+        <ol class="guide-steps">
+          <li><b>まずはデモを触る</b><br>上の制作デモは、サンプルデータでそのまま操作できます。</li>
+          <li><b>「業種・困りごと・見たい数字」を送る</b><br>無料相談から、ざっくり教えてください。<u>実データはこの段階では不要</u>です。</li>
+          <li><b>サンプルに仮入れして再現</b><br>こちらでお店向けにカスタムし、実際の見え方をご確認いただけます。</li>
+        </ol>
+        <p class="vnote">※ 売上などのデータは公開フォームに入力せず、相談開始後に安全な方法でやり取りします。</p>
+        <a class="btn btn-primary btn-lg" href="#cta" style="width:100%;justify-content:center;margin-top:4px">⚡ 無料で相談する</a>
+      </div>
+    </div>
+    <div class="share-row reveal">
+      <span class="share-label">このサイトを共有：</span>
+      <a class="sbtn" id="shareX" href="#" aria-label="Xで共有">𝕏 ポスト</a>
+      <a class="sbtn" id="shareLine" href="#" aria-label="LINEで共有">LINE</a>
+      <button class="sbtn" id="shareCopy" aria-label="リンクをコピー">🔗 リンクをコピー</button>
+      <button class="sbtn" id="shareNative" aria-label="共有" style="display:none">⤴ 共有</button>
     </div>
   </div>
 </section>
@@ -460,6 +548,46 @@ onScroll(); window.addEventListener('scroll',onScroll,{passive:true});
 // reveal
 const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.12,rootMargin:'0px 0px -7% 0px'});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+// 「気になる」カウンター（端末内に保存・簡易版）
+document.querySelectorAll('.fav').forEach(btn=>{
+  const id=btn.dataset.id, base=+btn.dataset.base;
+  const numEl=btn.querySelector('.favn'), heart=btn.querySelector('.fheart');
+  const render=()=>{const on=localStorage.getItem('sd-fav-'+id)==='1';btn.classList.toggle('on',on);heart.textContent=on?'♥':'♡';numEl.textContent=base+(on?1:0);};
+  render();
+  btn.addEventListener('click',()=>{
+    const on=localStorage.getItem('sd-fav-'+id)==='1';
+    localStorage.setItem('sd-fav-'+id,on?'0':'1');
+    render();
+    if(!on){btn.classList.remove('pop');void btn.offsetWidth;btn.classList.add('pop');}
+  });
+});
+// 匿名コメント投稿（フォームサービス連携用。FORM_ENDPOINT を設定すると運営に届きます）
+const FORM_ENDPOINT=""; // 例: TallyやFormspreeのPOST用URL。未設定時は端末内に保存＋お礼表示
+const ideaForm=document.getElementById('ideaForm');
+if(ideaForm){ideaForm.addEventListener('submit',async(e)=>{
+  e.preventDefault();
+  const payload={text:document.getElementById('ideaText').value.trim(),name:document.getElementById('ideaName').value.trim(),mail:document.getElementById('ideaMail').value.trim(),at:new Date().toISOString()};
+  if(!payload.text) return;
+  try{
+    if(FORM_ENDPOINT){await fetch(FORM_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});}
+    else{const arr=JSON.parse(localStorage.getItem('sd-ideas')||'[]');arr.push(payload);localStorage.setItem('sd-ideas',JSON.stringify(arr));}
+  }catch(_){}
+  ideaForm.style.display='none';
+  document.getElementById('ideaThanks').style.display='block';
+});}
+// 共有ボタン
+(function(){
+  const url=location.origin+location.pathname;
+  const text='飲食店向けオーダーメイドWebツールのスパイシーデバイス';
+  const x=document.getElementById('shareX');
+  if(x){x.href='https://twitter.com/intent/tweet?text='+encodeURIComponent(text)+'&url='+encodeURIComponent(url);x.target='_blank';x.rel='noopener';}
+  const ln=document.getElementById('shareLine');
+  if(ln){ln.href='https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(url);ln.target='_blank';ln.rel='noopener';}
+  const cp=document.getElementById('shareCopy');
+  if(cp)cp.addEventListener('click',()=>{navigator.clipboard.writeText(url).then(()=>{const o=cp.textContent;cp.textContent='✓ コピーしました';setTimeout(()=>cp.textContent=o,2000);});});
+  const ns=document.getElementById('shareNative');
+  if(ns&&navigator.share){ns.style.display='inline-flex';ns.addEventListener('click',()=>navigator.share({title:text,url}).catch(()=>{}));}
+})();
 // accent preview switch (?accent=blue) — 本番では無視される任意機能
 const ac=new URLSearchParams(location.search).get('accent');
 if(ac==='blue'){const r=document.documentElement.style;
