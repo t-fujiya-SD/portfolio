@@ -582,7 +582,7 @@ function togglePanel(id){var e=document.getElementById(id);if(e)e.classList.togg
   }
   function catSlide(p,cat,its,note,cv){
     const s=p.addSlide(); s.background={color:C.white};
-    header(s,cat+'　｜　目標対比・課題・対策',cv);
+    header(s,cat,cv);
     s.addText('① 目標対比・GAP',{x:0.4,y:0.95,w:9,h:0.3,fontSize:12,bold:true,color:C.navy,fontFace:FONT});
     const yEnd=goalTable(s,its,1.28);
     let cy=yEnd+0.3; if(cy>3.55)cy=3.55;

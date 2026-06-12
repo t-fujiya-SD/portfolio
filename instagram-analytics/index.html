@@ -358,7 +358,7 @@ function renderDash(){
     <button class="${period===90?'on':''}" onclick="setPeriod(90)">直近90日</button>
     <button class="${period===0?'on':''}" onclick="setPeriod(0)">全期間</button>
   </div>
-  <div class="rb-bar"><button class="rb-open" onclick="igOpenRB()">📄 レポート出力（PDF）</button></div>
+  <div class="rb-bar"><button class="rb-open" onclick="igOpenRB()">📊 レポート作成（PowerPoint）</button></div>
   ${goalGapHTML()}
   <div class="sec" id="sec-acct"><div class="sec-h"><h2>アカウント概要</h2><span class="hint">直近30日</span></div>
     <div id="acct-ov"></div></div>
@@ -786,126 +786,155 @@ function seedAccount(force){
 }
 
 // ── init ──────────────────────────────────────────────────────
-/* ── レポートビルダー（PDF出力） ───────────────────────────── */
+/* ── レポート出力（PowerPoint / スライド・編集可）─────────────── */
 (function(){
-  const SECS=[
-    {id:'sec-goal',label:'🎯 目標 vs 実績'},
-    {id:'sec-acct',label:'アカウント概要'},
-    {id:'sec-kpi',label:'主要KPI（4指標）'},
-    {id:'sec-fol',label:'フォロワー推移（グラフ）'},
-    {id:'sec-aud',label:'オーディエンス（属性）'},
-    {id:'sec-active',label:'アクティブな時間帯'},
-    {id:'sec-type',label:'投稿タイプ別パフォーマンス'},
-    {id:'sec-top',label:'トップ投稿'},
-    {id:'sec-funnel',label:'来店までの導線'},
-    {id:'sec-ins',label:'💡 改善のヒント'},
+  const PPTX_SRC='https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js';
+  const FONT='Meiryo';
+  const C={pur:'962FBF',pink:'D62976',green:'16A34A',amber:'D97706',red:'DC2626',ink:'1F2733',mute:'6B7686',line:'E7ECF2',bg:'FAF5FF',white:'FFFFFF'};
+  const THEMES=[
+    {name:'フォロワー成長（認知拡大）',keys:['follow','disc'],actions:'・リールを増やし、非フォロワー（新規）への到達を拡大する\n・プロフィール／固定投稿を見直し、フォローする動機を明確にする'},
+    {name:'エンゲージメント（反応・保存）',keys:['er','save'],actions:'・冒頭3秒とサムネを改善し、離脱を防ぐ\n・メニューや限定情報はカルーセルにし「保存」を促す'},
+    {name:'来店・予約導線',keys:['clicks'],actions:'・プロフィールのリンク導線とハイライトを最適化する\n・ストーリーズで予約・キャンペーンを定期的に訴求する'},
   ];
-  const PRESETS={
-    monthly:['sec-goal','sec-acct','sec-kpi','sec-fol','sec-type','sec-top'],
-    mtg:['sec-goal','sec-kpi','sec-active','sec-type','sec-top','sec-ins'],
-    owner:['sec-goal','sec-acct','sec-kpi','sec-fol'],
-  };
+  const def=k=>GOAL_METRICS.find(d=>d.k===k);
+  const lbl=d=>d.label.replace(/^\S+\s/,'');
+  const colP=p=>p>=99.5?C.green:p>=85?C.amber:C.red;
+  const prog=it=>it.target?it.actual/it.target*100:0;
+  function items(keys){const g=getGoals()||{},m=computeMetrics();return keys.map(k=>{const d=def(k);if(!d||g[k]==null||g[k]<=0)return null;return {d,target:+g[k],actual:d.get(m)};}).filter(Boolean);}
+  function allItems(){const g=getGoals()||{},m=computeMetrics();return GOAL_METRICS.filter(d=>g[d.k]!=null&&g[d.k]>0).map(d=>({d,target:+g[d.k],actual:d.get(m)}));}
+  function autoIssues(its){const bad=its.filter(it=>prog(it)<99.5).sort((a,b)=>prog(a)-prog(b));if(!bad.length)return '・主要指標は目標を達成。次の伸びしろを検討する。';return bad.slice(0,4).map(it=>`・${lbl(it.d)}が目標未達（達成${Math.round(prog(it))}%／実績 ${fmtMetric(it.d,it.actual)}・目標 ${fmtMetric(it.d,it.target)}）`).join('\n');}
+  const getRN=()=>{try{return JSON.parse(localStorage.getItem('ig-rnotes'))||{}}catch(e){return {}}};
+  const setRN=o=>localStorage.setItem('ig-rnotes',JSON.stringify(o));
+  function goalSummary(){const g=getGoals();if(!g)return '';const its=allItems();let met=0;its.forEach(it=>{if(prog(it)>=99.5)met++;});const behind=its.filter(it=>prog(it)<99.5).sort((a,b)=>prog(a)-prog(b)).slice(0,2).map(it=>lbl(it.d));const pl=typeof period!=='undefined'&&period?('直近'+period+'日'):'全期間';return pl+'で'+its.length+'項目中 '+met+'項目を達成。'+(g.deadline?'（期限 '+fmtJDate(g.deadline)+'）':'')+(behind.length?' 重点改善：'+behind.join('・')+'。':'');}
+  function loadLib(){return new Promise((res,rej)=>{if(window.PptxGenJS)return res();const s=document.createElement('script');s.src=PPTX_SRC;s.onload=()=>res();s.onerror=()=>rej(new Error('PptxGenJSの読み込みに失敗（オフライン？）'));document.head.appendChild(s);});}
+
   const css=document.createElement('style'); css.textContent=`
     .rb-bar{margin:6px 0 2px;text-align:right}
     .rb-open{background:linear-gradient(135deg,#d62976,#962fbf);color:#fff;border:0;border-radius:10px;padding:9px 16px;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 2px 8px #962fbf44}
     .rb-ov{position:fixed;inset:0;background:#0008;display:none;align-items:flex-end;justify-content:center;z-index:90}
     .rb-ov.on{display:flex}
-    .rb-card{background:#fff;width:100%;max-width:560px;max-height:92vh;overflow:auto;border-radius:18px 18px 0 0;padding:18px 18px calc(18px + var(--sb))}
+    .rb-card{background:#fff;width:100%;max-width:580px;max-height:92vh;overflow:auto;border-radius:18px 18px 0 0;padding:18px 18px calc(18px + var(--sb))}
     @media(min-width:600px){.rb-ov{align-items:center}.rb-card{border-radius:18px}}
     .rb-card h3{font-size:16px;font-weight:800;color:var(--ink);margin-bottom:2px}
-    .rb-card .rb-d{font-size:12px;color:var(--muted);margin-bottom:12px}
-    .rb-sec-t{font-size:12px;font-weight:800;color:var(--purple);margin:14px 0 7px}
-    .rb-pre{display:flex;gap:7px;flex-wrap:wrap}
-    .rb-pre button{flex:1;min-width:120px;background:#faf5ff;border:1px solid #e6d6f5;border-radius:10px;padding:9px;font-size:12px;font-weight:700;color:#6b2c91;cursor:pointer}
-    .rb-pre button:active{background:#f0e2fb}
-    .rb-list label{display:flex;align-items:center;gap:9px;padding:8px 4px;border-bottom:1px solid var(--border);font-size:13px;cursor:pointer}
-    .rb-list input{width:17px;height:17px;accent-color:var(--purple)}
-    .rb-fld{margin:9px 0}
-    .rb-fld label{display:block;font-size:11.5px;font-weight:700;color:var(--muted);margin-bottom:3px}
-    .rb-fld input,.rb-fld textarea{width:100%;border:1px solid var(--border);border-radius:9px;padding:8px 10px;font-size:13px;font-family:inherit;box-sizing:border-box}
-    .rb-act{display:flex;gap:9px;margin-top:16px}
+    .rb-card .rb-d{font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6}
+    .rb-sec-t{font-size:12px;font-weight:800;color:var(--purple);margin:15px 0 8px}
+    .rb-themes{display:flex;flex-direction:column;gap:7px}
+    .rb-themes label{display:flex;align-items:center;gap:9px;font-size:13px;background:#faf5ff;border:1px solid #e6d6f5;border-radius:9px;padding:9px 12px;cursor:pointer}
+    .rb-themes input{width:16px;height:16px;accent-color:var(--purple)}
+    .rbf{margin:9px 0}
+    .rbf label{display:block;font-size:11.5px;font-weight:700;color:var(--muted);margin-bottom:3px}
+    .rbf input,.rbf textarea{width:100%;border:1px solid var(--border);border-radius:9px;padding:8px 10px;font-size:13px;font-family:inherit;box-sizing:border-box}
+    .rb-note{border:1px solid var(--border);border-radius:11px;padding:11px 12px;margin-bottom:9px}
+    .rb-note h5{font-size:13px;color:var(--purple);margin:0 0 4px;font-weight:800}
+    .rb-note .nl{font-size:11px;font-weight:700;color:var(--muted);margin:7px 0 3px}
+    .rb-note textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:7px 9px;font-size:12.5px;font-family:inherit;min-height:50px;resize:vertical;box-sizing:border-box;line-height:1.6}
+    .rb-busy{font-size:12.5px;color:var(--purple);font-weight:700;text-align:center;margin-top:8px;display:none}
+    .rb-act{display:flex;gap:9px;margin-top:10px;position:sticky;bottom:calc(-18px - var(--sb));background:#fff;padding:12px 0 2px}
     .rb-act button{flex:1;border:0;border-radius:11px;padding:12px;font-size:14px;font-weight:800;cursor:pointer}
     .rb-go{background:linear-gradient(135deg,#d62976,#962fbf);color:#fff}
-    .rb-cancel{background:#eef1f5;color:#47556b}
-    .rpt-cover{display:none}
-    @media print{
-      header,.tabs,.period,.rb-bar,.demo-note,.rb-ov,#view-goal,#view-add,#view-list{display:none!important}
-      body{background:#fff;padding:0}
-      .wrap{max-width:none;padding:0 6mm}
-      .rpt-off{display:none!important}
-      .rpt-cover{display:block!important;padding:18mm 0 12mm;border-bottom:3px solid var(--purple);margin-bottom:9mm}
-      .rpt-cover .rc-brand{font-size:12px;color:var(--purple);font-weight:800;letter-spacing:.04em}
-      .rpt-cover h1{font-size:26px;font-weight:800;color:var(--ink);margin:8px 0 4px}
-      .rpt-cover .rc-sub{font-size:14px;color:var(--muted)}
-      .rpt-cover .rc-meta{font-size:11.5px;color:#8893a3;margin-top:10px}
-      .rpt-cover .rc-memo{margin-top:14px;font-size:13px;color:#3a4658;background:#faf5ff;border-left:3px solid var(--purple);border-radius:8px;padding:10px 13px;white-space:pre-wrap}
-      .sec{break-inside:avoid;page-break-inside:avoid}
-      *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
-    }`;
+    .rb-cancel{background:#eef1f5;color:#47556b}`;
   document.head.appendChild(css);
-  const wrap=document.getElementById('view-dash').parentNode;
-  const cover=document.createElement('div'); cover.className='rpt-cover'; cover.id='rpt-cover';
-  cover.innerHTML=`<div class="rc-brand">Instagram 分析レポート</div>
-    <h1 id="rc-store">中華ダイニング 鳳来（デモ）</h1>
-    <div class="rc-sub" id="rc-period">対象期間：直近30日</div>
-    <div class="rc-meta" id="rc-meta"></div>
-    <div class="rc-memo" id="rc-memo"></div>`;
-  wrap.insertBefore(cover, wrap.firstChild);
+
   const ov=document.createElement('div'); ov.className='rb-ov'; ov.id='rbig-ov';
   ov.innerHTML=`<div class="rb-card">
-    <h3>📄 レポートを作成（PDF）</h3>
-    <div class="rb-d">必要な項目を選び、表紙を入力して「PDFを作成」。印刷ダイアログで「PDFとして保存」を選べます。</div>
-    <div class="rb-sec-t">目的別プリセット</div>
-    <div class="rb-pre">
-      <button onclick="igRbPreset('monthly')">📅 月次まとめ用</button>
-      <button onclick="igRbPreset('mtg')">🛠 改善ミーティング用</button>
-      <button onclick="igRbPreset('owner')">👤 オーナー報告用</button>
-    </div>
-    <div class="rb-sec-t">掲載する項目</div>
-    <div class="rb-list" id="rbig-list">${SECS.map(s=>`<label><input type="checkbox" value="${s.id}" checked>${s.label}</label>`).join('')}</div>
+    <h3>📊 レポートを作成（PowerPoint）</h3>
+    <div class="rb-d">テーマを選ぶと<b>1テーマ＝1スライド</b>で「①目標対比・GAP ②課題 ③対策案」を出力します。出力後も PowerPoint／Googleスライド（インポート）で<b>そのまま編集</b>できます。</div>
+    <div class="rb-sec-t">含めるテーマ（スライド）</div>
+    <div class="rb-themes" id="rbig-themes"></div>
     <div class="rb-sec-t">表紙</div>
-    <div class="rb-fld"><label>アカウント／店名</label><input id="rbig-store" value="中華ダイニング 鳳来（デモ）"></div>
-    <div class="rb-fld"><label>対象期間</label><input id="rbig-period" value="直近30日"></div>
-    <div class="rb-fld"><label>担当者</label><input id="rbig-author" value="藤谷"></div>
-    <div class="rb-fld"><label>コメント（任意・目標サマリーを自動入力）</label><textarea id="rbig-memo" rows="3"></textarea></div>
-    <div class="rb-act"><button class="rb-cancel" onclick="igCloseRB()">キャンセル</button><button class="rb-go" onclick="igRbPrint()">🖨 PDFを作成</button></div>
+    <div class="rbf"><label>アカウント／店名</label><input id="rbig-store" value="中華ダイニング 鳳来（デモ）"></div>
+    <div class="rbf"><label>アカウントID</label><input id="rbig-handle" value="@hourai_dining"></div>
+    <div class="rbf"><label>対象期間</label><input id="rbig-period" value="直近30日"></div>
+    <div class="rbf"><label>担当者</label><input id="rbig-author" value="藤谷"></div>
+    <div class="rbf"><label>総括コメント（任意・自動入力）</label><textarea id="rbig-memo" rows="2"></textarea></div>
+    <div class="rb-sec-t">各テーマの課題・対策（自動生成／編集できます）</div>
+    <div id="rbig-notes"></div>
+    <div class="rb-busy" id="rbig-busy">スライドを生成しています…</div>
+    <div class="rb-act"><button class="rb-cancel" onclick="igCloseRB()">キャンセル</button><button class="rb-go" onclick="makeIgPptx()">📊 PowerPointを作成</button></div>
   </div>`;
   document.body.appendChild(ov);
-  function checks(){return [...document.querySelectorAll('#rbig-list input')];}
-  window.igRbPreset=function(p){const set=new Set(PRESETS[p]||[]);checks().forEach(c=>c.checked=set.has(c.value));};
+
+  function activeThemes(){return THEMES.filter(t=>items(t.keys).length);}
   window.igCloseRB=function(){ov.classList.remove('on');};
-  function goalSummary(){
-    if(typeof getGoals!=='function') return '';
-    const g=getGoals(); if(!g) return '';
-    const m=computeMetrics();
-    const defs=GOAL_METRICS.filter(d=>g[d.k]!=null&&g[d.k]>0);
-    if(!defs.length) return '';
-    let met=0; const behind=[];
-    defs.forEach(d=>{const r=g[d.k]?d.get(m)/g[d.k]:0; if(r>=1)met++; else behind.push({d,r});});
-    behind.sort((a,b)=>a.r-b.r);
-    let s=`目標 ${defs.length}項目中 ${met}項目を達成。`;
-    if(g.deadline) s+=`（期限 ${fmtJDate(g.deadline)}）`;
-    if(behind.length) s+=`\n重点改善：`+behind.slice(0,2).map(b=>b.d.label.replace(/^\S+\s/,'')).join('・')+'。';
-    return s;
-  }
   window.igOpenRB=function(){
-    const t=document.getElementById('rbig-memo'); if(t&&!t.value.trim()) t.value=goalSummary();
+    const ts=activeThemes(); const rn=getRN();
+    const tw=document.getElementById('rbig-themes');
+    tw.innerHTML=ts.length?ts.map((t,i)=>`<label><input type="checkbox" value="${i}" checked>${t.name}</label>`).join(''):'<div style="font-size:12px;color:var(--muted)">🎯 目標が未設定です。「🎯 目標」タブで設定してください。</div>';
+    document.getElementById('rbig-notes').innerHTML=ts.map((t,i)=>{
+      const its=items(t.keys);
+      const iss=(rn[t.name]&&rn[t.name].issues!=null)?rn[t.name].issues:autoIssues(its);
+      const act=(rn[t.name]&&rn[t.name].actions!=null)?rn[t.name].actions:t.actions;
+      const e=s=>String(s).replace(/</g,'&lt;');
+      return `<div class="rb-note"><h5>${t.name}</h5><div class="nl">課題</div><textarea id="ig-iss-${i}">${e(iss)}</textarea><div class="nl">対策案</div><textarea id="ig-act-${i}">${e(act)}</textarea></div>`;
+    }).join('');
+    const memo=document.getElementById('rbig-memo'); if(memo&&!memo.value.trim())memo.value=goalSummary();
+    const pe=document.getElementById('rbig-period'); if(pe&&typeof period!=='undefined')pe.value=period?('直近'+period+'日'):'全期間';
     ov.classList.add('on');
   };
-  window.igRbPrint=function(){
-    const sel=new Set(checks().filter(c=>c.checked).map(c=>c.value));
-    SECS.forEach(s=>{const el=document.getElementById(s.id); if(el) el.classList.toggle('rpt-off', !sel.has(s.id));});
-    document.getElementById('rc-store').textContent=document.getElementById('rbig-store').value||'';
-    document.getElementById('rc-period').textContent='対象期間：'+(document.getElementById('rbig-period').value||'');
-    const today=new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric'});
-    const au=document.getElementById('rbig-author').value;
-    document.getElementById('rc-meta').textContent='作成日：'+today+(au?'　担当：'+au:'');
-    const memo=document.getElementById('rbig-memo').value;
-    const mEl=document.getElementById('rc-memo'); mEl.textContent=memo; mEl.style.display=memo.trim()?'block':'none';
-    ov.classList.remove('on');
-    setTimeout(()=>window.print(),180);
+  window.makeIgPptx=async function(){
+    if(!getGoals()){alert('先に「🎯 目標」タブで目標を設定してください。');return;}
+    const ts=activeThemes();
+    const sel=[...document.querySelectorAll('#rbig-themes input:checked')].map(c=>+c.value);
+    if(!sel.length){alert('テーマを1つ以上選んでください。');return;}
+    const rn=getRN();
+    ts.forEach((t,i)=>{const iss=document.getElementById('ig-iss-'+i),act=document.getElementById('ig-act-'+i);if(iss&&act)rn[t.name]={issues:iss.value,actions:act.value};});
+    setRN(rn);
+    const cv={store:document.getElementById('rbig-store').value||'',handle:document.getElementById('rbig-handle').value||'',period:document.getElementById('rbig-period').value||'',author:document.getElementById('rbig-author').value||'',memo:document.getElementById('rbig-memo').value||''};
+    const busy=document.getElementById('rbig-busy'); busy.style.display='block';
+    try{ await loadLib(); await buildDeck(ts.filter((t,i)=>sel.indexOf(i)>=0),cv); }
+    catch(e){ alert('生成に失敗しました：'+e.message); }
+    busy.style.display='none';
   };
-  window.addEventListener('afterprint',()=>{document.querySelectorAll('.rpt-off').forEach(e=>e.classList.remove('rpt-off'));});
+
+  function thead(){return ['項目','実績','目標','達成率'].map((t,i)=>({text:t,options:{bold:true,color:C.white,fill:{color:C.pur},fontSize:11,align:i===0?'left':'center',valign:'middle',fontFace:FONT}}));}
+  function trow(it){const p=prog(it);return [
+    {text:lbl(it.d),options:{fontSize:11,color:C.ink,align:'left',valign:'middle',fontFace:FONT}},
+    {text:fmtMetric(it.d,it.actual),options:{fontSize:11,color:C.ink,align:'right',valign:'middle',fontFace:FONT}},
+    {text:fmtMetric(it.d,it.target),options:{fontSize:11,color:C.mute,align:'right',valign:'middle',fontFace:FONT}},
+    {text:Math.round(p)+'%',options:{fontSize:11,bold:true,color:C.white,fill:{color:colP(p)},align:'center',valign:'middle',fontFace:FONT}},
+  ];}
+  function goalTable(s,its,y){const rows=[thead()].concat(its.map(trow));s.addTable(rows,{x:0.4,y:y,w:9.2,colW:[4.6,1.7,1.7,1.2],border:{type:'solid',color:C.line,pt:0.5},rowH:0.34,valign:'middle',fontFace:FONT});return y+rows.length*0.34;}
+  function header(s,title,cv){s.addShape('rect',{x:0,y:0,w:10,h:0.82,fill:{color:C.pur}});s.addShape('rect',{x:0,y:0.82,w:10,h:0.05,fill:{color:C.pink}});s.addText(title,{x:0.4,y:0.1,w:7.0,h:0.62,fontSize:18,bold:true,color:C.white,valign:'middle',fontFace:FONT});s.addText(cv.store+'  /  '+cv.period,{x:6.6,y:0.1,w:3.0,h:0.62,fontSize:10,color:'EAD9F5',align:'right',valign:'middle',fontFace:FONT});}
+  function bullets(str){return String(str||'').split('\n').map(x=>x.replace(/^[・\-•\s]+/,'').trim()).filter(Boolean).map(x=>({text:x,options:{bullet:{code:'2022'},fontSize:11.5,color:C.ink,fontFace:FONT,breakLine:true,paraSpaceAfter:6}}));}
+  function footer(s,store){s.addText(store+'  |  DEMO（サンプル・架空データ）',{x:0.4,y:5.32,w:9.2,h:0.25,fontSize:9,color:C.mute,fontFace:FONT});}
+
+  async function buildDeck(themes,cv){
+    const p=new PptxGenJS(); p.defineLayout({name:'IG',width:10,height:5.63}); p.layout='IG';
+    const today=new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric'});
+    // 表紙
+    let s=p.addSlide(); s.background={color:C.white};
+    s.addShape('rect',{x:0,y:0,w:10,h:0.26,fill:{color:C.pur}});
+    s.addShape('rect',{x:0.62,y:2.5,w:0.62,h:0.07,fill:{color:C.pink}});
+    s.addText('Instagram 分析レポート',{x:0.6,y:1.2,w:8.8,h:0.4,fontSize:13,bold:true,color:C.pur,fontFace:FONT});
+    s.addText(cv.store,{x:0.6,y:1.62,w:8.8,h:0.8,fontSize:28,bold:true,color:C.ink,fontFace:FONT});
+    s.addText((cv.handle?cv.handle+'　／　':'')+cv.period,{x:0.62,y:2.74,w:8.8,h:0.45,fontSize:15,color:C.mute,fontFace:FONT});
+    s.addText('作成日：'+today+(cv.author?'　担当：'+cv.author:''),{x:0.62,y:3.24,w:8.8,h:0.4,fontSize:11,color:C.mute,fontFace:FONT});
+    if(cv.memo.trim()){s.addShape('rect',{x:0.6,y:3.78,w:8.8,h:1.06,fill:{color:C.bg},line:{color:'E6D6F5',width:0.75}});s.addText(cv.memo,{x:0.78,y:3.86,w:8.45,h:0.9,fontSize:12,color:C.ink,valign:'top',fontFace:FONT});}
+    footer(s,cv.store);
+    // サマリー
+    const all=allItems();
+    s=p.addSlide(); s.background={color:C.white}; header(s,'全体サマリー（目標 vs 実績）',cv);
+    let met=0; all.forEach(it=>{if(prog(it)>=99.5)met++;});
+    s.addText([{text:String(met),options:{fontSize:40,bold:true,color:C.pur,fontFace:FONT}},{text:' / '+all.length+' 項目 達成',options:{fontSize:16,color:C.ink,fontFace:FONT}}],{x:0.4,y:1.0,w:6.4,h:0.7,valign:'middle'});
+    const g=getGoals();
+    if(g&&g.deadline){const lf=daysUntil(g.deadline);s.addText('期限：'+fmtJDate(g.deadline)+'まで '+(lf>=0?'あと'+lf+'日':'超過'+(-lf)+'日'),{x:6.0,y:1.12,w:3.6,h:0.5,fontSize:12,bold:true,color:lf<0?C.red:C.pur,align:'right',valign:'middle',fontFace:FONT});}
+    goalTable(s,all,1.9);
+    footer(s,cv.store);
+    // テーマ別
+    themes.forEach(t=>{const its=items(t.keys); if(!its.length)return; const rn=getRN(); const note=rn[t.name]||{};
+      const s2=p.addSlide(); s2.background={color:C.white}; header(s2,t.name,cv);
+      s2.addText('① 目標対比・GAP',{x:0.4,y:0.96,w:9,h:0.3,fontSize:12,bold:true,color:C.pur,fontFace:FONT});
+      const yEnd=goalTable(s2,its,1.3); let cy=yEnd+0.35; if(cy>3.55)cy=3.55;
+      s2.addShape('rect',{x:0.4,y:cy+0.02,w:0.12,h:0.24,fill:{color:C.red}});
+      s2.addText('② 課題',{x:0.6,y:cy-0.02,w:4,h:0.32,fontSize:12.5,bold:true,color:C.red,valign:'middle',fontFace:FONT});
+      s2.addText(bullets(note.issues!=null?note.issues:autoIssues(its)),{x:0.4,y:cy+0.34,w:4.5,h:1.55,valign:'top',fontFace:FONT});
+      s2.addShape('rect',{x:5.15,y:cy+0.02,w:0.12,h:0.24,fill:{color:C.green}});
+      s2.addText('③ 対策案',{x:5.35,y:cy-0.02,w:4,h:0.32,fontSize:12.5,bold:true,color:C.green,valign:'middle',fontFace:FONT});
+      s2.addText(bullets(note.actions!=null?note.actions:t.actions),{x:5.15,y:cy+0.34,w:4.45,h:1.55,valign:'top',fontFace:FONT});
+      footer(s2,cv.store);
+    });
+    await p.writeFile({fileName:'Instagram分析レポート_'+String(cv.period).replace(/[\\\/:*?"<>|\s]/g,'')+'.pptx'});
+  }
 })();
 
 seedDemo();
