@@ -135,7 +135,7 @@
     <canvas id="drink" height="150"></canvas>
   </section>
 
-  <div class="grid2">
+  <div class="grid2" id="s-menugrid">
     <section>
       <h2>カテゴリ別 売上構成</h2>
       <canvas id="catpie" height="220"></canvas>
@@ -383,6 +383,13 @@ function togglePanel(id){var e=document.getElementById(id);if(e)e.classList.togg
     if(g.deadline){const lf=daysU(g.deadline);dl=`<div class="g-dl${lf<0?' over':''}">🗓 期限：${fmtDL(g.deadline)}まで `+(lf>=0?`<b>あと${lf}日</b>`:`<b>期限超過 ${-lf}日</b>`)+`</div>`;}
     mount.innerHTML=`<div class="gcard"><div class="gch"><h3>🎯 目標 vs 実績</h3><span class="ghint">2026年5月・${defs.length}項目中 ${met}達成<button class="gm-edit" onclick="openGoalModal()">編集</button></span></div>${dl}${rows}${qa}</div>`;
   }
+  window.mrGoalSummary=function(){
+    const g=getG(); if(!g) return '';
+    const defs=DEFS.filter(d=>g[d.k]!=null&&g[d.k]!=='');
+    let met=0; defs.forEach(d=>{if(prog(d,+g[d.k],ACT[d.k])>=99.5)met++;});
+    const behind=defs.filter(d=>prog(d,+g[d.k],ACT[d.k])<99.5).sort((x,y)=>prog(x,+g[x.k],ACT[x.k])-prog(y,+g[y.k],ACT[y.k])).slice(0,2).map(d=>d.label.split(' ').slice(1).join(' '));
+    return '今月は'+defs.length+'項目中 '+met+'項目を達成。'+(g.deadline?'（期限 '+fmtDL(g.deadline)+'）':'')+(behind.length?' 重点改善：'+behind.join('・')+'。':'');
+  };
   window.openGoalModal=function(){
     const g=getG()||{};
     const fields=DEFS.map(d=>`<div class="gmf"><label>${d.label}${d.opt?'<span class="opt">任意</span>':''}<span class="gcur">実績 ${fmtV(d,ACT[d.k])}</span></label><div class="gmi"><input id="mg-${d.k}" type="number" inputmode="decimal" value="${g[d.k]!=null?g[d.k]:''}" placeholder="0"><span class="gu">${d.unit}</span></div></div>`).join('');
@@ -394,6 +401,106 @@ function togglePanel(id){var e=document.getElementById(id);if(e)e.classList.togg
   document.body.insertAdjacentHTML('beforeend',`<div class="gm-ov" id="gm-ov"><div class="gm"><h3>🎯 目標（ノルマ）設定</h3><p class="gmd">この月の目標を入力します。予約系は任意です。各項目の実績を参考に決められます。</p><div id="gm-body"></div><div class="gm-btns"><button onclick="closeGoalModal()">閉じる</button><button class="save" onclick="saveGoalModal()">保存する</button></div></div></div>`);
   if(!getG()) setG({sales:6500000,guests:1000,avg:6000,cogs:30.0,profit:500000,resv:220,resvSales:4500000,deadline:defDL()});
   renderCard();
+})();
+
+// ── レポートビルダー（PDF出力・印刷ベース）───────────────────────
+(function(){
+  const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const SECS=[
+    {id:'goal-mount',label:'🎯 目標 vs 実績',type:''},
+    {id:'s-summary',label:'サマリー（主要指標）',type:'カード'},
+    {id:'s-trend',label:'日別 売上・客数 推移',type:'グラフ'},
+    {id:'s-ld',label:'ランチ / ディナー別',type:'表'},
+    {id:'s-menugrid',label:'カテゴリ構成・上位メニュー',type:'グラフ＋表'},
+    {id:'s-drink',label:'ドリンク詳細',type:'グラフ'},
+    {id:'s-pl',label:'収益 PL明細',type:'表'},
+    {id:'s-web',label:'WEB詳細（媒体PV）',type:'表'},
+  ];
+  const PRESETS={
+    owner:['goal-mount','s-summary','s-trend','s-pl'],
+    manager:['goal-mount','s-summary','s-trend','s-ld','s-menugrid','s-drink'],
+    bank:['s-summary','s-pl','s-trend','s-ld','s-web'],
+  };
+  document.head.insertAdjacentHTML('beforeend',`<style>
+  .rb-bar{margin:16px 0 0;text-align:right}
+  .rb-open{background:var(--gold);color:#1c2a3a;border:none;border-radius:10px;padding:10px 18px;font-size:13.5px;font-weight:800;cursor:pointer}
+  .rb-ov{position:fixed;inset:0;background:rgba(20,30,45,.5);z-index:210;display:none;align-items:center;justify-content:center;padding:16px}
+  .rb-ov.on{display:flex}
+  .rb{background:#fff;border-radius:16px;max-width:520px;width:100%;max-height:88vh;overflow:auto;padding:22px}
+  .rb h3{font-size:17px;color:var(--navy);margin:0 0 4px}
+  .rb .rbd{font-size:12.5px;color:#7a8699;margin:0 0 14px;line-height:1.6}
+  .rb-presets{font-size:12.5px;color:#46506a;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .rb-presets button{background:#eef2f7;border:1px solid #d8e0ea;border-radius:20px;padding:6px 13px;font-size:12px;font-weight:700;cursor:pointer;color:#46506a}
+  .rb-presets button:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .rb-secs{display:flex;flex-direction:column;margin-bottom:14px}
+  .rb-secs label{display:flex;align-items:center;gap:9px;padding:9px 4px;border-bottom:1px solid #f1f4f8;font-size:13.5px;cursor:pointer}
+  .rb-secs input{width:17px;height:17px;accent-color:var(--navy)}
+  .rb-secs .ty{margin-left:auto;font-size:10.5px;color:#9aa6b4;background:#f4f6f8;border-radius:20px;padding:2px 9px}
+  .rb-cover{border-top:1px solid #eef1f5;padding-top:14px;display:flex;flex-direction:column;gap:9px}
+  .rbf{display:flex;align-items:flex-start;gap:10px}
+  .rbf label{font-size:12.5px;font-weight:700;width:74px;flex:none;padding-top:8px}
+  .rbf input,.rbf textarea{flex:1;border:1px solid #d8e0ea;border-radius:8px;padding:8px 10px;font-size:13.5px;font-family:inherit;outline:none}
+  .rbf textarea{min-height:56px;resize:vertical}
+  .rb-btns{display:flex;gap:10px;margin-top:18px}
+  .rb-btns button{flex:1;border-radius:10px;padding:12px;font-size:14px;font-weight:800;cursor:pointer;border:1.5px solid #d8e0ea;background:#fff;color:#46506a}
+  .rb-btns .prt{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .rpt-cover{display:none;padding:24px 4px 16px;border-bottom:3px solid var(--navy);margin-bottom:16px}
+  .rpt-cover .rc-title{font-size:23px;font-weight:800;color:var(--navy)}
+  .rpt-cover .rc-sub{font-size:15px;color:#46506a;margin-top:3px}
+  .rpt-cover .rc-meta{font-size:12px;color:#7a8699;margin-top:9px}
+  .rpt-cover .rc-memo{font-size:13px;color:#2b3445;margin-top:11px;white-space:pre-wrap;background:#f7f9fc;border:1px solid #e3e9f0;border-radius:8px;padding:11px 14px;line-height:1.7}
+  @media print{
+    header,.drawer,.scrim,#gm-ov,#rb-ov,.gm-edit,.rb-bar{display:none!important}
+    .rpt-off{display:none!important}
+    .rpt-cover{display:block!important}
+    body{background:#fff!important}
+    .wrap{max-width:none!important;padding:0 6px!important}
+    section,.gcard{break-inside:avoid;page-break-inside:avoid}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+  </style>`);
+  // ボタン・表紙・モーダルを設置
+  const wrap=document.querySelector('.wrap');
+  wrap.insertAdjacentHTML('afterbegin','<div class="rpt-cover" id="rpt-cover"></div>');
+  const gm=document.getElementById('goal-mount');
+  gm.insertAdjacentHTML('beforebegin','<div class="rb-bar"><button class="rb-open" onclick="openRB()">📄 レポートを作成（PDF）</button></div>');
+  const secHTML=SECS.map(s=>`<label><input type="checkbox" id="rb-${s.id}" checked>${s.label}${s.type?`<span class="ty">${s.type}</span>`:''}</label>`).join('');
+  document.body.insertAdjacentHTML('beforeend',`<div class="rb-ov" id="rb-ov"><div class="rb">
+    <h3>📄 レポートを作成</h3>
+    <p class="rbd">含める項目とプリセットを選び、「PDFで出力」を押すと印刷ダイアログから保存できます。</p>
+    <div class="rb-presets">プリセット：<button onclick="rbPreset('owner')">オーナー報告用</button><button onclick="rbPreset('manager')">店長会議用</button><button onclick="rbPreset('bank')">融資・銀行用</button></div>
+    <div class="rb-secs">${secHTML}</div>
+    <div class="rb-cover">
+      <div class="rbf"><label>店名</label><input id="rb-store" value="中華ダイニング 鳳来（サンプル）"></div>
+      <div class="rbf"><label>対象期間</label><input id="rb-period" value="2026年5月"></div>
+      <div class="rbf"><label>担当者</label><input id="rb-author" placeholder="（任意）"></div>
+      <div class="rbf"><label>コメント</label><textarea id="rb-memo" placeholder="今月の総括（任意）"></textarea></div>
+    </div>
+    <div class="rb-btns"><button onclick="closeRB()">閉じる</button><button class="prt" onclick="rbPrint()">🖨 PDFで出力</button></div>
+  </div></div>`);
+
+  window.rbPreset=function(p){const on=PRESETS[p]||[];SECS.forEach(s=>{const c=document.getElementById('rb-'+s.id);if(c)c.checked=on.indexOf(s.id)>=0;});};
+  window.openRB=function(){
+    const memo=document.getElementById('rb-memo');
+    if(memo&&!memo.value&&window.mrGoalSummary){memo.value=window.mrGoalSummary();}
+    document.getElementById('rb-ov').classList.add('on');
+  };
+  window.closeRB=function(){document.getElementById('rb-ov').classList.remove('on');};
+  window.rbPrint=function(){
+    const store=document.getElementById('rb-store').value, period=document.getElementById('rb-period').value;
+    const author=document.getElementById('rb-author').value, memo=document.getElementById('rb-memo').value.trim();
+    const today=new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric'});
+    document.getElementById('rpt-cover').innerHTML=`<div class="rc-title">${esc(store)}</div><div class="rc-sub">月次業績レポート ／ ${esc(period)}</div><div class="rc-meta">作成日：${today}${author?'　担当：'+esc(author):''}</div>${memo?`<div class="rc-memo">${esc(memo)}</div>`:''}`;
+    SECS.forEach(s=>{const el=document.getElementById(s.id);if(!el)return;const on=document.getElementById('rb-'+s.id).checked;
+      if(on){el.classList.remove('rpt-off');if(el.classList.contains('hidden')){el.classList.remove('hidden');el.classList.add('rpt-unhid');}}
+      else{el.classList.add('rpt-off');}});
+    closeRB();
+    setTimeout(()=>window.print(),150);
+  };
+  window.addEventListener('afterprint',function(){
+    document.querySelectorAll('.rpt-off').forEach(e=>e.classList.remove('rpt-off'));
+    document.querySelectorAll('.rpt-unhid').forEach(e=>{e.classList.add('hidden');e.classList.remove('rpt-unhid');});
+  });
 })();
 function filterAbc(){
   var q=(document.getElementById('abc-q').value||'').toLowerCase();
