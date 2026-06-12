@@ -307,25 +307,41 @@ function closeDrawer(){document.getElementById('drawer').classList.remove('open'
 function goto(id){var el=document.getElementById(id);if(el){el.classList.remove('hidden');el.scrollIntoView({behavior:'smooth'});}closeDrawer();}
 function togglePanel(id){var e=document.getElementById(id);if(e)e.classList.toggle('hidden');}
 
-// ── 目標(ノルマ)・GAP・改善QA ──────────────────────────────────
+// ── 目標（カテゴリ別・項目編集可）＋GAP ──────────────────────────
 (function(){
-  const ACT={sales:6359677,guests:1047,avg:6074,cogs:32.5,profit:374967,resv:236,resvSales:4019392};
-  const DEFS=[
-    {k:'sales',label:'💰 売上高',unit:'円',lower:false,opt:false,tip:'客単価×客数に分解し、伸ばせる方を強化する。'},
-    {k:'guests',label:'👥 客数',unit:'人',lower:false,opt:false,tip:'WEB媒体・SNSの集客とリピート施策を強化する。'},
-    {k:'avg',label:'🧾 客単価',unit:'円',lower:false,opt:false,tip:'ドリンク・コース・＋1品の提案で底上げする。'},
-    {k:'cogs',label:'📉 原価率',unit:'%',lower:true,opt:false,tip:'高騰品目の見直し・歩留まり改善・メニュー設計を。'},
-    {k:'profit',label:'📈 営業利益',unit:'円',lower:false,opt:false,tip:'原価率・人件費率・固定費を見直す。'},
-    {k:'resv',label:'🗓 予約件数',unit:'件',lower:false,opt:true,tip:'媒体掲載の最適化と電話/WEB予約導線の改善。'},
-    {k:'resvSales',label:'🔗 予約売上',unit:'円',lower:false,opt:true,tip:'予約経由の客単価・コース付帯率を上げる。'},
+  const CATS=['売上・利益','WEB関連','SNS関連','CS関連'];
+  const SEED=[
+    {id:'sales',cat:'売上・利益',name:'売上高',unit:'円',target:6500000,actual:6359677,lower:false,locked:true},
+    {id:'guests',cat:'売上・利益',name:'客数',unit:'人',target:1000,actual:1047,lower:false,locked:true},
+    {id:'avg',cat:'売上・利益',name:'客単価',unit:'円',target:6000,actual:6074,lower:false,locked:true},
+    {id:'cogs',cat:'売上・利益',name:'原価率',unit:'%',target:30,actual:32.5,lower:true,locked:true},
+    {id:'profit',cat:'売上・利益',name:'営業利益',unit:'円',target:500000,actual:374967,lower:false,locked:true},
+    {id:'resv',cat:'WEB関連',name:'WEB予約件数',unit:'件',target:220,actual:236,lower:false,locked:true},
+    {id:'resvSales',cat:'WEB関連',name:'WEB予約売上',unit:'円',target:4500000,actual:4019392,lower:false,locked:true},
+    {id:'webrate',cat:'WEB関連',name:'WEB予約比率',unit:'%',target:65,actual:63,lower:false,locked:false},
+    {id:'igfollow',cat:'SNS関連',name:'IGフォロワー純増',unit:'人',target:500,actual:420,lower:false,locked:false},
+    {id:'iger',cat:'SNS関連',name:'平均エンゲージ率',unit:'%',target:6,actual:5.4,lower:false,locked:false},
+    {id:'igsave',cat:'SNS関連',name:'平均保存率',unit:'%',target:4,actual:3.2,lower:false,locked:false},
+    {id:'csat',cat:'CS関連',name:'アンケート満足度',unit:'%',target:90,actual:84,lower:false,locked:false},
+    {id:'repeat',cat:'CS関連',name:'リピート率',unit:'%',target:35,actual:31,lower:false,locked:false},
+    {id:'review',cat:'CS関連',name:'口コミ評価',unit:'点',target:4.5,actual:4.2,lower:false,locked:false},
+    {id:'complaint',cat:'CS関連',name:'クレーム件数',unit:'件',target:3,actual:5,lower:true,locked:false},
   ];
-  const fmtV=(d,v)=> d.unit==='%' ? (+v).toFixed(1)+'%' : d.unit==='円' ? '¥'+Math.round(v).toLocaleString() : Math.round(v).toLocaleString()+d.unit;
-  const getG=()=>{try{return JSON.parse(localStorage.getItem('mr-goals'))}catch(e){return null}};
+  const DEFNOTE={
+    '売上・利益':{actions:'・客単価×客数で伸びしろの大きい方を強化\n・原価率の高い品目を見直し、メニュー設計を最適化'},
+    'WEB関連':{actions:'・予約導線を画面上部に固定し、高単価コースへ誘導\n・媒体掲載とSNSから予約ページへの動線を強化'},
+    'SNS関連':{actions:'・リール比率を上げ、非フォロワー（新規）への到達を拡大\n・保存されやすい情報設計（メニュー・限定情報）に'},
+    'CS関連':{actions:'・アンケートの不満点を抽出し、優先度順に改善\n・リピート特典・会員化で再来店を喚起'},
+  };
+  const fmtV=(u,v)=> v==null||v===''?'—': u==='円'?'¥'+Math.round(v).toLocaleString(): u==='%'?(+v).toFixed(1)+'%': u==='点'?(+v).toFixed(1)+'点': Math.round(v).toLocaleString()+u;
+  const getG=()=>{try{const g=JSON.parse(localStorage.getItem('mr-goals'));return g&&g.items?g:null}catch(e){return null}};
   const setG=g=>localStorage.setItem('mr-goals',JSON.stringify(g));
   const defDL=()=>{const d=new Date(),e=new Date(d.getFullYear(),d.getMonth()+1,0),p=n=>String(n).padStart(2,'0');return e.getFullYear()+'-'+p(e.getMonth()+1)+'-'+p(e.getDate());};
   const fmtDL=s=>{try{return new Date(s+'T00:00:00').toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric'})}catch(e){return s}};
   const daysU=s=>Math.ceil((new Date(s+'T23:59:59')-Date.now())/864e5);
-  const prog=(d,t,a)=> !t?0 : d.lower ? (a? t/a*100:0) : a/t*100;
+  const prog=it=>{const t=+it.target,a=+it.actual; if(!t)return 0; return it.lower?(a?t/a*100:0):a/t*100;};
+  const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  window.MR=Object.assign(window.MR||{},{CATS,getG,setG,fmtV,fmtDL,daysU,prog,DEFNOTE});
 
   document.head.insertAdjacentHTML('beforeend',`<style>
   #goal-mount{margin:18px 0 0}
@@ -336,9 +352,10 @@ function togglePanel(id){var e=document.getElementById(id);if(e)e.classList.togg
   .gcard .gch{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
   .gcard .gch h3{font-size:16px;color:var(--navy);margin:0}
   .gcard .gch .ghint{font-size:12px;color:#7a8699}
+  .gcat{font-size:11.5px;font-weight:800;color:#6b7686;letter-spacing:.04em;margin:16px 0 9px;padding-bottom:5px;border-bottom:1px solid #eef1f5}
   .g-dl{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:#7a3a12;background:#fff6ec;border:1px solid #f3d9b8;border-radius:8px;padding:6px 11px;margin-bottom:13px}
   .g-dl b{color:var(--gold)} .g-dl.over{color:#991b1b;background:#fee2e2;border-color:#fecaca}.g-dl.over b{color:#991b1b}
-  .grow{display:grid;grid-template-columns:120px 1fr;gap:4px 12px;align-items:center;margin-bottom:11px}
+  .grow{display:grid;grid-template-columns:140px 1fr;gap:4px 12px;align-items:center;margin-bottom:11px}
   .grow .gl{font-size:13px;font-weight:700}
   .gbar{height:9px;background:#eef1f5;border-radius:5px;overflow:hidden}
   .gbar i{display:block;height:100%;border-radius:5px;transition:width .4s}
@@ -349,18 +366,26 @@ function togglePanel(id){var e=document.getElementById(id);if(e)e.classList.togg
   .gqa b{color:var(--navy)} .gqa.met{background:#f0fdf4;border-color:#bbf7d0;border-left-color:#16a34a;color:#166534;font-weight:700}
   .gm-ov{position:fixed;inset:0;background:rgba(20,30,45,.5);z-index:200;display:none;align-items:center;justify-content:center;padding:16px}
   .gm-ov.on{display:flex}
-  .gm{background:#fff;border-radius:16px;max-width:480px;width:100%;max-height:88vh;overflow:auto;padding:22px}
+  .gm{background:#fff;border-radius:16px;max-width:500px;width:100%;max-height:90vh;overflow:auto;padding:22px}
   .gm h3{font-size:17px;color:var(--navy);margin:0 0 4px}
   .gm p.gmd{font-size:12.5px;color:#7a8699;margin:0 0 12px;line-height:1.6}
   .gmf{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #eef1f5}
   .gmf label{font-size:13.5px;font-weight:700}
-  .gmf .opt{font-size:10px;color:#fff;background:#9aa6b4;border-radius:20px;padding:1px 7px;margin-left:5px}
-  .gmf .gcur{font-size:10.5px;color:#9aa6b4;font-weight:400;margin-left:5px}
-  .gmf .gmi{display:flex;align-items:center;gap:6px;flex:none}
-  .gmf input{width:122px;border:1px solid #d8e0ea;border-radius:8px;padding:8px 10px;font-size:14px;text-align:right;font-family:inherit;outline:none}
-  .gmf input[type=date]{width:160px;text-align:left}
-  .gmf .gu{font-size:12px;color:#7a8699;width:14px}
-  .gm-btns{display:flex;gap:10px;margin-top:18px}
+  .gmf input[type=date]{width:160px;border:1px solid #d8e0ea;border-radius:8px;padding:8px 10px;font-size:14px;font-family:inherit;outline:none}
+  .gm-cat{margin-top:16px}
+  .gm-cat h4{font-size:12.5px;color:var(--navy);margin:0 0 6px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eef1f5;padding-bottom:6px}
+  .gm-cat .addi{background:#eef2f7;border:1px solid #d8e0ea;border-radius:7px;font-size:11px;font-weight:700;color:#46506a;padding:4px 10px;cursor:pointer}
+  .girow{padding:9px 0;border-bottom:1px solid #f4f6f8}
+  .girow .gir1{display:flex;gap:7px;align-items:center;margin-bottom:6px}
+  .girow .gir2{display:flex;gap:6px;align-items:center;font-size:10.5px;color:#7a8699;flex-wrap:wrap}
+  .girow input,.girow select{border:1px solid #d8e0ea;border-radius:7px;padding:6px 8px;font-size:12.5px;font-family:inherit;outline:none}
+  .girow input.nm{flex:1;min-width:0;font-weight:700}
+  .girow .gir2 input{width:88px;text-align:right}
+  .girow .gir2 input.u{width:40px;text-align:center}
+  .girow .gir2 select{font-size:11px;padding:5px 6px}
+  .girow .del{background:none;border:none;color:#c0392b;font-size:18px;line-height:1;cursor:pointer;padding:0 4px;flex:none}
+  .girow .lk{font-size:10px;color:#fff;background:#9aa6b4;border-radius:10px;padding:2px 8px;flex:none}
+  .gm-btns{display:flex;gap:10px;margin-top:18px;position:sticky;bottom:-22px;background:#fff;padding:12px 0 2px}
   .gm-btns button{flex:1;border-radius:10px;padding:12px;font-size:14px;font-weight:800;cursor:pointer;border:1.5px solid #d8e0ea;background:#fff;color:#46506a}
   .gm-btns .save{background:var(--navy);color:#fff;border-color:var(--navy)}
   </style>`);
@@ -368,139 +393,216 @@ function togglePanel(id){var e=document.getElementById(id);if(e)e.classList.togg
   function renderCard(){
     const mount=document.getElementById('goal-mount'); if(!mount) return;
     const g=getG();
-    if(!g){mount.innerHTML=`<div class="goalcta"><span>🎯 売上・利益などの<b>目標（ノルマ）</b>を設定すると、達成状況と改善の打ち手が出ます。</span><button onclick="openGoalModal()">目標を設定</button></div>`;return;}
-    const defs=DEFS.filter(d=>g[d.k]!=null&&g[d.k]!=='');
-    if(!defs.length){mount.innerHTML=`<div class="goalcta"><span>🎯 目標が未設定です。</span><button onclick="openGoalModal()">目標を設定</button></div>`;return;}
-    let met=0;
-    const rows=defs.map(d=>{const t=+g[d.k],a=ACT[d.k],pr=prog(d,t,a),ok=pr>=99.5;if(ok)met++;
-      const col=ok?'#16a34a':pr>=85?'#d97706':'#c0392b';
-      return `<div class="grow"><div class="gl">${d.label}</div>
-        <div class="gbar"><i style="width:${Math.max(3,Math.min(pr,100))}%;background:${col}"></i></div>
-        <div class="gnum"><b style="color:${col}">${Math.round(pr)}%</b><span>実績 ${fmtV(d,a)} / 目標 ${fmtV(d,t)}${d.lower?'（低いほど良い）':''}</span></div></div>`;}).join('');
-    const behind=defs.filter(d=>prog(d,+g[d.k],ACT[d.k])<99.5).sort((x,y)=>prog(x,+g[x.k],ACT[x.k])-prog(y,+g[y.k],ACT[y.k])).slice(0,3);
-    const qa=behind.length?`<div class="gqa-h">📌 達成への近道（未達の優先${behind.length}項目）</div>`+behind.map(d=>`<div class="gqa"><b>${d.label}：</b>${d.tip}</div>`).join(''):`<div class="gqa met">🎉 すべての目標を達成！この調子で。</div>`;
+    if(!g||!g.items||!g.items.length){mount.innerHTML=`<div class="goalcta"><span>🎯 売上・WEB・SNS・CSなどの<b>目標（ノルマ）</b>を設定すると、達成状況と改善の打ち手が出ます。</span><button onclick="openGoalModal()">目標を設定</button></div>`;return;}
+    const items=g.items; let met=0;
     let dl='';
     if(g.deadline){const lf=daysU(g.deadline);dl=`<div class="g-dl${lf<0?' over':''}">🗓 期限：${fmtDL(g.deadline)}まで `+(lf>=0?`<b>あと${lf}日</b>`:`<b>期限超過 ${-lf}日</b>`)+`</div>`;}
-    mount.innerHTML=`<div class="gcard"><div class="gch"><h3>🎯 目標 vs 実績</h3><span class="ghint">2026年5月・${defs.length}項目中 ${met}達成<button class="gm-edit" onclick="openGoalModal()">編集</button></span></div>${dl}${rows}${qa}</div>`;
+    let body='';
+    CATS.forEach(cat=>{const its=items.filter(it=>it.cat===cat); if(!its.length)return;
+      body+=`<div class="gcat">${esc(cat)}</div>`;
+      its.forEach(it=>{const pr=prog(it),ok=pr>=99.5;if(ok)met++;const col=ok?'#16a34a':pr>=85?'#d97706':'#c0392b';
+        body+=`<div class="grow"><div class="gl">${esc(it.name)}</div>
+          <div class="gbar"><i style="width:${Math.max(3,Math.min(pr,100))}%;background:${col}"></i></div>
+          <div class="gnum"><b style="color:${col}">${Math.round(pr)}%</b><span>実績 ${fmtV(it.unit,it.actual)} / 目標 ${fmtV(it.unit,it.target)}${it.lower?'（低いほど良い）':''}</span></div></div>`;});
+    });
+    const behind=items.filter(it=>prog(it)<99.5).sort((a,b)=>prog(a)-prog(b)).slice(0,4);
+    const qa=behind.length
+      ? `<div class="gqa-h">📌 未達（要改善）の項目</div>`+behind.map(it=>`<div class="gqa"><b>${esc(it.name)}：</b>達成 ${Math.round(prog(it))}%（実績 ${fmtV(it.unit,it.actual)} / 目標 ${fmtV(it.unit,it.target)}）</div>`).join('')+`<div class="gqa" style="background:#fffbeb;border-left-color:var(--gold)">📊 各テーマの<b>課題・対策</b>は「レポート作成（PowerPoint）」で編集して<b>1テーマ＝1スライド</b>に出力できます。</div>`
+      : `<div class="gqa met">🎉 すべての目標を達成！この調子で。</div>`;
+    mount.innerHTML=`<div class="gcard"><div class="gch"><h3>🎯 目標 vs 実績</h3><span class="ghint">2026年5月・${items.length}項目中 ${met}達成<button class="gm-edit" onclick="openGoalModal()">編集</button></span></div>${dl}${body}${qa}</div>`;
   }
-  window.mrGoalSummary=function(){
-    const g=getG(); if(!g) return '';
-    const defs=DEFS.filter(d=>g[d.k]!=null&&g[d.k]!=='');
-    let met=0; defs.forEach(d=>{if(prog(d,+g[d.k],ACT[d.k])>=99.5)met++;});
-    const behind=defs.filter(d=>prog(d,+g[d.k],ACT[d.k])<99.5).sort((x,y)=>prog(x,+g[x.k],ACT[x.k])-prog(y,+g[y.k],ACT[y.k])).slice(0,2).map(d=>d.label.split(' ').slice(1).join(' '));
-    return '今月は'+defs.length+'項目中 '+met+'項目を達成。'+(g.deadline?'（期限 '+fmtDL(g.deadline)+'）':'')+(behind.length?' 重点改善：'+behind.join('・')+'。':'');
+  window.MR.goalSummary=function(){
+    const g=getG(); if(!g||!g.items) return '';
+    let met=0; g.items.forEach(it=>{if(prog(it)>=99.5)met++;});
+    const behind=g.items.filter(it=>prog(it)<99.5).sort((a,b)=>prog(a)-prog(b)).slice(0,2).map(it=>it.name);
+    return '今月は'+g.items.length+'項目中 '+met+'項目を達成。'+(g.deadline?'（期限 '+fmtDL(g.deadline)+'）':'')+(behind.length?' 重点改善：'+behind.join('・')+'。':'');
   };
+
+  let W=[];
+  function syncW(){W.forEach((it,i)=>{const q=k=>document.getElementById('w-'+i+'-'+k); if(!q('name'))return; it.name=q('name').value; const t=q('target').value; it.target=t===''?null:parseFloat(t); const a=q('actual').value; it.actual=a===''?null:parseFloat(a); it.unit=q('unit').value||''; const lw=q('lower'); if(lw)it.lower=lw.value==='1';});}
+  function renderBody(deadline){
+    let html=`<div class="gmf"><label>🗓 達成期限（納期）</label><input id="mg-deadline" type="date" value="${deadline}"></div>`;
+    CATS.forEach(cat=>{
+      html+=`<div class="gm-cat"><h4>${esc(cat)}<button class="addi" onclick="mgAdd('${esc(cat)}')">＋ 項目を追加</button></h4>`;
+      W.forEach((it,i)=>{ if(it.cat!==cat) return;
+        html+=`<div class="girow"><div class="gir1">
+          <input class="nm" id="w-${i}-name" value="${esc(it.name)}" placeholder="項目名">
+          ${it.locked?'<span class="lk">実績 自動</span>':`<button class="del" title="削除" onclick="mgDel(${i})">×</button>`}
+        </div><div class="gir2">
+          目標<input id="w-${i}-target" type="number" inputmode="decimal" value="${it.target!=null?it.target:''}">
+          実績<input id="w-${i}-actual" type="number" inputmode="decimal" value="${it.actual!=null?it.actual:''}" ${it.locked?'readonly style="background:#f4f6f8;color:#9aa6b4"':''}>
+          単位<input class="u" id="w-${i}-unit" value="${esc(it.unit)}" ${it.locked?'readonly':''}>
+          <select id="w-${i}-lower" ${it.locked?'disabled':''}><option value="0"${it.lower?'':' selected'}>大きいほど良い</option><option value="1"${it.lower?' selected':''}>小さいほど良い</option></select>
+        </div></div>`;
+      });
+      html+=`</div>`;
+    });
+    document.getElementById('gm-body').innerHTML=html;
+  }
+  function reRender(){const dl=document.getElementById('mg-deadline').value;renderBody(dl);}
   window.openGoalModal=function(){
-    const g=getG()||{};
-    const fields=DEFS.map(d=>`<div class="gmf"><label>${d.label}${d.opt?'<span class="opt">任意</span>':''}<span class="gcur">実績 ${fmtV(d,ACT[d.k])}</span></label><div class="gmi"><input id="mg-${d.k}" type="number" inputmode="decimal" value="${g[d.k]!=null?g[d.k]:''}" placeholder="0"><span class="gu">${d.unit}</span></div></div>`).join('');
-    document.getElementById('gm-body').innerHTML=`<div class="gmf"><label>🗓 達成期限（納期）</label><div class="gmi"><input id="mg-deadline" type="date" value="${g.deadline||defDL()}"></div></div>`+fields;
+    const g=getG()||{items:JSON.parse(JSON.stringify(SEED)),deadline:defDL()};
+    W=JSON.parse(JSON.stringify(g.items||SEED));
+    renderBody(g.deadline||defDL());
     document.getElementById('gm-ov').classList.add('on');
   };
+  window.mgAdd=function(cat){syncW();W.push({id:'c'+Date.now(),cat:cat,name:'',unit:'%',target:null,actual:null,lower:false,locked:false});reRender();};
+  window.mgDel=function(i){syncW();W.splice(i,1);reRender();};
   window.closeGoalModal=function(){document.getElementById('gm-ov').classList.remove('on');};
-  window.saveGoalModal=function(){const g={};DEFS.forEach(d=>{const v=document.getElementById('mg-'+d.k).value;if(v!=='')g[d.k]=parseFloat(v);});const dl=document.getElementById('mg-deadline').value;if(dl)g.deadline=dl;setG(g);renderCard();closeGoalModal();};
-  document.body.insertAdjacentHTML('beforeend',`<div class="gm-ov" id="gm-ov"><div class="gm"><h3>🎯 目標（ノルマ）設定</h3><p class="gmd">この月の目標を入力します。予約系は任意です。各項目の実績を参考に決められます。</p><div id="gm-body"></div><div class="gm-btns"><button onclick="closeGoalModal()">閉じる</button><button class="save" onclick="saveGoalModal()">保存する</button></div></div></div>`);
-  if(!getG()) setG({sales:6500000,guests:1000,avg:6000,cogs:30.0,profit:500000,resv:220,resvSales:4500000,deadline:defDL()});
+  window.saveGoalModal=function(){syncW();const dl=document.getElementById('mg-deadline').value;const items=W.filter(it=>it.name&&it.name.trim()&&it.target!=null);const g=getG()||{};g.items=items;g.deadline=dl;g.notes=g.notes||{};setG(g);renderCard();closeGoalModal();};
+  document.body.insertAdjacentHTML('beforeend',`<div class="gm-ov" id="gm-ov"><div class="gm"><h3>🎯 目標（ノルマ）設定</h3><p class="gmd">カテゴリごとに目標を入力します。「実績 自動」は本ツールの集計値、それ以外（SNS・CS等）は実績も入力できます。＋項目を追加で自由に増やせます。</p><div id="gm-body"></div><div class="gm-btns"><button onclick="closeGoalModal()">閉じる</button><button class="save" onclick="saveGoalModal()">保存する</button></div></div></div>`);
+  if(!getG()){setG({items:JSON.parse(JSON.stringify(SEED)),deadline:defDL(),notes:{}});}
   renderCard();
 })();
 
-// ── レポートビルダー（PDF出力・印刷ベース）───────────────────────
+// ── レポート出力（PowerPoint / スライド・編集可）──────────────────
 (function(){
-  const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  const SECS=[
-    {id:'goal-mount',label:'🎯 目標 vs 実績',type:''},
-    {id:'s-summary',label:'サマリー（主要指標）',type:'カード'},
-    {id:'s-trend',label:'日別 売上・客数 推移',type:'グラフ'},
-    {id:'s-ld',label:'ランチ / ディナー別',type:'表'},
-    {id:'s-menugrid',label:'カテゴリ構成・上位メニュー',type:'グラフ＋表'},
-    {id:'s-drink',label:'ドリンク詳細',type:'グラフ'},
-    {id:'s-pl',label:'収益 PL明細',type:'表'},
-    {id:'s-web',label:'WEB詳細（媒体PV）',type:'表'},
-  ];
-  const PRESETS={
-    owner:['goal-mount','s-summary','s-trend','s-pl'],
-    manager:['goal-mount','s-summary','s-trend','s-ld','s-menugrid','s-drink'],
-    bank:['s-summary','s-pl','s-trend','s-ld','s-web'],
-  };
+  const MR=window.MR; const PPTX_SRC='https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js';
+  const FONT='Meiryo';
+  const C={navy:'1C3A5E',gold:'C9A84A',green:'16A34A',amber:'D97706',red:'C0392B',ink:'2B3445',mute:'7A8699',line:'E3E9F0',bg:'F7F9FC',white:'FFFFFF'};
+  const colP=p=>p>=99.5?C.green:p>=85?C.amber:C.red;
+  function loadLib(){return new Promise((res,rej)=>{if(window.PptxGenJS)return res();const s=document.createElement('script');s.src=PPTX_SRC;s.onload=()=>res();s.onerror=()=>rej(new Error('PptxGenJSの読み込みに失敗（オフライン？）'));document.head.appendChild(s);});}
+  function autoIssues(cat,its){const bad=its.filter(it=>MR.prog(it)<99.5).sort((a,b)=>MR.prog(a)-MR.prog(b));if(!bad.length)return '・主要指標は目標を達成。次の伸びしろを検討する。';return bad.slice(0,4).map(it=>`・${it.name}が目標未達（達成${Math.round(MR.prog(it))}%／実績 ${MR.fmtV(it.unit,it.actual)}・目標 ${MR.fmtV(it.unit,it.target)}）`).join('\n');}
+  function autoActions(cat){return (MR.DEFNOTE[cat]&&MR.DEFNOTE[cat].actions)||'・要因を分解し、優先度の高い施策から着手する。';}
+
   document.head.insertAdjacentHTML('beforeend',`<style>
   .rb-bar{margin:16px 0 0;text-align:right}
   .rb-open{background:var(--gold);color:#1c2a3a;border:none;border-radius:10px;padding:10px 18px;font-size:13.5px;font-weight:800;cursor:pointer}
   .rb-ov{position:fixed;inset:0;background:rgba(20,30,45,.5);z-index:210;display:none;align-items:center;justify-content:center;padding:16px}
   .rb-ov.on{display:flex}
-  .rb{background:#fff;border-radius:16px;max-width:520px;width:100%;max-height:88vh;overflow:auto;padding:22px}
+  .rb{background:#fff;border-radius:16px;max-width:560px;width:100%;max-height:90vh;overflow:auto;padding:22px}
   .rb h3{font-size:17px;color:var(--navy);margin:0 0 4px}
   .rb .rbd{font-size:12.5px;color:#7a8699;margin:0 0 14px;line-height:1.6}
-  .rb-presets{font-size:12.5px;color:#46506a;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-  .rb-presets button{background:#eef2f7;border:1px solid #d8e0ea;border-radius:20px;padding:6px 13px;font-size:12px;font-weight:700;cursor:pointer;color:#46506a}
-  .rb-presets button:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
-  .rb-secs{display:flex;flex-direction:column;margin-bottom:14px}
-  .rb-secs label{display:flex;align-items:center;gap:9px;padding:9px 4px;border-bottom:1px solid #f1f4f8;font-size:13.5px;cursor:pointer}
-  .rb-secs input{width:17px;height:17px;accent-color:var(--navy)}
-  .rb-secs .ty{margin-left:auto;font-size:10.5px;color:#9aa6b4;background:#f4f6f8;border-radius:20px;padding:2px 9px}
-  .rb-cover{border-top:1px solid #eef1f5;padding-top:14px;display:flex;flex-direction:column;gap:9px}
-  .rbf{display:flex;align-items:flex-start;gap:10px}
-  .rbf label{font-size:12.5px;font-weight:700;width:74px;flex:none;padding-top:8px}
+  .rb-sub{font-size:12px;font-weight:800;color:#6b7686;margin:16px 0 8px}
+  .rb-cats{display:flex;flex-wrap:wrap;gap:8px}
+  .rb-cats label{display:flex;align-items:center;gap:7px;font-size:13px;background:#f4f6f8;border:1px solid #e3e9f0;border-radius:9px;padding:7px 12px;cursor:pointer}
+  .rb-cats input{width:16px;height:16px;accent-color:var(--navy)}
+  .rbf{display:flex;align-items:flex-start;gap:10px;margin-bottom:9px}
+  .rbf label{font-size:12.5px;font-weight:700;width:78px;flex:none;padding-top:8px}
   .rbf input,.rbf textarea{flex:1;border:1px solid #d8e0ea;border-radius:8px;padding:8px 10px;font-size:13.5px;font-family:inherit;outline:none}
-  .rbf textarea{min-height:56px;resize:vertical}
-  .rb-btns{display:flex;gap:10px;margin-top:18px}
+  .rb-note{border:1px solid #e3e9f0;border-radius:11px;padding:12px 13px;margin-bottom:10px}
+  .rb-note h5{font-size:13px;color:var(--navy);margin:0 0 4px}
+  .rb-note .nl{font-size:11px;font-weight:700;color:#7a8699;margin:8px 0 3px}
+  .rb-note textarea{width:100%;border:1px solid #d8e0ea;border-radius:8px;padding:7px 9px;font-size:12.5px;font-family:inherit;min-height:54px;resize:vertical;outline:none;box-sizing:border-box;line-height:1.6}
+  .rb-busy{font-size:12.5px;color:var(--navy);font-weight:700;text-align:center;margin-top:10px;display:none}
+  .rb-btns{display:flex;gap:10px;margin-top:10px;position:sticky;bottom:-22px;background:#fff;padding:12px 0 2px}
   .rb-btns button{flex:1;border-radius:10px;padding:12px;font-size:14px;font-weight:800;cursor:pointer;border:1.5px solid #d8e0ea;background:#fff;color:#46506a}
-  .rb-btns .prt{background:var(--navy);color:#fff;border-color:var(--navy)}
-  .rpt-cover{display:none;padding:24px 4px 16px;border-bottom:3px solid var(--navy);margin-bottom:16px}
-  .rpt-cover .rc-title{font-size:23px;font-weight:800;color:var(--navy)}
-  .rpt-cover .rc-sub{font-size:15px;color:#46506a;margin-top:3px}
-  .rpt-cover .rc-meta{font-size:12px;color:#7a8699;margin-top:9px}
-  .rpt-cover .rc-memo{font-size:13px;color:#2b3445;margin-top:11px;white-space:pre-wrap;background:#f7f9fc;border:1px solid #e3e9f0;border-radius:8px;padding:11px 14px;line-height:1.7}
-  @media print{
-    header,.drawer,.scrim,#gm-ov,#rb-ov,.gm-edit,.rb-bar{display:none!important}
-    .rpt-off{display:none!important}
-    .rpt-cover{display:block!important}
-    body{background:#fff!important}
-    .wrap{max-width:none!important;padding:0 6px!important}
-    section,.gcard{break-inside:avoid;page-break-inside:avoid}
-    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  }
+  .rb-btns .mk{background:var(--navy);color:#fff;border-color:var(--navy)}
   </style>`);
-  // ボタン・表紙・モーダルを設置
-  const wrap=document.querySelector('.wrap');
-  wrap.insertAdjacentHTML('afterbegin','<div class="rpt-cover" id="rpt-cover"></div>');
+
   const gm=document.getElementById('goal-mount');
-  gm.insertAdjacentHTML('beforebegin','<div class="rb-bar"><button class="rb-open" onclick="openRB()">📄 レポートを作成（PDF）</button></div>');
-  const secHTML=SECS.map(s=>`<label><input type="checkbox" id="rb-${s.id}" checked>${s.label}${s.type?`<span class="ty">${s.type}</span>`:''}</label>`).join('');
+  if(gm) gm.insertAdjacentHTML('beforebegin','<div class="rb-bar"><button class="rb-open" onclick="openRB()">📊 レポート作成（PowerPoint）</button></div>');
   document.body.insertAdjacentHTML('beforeend',`<div class="rb-ov" id="rb-ov"><div class="rb">
-    <h3>📄 レポートを作成</h3>
-    <p class="rbd">含める項目とプリセットを選び、「PDFで出力」を押すと印刷ダイアログから保存できます。</p>
-    <div class="rb-presets">プリセット：<button onclick="rbPreset('owner')">オーナー報告用</button><button onclick="rbPreset('manager')">店長会議用</button><button onclick="rbPreset('bank')">融資・銀行用</button></div>
-    <div class="rb-secs">${secHTML}</div>
-    <div class="rb-cover">
-      <div class="rbf"><label>店名</label><input id="rb-store" value="中華ダイニング 鳳来（サンプル）"></div>
-      <div class="rbf"><label>対象期間</label><input id="rb-period" value="2026年5月"></div>
-      <div class="rbf"><label>担当者</label><input id="rb-author" placeholder="（任意）"></div>
-      <div class="rbf"><label>コメント</label><textarea id="rb-memo" placeholder="今月の総括（任意）"></textarea></div>
-    </div>
-    <div class="rb-btns"><button onclick="closeRB()">閉じる</button><button class="prt" onclick="rbPrint()">🖨 PDFで出力</button></div>
+    <h3>📊 レポートを作成（PowerPoint）</h3>
+    <p class="rbd">テーマを選ぶと<b>1テーマ＝1スライド</b>で「①目標対比・GAP ②課題 ③対策案」を出力します。中身は出力後も PowerPoint／Googleスライド（インポート）で<b>そのまま編集</b>できます。</p>
+    <div class="rb-sub">含めるテーマ（スライド）</div>
+    <div class="rb-cats" id="rb-cats"></div>
+    <div class="rb-sub">表紙</div>
+    <div class="rbf"><label>店名</label><input id="rb-store" value="中華ダイニング 鳳来（サンプル）"></div>
+    <div class="rbf"><label>対象期間</label><input id="rb-period" value="2026年5月"></div>
+    <div class="rbf"><label>担当者</label><input id="rb-author" placeholder="（任意）"></div>
+    <div class="rbf"><label>総括コメント</label><textarea id="rb-memo" placeholder="今月の総括（任意・自動入力）"></textarea></div>
+    <div class="rb-sub">各テーマの課題・対策（自動生成／編集できます）</div>
+    <div id="rb-notes"></div>
+    <div class="rb-busy" id="rb-busy">スライドを生成しています…</div>
+    <div class="rb-btns"><button onclick="closeRB()">閉じる</button><button class="mk" onclick="makePptx()">📊 PowerPointを作成</button></div>
   </div></div>`);
 
-  window.rbPreset=function(p){const on=PRESETS[p]||[];SECS.forEach(s=>{const c=document.getElementById('rb-'+s.id);if(c)c.checked=on.indexOf(s.id)>=0;});};
+  function cats(){const g=MR.getG();if(!g||!g.items)return [];return MR.CATS.filter(c=>g.items.some(it=>it.cat===c));}
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
   window.openRB=function(){
+    const g=MR.getG(); const cs=cats();
+    document.getElementById('rb-cats').innerHTML=cs.length?cs.map(c=>`<label><input type="checkbox" value="${esc(c)}" checked>${esc(c)}</label>`).join(''):'<span style="font-size:12px;color:#7a8699">目標が未設定です。先に「目標を設定」してください。</span>';
+    const notes=(g&&g.notes)||{};
+    document.getElementById('rb-notes').innerHTML=cs.map(c=>{
+      const its=g.items.filter(it=>it.cat===c);
+      const iss=(notes[c]&&notes[c].issues!=null)?notes[c].issues:autoIssues(c,its);
+      const act=(notes[c]&&notes[c].actions!=null)?notes[c].actions:autoActions(c);
+      return `<div class="rb-note"><h5>${esc(c)}</h5><div class="nl">課題</div><textarea id="note-iss-${esc(c)}">${esc(iss)}</textarea><div class="nl">対策案</div><textarea id="note-act-${esc(c)}">${esc(act)}</textarea></div>`;
+    }).join('');
     const memo=document.getElementById('rb-memo');
-    if(memo&&!memo.value&&window.mrGoalSummary){memo.value=window.mrGoalSummary();}
+    if(memo&&!memo.value&&MR.goalSummary){memo.value=MR.goalSummary();}
     document.getElementById('rb-ov').classList.add('on');
   };
   window.closeRB=function(){document.getElementById('rb-ov').classList.remove('on');};
-  window.rbPrint=function(){
-    const store=document.getElementById('rb-store').value, period=document.getElementById('rb-period').value;
-    const author=document.getElementById('rb-author').value, memo=document.getElementById('rb-memo').value.trim();
-    const today=new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric'});
-    document.getElementById('rpt-cover').innerHTML=`<div class="rc-title">${esc(store)}</div><div class="rc-sub">月次業績レポート ／ ${esc(period)}</div><div class="rc-meta">作成日：${today}${author?'　担当：'+esc(author):''}</div>${memo?`<div class="rc-memo">${esc(memo)}</div>`:''}`;
-    SECS.forEach(s=>{const el=document.getElementById(s.id);if(!el)return;const on=document.getElementById('rb-'+s.id).checked;
-      if(on){el.classList.remove('rpt-off');if(el.classList.contains('hidden')){el.classList.remove('hidden');el.classList.add('rpt-unhid');}}
-      else{el.classList.add('rpt-off');}});
-    closeRB();
-    setTimeout(()=>window.print(),150);
+  window.makePptx=async function(){
+    const g=MR.getG(); if(!g||!g.items){alert('先に目標を設定してください。');return;}
+    const sel=[...document.querySelectorAll('#rb-cats input:checked')].map(c=>c.value);
+    if(!sel.length){alert('テーマを1つ以上選んでください。');return;}
+    g.notes=g.notes||{};
+    cats().forEach(c=>{const i=document.getElementById('note-iss-'+c),a=document.getElementById('note-act-'+c);if(i&&a)g.notes[c]={issues:i.value,actions:a.value};});
+    MR.setG(g);
+    const cv={store:document.getElementById('rb-store').value||'店舗',period:document.getElementById('rb-period').value||'',author:document.getElementById('rb-author').value||'',memo:document.getElementById('rb-memo').value||''};
+    const busy=document.getElementById('rb-busy'); busy.style.display='block';
+    try{ await loadLib(); await buildDeck(g,sel,cv); }
+    catch(e){ alert('生成に失敗しました：'+e.message); }
+    busy.style.display='none';
   };
-  window.addEventListener('afterprint',function(){
-    document.querySelectorAll('.rpt-off').forEach(e=>e.classList.remove('rpt-off'));
-    document.querySelectorAll('.rpt-unhid').forEach(e=>{e.classList.add('hidden');e.classList.remove('rpt-unhid');});
-  });
+
+  function thead(){return ['項目','実績','目標','達成率'].map((t,i)=>({text:t,options:{bold:true,color:C.white,fill:{color:C.navy},fontSize:11,align:i===0?'left':'center',valign:'middle',fontFace:FONT}}));}
+  function trow(it){const pr=MR.prog(it);return [
+    {text:it.name,options:{fontSize:11,color:C.ink,align:'left',valign:'middle',fontFace:FONT}},
+    {text:MR.fmtV(it.unit,it.actual),options:{fontSize:11,color:C.ink,align:'right',valign:'middle',fontFace:FONT}},
+    {text:MR.fmtV(it.unit,it.target),options:{fontSize:11,color:C.mute,align:'right',valign:'middle',fontFace:FONT}},
+    {text:Math.round(pr)+'%',options:{fontSize:11,bold:true,color:C.white,fill:{color:colP(pr)},align:'center',valign:'middle',fontFace:FONT}},
+  ];}
+  function goalTable(s,its,y){const rows=[thead()].concat(its.map(trow));
+    s.addTable(rows,{x:0.4,y:y,w:9.2,colW:[4.4,1.7,1.7,1.4],border:{type:'solid',color:C.line,pt:0.5},rowH:0.34,valign:'middle',fontFace:FONT});
+    return y+rows.length*0.34;}
+  function header(s,title,cv){
+    s.addShape('rect',{x:0,y:0,w:10,h:0.82,fill:{color:C.navy}});
+    s.addText(title,{x:0.4,y:0.1,w:7.0,h:0.62,fontSize:18,bold:true,color:C.white,valign:'middle',fontFace:FONT});
+    s.addText(cv.store+'  /  '+cv.period,{x:6.6,y:0.1,w:3.0,h:0.62,fontSize:10,color:'D6DEE8',align:'right',valign:'middle',fontFace:FONT});
+  }
+  function bullets(str){return String(str||'').split('\n').map(x=>x.replace(/^[・\-•\s]+/,'').trim()).filter(Boolean).map(x=>({text:x,options:{bullet:{code:'2022'},fontSize:11.5,color:C.ink,fontFace:FONT,breakLine:true,paraSpaceAfter:6}}));}
+  function footer(s,store){s.addText(store+'  |  DEMO（サンプル・架空データ）',{x:0.4,y:5.32,w:9.2,h:0.25,fontSize:9,color:C.mute,fontFace:FONT});}
+
+  function titleSlide(p,cv,today){
+    const s=p.addSlide(); s.background={color:C.white};
+    s.addShape('rect',{x:0,y:0,w:10,h:0.26,fill:{color:C.navy}});
+    s.addShape('rect',{x:0.62,y:2.5,w:0.62,h:0.07,fill:{color:C.gold}});
+    s.addText(cv.store,{x:0.6,y:1.55,w:8.8,h:0.85,fontSize:30,bold:true,color:C.navy,fontFace:FONT});
+    s.addText('月次業績レポート　／　'+cv.period,{x:0.62,y:2.72,w:8.8,h:0.5,fontSize:16,color:C.ink,fontFace:FONT});
+    s.addText('作成日：'+today+(cv.author?'　担当：'+cv.author:''),{x:0.62,y:3.26,w:8.8,h:0.4,fontSize:11,color:C.mute,fontFace:FONT});
+    if(cv.memo.trim()){s.addShape('rect',{x:0.6,y:3.82,w:8.8,h:1.08,fill:{color:C.bg},line:{color:C.line,width:0.75}});s.addText(cv.memo,{x:0.78,y:3.9,w:8.45,h:0.92,fontSize:12,color:C.ink,valign:'top',fontFace:FONT});}
+    footer(s,cv.store);
+  }
+  function summarySlide(p,g,cv){
+    const s=p.addSlide(); s.background={color:C.white};
+    header(s,'全体サマリー',cv);
+    let met=0; g.items.forEach(it=>{if(MR.prog(it)>=99.5)met++;});
+    s.addText([{text:String(met),options:{fontSize:40,bold:true,color:C.navy,fontFace:FONT}},{text:' / '+g.items.length+' 項目 達成',options:{fontSize:16,color:C.ink,fontFace:FONT}}],{x:0.4,y:1.0,w:6.2,h:0.7,valign:'middle'});
+    if(g.deadline){const lf=MR.daysU(g.deadline);s.addText('期限：'+MR.fmtDL(g.deadline)+'まで '+(lf>=0?'あと'+lf+'日':'超過'+(-lf)+'日'),{x:6.0,y:1.12,w:3.6,h:0.5,fontSize:12,bold:true,color:lf<0?C.red:'7A3A12',align:'right',valign:'middle',fontFace:FONT});}
+    const head=['テーマ','達成項目','平均達成率'].map((t,i)=>({text:t,options:{bold:true,color:C.white,fill:{color:C.navy},fontSize:12,align:i===0?'left':'center',valign:'middle',fontFace:FONT}}));
+    const rows=[head];
+    MR.CATS.forEach(c=>{const its=g.items.filter(it=>it.cat===c);if(!its.length)return;let m=0,sum=0;its.forEach(it=>{const pr=MR.prog(it);if(pr>=99.5)m++;sum+=Math.min(pr,150);});const avg=Math.round(sum/its.length);
+      rows.push([{text:c,options:{fontSize:12.5,color:C.ink,align:'left',valign:'middle',fontFace:FONT}},{text:m+' / '+its.length,options:{fontSize:12.5,color:C.ink,align:'center',valign:'middle',fontFace:FONT}},{text:avg+'%',options:{fontSize:12.5,bold:true,color:C.white,fill:{color:colP(avg)},align:'center',valign:'middle',fontFace:FONT}}]);});
+    s.addTable(rows,{x:0.4,y:1.95,w:9.2,colW:[5.0,2.1,2.1],border:{type:'solid',color:C.line,pt:0.5},rowH:0.46,valign:'middle',fontFace:FONT});
+    footer(s,cv.store);
+  }
+  function catSlide(p,cat,its,note,cv){
+    const s=p.addSlide(); s.background={color:C.white};
+    header(s,cat+'　｜　目標対比・課題・対策',cv);
+    s.addText('① 目標対比・GAP',{x:0.4,y:0.95,w:9,h:0.3,fontSize:12,bold:true,color:C.navy,fontFace:FONT});
+    const yEnd=goalTable(s,its,1.28);
+    let cy=yEnd+0.3; if(cy>3.55)cy=3.55;
+    s.addShape('rect',{x:0.4,y:cy+0.02,w:0.12,h:0.24,fill:{color:C.red}});
+    s.addText('② 課題',{x:0.6,y:cy-0.02,w:4,h:0.32,fontSize:12.5,bold:true,color:C.red,valign:'middle',fontFace:FONT});
+    s.addText(bullets(note.issues!=null?note.issues:autoIssues(cat,its)),{x:0.4,y:cy+0.34,w:4.5,h:1.55,valign:'top',fontFace:FONT});
+    s.addShape('rect',{x:5.15,y:cy+0.02,w:0.12,h:0.24,fill:{color:C.green}});
+    s.addText('③ 対策案',{x:5.35,y:cy-0.02,w:4,h:0.32,fontSize:12.5,bold:true,color:C.green,valign:'middle',fontFace:FONT});
+    s.addText(bullets(note.actions!=null?note.actions:autoActions(cat)),{x:5.15,y:cy+0.34,w:4.45,h:1.55,valign:'top',fontFace:FONT});
+    footer(s,cv.store);
+  }
+  async function buildDeck(g,sel,cv){
+    const p=new PptxGenJS();
+    p.defineLayout({name:'MR',width:10,height:5.63}); p.layout='MR';
+    const today=new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric'});
+    titleSlide(p,cv,today);
+    summarySlide(p,g,cv);
+    MR.CATS.filter(c=>sel.indexOf(c)>=0).forEach(c=>{const its=g.items.filter(it=>it.cat===c);if(!its.length)return;const note=(g.notes&&g.notes[c])||{};catSlide(p,c,its,note,cv);});
+    await p.writeFile({fileName:'月次業績レポート_'+String(cv.period).replace(/[\\\/:*?"<>|\s]/g,'')+'.pptx'});
+  }
 })();
 function filterAbc(){
   var q=(document.getElementById('abc-q').value||'').toLowerCase();
