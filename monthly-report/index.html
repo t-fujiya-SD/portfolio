@@ -96,6 +96,8 @@
     <span style="color:#7a8699">右上の <b>≡</b> メニューから、PL明細・WEB／SNS詳細・メニューABCなどの詳細セクションを開けます。</span>
   </div>
 
+  <div id="goal-mount"></div>
+
   <section id="s-summary">
     <h2>サマリー</h2>
     <div class="seclabel">① 店舗実績</div>
@@ -304,6 +306,95 @@ function openDrawer(){document.getElementById('drawer').classList.add('open');do
 function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('scrim').classList.remove('open');}
 function goto(id){var el=document.getElementById(id);if(el){el.classList.remove('hidden');el.scrollIntoView({behavior:'smooth'});}closeDrawer();}
 function togglePanel(id){var e=document.getElementById(id);if(e)e.classList.toggle('hidden');}
+
+// ── 目標(ノルマ)・GAP・改善QA ──────────────────────────────────
+(function(){
+  const ACT={sales:6359677,guests:1047,avg:6074,cogs:32.5,profit:374967,resv:236,resvSales:4019392};
+  const DEFS=[
+    {k:'sales',label:'💰 売上高',unit:'円',lower:false,opt:false,tip:'客単価×客数に分解し、伸ばせる方を強化する。'},
+    {k:'guests',label:'👥 客数',unit:'人',lower:false,opt:false,tip:'WEB媒体・SNSの集客とリピート施策を強化する。'},
+    {k:'avg',label:'🧾 客単価',unit:'円',lower:false,opt:false,tip:'ドリンク・コース・＋1品の提案で底上げする。'},
+    {k:'cogs',label:'📉 原価率',unit:'%',lower:true,opt:false,tip:'高騰品目の見直し・歩留まり改善・メニュー設計を。'},
+    {k:'profit',label:'📈 営業利益',unit:'円',lower:false,opt:false,tip:'原価率・人件費率・固定費を見直す。'},
+    {k:'resv',label:'🗓 予約件数',unit:'件',lower:false,opt:true,tip:'媒体掲載の最適化と電話/WEB予約導線の改善。'},
+    {k:'resvSales',label:'🔗 予約売上',unit:'円',lower:false,opt:true,tip:'予約経由の客単価・コース付帯率を上げる。'},
+  ];
+  const fmtV=(d,v)=> d.unit==='%' ? (+v).toFixed(1)+'%' : d.unit==='円' ? '¥'+Math.round(v).toLocaleString() : Math.round(v).toLocaleString()+d.unit;
+  const getG=()=>{try{return JSON.parse(localStorage.getItem('mr-goals'))}catch(e){return null}};
+  const setG=g=>localStorage.setItem('mr-goals',JSON.stringify(g));
+  const defDL=()=>{const d=new Date(),e=new Date(d.getFullYear(),d.getMonth()+1,0),p=n=>String(n).padStart(2,'0');return e.getFullYear()+'-'+p(e.getMonth()+1)+'-'+p(e.getDate());};
+  const fmtDL=s=>{try{return new Date(s+'T00:00:00').toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric'})}catch(e){return s}};
+  const daysU=s=>Math.ceil((new Date(s+'T23:59:59')-Date.now())/864e5);
+  const prog=(d,t,a)=> !t?0 : d.lower ? (a? t/a*100:0) : a/t*100;
+
+  document.head.insertAdjacentHTML('beforeend',`<style>
+  #goal-mount{margin:18px 0 0}
+  .goalcta{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;background:#fff;border:1px solid #e3e9f0;border-left:4px solid var(--navy);border-radius:12px;padding:16px 18px;font-size:13.5px;color:#3a4658}
+  .goalcta button,.gm-edit{background:var(--navy);color:#fff;border:none;border-radius:9px;padding:8px 15px;font-size:12.5px;font-weight:700;cursor:pointer}
+  .gm-edit{padding:5px 12px;margin-left:8px}
+  .gcard{background:#fff;border:1px solid #e3e9f0;border-radius:14px;padding:18px 20px}
+  .gcard .gch{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+  .gcard .gch h3{font-size:16px;color:var(--navy);margin:0}
+  .gcard .gch .ghint{font-size:12px;color:#7a8699}
+  .g-dl{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:#7a3a12;background:#fff6ec;border:1px solid #f3d9b8;border-radius:8px;padding:6px 11px;margin-bottom:13px}
+  .g-dl b{color:var(--gold)} .g-dl.over{color:#991b1b;background:#fee2e2;border-color:#fecaca}.g-dl.over b{color:#991b1b}
+  .grow{display:grid;grid-template-columns:120px 1fr;gap:4px 12px;align-items:center;margin-bottom:11px}
+  .grow .gl{font-size:13px;font-weight:700}
+  .gbar{height:9px;background:#eef1f5;border-radius:5px;overflow:hidden}
+  .gbar i{display:block;height:100%;border-radius:5px;transition:width .4s}
+  .gnum{grid-column:1/-1;display:flex;justify-content:space-between;font-size:11.5px;color:#7a8699;gap:10px}
+  .gnum b{font-size:14px}
+  .gqa-h{font-size:12.5px;font-weight:800;margin:15px 0 9px;border-top:1px solid #eef1f5;padding-top:13px}
+  .gqa{font-size:12.6px;color:#46506a;background:#f7f9fc;border:1px solid #e3e9f0;border-left:3px solid var(--navy);border-radius:9px;padding:9px 12px;margin-bottom:7px;line-height:1.6}
+  .gqa b{color:var(--navy)} .gqa.met{background:#f0fdf4;border-color:#bbf7d0;border-left-color:#16a34a;color:#166534;font-weight:700}
+  .gm-ov{position:fixed;inset:0;background:rgba(20,30,45,.5);z-index:200;display:none;align-items:center;justify-content:center;padding:16px}
+  .gm-ov.on{display:flex}
+  .gm{background:#fff;border-radius:16px;max-width:480px;width:100%;max-height:88vh;overflow:auto;padding:22px}
+  .gm h3{font-size:17px;color:var(--navy);margin:0 0 4px}
+  .gm p.gmd{font-size:12.5px;color:#7a8699;margin:0 0 12px;line-height:1.6}
+  .gmf{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #eef1f5}
+  .gmf label{font-size:13.5px;font-weight:700}
+  .gmf .opt{font-size:10px;color:#fff;background:#9aa6b4;border-radius:20px;padding:1px 7px;margin-left:5px}
+  .gmf .gcur{font-size:10.5px;color:#9aa6b4;font-weight:400;margin-left:5px}
+  .gmf .gmi{display:flex;align-items:center;gap:6px;flex:none}
+  .gmf input{width:122px;border:1px solid #d8e0ea;border-radius:8px;padding:8px 10px;font-size:14px;text-align:right;font-family:inherit;outline:none}
+  .gmf input[type=date]{width:160px;text-align:left}
+  .gmf .gu{font-size:12px;color:#7a8699;width:14px}
+  .gm-btns{display:flex;gap:10px;margin-top:18px}
+  .gm-btns button{flex:1;border-radius:10px;padding:12px;font-size:14px;font-weight:800;cursor:pointer;border:1.5px solid #d8e0ea;background:#fff;color:#46506a}
+  .gm-btns .save{background:var(--navy);color:#fff;border-color:var(--navy)}
+  </style>`);
+
+  function renderCard(){
+    const mount=document.getElementById('goal-mount'); if(!mount) return;
+    const g=getG();
+    if(!g){mount.innerHTML=`<div class="goalcta"><span>🎯 売上・利益などの<b>目標（ノルマ）</b>を設定すると、達成状況と改善の打ち手が出ます。</span><button onclick="openGoalModal()">目標を設定</button></div>`;return;}
+    const defs=DEFS.filter(d=>g[d.k]!=null&&g[d.k]!=='');
+    if(!defs.length){mount.innerHTML=`<div class="goalcta"><span>🎯 目標が未設定です。</span><button onclick="openGoalModal()">目標を設定</button></div>`;return;}
+    let met=0;
+    const rows=defs.map(d=>{const t=+g[d.k],a=ACT[d.k],pr=prog(d,t,a),ok=pr>=99.5;if(ok)met++;
+      const col=ok?'#16a34a':pr>=85?'#d97706':'#c0392b';
+      return `<div class="grow"><div class="gl">${d.label}</div>
+        <div class="gbar"><i style="width:${Math.max(3,Math.min(pr,100))}%;background:${col}"></i></div>
+        <div class="gnum"><b style="color:${col}">${Math.round(pr)}%</b><span>実績 ${fmtV(d,a)} / 目標 ${fmtV(d,t)}${d.lower?'（低いほど良い）':''}</span></div></div>`;}).join('');
+    const behind=defs.filter(d=>prog(d,+g[d.k],ACT[d.k])<99.5).sort((x,y)=>prog(x,+g[x.k],ACT[x.k])-prog(y,+g[y.k],ACT[y.k])).slice(0,3);
+    const qa=behind.length?`<div class="gqa-h">📌 達成への近道（未達の優先${behind.length}項目）</div>`+behind.map(d=>`<div class="gqa"><b>${d.label}：</b>${d.tip}</div>`).join(''):`<div class="gqa met">🎉 すべての目標を達成！この調子で。</div>`;
+    let dl='';
+    if(g.deadline){const lf=daysU(g.deadline);dl=`<div class="g-dl${lf<0?' over':''}">🗓 期限：${fmtDL(g.deadline)}まで `+(lf>=0?`<b>あと${lf}日</b>`:`<b>期限超過 ${-lf}日</b>`)+`</div>`;}
+    mount.innerHTML=`<div class="gcard"><div class="gch"><h3>🎯 目標 vs 実績</h3><span class="ghint">2026年5月・${defs.length}項目中 ${met}達成<button class="gm-edit" onclick="openGoalModal()">編集</button></span></div>${dl}${rows}${qa}</div>`;
+  }
+  window.openGoalModal=function(){
+    const g=getG()||{};
+    const fields=DEFS.map(d=>`<div class="gmf"><label>${d.label}${d.opt?'<span class="opt">任意</span>':''}<span class="gcur">実績 ${fmtV(d,ACT[d.k])}</span></label><div class="gmi"><input id="mg-${d.k}" type="number" inputmode="decimal" value="${g[d.k]!=null?g[d.k]:''}" placeholder="0"><span class="gu">${d.unit}</span></div></div>`).join('');
+    document.getElementById('gm-body').innerHTML=`<div class="gmf"><label>🗓 達成期限（納期）</label><div class="gmi"><input id="mg-deadline" type="date" value="${g.deadline||defDL()}"></div></div>`+fields;
+    document.getElementById('gm-ov').classList.add('on');
+  };
+  window.closeGoalModal=function(){document.getElementById('gm-ov').classList.remove('on');};
+  window.saveGoalModal=function(){const g={};DEFS.forEach(d=>{const v=document.getElementById('mg-'+d.k).value;if(v!=='')g[d.k]=parseFloat(v);});const dl=document.getElementById('mg-deadline').value;if(dl)g.deadline=dl;setG(g);renderCard();closeGoalModal();};
+  document.body.insertAdjacentHTML('beforeend',`<div class="gm-ov" id="gm-ov"><div class="gm"><h3>🎯 目標（ノルマ）設定</h3><p class="gmd">この月の目標を入力します。予約系は任意です。各項目の実績を参考に決められます。</p><div id="gm-body"></div><div class="gm-btns"><button onclick="closeGoalModal()">閉じる</button><button class="save" onclick="saveGoalModal()">保存する</button></div></div></div>`);
+  if(!getG()) setG({sales:6500000,guests:1000,avg:6000,cogs:30.0,profit:500000,resv:220,resvSales:4500000,deadline:defDL()});
+  renderCard();
+})();
 function filterAbc(){
   var q=(document.getElementById('abc-q').value||'').toLowerCase();
   var cat=document.getElementById('abc-cat').value, rk=document.getElementById('abc-rank').value;
