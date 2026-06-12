@@ -152,6 +152,12 @@ header{background:linear-gradient(95deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5)
 .goal-done{display:none;background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;border-radius:10px;padding:11px 14px;font-size:13px;font-weight:600;text-align:center;margin-top:12px}
 /* goal gap card */
 .gap-card{display:flex;flex-direction:column;gap:14px}
+.gfld.gdl{border-color:var(--accent-line,#eccfc9);background:#fbf3f1}
+.gfld.gdl .ginput input{width:auto;text-align:left}
+.gap-dl{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#7a3a12;background:#fff6ec;border:1px solid #f3d9b8;border-radius:10px;padding:9px 13px}
+.gap-dl b{color:var(--pink)}
+.gap-dl.over{color:#991b1b;background:#fee2e2;border-color:#fecaca}
+.gap-dl.over b{color:#991b1b}
 .gap-row{display:grid;grid-template-columns:128px 1fr;gap:5px 12px;align-items:center}
 .gap-lbl{font-size:13px;font-weight:700}
 .gap-bar{height:9px;background:#eef1f5;border-radius:5px;overflow:hidden}
@@ -248,6 +254,9 @@ function setView(v){
 // ── 目標(ノルマ) ───────────────────────────────────────────────
 function getGoals(){const r=localStorage.getItem('ig-goals');return r?JSON.parse(r):null;}
 function saveGoals(g){localStorage.setItem('ig-goals',JSON.stringify(g));}
+function defaultDeadline(){const d=new Date();const e=new Date(d.getFullYear(),d.getMonth()+1,0);const p=n=>String(n).padStart(2,'0');return e.getFullYear()+'-'+p(e.getMonth()+1)+'-'+p(e.getDate());}
+function fmtJDate(ymd){try{return new Date(ymd+'T00:00:00').toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric'});}catch(e){return ymd;}}
+function daysUntil(ymd){return Math.ceil((new Date(ymd+'T23:59:59')-Date.now())/864e5);}
 const GOAL_METRICS=[
   {k:'follow',label:'👥 フォロワー純増',unit:'人',get:m=>m.follow,tip:'プロフィール・固定投稿を見直し、発見リーチ施策で新規フォローを増やす。'},
   {k:'er',label:'❤️ 平均エンゲージ率',unit:'%',get:m=>m.er,tip:'冒頭・サムネを改善し、保存・コメントしたくなる情報設計に。'},
@@ -270,6 +279,9 @@ function renderGoal(){
   root.innerHTML=`
   <div class="demo-note">🎯 <b style="color:var(--purple)">月の目標（ノルマ）</b>を設定します。右の現状値（${pl}）を参考に決められます。入力は端末内に保存されます。</div>
   <div class="goal-form">
+    <div class="gfld gdl"><div class="gfl">🗓 達成期限（納期）</div>
+      <div class="ginput"><input id="goal-deadline" type="date" value="${g.deadline||defaultDeadline()}"></div>
+      <div class="gcur">この日までに達成する目標として管理します</div></div>
     ${GOAL_METRICS.map(d=>`<div class="gfld">
       <div class="gfl">${d.label}</div>
       <div class="ginput"><span class="gt">目標</span><input id="goal-${d.k}" type="number" inputmode="decimal" value="${g[d.k]!=null?g[d.k]:''}" placeholder="0"><span class="gu">${d.unit}</span></div>
@@ -282,6 +294,7 @@ function renderGoal(){
 function saveGoalsFromForm(){
   const g={};
   GOAL_METRICS.forEach(d=>{const v=document.getElementById('goal-'+d.k).value;if(v!=='')g[d.k]=parseFloat(v);});
+  const dl=document.getElementById('goal-deadline').value; if(dl)g.deadline=dl;
   saveGoals(g);
   const el=document.getElementById('goal-done'); el.style.display='block'; setTimeout(()=>el.style.display='none',3500);
 }
@@ -309,8 +322,13 @@ function goalGapHTML(){
   let qa = behind.length
     ? `<div class="qa-h">📌 達成への近道（未達の優先${behind.length}項目）</div>`+behind.map(d=>`<div class="qa"><b>${d.label}：</b>${d.tip}</div>`).join('')
     : `<div class="qa met">🎉 すべての目標を達成！この調子で続けましょう。</div>`;
+  let dl='';
+  if(g.deadline){
+    const left=daysUntil(g.deadline);
+    dl=`<div class="gap-dl${left<0?' over':''}">🗓 期限：${fmtJDate(g.deadline)}まで `+(left>=0?`<b>あと${left}日</b>`:`<b>期限超過 ${-left}日</b>`)+`</div>`;
+  }
   return `<div class="sec"><div class="sec-h"><h2>🎯 目標 vs 実績</h2><span class="hint">${period?'直近'+period+'日':'全期間'}・${defs.length}項目中 ${met}達成</span></div>
-    <div class="card gap-card">${rows}<div class="qa-wrap">${qa}</div></div></div>`;
+    <div class="card gap-card">${dl}${rows}<div class="qa-wrap">${qa}</div></div></div>`;
 }
 function setPeriod(d){period=d;renderDash();}
 
@@ -725,7 +743,7 @@ function seedDemo(){
   seedAudience(false);
   seedAccount(false);
   // サンプル目標（未設定時のみ）— 初見で「目標vs実績」が見えるように
-  if(!getGoals()) saveGoals({follow:500,er:6.0,save:4.0,disc:50,clicks:650});
+  if(!getGoals()) saveGoals({follow:500,er:6.0,save:4.0,disc:50,clicks:650,deadline:defaultDeadline()});
 }
 function seedAudience(force){
   if(!force&&getAudience())return;
