@@ -138,6 +138,31 @@ header{background:linear-gradient(95deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5)
 .scan-types button small{display:block;font-size:9.5px;color:var(--muted);font-weight:600;margin-top:2px}
 .scan-types button:active{background:#fdf2f8;border-color:var(--pink)}
 @media(max-width:430px){.kpi .kv{font-size:22px}.scan-types button{font-size:11px}}
+/* goal input */
+.goal-form{display:flex;flex-direction:column;gap:11px;margin-top:14px}
+.gfld{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:4px 12px}
+.gfld .gfl{font-size:14px;font-weight:700}
+.gfld .ginput{display:flex;align-items:center;gap:7px}
+.gfld .ginput .gt{font-size:12px;color:var(--muted);font-weight:700}
+.gfld .ginput input{width:96px;border:1px solid var(--border);border-radius:9px;padding:8px 10px;font-size:15px;text-align:right;font-family:inherit;outline:none}
+.gfld .ginput input:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(150,47,191,.12)}
+.gfld .ginput .gu{font-size:12px;color:var(--muted);width:18px}
+.gfld .gcur{grid-column:1/-1;font-size:11.5px;color:var(--muted)}
+.goal-save{width:100%;background:linear-gradient(95deg,#d62976,#962fbf);color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:800;cursor:pointer;margin-top:16px}
+.goal-done{display:none;background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;border-radius:10px;padding:11px 14px;font-size:13px;font-weight:600;text-align:center;margin-top:12px}
+/* goal gap card */
+.gap-card{display:flex;flex-direction:column;gap:14px}
+.gap-row{display:grid;grid-template-columns:128px 1fr;gap:5px 12px;align-items:center}
+.gap-lbl{font-size:13px;font-weight:700}
+.gap-bar{height:9px;background:#eef1f5;border-radius:5px;overflow:hidden}
+.gap-fill{height:100%;border-radius:5px;transition:width .4s}
+.gap-num{grid-column:1/-1;display:flex;justify-content:space-between;align-items:baseline;font-size:11.5px;color:var(--muted);gap:10px}
+.gap-num b{font-size:15px;font-family:var(--mono,inherit)}
+.qa-wrap{border-top:1px solid var(--border);padding-top:13px}
+.qa-h{font-size:12.5px;font-weight:800;margin-bottom:9px}
+.qa{font-size:12.8px;color:#4a4f57;background:#faf6fd;border:1px solid #eadcf5;border-left:3px solid var(--purple);border-radius:9px;padding:9px 12px;margin-bottom:7px;line-height:1.6}
+.qa b{color:var(--ink)}
+.qa.met{background:#f0fdf4;border-color:#bbf7d0;border-left-color:var(--green);color:#166534;font-weight:700}
 </style>
 </head>
 <body>
@@ -148,11 +173,13 @@ header{background:linear-gradient(95deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5)
 </div></header>
 <div class="tabs">
   <button class="tab on" id="tab-dash" onclick="setView('dash')">📊 分析</button>
+  <button class="tab" id="tab-goal" onclick="setView('goal')">🎯 目標</button>
   <button class="tab" id="tab-add" onclick="setView('add')">＋ 投稿を追加</button>
   <button class="tab" id="tab-list" onclick="setView('list')">📋 投稿一覧</button>
 </div>
 <div class="wrap">
   <div id="view-dash"></div>
+  <div id="view-goal" style="display:none"></div>
   <div id="view-add" style="display:none"></div>
   <div id="view-list" style="display:none"></div>
 </div>
@@ -208,13 +235,82 @@ function inPeriod(p,days){return days===0?true:daysAgo(p.date)<days;}
 function setView(v){
   view=v;
   document.getElementById('tab-dash').classList.toggle('on',v==='dash');
+  document.getElementById('tab-goal').classList.toggle('on',v==='goal');
   document.getElementById('tab-add').classList.toggle('on',v==='add');
   document.getElementById('tab-list').classList.toggle('on',v==='list');
   document.getElementById('view-dash').style.display=v==='dash'?'':'none';
+  document.getElementById('view-goal').style.display=v==='goal'?'':'none';
   document.getElementById('view-add').style.display=v==='add'?'':'none';
   document.getElementById('view-list').style.display=v==='list'?'':'none';
-  if(v==='dash')renderDash();else if(v==='add')renderAdd();else renderList();
+  if(v==='dash')renderDash();else if(v==='goal')renderGoal();else if(v==='add')renderAdd();else renderList();
   window.scrollTo(0,0);
+}
+// ── 目標(ノルマ) ───────────────────────────────────────────────
+function getGoals(){const r=localStorage.getItem('ig-goals');return r?JSON.parse(r):null;}
+function saveGoals(g){localStorage.setItem('ig-goals',JSON.stringify(g));}
+const GOAL_METRICS=[
+  {k:'follow',label:'👥 フォロワー純増',unit:'人',get:m=>m.follow,tip:'プロフィール・固定投稿を見直し、発見リーチ施策で新規フォローを増やす。'},
+  {k:'er',label:'❤️ 平均エンゲージ率',unit:'%',get:m=>m.er,tip:'冒頭・サムネを改善し、保存・コメントしたくなる情報設計に。'},
+  {k:'save',label:'🔖 平均保存率',unit:'%',get:m=>m.save,tip:'メニューや限定情報はカルーセルで（あとで見たい＝保存されやすい）。'},
+  {k:'disc',label:'🧭 発見リーチ比率',unit:'%',get:m=>m.disc,tip:'リールを増やして非フォロワー（新規）に届ける。'},
+  {k:'clicks',label:'🔗 予約クリック',unit:'件',get:m=>m.clicks,tip:'プロフィールのリンク導線・ストーリーズで予約を訴求する。'},
+];
+function computeMetrics(){
+  const fol=getFollowers(), posts=getPosts();
+  const cur=posts.filter(p=>inPeriod(p,period));
+  const avg=(a,fn)=>a.length?a.reduce((s,p)=>s+fn(p),0)/a.length:0;
+  const folNow=fol.length?fol[fol.length-1].count:0;
+  return {follow:folNow-findFol(fol,period||60),er:avg(cur,erRate),save:avg(cur,saveRate),disc:avg(cur,discRate),clicks:cur.reduce((s,p)=>s+(p.linkClicks||0),0)};
+}
+function fmtMetric(def,v){return def.unit==='%'?(+v).toFixed(1)+'%':fmtFull(Math.round(v))+def.unit;}
+function renderGoal(){
+  const root=document.getElementById('view-goal');
+  const g=getGoals()||{}; const m=computeMetrics();
+  const pl=period?('直近'+period+'日'):'全期間';
+  root.innerHTML=`
+  <div class="demo-note">🎯 <b style="color:var(--purple)">月の目標（ノルマ）</b>を設定します。右の現状値（${pl}）を参考に決められます。入力は端末内に保存されます。</div>
+  <div class="goal-form">
+    ${GOAL_METRICS.map(d=>`<div class="gfld">
+      <div class="gfl">${d.label}</div>
+      <div class="ginput"><span class="gt">目標</span><input id="goal-${d.k}" type="number" inputmode="decimal" value="${g[d.k]!=null?g[d.k]:''}" placeholder="0"><span class="gu">${d.unit}</span></div>
+      <div class="gcur">現状 ${fmtMetric(d,d.get(m))}（${pl}）</div>
+    </div>`).join('')}
+  </div>
+  <button class="goal-save" onclick="saveGoalsFromForm()">🎯 目標を保存</button>
+  <div class="goal-done" id="goal-done">✅ 保存しました！「📊 分析」タブの上部に「目標 vs 実績」が表示されます。</div>`;
+}
+function saveGoalsFromForm(){
+  const g={};
+  GOAL_METRICS.forEach(d=>{const v=document.getElementById('goal-'+d.k).value;if(v!=='')g[d.k]=parseFloat(v);});
+  saveGoals(g);
+  const el=document.getElementById('goal-done'); el.style.display='block'; setTimeout(()=>el.style.display='none',3500);
+}
+function goalSub(key,cur){
+  const g=getGoals(); if(!g||g[key]==null||g[key]<=0) return '';
+  const def=GOAL_METRICS.find(d=>d.k===key); const rate=cur/g[key]*100;
+  const col=rate>=100?'var(--green)':rate>=80?'var(--amber)':'var(--red)';
+  return ` <span style="color:${col};font-weight:700">／ 目標 ${fmtMetric(def,g[key])}・達成 ${Math.round(rate)}%</span>`;
+}
+function goalGapHTML(){
+  const g=getGoals(); if(!g) return '';
+  const m=computeMetrics();
+  const defs=GOAL_METRICS.filter(d=>g[d.k]!=null&&g[d.k]>0);
+  if(!defs.length) return '';
+  let met=0;
+  const rows=defs.map(d=>{
+    const t=g[d.k], c=d.get(m), rate=t?c/t*100:0; if(rate>=100)met++;
+    const col=rate>=100?'var(--green)':rate>=80?'var(--amber)':'var(--red)';
+    const diff=c-t, dt=(diff>=0?'+':'')+(d.unit==='%'?diff.toFixed(1)+'pt':fmtFull(Math.round(diff))+d.unit);
+    return `<div class="gap-row"><div class="gap-lbl">${d.label}</div>
+      <div class="gap-bar"><div class="gap-fill" style="width:${Math.max(3,Math.min(rate,100))}%;background:${col}"></div></div>
+      <div class="gap-num"><b style="color:${col}">${Math.round(rate)}%</b><span>${fmtMetric(d,c)} / 目標 ${fmtMetric(d,t)}（${dt}）</span></div></div>`;
+  }).join('');
+  const behind=defs.filter(d=>d.get(m)/g[d.k]<1).sort((a,b)=>a.get(m)/g[a.k]-b.get(m)/g[b.k]).slice(0,3);
+  let qa = behind.length
+    ? `<div class="qa-h">📌 達成への近道（未達の優先${behind.length}項目）</div>`+behind.map(d=>`<div class="qa"><b>${d.label}：</b>${d.tip}</div>`).join('')
+    : `<div class="qa met">🎉 すべての目標を達成！この調子で続けましょう。</div>`;
+  return `<div class="sec"><div class="sec-h"><h2>🎯 目標 vs 実績</h2><span class="hint">${period?'直近'+period+'日':'全期間'}・${defs.length}項目中 ${met}達成</span></div>
+    <div class="card gap-card">${rows}<div class="qa-wrap">${qa}</div></div></div>`;
 }
 function setPeriod(d){period=d;renderDash();}
 
@@ -244,14 +340,15 @@ function renderDash(){
     <button class="${period===90?'on':''}" onclick="setPeriod(90)">直近90日</button>
     <button class="${period===0?'on':''}" onclick="setPeriod(0)">全期間</button>
   </div>
+  ${goalGapHTML()}
   <div class="sec"><div class="sec-h"><h2>アカウント概要</h2><span class="hint">直近30日</span></div>
     <div id="acct-ov"></div></div>
 
   <div class="sec"><div class="kpis">
-    ${kpi('👥 フォロワー純増',(net1>=0?'+':'')+fmtFull(net1),net1,net2,'人','現在 '+fmtFull(folNow)+'人')}
-    ${kpi('❤️ 平均エンゲージ率',erC.toFixed(1),erC,erP,'%','保存+いいね+コメント+シェア ÷ リーチ')}
-    ${kpi('🔖 平均保存率',svC.toFixed(1),svC,svP,'%','＝「行きたい店リスト」入りの強さ')}
-    ${kpi('🧭 発見リーチ比率',dcC.toFixed(0),dcC,dcP,'%','非フォロワーに届いた割合＝新規認知')}
+    ${kpi('👥 フォロワー純増',(net1>=0?'+':'')+fmtFull(net1),net1,net2,'人','現在 '+fmtFull(folNow)+'人'+goalSub('follow',net1))}
+    ${kpi('❤️ 平均エンゲージ率',erC.toFixed(1),erC,erP,'%','保存+いいね+コメント+シェア ÷ リーチ'+goalSub('er',erC))}
+    ${kpi('🔖 平均保存率',svC.toFixed(1),svC,svP,'%','＝「行きたい店リスト」入りの強さ'+goalSub('save',svC))}
+    ${kpi('🧭 発見リーチ比率',dcC.toFixed(0),dcC,dcP,'%','非フォロワーに届いた割合＝新規認知'+goalSub('disc',dcC))}
   </div></div>
 
   <div class="sec"><div class="sec-h"><h2>フォロワー推移</h2><span class="hint">${period?'直近'+period+'日':'全期間'}</span></div>
@@ -627,6 +724,8 @@ function seedDemo(){
   saveFollowers(fol);
   seedAudience(false);
   seedAccount(false);
+  // サンプル目標（未設定時のみ）— 初見で「目標vs実績」が見えるように
+  if(!getGoals()) saveGoals({follow:500,er:6.0,save:4.0,disc:50,clicks:650});
 }
 function seedAudience(force){
   if(!force&&getAudience())return;
