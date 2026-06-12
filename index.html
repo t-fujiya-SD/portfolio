@@ -134,9 +134,17 @@ section{padding:76px 0}
 .dcards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .dcard{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:transform .16s,box-shadow .16s}
 .dcard:hover{transform:translateY(-5px);box-shadow:0 20px 44px rgba(40,44,50,.12)}
-.dthumb{height:150px;overflow:hidden;background:#eef1f4;border-bottom:1px solid var(--line)}
-.dthumb img{width:100%;height:100%;object-fit:cover;object-position:top center;transition:transform .45s ease}
-.dcard:hover .dthumb img{transform:scale(1.05)}
+.dthumb{height:150px;overflow:hidden;border-bottom:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;position:relative}
+.dthumb::after{content:"";position:absolute;right:-34px;bottom:-34px;width:132px;height:132px;border-radius:50%;background:rgba(255,255,255,.38)}
+.dthumb .gi{width:64px;height:64px;border-radius:17px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:31px;box-shadow:0 10px 22px rgba(40,44,50,.13);z-index:1;transition:transform .18s}
+.dcard:hover .dthumb .gi{transform:translateY(-3px) scale(1.05)}
+.dthumb .gc{font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.05em;color:rgba(20,24,30,.6);z-index:1}
+.tg-ig{background:linear-gradient(135deg,#fdeaf4,#efe4fb)}
+.tg-check{background:linear-gradient(135deg,#e4f6ec,#e7f0fb)}
+.tg-report{background:linear-gradient(135deg,#e7eefc,#eef2f8)}
+.tg-sim{background:linear-gradient(135deg,#fdf0dc,#fbe9e3)}
+.tg-media{background:linear-gradient(135deg,#fde9dc,#fdeede)}
+.tg-proc{background:linear-gradient(135deg,#e7f6e3,#eff7e6)}
 .dbody{padding:17px 18px 18px;display:flex;flex-direction:column;flex:1}
 .dbody h3{font-size:16px;margin-bottom:6px}
 .dbody p{font-size:12.8px;color:var(--ink2);margin-bottom:13px;flex:1}
@@ -425,7 +433,7 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
     <div class="dcards">
 
       <div class="dcard reveal d1">
-        <a class="dthumb" href="tools/?t=instagram"><img src="assets/shot-instagram.png" alt="Instagram分析ダッシュボード" loading="lazy"></a>
+        <a class="dthumb tg-ig" href="tools/?t=instagram"><span class="gi">📊</span><span class="gc">SNS分析</span></a>
         <div class="dbody">
           <span class="forlabel">🎯 SNS投稿を数字で改善したい方へ</span>
           <h3>Instagram分析ダッシュボード</h3>
@@ -440,7 +448,7 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
       </div>
 
       <div class="dcard reveal d2">
-        <a class="dthumb" href="tools/?t=checklist"><img src="assets/shot-checklist.png" alt="開店・閉店チェックリスト" loading="lazy"></a>
+        <a class="dthumb tg-check" href="tools/?t=checklist"><span class="gi">✅</span><span class="gc">開店・閉店</span></a>
         <div class="dbody">
           <span class="forlabel">🎯 開店・閉店の抜け漏れを減らしたい方へ</span>
           <h3>開店・閉店チェックリスト</h3>
@@ -455,7 +463,7 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
       </div>
 
       <div class="dcard reveal d3">
-        <a class="dthumb" href="tools/?t=monthly"><img src="assets/shot-report.png" alt="月次業績レポート" loading="lazy"></a>
+        <a class="dthumb tg-report" href="tools/?t=monthly"><span class="gi">📈</span><span class="gc">月次レポート</span></a>
         <div class="dbody">
           <span class="forlabel">🎯 月次報告を1枚にまとめたい方へ</span>
           <h3>月次業績レポート</h3>
@@ -470,7 +478,7 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
       </div>
 
       <div class="dcard reveal d1">
-        <a class="dthumb" href="tools/?t=opening"><img src="assets/shot-opening.png" alt="出店シミュレーションツール" loading="lazy"></a>
+        <a class="dthumb tg-sim" href="tools/?t=opening"><span class="gi">🧮</span><span class="gc">出店シミュ</span></a>
         <div class="dbody">
           <span class="forlabel">🎯 出店の判断を数字でしたい方へ</span>
           <h3>出店シミュレーションツール</h3>
@@ -485,7 +493,7 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
       </div>
 
       <div class="dcard reveal d2">
-        <a class="dthumb" href="tools/?t=media"><img src="assets/shot-media.png" alt="グルメ媒体効果測定ダッシュボード" loading="lazy"></a>
+        <a class="dthumb tg-media" href="tools/?t=media"><span class="gi">🍽</span><span class="gc">媒体分析</span></a>
         <div class="dbody">
           <span class="forlabel">🎯 媒体ごとの効果を比較したい方へ</span>
           <h3>グルメ媒体効果測定ダッシュボード</h3>
@@ -500,7 +508,7 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
       </div>
 
       <div class="dcard reveal d3">
-        <a class="dthumb" href="tools/?t=procurement"><img src="assets/shot-procurement.png" alt="仕入れ見える化レポート" loading="lazy"></a>
+        <a class="dthumb tg-proc" href="tools/?t=procurement"><span class="gi">🥬</span><span class="gc">仕入れ管理</span></a>
         <div class="dbody">
           <span class="forlabel">🎯 仕入れの数字を見える化したい方へ</span>
           <h3>仕入れ見える化レポート</h3>
