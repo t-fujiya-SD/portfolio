@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://t-fujiya-sd.github.io/portfolio/sitemap.xml

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+@page{size:A4;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Noto Sans JP",sans-serif;color:#2f3133;width:210mm;height:296mm;padding:13mm 14mm 10mm;position:relative;line-height:1.6;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body::after{content:"";position:absolute;left:0;right:0;bottom:0;height:5mm;background:linear-gradient(90deg,#C32F1C,#e85a3a)}
+.top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7mm}
+.logo{height:9mm;width:auto}
+.doc{font-family:"Chakra Petch",sans-serif;font-size:8.5pt;color:#8a9099;letter-spacing:.08em;text-align:right}
+h1{font-size:17.5pt;font-weight:900;letter-spacing:-.01em;line-height:1.45;margin-bottom:2.5mm}
+h1 .hl{color:#C32F1C}
+.lead{font-size:9pt;color:#5b6066;margin-bottom:6mm}
+h2{font-size:10.5pt;font-weight:800;margin:5mm 0 2.5mm;padding-left:3mm;border-left:1.2mm solid #C32F1C}
+.svc{display:flex;gap:3mm}
+.sv{flex:1;border:1px solid #e8eaed;border-radius:2.5mm;padding:3mm 3.5mm}
+.sv .si{font-size:13pt;margin-bottom:1mm}
+.sv b{display:block;font-size:9pt;margin-bottom:1mm}
+.sv p{font-size:7.5pt;color:#5b6066;line-height:1.55}
+.demos{display:grid;grid-template-columns:1fr 1fr;gap:1.5mm 4mm}
+.dm{display:flex;gap:2mm;font-size:8pt;align-items:baseline}
+.dm::before{content:"■";color:#C32F1C;font-size:6pt}
+.dm b{font-weight:700}
+.dm span{color:#8a9099;font-size:7pt}
+.flowrow{display:flex;gap:1.5mm;align-items:stretch}
+.fs{flex:1;background:#f7f8fa;border-radius:2mm;padding:2mm;text-align:center}
+.fs .fn{font-family:"Chakra Petch",sans-serif;font-size:6.5pt;font-weight:700;color:#C32F1C}
+.fs b{display:block;font-size:7.5pt}
+.fs p{font-size:6.5pt;color:#5b6066;line-height:1.4}
+.price{background:#fbeeec;border:1px solid #eccfc9;border-radius:2.5mm;padding:3mm 4mm;font-size:8.5pt;margin-top:2mm}
+.price b{color:#9E2415}
+.bottom{display:flex;gap:5mm;margin-top:5mm}
+.co{flex:1.4}
+.ct{width:100%;border-collapse:collapse;font-size:8pt}
+.ct td{border-bottom:1px solid #e8eaed;padding:1.4mm 1mm;vertical-align:top}
+.ct td:first-child{width:22mm;color:#8a9099;font-weight:700;font-size:7.5pt}
+.qr{flex:none;width:38mm;text-align:center;border:1px solid #e8eaed;border-radius:2.5mm;padding:3mm}
+.qr img{width:26mm;height:26mm}
+.qr p{font-size:7pt;color:#5b6066;line-height:1.5;margin-top:1mm}
+.qr b{color:#C32F1C;font-size:7.5pt}
+.note{font-size:6.5pt;color:#8a9099;margin-top:3mm}
+</style>
+</head>
+<body>
+  <div class="top">
+    <img class="logo" src="logo.png" alt="SPICY DEVICE">
+    <div class="doc">COMPANY &amp; SERVICE PROFILE<br>2026.06</div>
+  </div>
+
+  <h1>飲食店の「数字」と「めんどうな業務」を、<br><span class="hl">売上と利益</span>に変える仕組みに。</h1>
+  <p class="lead">レジ・予約媒体・SNS・仕入れ・原価・日報。バラバラな情報を整理・可視化して終わりではなく、売上アップとコストダウンの打ち手までつなげます。店長・料理長が集計作業ではなく、お客様と現場に集中できるように。</p>
+
+  <h2>サービス（3つの柱）</h2>
+  <div class="svc">
+    <div class="sv"><div class="si">🖥</div><b>飲食店向けWebツール制作</b><p>売上管理・媒体分析・月次レポート・チェックリスト・SNS分析など、お店の運用に合わせてオーダーメイドで制作。1機能から。</p></div>
+    <div class="sv"><div class="si">🛒</div><b>購買・原価改善支援</b><p>仕入れの見直し、業者比較、原価率・粗利率の改善まで。コストを下げて利益を残す仕組みを一緒につくります。</p></div>
+    <div class="sv"><div class="si">📈</div><b>集客・売上改善支援</b><p>グルメ媒体・Instagramの効果測定から、客単価・メニュー構成・店頭導線の見直しまで幅広く支援します。</p></div>
+  </div>
+
+  <h2>公開中の制作デモ（すべて実際に操作できます）</h2>
+  <div class="demos">
+    <div class="dm"><b>Instagram分析ダッシュボード</b><span>保存率・発見リーチで投稿を改善</span></div>
+    <div class="dm"><b>開店・閉店チェックリスト</b><span>日英中3言語・スマホ記録・写真報告</span></div>
+    <div class="dm"><b>月次業績レポート</b><span>CSVから自動集計・スライド出力</span></div>
+    <div class="dm"><b>出店シミュレーション</b><span>5年PL・損益分岐・融資資料にも</span></div>
+    <div class="dm"><b>グルメ媒体効果測定</b><span>7媒体のPV・予約を1画面で比較</span></div>
+    <div class="dm"><b>仕入れ見える化レポート</b><span>週次・店舗別・品目別に自動レポート</span></div>
+  </div>
+
+  <h2>導入までの流れ</h2>
+  <div class="flowrow">
+    <div class="fs"><div class="fn">STEP 01</div><b>ヒアリング</b><p>状況と課題を伺います</p></div>
+    <div class="fs"><div class="fn">STEP 02</div><b>試作・お試し</b><p>1機能を小さく試作</p></div>
+    <div class="fs"><div class="fn">STEP 03</div><b>改善・調整</b><p>現場の声で改善</p></div>
+    <div class="fs"><div class="fn">STEP 04</div><b>本格導入</b><p>運用に合わせ導入</p></div>
+    <div class="fs"><div class="fn">STEP 05</div><b>運用サポート</b><p>改善提案を継続</p></div>
+  </div>
+  <div class="price">💰 <b>料金は内容により個別お見積もり。</b>初回相談・お見積もりは無料です。まずは「1機能だけの小さな試作」からご相談いただけます。無理な提案はしません。</div>
+
+  <div class="bottom">
+    <div class="co">
+      <h2 style="margin-top:0">会社概要</h2>
+      <table class="ct">
+        <tr><td>会社名</td><td>株式会社スパイシーデバイス</td></tr>
+        <tr><td>代表者</td><td>代表取締役　藤谷 拓文</td></tr>
+        <tr><td>設立</td><td>2020年2月5日</td></tr>
+        <tr><td>所在地</td><td>〒171-0021 東京都豊島区西池袋3-29-3 梅本ビル4階（co-ba IKEBUKURO）</td></tr>
+        <tr><td>事業内容</td><td>飲食店向けオーダーメイドWebツール制作／購買・原価改善コンサルティング／集客・売上改善支援</td></tr>
+        <tr><td>連絡先</td><td>03-6822-4544（平日 10:00〜18:00）／ t-fujiya@spicydevice.com</td></tr>
+      </table>
+    </div>
+    <div class="qr">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=0&data=https%3A%2F%2Ft-fujiya-sd.github.io%2Fportfolio%2F" alt="QRコード">
+      <p><b>デモを実際に触れます</b><br>t-fujiya-sd.github.io/portfolio</p>
+    </div>
+  </div>
+
+  <p class="note">※ 掲載中のデモはすべて架空のサンプルデータで動作しています。実店舗・実顧客のデータは含まれません。／ 本資料は社内でのご共有・転送にご利用ください。</p>
+</body>
+</html>
