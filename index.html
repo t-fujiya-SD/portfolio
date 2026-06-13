@@ -198,18 +198,12 @@ section{padding:76px 0}
 .ba .before .bt{background:#eceef1;color:var(--ink2)}
 .ba .after .bt{background:var(--accent-soft);color:var(--accent)}
 .ba .after{color:var(--ink);font-weight:600}
-.share-demo{flex:none;width:42px;display:inline-flex;align-items:center;justify-content:center;font-size:15px;color:var(--ink2);background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:9px 0;cursor:pointer;transition:color .15s,border-color .15s,transform .1s}
+.share-demo{flex:none;width:44px;display:inline-flex;align-items:center;justify-content:center;color:var(--ink2);background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:9px 0;cursor:pointer;transition:color .15s,border-color .15s,transform .1s}
 .share-demo:hover{border-color:var(--accent-line);color:var(--accent);transform:translateY(-1px)}
 .dthumb{display:block;cursor:pointer}
 .dactions{display:flex;align-items:center;gap:10px;margin-top:auto}
 .dlink{flex:1;display:inline-flex;align-items:center;gap:7px;font-weight:800;font-size:13.5px;color:#fff;background:var(--ink);padding:10px 15px;border-radius:9px;justify-content:center;transition:background .15s,gap .15s}
 .dlink:hover{background:var(--accent);gap:11px}
-.fav{flex:none;display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:13px;font-weight:700;color:var(--ink2);background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:9px 12px;cursor:pointer;transition:color .15s,border-color .15s,background .15s,transform .1s}
-.fav .fheart{font-size:15px;line-height:1}
-.fav:hover{border-color:var(--accent-line);color:var(--accent)}
-.fav.on{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent)}
-.fav.pop{animation:pop .35s ease}
-@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.2)}100%{transform:scale(1)}}
 @media(max-width:860px){.dcards{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){.dcards{grid-template-columns:1fr}}
 
@@ -576,9 +570,7 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
           <p>「いいね」を眺めるだけの投稿を、保存率・発見リーチで“伸びる型”が見えるように。来店につながる投稿づくりへ。</p>
           <div class="chips"><span>SNS分析</span><span>Instagram</span><span class="own">自店データOK</span></div>
           <div class="dactions">
-            <a class="dlink" href="tools/?t=instagram">詳しく見る →</a>
-            <button class="fav" data-id="instagram" data-base="86" aria-label="気になる"><span class="fheart">♡</span><span class="favn">86</span></button>
-            <button class="share-demo" data-url="tools/?t=instagram" data-title="Instagram分析ダッシュボード" aria-label="このツールを共有">⤴</button>
+            <a class="dlink" href="tools/?t=instagram">詳しく見る →</a>            <button class="share-demo" data-url="tools/?t=instagram" data-title="Instagram分析ダッシュボード" aria-label="このツールを共有" title="共有する"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg></button>
           </div>
         </div>
       </div>
@@ -591,9 +583,7 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
           <p>紙のチェック表と口頭の申し送りを、スマホ記録に。誰がやっても同じ品質で、責任者はリモートでも確認できます。</p>
           <div class="chips"><span>オペレーション</span><span>チェックリスト</span><span class="own">自店データOK</span></div>
           <div class="dactions">
-            <a class="dlink" href="tools/?t=checklist">詳しく見る →</a>
-            <button class="fav" data-id="checklist" data-base="64" aria-label="気になる"><span class="fheart">♡</span><span class="favn">64</span></button>
-            <button class="share-demo" data-url="tools/?t=checklist" data-title="開店・閉店チェックリスト" aria-label="このツールを共有">⤴</button>
+            <a class="dlink" href="tools/?t=checklist">詳しく見る →</a>            <button class="share-demo" data-url="tools/?t=checklist" data-title="開店・閉店チェックリスト" aria-label="このツールを共有" title="共有する"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg></button>
           </div>
         </div>
       </div>
@@ -606,9 +596,7 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
           <p>毎月のExcel転記と資料づくりをゼロに。売上・原価・客数・SNS・店舗を自動集計し、会議は「打ち手」の話から。</p>
           <div class="chips"><span>売上管理</span><span>月次レポート</span></div>
           <div class="dactions">
-            <a class="dlink" href="tools/?t=monthly">詳しく見る →</a>
-            <button class="fav" data-id="monthly" data-base="73" aria-label="気になる"><span class="fheart">♡</span><span class="favn">73</span></button>
-            <button class="share-demo" data-url="tools/?t=monthly" data-title="月次業績レポート" aria-label="このツールを共有">⤴</button>
+            <a class="dlink" href="tools/?t=monthly">詳しく見る →</a>            <button class="share-demo" data-url="tools/?t=monthly" data-title="月次業績レポート" aria-label="このツールを共有" title="共有する"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg></button>
           </div>
         </div>
       </div>
@@ -621,9 +609,7 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
           <p>収支メモと感覚ではなく、5年PL・損益分岐・投資回収で出店を比較。融資資料にも使えます。</p>
           <div class="chips"><span>出店計画</span><span>シミュレーション</span><span class="own">自店データOK</span></div>
           <div class="dactions">
-            <a class="dlink" href="tools/?t=opening">詳しく見る →</a>
-            <button class="fav" data-id="opening" data-base="41" aria-label="気になる"><span class="fheart">♡</span><span class="favn">41</span></button>
-            <button class="share-demo" data-url="tools/?t=opening" data-title="出店シミュレーションツール" aria-label="このツールを共有">⤴</button>
+            <a class="dlink" href="tools/?t=opening">詳しく見る →</a>            <button class="share-demo" data-url="tools/?t=opening" data-title="出店シミュレーションツール" aria-label="このツールを共有" title="共有する"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg></button>
           </div>
         </div>
       </div>
@@ -636,9 +622,7 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
           <p>媒体ごとの管理画面を行き来する手間をなくし、食べログ・ぐるなび・一休・OZmallなどを1画面で費用対効果比較。</p>
           <div class="chips"><span>媒体分析</span><span>効果測定</span></div>
           <div class="dactions">
-            <a class="dlink" href="tools/?t=media">詳しく見る →</a>
-            <button class="fav" data-id="media" data-base="58" aria-label="気になる"><span class="fheart">♡</span><span class="favn">58</span></button>
-            <button class="share-demo" data-url="tools/?t=media" data-title="グルメ媒体効果測定ダッシュボード" aria-label="このツールを共有">⤴</button>
+            <a class="dlink" href="tools/?t=media">詳しく見る →</a>            <button class="share-demo" data-url="tools/?t=media" data-title="グルメ媒体効果測定ダッシュボード" aria-label="このツールを共有" title="共有する"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg></button>
           </div>
         </div>
       </div>
@@ -651,9 +635,7 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
           <p>卸からの仕入れを週次・店舗別・品目別に自動レポート化。「何にいくら使っているか」がひと目で分かり、コスト改善に。</p>
           <div class="chips"><span>仕入れ管理</span><span>原価改善</span><span>卸→飲食店</span></div>
           <div class="dactions">
-            <a class="dlink" href="tools/?t=procurement">詳しく見る →</a>
-            <button class="fav" data-id="procurement" data-base="52" aria-label="気になる"><span class="fheart">♡</span><span class="favn">52</span></button>
-            <button class="share-demo" data-url="tools/?t=procurement" data-title="仕入れ見える化レポート" aria-label="このツールを共有">⤴</button>
+            <a class="dlink" href="tools/?t=procurement">詳しく見る →</a>            <button class="share-demo" data-url="tools/?t=procurement" data-title="仕入れ見える化レポート" aria-label="このツールを共有" title="共有する"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg></button>
           </div>
         </div>
       </div>
@@ -1065,19 +1047,6 @@ onScroll(); window.addEventListener('scroll',onScroll,{passive:true});
 // reveal
 const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.12,rootMargin:'0px 0px -7% 0px'});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-// 「気になる」カウンター（端末内に保存・簡易版）
-document.querySelectorAll('.fav').forEach(btn=>{
-  const id=btn.dataset.id, base=+btn.dataset.base;
-  const numEl=btn.querySelector('.favn'), heart=btn.querySelector('.fheart');
-  const render=()=>{const on=localStorage.getItem('sd-fav-'+id)==='1';btn.classList.toggle('on',on);heart.textContent=on?'♥':'♡';numEl.textContent=base+(on?1:0);};
-  render();
-  btn.addEventListener('click',()=>{
-    const on=localStorage.getItem('sd-fav-'+id)==='1';
-    localStorage.setItem('sd-fav-'+id,on?'0':'1');
-    render();
-    if(!on){btn.classList.remove('pop');void btn.offsetWidth;btn.classList.add('pop');}
-  });
-});
 // 各デモの共有ボタン（スマホはネイティブ共有、PCはリンクコピー）
 document.querySelectorAll('.share-demo').forEach(b=>{
   b.addEventListener('click',e=>{
@@ -1085,7 +1054,7 @@ document.querySelectorAll('.share-demo').forEach(b=>{
     const url=new URL(b.dataset.url,location.href).href;
     const title=b.dataset.title+'｜飲食店向けWebツールのデモ';
     if(navigator.share){navigator.share({title,url}).catch(()=>{});}
-    else{navigator.clipboard.writeText(url).then(()=>{const o=b.textContent;b.textContent='✓';setTimeout(()=>b.textContent=o,1600);});}
+    else{navigator.clipboard.writeText(url).then(()=>{const o=b.innerHTML;b.innerHTML='✓';setTimeout(()=>b.innerHTML=o,1600);});}
   });
 });
 // 匿名コメント投稿（フォームサービス連携用。FORM_ENDPOINT を設定すると運営に届きます）

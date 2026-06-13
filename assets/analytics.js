@@ -30,8 +30,7 @@
       ['a[href^="tel:"]', function () { return 'tel-click'; }],
       ['#lineBtn', function () { return 'line-click'; }],
       ['#pdfDl, a[href$="company-profile.pdf"]', function () { return 'pdf-download'; }],
-      ['.share-demo, .sbtn', function () { return 'share-click'; }],
-      ['.fav', function (el) { return 'fav-' + el.dataset.id; }]
+      ['.share-demo, .sbtn', function () { return 'share-click'; }]
     ];
     document.addEventListener('click', function (e) {
       for (var i = 0; i < MAP.length; i++) {
