@@ -9,5 +9,5 @@ window.SITE_CONFIG = {
   formspreeId: "",
 
   // 公式LINEの友だち追加URL（例: "https://lin.ee/xxxxxxx"）。設定するとLINE相談ボタンが表示される
-  lineUrl: ""
+  lineUrl: "https://lin.ee/tExiJ9c"
 };
