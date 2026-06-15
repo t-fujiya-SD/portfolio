@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>お知らせ｜株式会社スパイシーデバイス</title>
+<meta name="description" content="株式会社スパイシーデバイスからのお知らせ・新機能・デモ公開情報。飲食店向けWebツール制作の最新情報をお届けします。">
+<link rel="canonical" href="https://t-fujiya-sd.github.io/portfolio/news/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E🌶%3C/text%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="株式会社スパイシーデバイス">
+<meta property="og:title" content="お知らせ｜株式会社スパイシーデバイス">
+<meta property="og:description" content="新機能・デモ公開などの最新情報。">
+<meta property="og:url" content="https://t-fujiya-sd.github.io/portfolio/news/">
+<meta property="og:image" content="https://t-fujiya-sd.github.io/portfolio/assets/og-image.png">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Noto+Sans+JP:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<script defer src="../assets/site-config.js"></script>
+<script defer src="../assets/analytics.js"></script>
+<style>
+:root{--ink:#2f3133;--ink2:#5b6066;--muted:#8a9099;--line:#e8eaed;--bg:#fff;--soft:#f7f8fa;--accent:#C32F1C;--accent-d:#9E2415;--accent-soft:#fbeeec;--accent-line:#eccfc9;--mono:"Chakra Petch",sans-serif;--sans:"Noto Sans JP",-apple-system,BlinkMacSystemFont,"Hiragino Sans",Meiryo,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.8;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px}
+header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.86);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hd{display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo-img{height:23px;width:auto;display:block}
+.back{font-size:13px;font-weight:700;color:var(--ink2)}
+.back:hover{color:var(--accent)}
+main{padding:48px 0 72px}
+.lead{margin-bottom:8px}
+.seclabel{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.14em;color:var(--accent);margin-bottom:8px}
+h1{font-size:27px;font-weight:900;letter-spacing:-.02em;margin-bottom:8px}
+.sub{font-size:13.5px;color:var(--ink2);margin-bottom:32px}
+.news{display:flex;flex-direction:column}
+.news-item{display:flex;gap:16px;align-items:baseline;padding:18px 4px;border-bottom:1px solid var(--line)}
+.news-item:first-child{padding-top:0}
+.news-item .nd{flex:none;font-family:var(--mono);font-size:12.5px;font-weight:600;color:var(--muted);width:96px}
+.news-item .nc{flex:none;font-size:10.5px;font-weight:700;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:20px;padding:2px 11px;white-space:nowrap}
+.news-item .nt{font-size:14px;color:var(--ink)}
+.empty{color:var(--muted);font-size:14px;padding:20px 0}
+@media(max-width:560px){.news-item{flex-wrap:wrap;gap:8px}.news-item .nt{width:100%}}
+.cta{margin-top:40px;background:linear-gradient(150deg,#fff,var(--accent-soft));border:1px solid var(--accent-line);border-radius:16px;padding:26px;text-align:center}
+.cta p{font-size:14.5px;color:var(--ink2);margin-bottom:16px}
+.btn{display:inline-flex;align-items:center;gap:7px;font-weight:700;border-radius:10px;padding:12px 22px;font-size:14.5px;background:var(--accent);color:#fff;transition:background .15s,transform .15s}
+.btn:hover{background:var(--accent-d);transform:translateY(-1px)}
+footer{background:#23262a;color:#a7adb4;font-size:12px;padding:22px 0;text-align:center;margin-top:8px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap hd">
+    <a href="../" aria-label="SPICY DEVICE"><img src="../assets/logo.png" alt="SPICY DEVICE" class="logo-img"></a>
+    <a class="back" href="../">← トップへ戻る</a>
+  </div>
+</header>
+<main>
+  <div class="wrap">
+    <div class="seclabel">NEWS</div>
+    <h1>お知らせ</h1>
+    <p class="sub">新機能の追加・デモ公開など、最新情報をお届けします。</p>
+    <div class="news" id="newsList"><p class="empty">読み込み中…</p></div>
+
+    <div class="cta">
+      <p>飲食店の「数字」と「めんどうな業務」を、売上と利益に変える仕組みに。<br>初回相談・お見積もりは無料です。</p>
+      <a class="btn" href="../#cta">⚡ 無料で相談する</a>
+    </div>
+  </div>
+</main>
+<footer>© 2026 株式会社スパイシーデバイス</footer>
+<script>
+fetch('../assets/news.json').then(r=>r.json()).then(items=>{
+  const box=document.getElementById('newsList');
+  if(!Array.isArray(items)||!items.length){box.innerHTML='<p class="empty">お知らせはまだありません。</p>';return;}
+  box.innerHTML=items.map(n=>`<div class="news-item"><span class="nd">${n.date}</span><span class="nc">${n.cat}</span><span class="nt">${n.text}</span></div>`).join('');
+}).catch(()=>{document.getElementById('newsList').innerHTML='<p class="empty">お知らせを読み込めませんでした。</p>';});
+</script>
+</body>
+</html>
