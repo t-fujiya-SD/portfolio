@@ -2,7 +2,7 @@
 window.SITE_CONFIG = {
   // アクセス解析（GoatCounter https://www.goatcounter.com/ ・無料・Cookieレス）
   // アカウント作成時の「コード」を設定。例: "spicydevice" → https://spicydevice.goatcounter.com で閲覧
-  goatcounter: "",
+  goatcounter: "spicydevice",
 
   // 問い合わせフォーム（Formspree https://formspree.io/ ・無料枠あり）
   // フォーム作成後のID（formspree.io/f/XXXXXXX の XXXXXXX 部分）。未設定時はメール作成にフォールバック
