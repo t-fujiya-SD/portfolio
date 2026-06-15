@@ -6,7 +6,7 @@ window.SITE_CONFIG = {
 
   // 問い合わせフォーム（Formspree https://formspree.io/ ・無料枠あり）
   // フォーム作成後のID（formspree.io/f/XXXXXXX の XXXXXXX 部分）。未設定時はメール作成にフォールバック
-  formspreeId: "",
+  formspreeId: "mgobdnwn",
 
   // 公式LINEの友だち追加URL（例: "https://lin.ee/xxxxxxx"）。設定するとLINE相談ボタンが表示される
   lineUrl: "https://lin.ee/tExiJ9c"
