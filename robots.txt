@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://t-fujiya-sd.github.io/portfolio/sitemap.xml
+Sitemap: https://spicy-device.com/sitemap.xml

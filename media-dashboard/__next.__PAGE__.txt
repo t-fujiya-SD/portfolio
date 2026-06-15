@@ -1,9 +1,9 @@
 1:"$Sreact.fragment"
-2:I[47257,["/portfolio/media-dashboard/_next/static/chunks/01xlw8hd842-c.js","/portfolio/media-dashboard/_next/static/chunks/0n4z.7yu76je-.js"],"ClientPageRoot"]
-3:I[30257,["/portfolio/media-dashboard/_next/static/chunks/01xlw8hd842-c.js","/portfolio/media-dashboard/_next/static/chunks/0n4z.7yu76je-.js","/portfolio/media-dashboard/_next/static/chunks/0dl5_t-1a1_7f.js","/portfolio/media-dashboard/_next/static/chunks/0v42xb7~w6hgd.js"],"default"]
-6:I[97367,["/portfolio/media-dashboard/_next/static/chunks/01xlw8hd842-c.js","/portfolio/media-dashboard/_next/static/chunks/0n4z.7yu76je-.js"],"OutletBoundary"]
+2:I[47257,["/media-dashboard/_next/static/chunks/01xlw8hd842-c.js","/media-dashboard/_next/static/chunks/0n4z.7yu76je-.js"],"ClientPageRoot"]
+3:I[30257,["/media-dashboard/_next/static/chunks/01xlw8hd842-c.js","/media-dashboard/_next/static/chunks/0n4z.7yu76je-.js","/media-dashboard/_next/static/chunks/0dl5_t-1a1_7f.js","/media-dashboard/_next/static/chunks/0v42xb7~w6hgd.js"],"default"]
+6:I[97367,["/media-dashboard/_next/static/chunks/01xlw8hd842-c.js","/media-dashboard/_next/static/chunks/0n4z.7yu76je-.js"],"OutletBoundary"]
 7:"$Sreact.suspense"
-0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"Component":"$3","serverProvidedParams":{"searchParams":{},"params":{},"promises":["$@4","$@5"]}}],[["$","script","script-0",{"src":"/portfolio/media-dashboard/_next/static/chunks/0dl5_t-1a1_7f.js","async":true}],["$","script","script-1",{"src":"/portfolio/media-dashboard/_next/static/chunks/0v42xb7~w6hgd.js","async":true}]],["$","$L6",null,{"children":["$","$7",null,{"name":"Next.MetadataOutlet","children":"$@8"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"F9rJUrU7vIXiL6cz4x46_"}
+0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"Component":"$3","serverProvidedParams":{"searchParams":{},"params":{},"promises":["$@4","$@5"]}}],[["$","script","script-0",{"src":"/media-dashboard/_next/static/chunks/0dl5_t-1a1_7f.js","async":true}],["$","script","script-1",{"src":"/media-dashboard/_next/static/chunks/0v42xb7~w6hgd.js","async":true}]],["$","$L6",null,{"children":["$","$7",null,{"name":"Next.MetadataOutlet","children":"$@8"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"Z36diGOHp5wEn9KLSnqnq"}
 4:{}
 5:"$0:rsc:props:children:0:props:serverProvidedParams:params"
 8:null
