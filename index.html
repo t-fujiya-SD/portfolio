@@ -406,6 +406,10 @@ section{padding:76px 0}
 .btn-line{background:#06C755;color:#fff;display:none}
 .btn-line:hover{background:#05a847;transform:translateY(-1px);box-shadow:0 8px 18px rgba(6,199,85,.3)}
 .btn-line.show{display:inline-flex}
+@media(max-width:560px){.nav-line.show{display:none}}
+.fline{display:none;align-items:center;gap:8px;background:#06C755;color:#fff;padding:11px 20px;border-radius:10px;font-weight:700;font-size:13.5px;margin-top:10px;transition:background .15s,transform .15s}
+.fline.show{display:inline-flex}
+.fline:hover{background:#05a847;transform:translateY(-1px)}
 /* 資料DL */
 .dlpdf{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--ink2);margin-top:18px;border-bottom:1.5px dashed var(--line);padding-bottom:2px;transition:color .15s,border-color .15s}
 .dlpdf:hover{color:var(--accent);border-color:var(--accent-line)}
@@ -459,6 +463,7 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
       <a class="nl" href="#company">会社概要</a>
       <span class="nav-cta">
         <a class="btn btn-ghost btn-sm" href="#works">🖥 デモを見る</a>
+        <a class="btn btn-line btn-sm nav-line" id="lineBtnNav" href="#" target="_blank" rel="noopener">💬 LINE</a>
         <a class="btn btn-primary btn-sm" href="#cta">無料で相談する</a>
       </span>
     </nav>
@@ -991,6 +996,7 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
         <a class="ftel" href="tel:0368224544">☎ 03-6822-4544</a>
         <div class="fhours">受付時間：平日 10:00〜18:00</div>
         <a class="fbtn" href="mailto:t-fujiya@spicydevice.com?subject=Web%E3%83%84%E3%83%BC%E3%83%AB%E3%81%AE%E3%81%94%E7%9B%B8%E8%AB%87">お問い合わせフォーム</a>
+        <a class="fline" id="lineFoot" href="#" target="_blank" rel="noopener">💬 LINEで相談</a>
       </div>
     </div>
     <div class="fbottom">
@@ -1141,8 +1147,9 @@ if(ac==='blue'){const r=document.documentElement.style;
 // ===== 公式LINEボタン（SITE_CONFIG.lineUrl 設定時のみ表示） =====
 window.addEventListener('DOMContentLoaded',()=>{
   const cfg=window.SITE_CONFIG||{};
-  const lb=document.getElementById('lineBtn');
-  if(lb&&cfg.lineUrl){lb.href=cfg.lineUrl;lb.classList.add('show');}
+  if(cfg.lineUrl){
+    ['lineBtn','lineBtnNav','lineFoot'].forEach(id=>{const el=document.getElementById(id);if(el){el.href=cfg.lineUrl;el.classList.add('show');}});
+  }
 });
 </script>
 </body>

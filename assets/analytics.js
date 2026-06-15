@@ -28,7 +28,7 @@
       ['a[href="#cta"]', function () { return 'cta-jump'; }],
       ['a[href^="mailto:"]', function () { return 'mail-click'; }],
       ['a[href^="tel:"]', function () { return 'tel-click'; }],
-      ['#lineBtn', function () { return 'line-click'; }],
+      ['#lineBtn, #lineBtnNav, #lineFoot', function () { return 'line-click'; }],
       ['#pdfDl, a[href$="company-profile.pdf"]', function () { return 'pdf-download'; }],
       ['.share-demo, .sbtn', function () { return 'share-click'; }]
     ];
