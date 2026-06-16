@@ -431,6 +431,12 @@ section{padding:76px 0}
 .cta-safe b{color:var(--ink)}
 .cta-safe a{color:var(--accent);text-decoration:underline;white-space:nowrap}
 
+/* 代表より: 顔写真を一旦非表示・本文中央寄せ（再表示するときは下記4行を削除） */
+#message .msg-photo{display:none}
+#message .msg{grid-template-columns:1fr;max-width:720px}
+#message .msg-body{text-align:center}
+#message .msg-body .mb-sign{text-align:center}
+
 /* footer */
 footer{background:#23262a;color:#a7adb4;font-size:13px}
 .fmain{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr auto;gap:30px;padding:46px 0 34px}
@@ -717,16 +723,10 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
   <div class="wrap">
     <div class="sec-head reveal"><div class="seclabel">CASES</div><div class="sectitle"><span class="u">制作事例</span></div>
       <p class="secdesc">実際の制作実績を、店舗・取引先が特定されない形でご紹介します。</p></div>
-    <div class="cnums reveal">
-      <div class="cnum"><b>6年<small style="font-size:13px">目</small></b><span>飲食店支援</span></div>
-      <div class="cnum"><b>6<small style="font-size:13px">種</small></b><span>公開中の制作デモ</span></div>
-      <div class="cnum"><b>7<small style="font-size:13px">媒体</small></b><span>グルメ媒体の比較分析</span></div>
-      <div class="cnum"><b>3<small style="font-size:13px">言語</small></b><span>多言語チェックリスト</span></div>
-    </div>
     <div class="cases">
       <div class="case reveal d1">
         <span class="c-who">🏮 都内の中華レストラン</span>
-        <h3>月次レポートの完全自動化</h3>
+        <h3>月次レポートの半自動化</h3>
         <div class="ba">
           <div class="before"><span class="bt">BEFORE</span><span>POSレジのCSVから毎月手作業で集計し、会議資料を作成。数時間がかりの作業が属人化。</span></div>
           <div class="after"><span class="bt">AFTER</span><span>CSVを渡すだけで、売上・客数・ABC分析・グラフ入りレポートが自動生成。目標管理とスライド出力まで。</span></div>
@@ -743,13 +743,13 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
         <p class="c-note">集計業務の削減に加えて、取引先への新しい付加価値づくりにつながっています。</p>
       </div>
       <div class="case reveal d3">
-        <span class="c-who">🍽 都内の飲食店（複数媒体に掲載）</span>
-        <h3>グルメ媒体の費用対効果を1画面に</h3>
+        <span class="c-who">🍽 都内の飲食店（多店舗運営）</span>
+        <h3>開店・閉店チェックをスマホ記録に</h3>
         <div class="ba">
-          <div class="before"><span class="bt">BEFORE</span><span>食べログ・ぐるなび等の管理画面を媒体ごとに目視確認。横並びの比較ができなかった。</span></div>
-          <div class="after"><span class="bt">AFTER</span><span>7媒体のPV・予約数を1つのダッシュボードで比較。CSV取込で毎月の更新も数分に。</span></div>
+          <div class="before"><span class="bt">BEFORE</span><span>紙のチェック表と口頭の申し送り。抜け漏れや確認漏れが起きやすく、品質が人によってばらついた。</span></div>
+          <div class="after"><span class="bt">AFTER</span><span>スマホでチェック・写真報告。誰がやっても同じ品質で、責任者はリモートでも確認できる。多言語対応で教育もスムーズ。</span></div>
         </div>
-        <p class="c-note">「どの媒体にいくらかける価値があるか」を数字で判断できるようになりました。</p>
+        <p class="c-note">開店・閉店の抜け漏れが減り、店長が現場に集中できるようになりました。</p>
       </div>
     </div>
     <p class="cases-note">※ 守秘のため店舗名・取引先名は伏せています。数値や仕組みの詳細は、ご相談時に可能な範囲でお見せできます。</p>
