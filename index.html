@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>株式会社スパイシーデバイス｜飲食店の数字とめんどうな業務を、現場で続く仕組みに</title>
+<title>飲食店向けWebツール制作・業務効率化｜株式会社スパイシーデバイス</title>
 <meta name="description" content="飲食店向けのオーダーメイドWebツール制作・購買/原価改善・媒体分析。売上・原価・媒体・SNSのバラバラな数字を、現場で使える形に整理・可視化します。実際に動くデモを公開中。">
 <link rel="canonical" href="https://spicy-device.com/">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png"><link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
@@ -685,6 +685,7 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
           <button class="dg-opt" data-v="manager">店長・現場責任者</button>
           <button class="dg-opt" data-v="hq">本部・複数店舗の管理</button>
           <button class="dg-opt" data-v="vendor">卸・食材業者</button>
+          <button class="dg-opt" data-v="other">その他</button>
         </div>
       </div>
       <div class="dg-q">
@@ -696,6 +697,7 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
           <button class="dg-opt" data-v="procurement">仕入れ・原価が不安</button>
           <button class="dg-opt" data-v="checklist">開店閉店・現場の抜け漏れ</button>
           <button class="dg-opt" data-v="opening">出店・新店舗の検討</button>
+          <button class="dg-opt" data-v="other">その他</button>
         </div>
       </div>
       <div class="dg-q">
@@ -1078,11 +1080,22 @@ if(ac==='blue'){const r=document.documentElement.style;
       const b=e.target.closest('.dg-opt'); if(!b)return;
       g.querySelectorAll('.dg-opt').forEach(x=>x.classList.remove('on'));
       b.classList.add('on'); ans[g.dataset.q]=b.dataset.v;
+      // 「その他」が選ばれたら、ツール提案ではなく相談セクションへ誘導
+      if(b.dataset.v==='other' || ans.role==='other' || ans.pain==='other'){
+        const r=document.getElementById('dgResult');
+        document.getElementById('dgTitle').textContent='まずはお話を聞かせてください';
+        document.getElementById('dgText').textContent='選択肢にぴったりが無くても大丈夫です。いまの管理方法を見せていただければ、何が楽になり・どこで成果が出せそうかを一緒に整理します。';
+        const lk=document.getElementById('dgLink'); if(lk)lk.style.display='none';
+        r.classList.add('show');
+        if(window.sdTrack)sdTrack('diag-other');
+        document.getElementById('cta').scrollIntoView({behavior:'smooth'});
+        return;
+      }
       if(ans.role&&ans.pain&&ans.now){
         const tool=TOOLS[ans.pain];
+        const lk=document.getElementById('dgLink'); if(lk){lk.style.display='';lk.href=tool.u;}
         document.getElementById('dgTitle').textContent=tool.t;
         document.getElementById('dgText').textContent=ROLE_MSG[ans.role]+'おすすめです。'+tool.d+' '+NOW_MSG[ans.now];
-        document.getElementById('dgLink').href=tool.u;
         const r=document.getElementById('dgResult'); r.classList.add('show');
         r.scrollIntoView({behavior:'smooth',block:'nearest'});
         if(window.sdTrack)sdTrack('diag-complete-'+ans.pain);
