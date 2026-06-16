@@ -431,10 +431,12 @@ section{padding:76px 0}
 .cta-safe b{color:var(--ink)}
 .cta-safe a{color:var(--accent);text-decoration:underline;white-space:nowrap}
 
-/* 代表より: 顔写真を一旦非表示・本文中央寄せ（再表示するときは下記4行を削除） */
+/* 代表より: 顔写真を一旦非表示・本文中央寄せ＋行バランス調整（再表示するときはこのブロックを削除） */
 #message .msg-photo{display:none}
-#message .msg{grid-template-columns:1fr;max-width:720px}
+#message .msg{grid-template-columns:1fr;max-width:660px}
 #message .msg-body{text-align:center}
+#message .msg-body p{text-wrap:balance;line-break:strict}
+#message .msg-body .nw{white-space:nowrap}
 #message .msg-body .mb-sign{text-align:center}
 
 /* footer */
@@ -890,7 +892,7 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
         <div><div class="mp-name">藤谷 拓文</div><div class="mp-title">代表取締役</div></div>
       </div>
       <div class="msg-body">
-        <p>私は会社を立ち上げる前、<b>3店舗から80店舗規模まで一気に拡大する飲食ベンチャー</b>の現場にいました。急成長の裏で、売上も在庫もシフトも数字がバラバラ、店長が深夜にExcelと格闘する——その混乱を、<b>当事者として</b>味わってきました。</p>
+        <p>私は会社を立ち上げる前、<b>3店舗から80店舗規模まで一気に拡大する<span class="nw">飲食ベンチャー</span></b>の現場にいました。急成長の裏で、売上も在庫もシフトも数字がバラバラ、店長が深夜にExcelと格闘する——その混乱を、<b>当事者として</b>味わってきました。</p>
         <p>その後は、飲食店の<b>集客や経営全般のコンサルティング</b>に携わってきました。そこで何度も感じたのは、「いい提案も、便利なツールも、<b>それだけでは現場は変わりきらない</b>」ということ。</p>
         <p>だから私は、提案で終わらせず、<b>作ったツールが現場で使われ、数字として成果が出るところまで一緒に走る</b>ことにしました。</p>
         <p>AIを活用した開発で、いまは<b>小さく・速く・安く</b>試せます。大きなシステム投資は要りません。まずは1機能、いちばん面倒な作業から一緒になくしていきましょう。</p>
