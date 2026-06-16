@@ -1,0 +1,55 @@
+name: note feed → blog.json
+
+on:
+  schedule:
+    - cron: '0 22 * * *'   # 毎日 07:00 JST (22:00 UTC)
+  workflow_dispatch:        # 手動実行も可
+
+permissions:
+  contents: write
+
+concurrency:
+  group: note-feed
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch note RSS -> assets/blog.json
+        run: |
+          python3 - <<'PY'
+          import urllib.request, re, json, os
+          URL = "https://note.com/spicy_device/rss"
+          req = urllib.request.Request(URL, headers={"User-Agent": "Mozilla/5.0"})
+          xml = urllib.request.urlopen(req, timeout=30).read().decode("utf-8", "ignore")
+          items = re.findall(r"<item>(.*?)</item>", xml, re.S)
+          def g(tag, s):
+              m = re.search(r"<" + tag + r"[^>]*>(.*?)</" + tag + r">", s, re.S)
+              if not m: return ""
+              return re.sub(r"<!\[CDATA\[(.*?)\]\]>", r"\1", m.group(1), flags=re.S).strip()
+          MON = {'Jan':1,'Feb':2,'Mar':3,'Apr':4,'May':5,'Jun':6,'Jul':7,'Aug':8,'Sep':9,'Oct':10,'Nov':11,'Dec':12}
+          def fmt(d):
+              m = re.search(r"(\d{1,2}) (\w{3}) (\d{4})", d)
+              return "%04d-%02d-%02d" % (int(m.group(3)), MON.get(m.group(2), 1), int(m.group(1))) if m else ""
+          out = []
+          for it in items[:9]:
+              tm = re.search(r"<media:thumbnail[^>]*>(.*?)</media:thumbnail>", it, re.S)
+              out.append({
+                  "title": g("title", it),
+                  "url": g("link", it),
+                  "date": fmt(g("pubDate", it)),
+                  "thumb": tm.group(1).strip() if tm else "",
+              })
+          os.makedirs("assets", exist_ok=True)
+          json.dump(out, open("assets/blog.json", "w"), ensure_ascii=False, indent=1)
+          print("wrote", len(out), "items")
+          PY
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add assets/blog.json
+          git diff --staged --quiet || git commit -m "chore: update note feed (blog.json) [skip ci]"
+          git push
