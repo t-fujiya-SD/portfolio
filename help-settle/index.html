@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>店舗間ヘルプ 人件費精算（試作版）</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1f2a37; --sub:#6b7280; --line:#e5e7eb;
+    --primary:#2563eb; --primary-d:#1d4ed8; --accent:#0d9488;
+    --credit:#15803d; --credit-bg:#e7f6ec; --debit:#b91c1c; --debit-bg:#fdecec;
+    --warn:#b45309; --shadow:0 1px 3px rgba(16,24,40,.08),0 1px 2px rgba(16,24,40,.06);
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,system-ui,sans-serif;
+    background:var(--bg);color:var(--ink);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  header{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;padding:18px 22px;box-shadow:var(--shadow)}
+  header .wrap{max-width:1160px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  header h1{font-size:19px;margin:0;font-weight:700;letter-spacing:.02em;display:flex;align-items:center;gap:10px}
+  header .badge{background:rgba(255,255,255,.2);font-size:11px;padding:2px 9px;border-radius:999px;font-weight:600}
+  header p{margin:3px 0 0;font-size:12px;opacity:.85}
+  .month-pick{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);padding:6px 10px;border-radius:10px}
+  .month-pick label{font-size:12px;opacity:.9}
+  .month-pick select{border:none;border-radius:7px;padding:5px 8px;font-size:13px;font-weight:600;background:#fff;color:var(--ink)}
+  main{max-width:1160px;margin:0 auto;padding:18px 22px 60px}
+  nav.tabs{display:flex;gap:4px;margin:0 0 18px;background:#e9edf3;padding:4px;border-radius:12px;width:fit-content;flex-wrap:wrap}
+  nav.tabs button{border:none;background:transparent;padding:9px 18px;border-radius:9px;font-size:13.5px;font-weight:600;color:var(--sub);cursor:pointer;transition:.15s}
+  nav.tabs button.active{background:#fff;color:var(--primary);box-shadow:var(--shadow)}
+  .panel{display:none}
+  .panel.active{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .grid-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:18px}
+  .kpi{background:var(--card);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);border:1px solid var(--line)}
+  .kpi .lbl{font-size:12px;color:var(--sub);font-weight:600}
+  .kpi .val{font-size:26px;font-weight:700;margin-top:4px;letter-spacing:-.01em}
+  .kpi .val small{font-size:14px;font-weight:600;color:var(--sub);margin-left:2px}
+  .card{background:var(--card);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);border:1px solid var(--line);margin-bottom:18px}
+  .card h2{font-size:15px;margin:0 0 4px;display:flex;align-items:center;gap:8px}
+  .card .hint{font-size:12px;color:var(--sub);margin:0 0 14px}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:820px){.two-col{grid-template-columns:1fr}}
+  /* bar chart */
+  .bar-row{display:grid;grid-template-columns:90px 1fr 110px;align-items:center;gap:10px;margin:9px 0}
+  .bar-row .name{font-size:13px;font-weight:600;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bar-track{position:relative;height:26px;background:#f1f3f7;border-radius:7px;overflow:hidden}
+  .bar-center{position:absolute;left:50%;top:0;bottom:0;width:1px;background:#cbd2dc}
+  .bar-fill{position:absolute;top:3px;bottom:3px;border-radius:5px;transition:.4s}
+  .bar-fill.credit{background:var(--credit);left:50%}
+  .bar-fill.debit{background:var(--debit);right:50%}
+  .bar-row .amt{font-size:13px;font-weight:700;text-align:left;white-space:nowrap}
+  .amt.credit{color:var(--credit)} .amt.debit{color:var(--debit)}
+  /* matrix */
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:9px 11px;text-align:left;border-bottom:1px solid var(--line)}
+  th{font-size:12px;color:var(--sub);font-weight:700;background:#fafbfc}
+  .matrix td,.matrix th{text-align:center;border:1px solid var(--line)}
+  .matrix th.corner{background:#eef2f7;text-align:right;font-size:11px}
+  .matrix td.diag{background:#f6f7f9;color:#cbd2dc}
+  .matrix td.cell{font-weight:600;font-variant-numeric:tabular-nums}
+  .matrix .rowlbl{background:#fafbfc;font-weight:700;text-align:right}
+  .num{text-align:right;font-variant-numeric:tabular-nums}
+  .pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:700}
+  .pill.credit{background:var(--credit-bg);color:var(--credit)}
+  .pill.debit{background:var(--debit-bg);color:var(--debit)}
+  .settle-item{display:flex;align-items:center;gap:10px;padding:11px 4px;border-bottom:1px solid var(--line);font-size:14px}
+  .settle-item:last-child{border-bottom:none}
+  .settle-item .who{font-weight:600}
+  .settle-item .arrow{color:var(--primary);font-weight:700}
+  .settle-item .pay{margin-left:auto;font-weight:700;font-size:15px;color:var(--ink)}
+  .empty{color:var(--sub);text-align:center;padding:26px;font-size:13px}
+  /* forms */
+  .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;align-items:end}
+  .field{display:flex;flex-direction:column;gap:4px}
+  .field label{font-size:12px;color:var(--sub);font-weight:600}
+  input,select{padding:9px 11px;border:1px solid var(--line);border-radius:9px;font-size:13.5px;font-family:inherit;background:#fff;color:var(--ink)}
+  input:focus,select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+  .btn{border:none;border-radius:9px;padding:10px 16px;font-size:13.5px;font-weight:700;cursor:pointer;transition:.15s;font-family:inherit}
+  .btn.primary{background:var(--primary);color:#fff}
+  .btn.primary:hover{background:var(--primary-d)}
+  .btn.ghost{background:#fff;border:1px solid var(--line);color:var(--ink)}
+  .btn.ghost:hover{background:#f7f9fc}
+  .btn.sm{padding:5px 10px;font-size:12px}
+  .btn.danger{color:var(--debit);background:#fff;border:1px solid #f3c7c7}
+  .btn.danger:hover{background:var(--debit-bg)}
+  .toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+  .toolbar .spacer{flex:1}
+  .tag-store{display:inline-block;padding:1px 8px;border-radius:6px;font-size:11.5px;font-weight:600;background:#eef2f7;color:#374151}
+  .muted{color:var(--sub);font-size:12px}
+  .footer-note{text-align:center;color:var(--sub);font-size:11.5px;margin-top:30px;line-height:1.7}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:#1f2a37;color:#fff;padding:11px 20px;border-radius:10px;font-size:13px;font-weight:600;opacity:0;transition:.3s;pointer-events:none;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .legend{display:flex;gap:16px;font-size:11.5px;color:var(--sub);margin-top:10px;flex-wrap:wrap}
+  .legend span{display:inline-flex;align-items:center;gap:5px}
+  .dot{width:10px;height:10px;border-radius:3px;display:inline-block}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div>
+      <h1>🏪 店舗間ヘルプ 人件費精算 <span class="badge">試作版 / たたき</span></h1>
+      <p>店舗をまたいだ応援（ヘルプ）勤務を記録し、店舗間の人件費の貸し借りを自動で可視化・精算します。</p>
+    </div>
+    <div class="month-pick">
+      <label>対象期間</label>
+      <select id="monthSel" onchange="App.setMonth(this.value)"></select>
+    </div>
+  </div>
+</header>
+
+<main>
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="dash" onclick="App.tab('dash')">📊 ダッシュボード</button>
+    <button class="tab-btn" data-tab="rec" onclick="App.tab('rec')">📝 ヘルプ記録</button>
+    <button class="tab-btn" data-tab="master" onclick="App.tab('master')">⚙️ 店舗・スタッフ管理</button>
+  </nav>
+
+  <!-- ============ DASHBOARD ============ -->
+  <section class="panel active" id="panel-dash">
+    <div class="grid-kpi" id="kpis"></div>
+
+    <div class="card">
+      <h2>💰 店舗別 人件費バランス</h2>
+      <p class="hint">対象期間中、その店舗が「他店を応援して稼いだ額（貸し）」と「他店に応援してもらった額（借り）」の差引です。</p>
+      <div id="balanceChart"></div>
+      <div class="legend">
+        <span><i class="dot" style="background:var(--credit)"></i>プラス（貸し越し＝受け取る側）</span>
+        <span><i class="dot" style="background:var(--debit)"></i>マイナス（借り越し＝支払う側）</span>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <h2>🔁 店舗間 貸借マトリクス</h2>
+        <p class="hint">縦＝応援を出した店（貸し手） / 横＝応援を受けた店（借り手）。金額は発生した人件費です。</p>
+        <div id="matrix" style="overflow-x:auto"></div>
+      </div>
+      <div class="card">
+        <h2>🧾 精算リスト（相殺後）</h2>
+        <p class="hint">店舗ペアごとに貸し借りを相殺した「最終的に誰が誰へいくら払うか」です。</p>
+        <div id="settle"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RECORDS ============ -->
+  <section class="panel" id="panel-rec">
+    <div class="card">
+      <h2>＋ ヘルプ記録を追加</h2>
+      <p class="hint">応援に入ったスタッフ・勤務先店舗・時間を入力すると、人件費（時間×時給）が自動計算されます。</p>
+      <div class="form-grid">
+        <div class="field"><label>日付</label><input type="date" id="r-date"></div>
+        <div class="field"><label>応援したスタッフ</label><select id="r-staff" onchange="App.onStaffPick()"></select></div>
+        <div class="field"><label>所属店（貸し手）</label><input id="r-from" disabled placeholder="スタッフ選択で自動"></div>
+        <div class="field"><label>勤務先店（借り手）</label><select id="r-to"></select></div>
+        <div class="field"><label>勤務時間（h）</label><input type="number" id="r-hours" min="0" step="0.5" value="4"></div>
+        <div class="field"><label>時給（円）</label><input type="number" id="r-wage" min="0" step="10"></div>
+        <div class="field"><button class="btn primary" onclick="App.addRecord()" style="width:100%">追加する</button></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="toolbar">
+        <h2 style="margin:0">📋 ヘルプ記録一覧</h2>
+        <span class="muted" id="recCount"></span>
+        <div class="spacer"></div>
+        <button class="btn ghost sm" onclick="App.exportRecords()">CSV出力</button>
+      </div>
+      <div style="overflow-x:auto">
+        <table id="recTable"></table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MASTER ============ -->
+  <section class="panel" id="panel-master">
+    <div class="two-col">
+      <div class="card">
+        <h2>🏪 店舗マスタ</h2>
+        <p class="hint">応援のやりとりをする店舗を登録します。</p>
+        <div class="toolbar">
+          <input id="m-store" placeholder="店舗名（例：渋谷店）" style="flex:1">
+          <button class="btn primary sm" onclick="App.addStore()">店舗を追加</button>
+        </div>
+        <table id="storeTable"></table>
+      </div>
+
+      <div class="card">
+        <h2>👤 スタッフマスタ</h2>
+        <p class="hint">スタッフの所属店と基本時給を登録します（時給は記録時に上書き可）。</p>
+        <div class="form-grid" style="margin-bottom:12px">
+          <div class="field"><label>氏名</label><input id="m-staff-name" placeholder="氏名"></div>
+          <div class="field"><label>所属店</label><select id="m-staff-store"></select></div>
+          <div class="field"><label>時給（円）</label><input type="number" id="m-staff-wage" value="1100" step="10"></div>
+          <div class="field"><button class="btn primary" onclick="App.addStaff()" style="width:100%">追加</button></div>
+        </div>
+        <table id="staffTable"></table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🗂 データ管理</h2>
+      <p class="hint">この試作版はデータをブラウザ内（端末ローカル）に保存します。サーバー連携や複数人共有は本開発で対応予定です。</p>
+      <div class="toolbar">
+        <button class="btn ghost sm" onclick="App.exportAll()">全データをJSON書き出し</button>
+        <button class="btn ghost sm" onclick="App.reseed()">サンプルデータで初期化</button>
+        <button class="btn danger sm" onclick="App.wipe()">全データ削除</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer-note">
+    これは要件確認用の試作（たたき）です。実データの計算ロジック・権限・打刻連携などはヒヤリング後に詰めます。<br>
+    Spicy Device — 飲食店向けWebツール
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const App = (()=>{
+  const KEY = 'help_settle_v1';
+  let state = { stores:[], staff:[], records:[] };
+  let month = 'all';
+
+  const uid = () => Math.random().toString(36).slice(2,9);
+  const yen = n => '¥' + Math.round(n).toLocaleString('ja-JP');
+  const $ = id => document.getElementById(id);
+
+  /* ---------- persistence ---------- */
+  function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
+  function load(){
+    const raw = localStorage.getItem(KEY);
+    if(raw){ try{ state = JSON.parse(raw); return true; }catch(e){} }
+    return false;
+  }
+
+  /* ---------- sample data ---------- */
+  function seed(){
+    const s = (name)=>({id:uid(),name});
+    const st = [s('銀座本店'),s('新宿店'),s('渋谷店'),s('横浜店')];
+    const byName = n => st.find(x=>x.name===n).id;
+    const staff = [
+      {id:uid(),name:'佐藤 健',   homeStoreId:byName('銀座本店'),wage:1400},
+      {id:uid(),name:'鈴木 美咲', homeStoreId:byName('銀座本店'),wage:1200},
+      {id:uid(),name:'高橋 翔',   homeStoreId:byName('新宿店'),  wage:1300},
+      {id:uid(),name:'田中 由紀', homeStoreId:byName('新宿店'),  wage:1150},
+      {id:uid(),name:'伊藤 大輔', homeStoreId:byName('渋谷店'),  wage:1250},
+      {id:uid(),name:'渡辺 彩',   homeStoreId:byName('渋谷店'),  wage:1100},
+      {id:uid(),name:'山本 拓也', homeStoreId:byName('横浜店'),  wage:1200},
+      {id:uid(),name:'中村 葵',   homeStoreId:byName('横浜店'),  wage:1100},
+    ];
+    const sid = n => staff.find(x=>x.name===n).id;
+    const mk = (date,name,to,hours)=>{
+      const stf = staff.find(x=>x.name===name);
+      return {id:uid(),date,staffId:stf.id,toStoreId:byName(to),hours,wage:stf.wage};
+    };
+    const records = [
+      mk('2026-05-03','佐藤 健','新宿店',6),
+      mk('2026-05-07','高橋 翔','銀座本店',5),
+      mk('2026-05-11','鈴木 美咲','渋谷店',4),
+      mk('2026-05-14','伊藤 大輔','新宿店',8),
+      mk('2026-05-18','山本 拓也','渋谷店',6),
+      mk('2026-05-22','渡辺 彩','横浜店',4),
+      mk('2026-05-25','田中 由紀','銀座本店',7),
+      mk('2026-05-29','中村 葵','新宿店',5),
+      mk('2026-06-02','佐藤 健','渋谷店',5),
+      mk('2026-06-05','高橋 翔','横浜店',6),
+      mk('2026-06-08','伊藤 大輔','銀座本店',4),
+      mk('2026-06-11','山本 拓也','新宿店',8),
+      mk('2026-06-13','鈴木 美咲','新宿店',5),
+      mk('2026-06-15','中村 葵','渋谷店',4),
+      mk('2026-06-16','田中 由紀','横浜店',6),
+    ];
+    state = { stores:st, staff, records };
+    save();
+  }
+
+  /* ---------- helpers ---------- */
+  const store = id => state.stores.find(s=>s.id===id);
+  const staffById = id => state.staff.find(s=>s.id===id);
+  const storeName = id => (store(id)||{name:'(削除済)'}).name;
+  const recMonth = r => r.date.slice(0,7);
+  function filtered(){ return month==='all' ? state.records : state.records.filter(r=>recMonth(r)===month); }
+  function amount(r){ return r.hours * r.wage; }
+  function months(){
+    const set = new Set(state.records.map(recMonth));
+    return [...set].sort().reverse();
+  }
+
+  /* ---------- compute ---------- */
+  function compute(){
+    const recs = filtered();
+    const ids = state.stores.map(s=>s.id);
+    const mat = {}; ids.forEach(a=>{ mat[a]={}; ids.forEach(b=>mat[a][b]=0); });
+    let totalAmt=0, totalHours=0;
+    recs.forEach(r=>{
+      const from = (staffById(r.staffId)||{}).homeStoreId;
+      const to = r.toStoreId;
+      if(!from||!to||from===to) return;
+      if(!mat[from]) mat[from]={}; if(mat[from][to]==null) mat[from][to]=0;
+      mat[from][to]+=amount(r); totalAmt+=amount(r); totalHours+=r.hours;
+    });
+    const bal={}; ids.forEach(id=>{
+      let lent=0,borrowed=0;
+      ids.forEach(o=>{ lent += (mat[id]&&mat[id][o])||0; borrowed += (mat[o]&&mat[o][id])||0; });
+      bal[id]={lent,borrowed,net:lent-borrowed};
+    });
+    // net settlement per unordered pair
+    const settle=[];
+    for(let i=0;i<ids.length;i++){
+      for(let j=i+1;j<ids.length;j++){
+        const a=ids[i],b=ids[j];
+        const net=(mat[a][b]||0)-(mat[b][a]||0);
+        if(net>0) settle.push({from:b,to:a,amt:net});       // b borrowed more → b pays a
+        else if(net<0) settle.push({from:a,to:b,amt:-net});
+      }
+    }
+    settle.sort((x,y)=>y.amt-x.amt);
+    return {recs,mat,bal,totalAmt,totalHours,ids,settle};
+  }
+
+  /* ---------- render: dashboard ---------- */
+  function renderDash(){
+    const c = compute();
+    // KPI
+    $('kpis').innerHTML = `
+      ${kpi('ヘルプ件数', c.recs.length, '件')}
+      ${kpi('応援総時間', c.totalHours, 'h')}
+      ${kpi('人件費 移動総額', yen(c.totalAmt))}
+      ${kpi('精算 必要件数', c.settle.length, '件')}
+    `;
+    // balance chart
+    const maxAbs = Math.max(1, ...state.stores.map(s=>Math.abs(c.bal[s.id].net)));
+    const rows = [...state.stores].sort((a,b)=>c.bal[b.id].net-c.bal[a.id].net).map(s=>{
+      const n=c.bal[s.id].net; const w=Math.abs(n)/maxAbs*50;
+      const cls = n>=0?'credit':'debit';
+      const fill = n>=0
+        ? `<div class="bar-fill credit" style="width:${w}%"></div>`
+        : `<div class="bar-fill debit" style="width:${w}%"></div>`;
+      return `<div class="bar-row">
+        <div class="name">${esc(s.name)}</div>
+        <div class="bar-track"><div class="bar-center"></div>${fill}</div>
+        <div class="amt ${cls}">${n>=0?'+':'−'}${yen(Math.abs(n))}</div>
+      </div>`;
+    }).join('');
+    $('balanceChart').innerHTML = c.recs.length? rows : empty('この期間のヘルプ記録がありません');
+    // matrix
+    $('matrix').innerHTML = renderMatrix(c);
+    // settle
+    $('settle').innerHTML = c.settle.length ? c.settle.map(s=>`
+      <div class="settle-item">
+        <span class="pill debit">${esc(storeName(s.from))}</span>
+        <span class="arrow">→</span>
+        <span class="pill credit">${esc(storeName(s.to))}</span>
+        <span class="pay">${yen(s.amt)}</span>
+      </div>`).join('') : empty('精算の必要はありません');
+  }
+  function kpi(lbl,val,unit=''){
+    const v = typeof val==='number'? val.toLocaleString('ja-JP'): val;
+    return `<div class="kpi"><div class="lbl">${lbl}</div><div class="val">${v}${unit?`<small>${unit}</small>`:''}</div></div>`;
+  }
+  function renderMatrix(c){
+    if(!state.stores.length) return empty('店舗を登録してください');
+    if(!c.recs.length) return empty('この期間のヘルプ記録がありません');
+    const heads = state.stores.map(s=>`<th>${esc(s.name)}</th>`).join('');
+    const max = Math.max(1, ...c.ids.flatMap(a=>c.ids.map(b=>c.mat[a][b]||0)));
+    const body = state.stores.map(from=>{
+      const cells = state.stores.map(to=>{
+        if(from.id===to.id) return `<td class="diag">—</td>`;
+        const v=c.mat[from.id][to.id]||0;
+        if(!v) return `<td class="cell" style="color:#cbd2dc">0</td>`;
+        const a=0.10+0.55*(v/max);
+        return `<td class="cell" style="background:rgba(37,99,235,${a.toFixed(2)})">${yen(v)}</td>`;
+      }).join('');
+      return `<tr><td class="rowlbl">${esc(from.name)}</td>${cells}</tr>`;
+    }).join('');
+    return `<table class="matrix"><tr><th class="corner">貸し手 ＼ 借り手</th>${heads}</tr>${body}</table>`;
+  }
+
+  /* ---------- render: records ---------- */
+  function renderRec(){
+    const recs = [...filtered()].sort((a,b)=>b.date.localeCompare(a.date));
+    $('recCount').textContent = `${recs.length}件（対象期間）`;
+    if(!recs.length){ $('recTable').innerHTML = `<tr><td>${empty('記録がありません。上のフォームから追加してください。')}</td></tr>`; return; }
+    const head = `<tr><th>日付</th><th>スタッフ</th><th>所属店（貸し）</th><th>勤務先（借り）</th><th class="num">時間</th><th class="num">時給</th><th class="num">人件費</th><th></th></tr>`;
+    const rows = recs.map(r=>{
+      const stf = staffById(r.staffId)||{name:'(削除済)',homeStoreId:null};
+      return `<tr>
+        <td>${r.date}</td>
+        <td>${esc(stf.name)}</td>
+        <td><span class="tag-store">${esc(storeName(stf.homeStoreId))}</span></td>
+        <td><span class="tag-store">${esc(storeName(r.toStoreId))}</span></td>
+        <td class="num">${r.hours}h</td>
+        <td class="num">${yen(r.wage)}</td>
+        <td class="num"><b>${yen(amount(r))}</b></td>
+        <td class="num"><button class="btn danger sm" onclick="App.delRecord('${r.id}')">削除</button></td>
+      </tr>`;
+    }).join('');
+    $('recTable').innerHTML = head+rows;
+  }
+
+  /* ---------- render: master ---------- */
+  function renderMaster(){
+    // stores
+    $('storeTable').innerHTML = state.stores.length ? state.stores.map(s=>`
+      <tr><td>${esc(s.name)}</td>
+      <td class="num muted">所属 ${state.staff.filter(x=>x.homeStoreId===s.id).length}名</td>
+      <td class="num"><button class="btn danger sm" onclick="App.delStore('${s.id}')">削除</button></td></tr>`).join('')
+      : `<tr><td>${empty('店舗がありません')}</td></tr>`;
+    // staff
+    $('staffTable').innerHTML = state.staff.length ?
+      `<tr><th>氏名</th><th>所属店</th><th class="num">時給</th><th></th></tr>`+
+      state.staff.map(s=>`<tr>
+        <td>${esc(s.name)}</td>
+        <td><span class="tag-store">${esc(storeName(s.homeStoreId))}</span></td>
+        <td class="num">${yen(s.wage)}</td>
+        <td class="num"><button class="btn danger sm" onclick="App.delStaff('${s.id}')">削除</button></td>
+      </tr>`).join('')
+      : `<tr><td>${empty('スタッフがいません')}</td></tr>`;
+    fillStoreSelects();
+  }
+
+  /* ---------- selects ---------- */
+  function fillStoreSelects(){
+    const opts = state.stores.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');
+    $('r-to').innerHTML = opts;
+    $('m-staff-store').innerHTML = opts;
+    $('r-staff').innerHTML = state.staff.map(s=>`<option value="${s.id}">${esc(s.name)}（${esc(storeName(s.homeStoreId))}）</option>`).join('');
+    onStaffPick();
+  }
+  function onStaffPick(){
+    const stf = staffById($('r-staff').value);
+    if(stf){ $('r-from').value = storeName(stf.homeStoreId); $('r-wage').value = stf.wage; }
+    else { $('r-from').value=''; }
+  }
+  function fillMonths(){
+    const ms = months();
+    const opts = [`<option value="all">全期間</option>`].concat(
+      ms.map(m=>{ const [y,mo]=m.split('-'); return `<option value="${m}">${y}年${+mo}月</option>`; })
+    ).join('');
+    $('monthSel').innerHTML = opts;
+    if(month!=='all' && !ms.includes(month)) month='all';
+    $('monthSel').value = month;
+  }
+
+  /* ---------- actions ---------- */
+  function addRecord(){
+    const date=$('r-date').value, staffId=$('r-staff').value, toStoreId=$('r-to').value;
+    const hours=parseFloat($('r-hours').value), wage=parseFloat($('r-wage').value);
+    if(!date) return toast('日付を入力してください');
+    if(!staffId) return toast('スタッフを選択してください');
+    if(!toStoreId) return toast('勤務先店舗を選択してください');
+    const stf = staffById(staffId);
+    if(stf.homeStoreId===toStoreId) return toast('所属店と勤務先が同じです（ヘルプではありません）');
+    if(!(hours>0)) return toast('勤務時間を入力してください');
+    if(!(wage>0)) return toast('時給を入力してください');
+    state.records.push({id:uid(),date,staffId,toStoreId,hours,wage});
+    save(); fillMonths(); renderAll(); toast('ヘルプ記録を追加しました');
+  }
+  function delRecord(id){ state.records=state.records.filter(r=>r.id!==id); save(); fillMonths(); renderAll(); }
+  function addStore(){
+    const name=$('m-store').value.trim();
+    if(!name) return toast('店舗名を入力してください');
+    state.stores.push({id:uid(),name}); $('m-store').value=''; save(); renderAll(); toast('店舗を追加しました');
+  }
+  function delStore(id){
+    if(state.staff.some(s=>s.homeStoreId===id)) return toast('所属スタッフがいる店舗は削除できません');
+    if(state.records.some(r=>r.toStoreId===id)) return toast('ヘルプ記録に使われている店舗は削除できません');
+    state.stores=state.stores.filter(s=>s.id!==id); save(); renderAll();
+  }
+  function addStaff(){
+    const name=$('m-staff-name').value.trim(), homeStoreId=$('m-staff-store').value, wage=parseFloat($('m-staff-wage').value);
+    if(!name) return toast('氏名を入力してください');
+    if(!homeStoreId) return toast('所属店を選択してください（先に店舗を登録）');
+    if(!(wage>0)) return toast('時給を入力してください');
+    state.staff.push({id:uid(),name,homeStoreId,wage}); $('m-staff-name').value=''; save(); renderAll(); toast('スタッフを追加しました');
+  }
+  function delStaff(id){
+    if(state.records.some(r=>r.staffId===id)) return toast('ヘルプ記録があるスタッフは削除できません');
+    state.staff=state.staff.filter(s=>s.id!==id); save(); renderAll();
+  }
+  function reseed(){ if(confirm('現在のデータを消してサンプルデータで初期化します。よろしいですか？')){ seed(); month='all'; fillMonths(); renderAll(); toast('サンプルデータを読み込みました'); } }
+  function wipe(){ if(confirm('全てのデータを削除します。元に戻せません。よろしいですか？')){ state={stores:[],staff:[],records:[]}; save(); month='all'; fillMonths(); renderAll(); toast('全データを削除しました'); } }
+
+  /* ---------- export ---------- */
+  function dl(name,content,type){ const b=new Blob([content],{type}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download=name; a.click(); URL.revokeObjectURL(u); }
+  function exportRecords(){
+    const head='日付,スタッフ,所属店(貸し),勤務先(借り),勤務時間,時給,人件費\n';
+    const body=filtered().map(r=>{ const s=staffById(r.staffId)||{name:'',homeStoreId:null};
+      return [r.date,s.name,storeName(s.homeStoreId),storeName(r.toStoreId),r.hours,r.wage,amount(r)].join(','); }).join('\n');
+    dl(`ヘルプ記録_${month}.csv`,'﻿'+head+body,'text/csv');
+  }
+  function exportAll(){ dl('help_settle_data.json',JSON.stringify(state,null,2),'application/json'); }
+
+  /* ---------- ui plumbing ---------- */
+  function tab(name){
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+name));
+  }
+  function setMonth(m){ month=m; renderAll(); }
+  function renderAll(){ renderDash(); renderRec(); renderMaster(); }
+  function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2200); }
+  function esc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+  function empty(msg){ return `<div class="empty">${msg}</div>`; }
+
+  function init(){
+    if(!load()) seed();
+    $('r-date').value = new Date().toISOString().slice(0,10);
+    fillMonths(); renderAll();
+  }
+
+  return { init,tab,setMonth,addRecord,delRecord,addStore,delStore,addStaff,delStaff,
+           onStaffPick,reseed,wipe,exportRecords,exportAll };
+})();
+window.addEventListener('DOMContentLoaded',App.init);
+</script>
+</body>
+</html>
