@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>店舗間ヘルプ 申請・人件費精算システム ご提案資料</title>
+<style>
+  :root{
+    --ink:#1f2a37; --sub:#5b6573; --line:#e3e8ef; --bg:#f4f6f9; --card:#fff;
+    --primary:#2563eb; --primary-d:#1e3a8a; --accent:#0d9488;
+    --credit:#15803d; --warn:#b45309; --purple:#7c3aed;
+    --credit-bg:#e7f6ec; --blue-bg:#e8efff; --warn-bg:#fff5e6; --purple-bg:#f3edff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,system-ui,sans-serif;
+    font-size:14px;line-height:1.75;-webkit-font-smoothing:antialiased}
+  .page{max-width:920px;margin:0 auto;padding:0 24px 60px}
+  .cover{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;border-radius:0 0 22px 22px;
+    padding:40px 44px 34px;margin-bottom:26px;box-shadow:0 8px 24px rgba(30,58,138,.18)}
+  .cover .eyebrow{font-size:12.5px;letter-spacing:.16em;opacity:.85;font-weight:600}
+  .cover h1{font-size:28px;margin:8px 0 6px;font-weight:800;letter-spacing:.01em;line-height:1.4}
+  .cover .name{display:inline-block;margin-top:6px;background:rgba(255,255,255,.16);
+    padding:4px 13px;border-radius:999px;font-size:13px;font-weight:700}
+  .cover .lead{margin:14px 0 0;font-size:14px;opacity:.92;max-width:640px}
+  .cover .meta{margin-top:18px;font-size:12px;opacity:.8;display:flex;gap:18px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.22);padding-top:14px}
+  section{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:26px 30px;margin-bottom:20px;box-shadow:0 1px 3px rgba(16,24,40,.06)}
+  .secnum{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;
+    background:var(--primary);color:#fff;border-radius:8px;font-size:13px;font-weight:800;margin-right:10px}
+  h2{font-size:19px;margin:0 0 6px;display:flex;align-items:center;font-weight:800}
+  .sub{color:var(--sub);font-size:13px;margin:0 0 18px}
+  h3{font-size:14.5px;margin:22px 0 10px;font-weight:700;color:var(--primary-d)}
+  p{margin:0 0 12px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  @media(max-width:760px){.grid2,.grid4{grid-template-columns:1fr}}
+  .pill-card{border:1px solid var(--line);border-radius:13px;padding:16px 18px;background:#fcfdff}
+  .pill-card .ic{font-size:22px}
+  .pill-card .t{font-weight:800;font-size:14.5px;margin:6px 0 4px}
+  .pill-card .d{font-size:12.5px;color:var(--sub);margin:0}
+  /* problem list */
+  .prob{display:flex;gap:11px;align-items:flex-start;margin:9px 0;font-size:13.5px}
+  .prob .x{color:#b91c1c;font-weight:800;flex:none}
+  .arrow-sol{background:var(--credit-bg);color:var(--credit);border-radius:11px;padding:13px 16px;
+    font-weight:700;font-size:13.5px;margin-top:8px}
+  /* flow */
+  .flow{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap;margin-top:6px}
+  .step{flex:1;min-width:120px;border:1px solid var(--line);border-radius:13px;padding:14px 12px;text-align:center;background:#fcfdff;position:relative}
+  .step .n{width:28px;height:28px;border-radius:50%;background:var(--primary);color:#fff;font-weight:800;
+    display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:13px}
+  .step .st{font-weight:800;font-size:13.5px;margin-bottom:3px}
+  .step .sd{font-size:11.5px;color:var(--sub);line-height:1.55}
+  .step.acc .n{background:var(--accent)} .step.cr .n{background:var(--credit)}
+  .flow .gt{display:flex;align-items:center;color:#c7cfdb;font-size:22px;font-weight:800}
+  @media(max-width:760px){.flow .gt{display:none}}
+  /* table */
+  table{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+  th,td{padding:11px 13px;border:1px solid var(--line);text-align:left;vertical-align:top}
+  th{background:#f3f6fb;font-weight:800;font-size:12.5px;color:var(--primary-d)}
+  td .yes{color:var(--credit);font-weight:800}
+  td .no{color:#b91c1c;font-weight:800}
+  .chip{display:inline-block;padding:2px 10px;border-radius:999px;font-size:12px;font-weight:800}
+  .chip.admin{background:var(--primary-d);color:#fff}
+  .chip.mgr{background:var(--accent);color:#fff}
+  .chip.staff{background:var(--purple);color:#fff}
+  .lv{display:inline-block;padding:1px 8px;border-radius:6px;font-size:11.5px;font-weight:800}
+  .lv1{background:var(--warn-bg);color:var(--warn)} .lv2{background:var(--blue-bg);color:var(--primary)}
+  .lv3{background:var(--credit-bg);color:var(--credit)} .lv4{background:var(--primary-d);color:#fff}
+  /* future option band */
+  .opt{background:var(--purple-bg);border:1px solid #e2d6ff}
+  .opt h2{color:var(--purple)} .opt .secnum{background:var(--purple)}
+  .talk{border-left:3px solid var(--purple);padding:8px 0 8px 14px;margin:6px 0;font-size:13px;color:#43356b}
+  /* pricing */
+  .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:6px}
+  @media(max-width:760px){.price-grid{grid-template-columns:1fr}}
+  .plan{border:1px solid var(--line);border-radius:14px;padding:18px;background:#fcfdff;display:flex;flex-direction:column}
+  .plan.feature{border:2px solid var(--primary);box-shadow:0 6px 18px rgba(37,99,235,.12)}
+  .plan .pn{font-weight:800;font-size:14.5px}
+  .plan .tagm{font-size:11px;font-weight:800;color:#fff;background:var(--primary);border-radius:999px;padding:2px 9px;display:inline-block;margin-bottom:8px}
+  .plan .pp{font-size:26px;font-weight:800;margin:6px 0 2px}
+  .plan .pp small{font-size:13px;color:var(--sub);font-weight:700}
+  .plan .pi{font-size:12px;color:var(--sub);margin-bottom:10px}
+  .plan ul{margin:6px 0 0;padding-left:18px;font-size:12.5px;color:#37414f}
+  .plan li{margin:4px 0}
+  .calc{background:#f0f6ff;border:1px dashed var(--primary);border-radius:13px;padding:16px 18px;margin-top:16px}
+  .calc .ct{font-weight:800;color:var(--primary-d);margin-bottom:8px;font-size:13.5px}
+  .calc table{margin:0} .calc td{border:none;padding:4px 0;font-size:13px}
+  .calc .tot{font-size:17px;font-weight:800;color:var(--primary-d)}
+  .note{background:var(--warn-bg);border:1px solid #f4e0bf;border-radius:11px;padding:13px 16px;font-size:12.5px;color:#6b4a12;margin-top:14px}
+  .note b{color:var(--warn)}
+  .guide{display:flex;gap:10px;flex-wrap:wrap}
+  .gstep{flex:1;min-width:160px;border:1px solid var(--line);border-radius:12px;padding:14px;background:#fcfdff}
+  .gstep .gn{font-weight:800;color:var(--primary)}
+  .roadmap{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+  .rm{flex:1;min-width:150px;border:1px solid var(--line);border-radius:12px;padding:13px 14px;background:#fcfdff}
+  .rm .ph{font-size:11px;font-weight:800;color:var(--primary);letter-spacing:.04em}
+  .rm.now{border:2px solid var(--credit);background:var(--credit-bg)}
+  .rm.now .ph{color:var(--credit)}
+  .rm .rt{font-weight:800;font-size:13.5px;margin:4px 0 3px}
+  .rm .rd{font-size:11.5px;color:var(--sub)}
+  .foot{text-align:center;color:var(--sub);font-size:12px;margin-top:8px}
+  .linkbox{background:#0f1f3d;color:#fff;border-radius:13px;padding:16px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:6px}
+  .linkbox .u{font-weight:800;font-size:15px}
+  .print-btn{position:fixed;right:18px;bottom:18px;background:var(--primary);color:#fff;border:none;border-radius:999px;
+    padding:12px 20px;font-weight:800;font-size:13.5px;cursor:pointer;box-shadow:0 6px 18px rgba(37,99,235,.35);z-index:10}
+  @media print{
+    body{background:#fff} .page{max-width:none;padding:0}
+    .print-btn{display:none}
+    .cover{border-radius:0;box-shadow:none}
+    section{box-shadow:none;break-inside:avoid;page-break-inside:avoid}
+    .plan.feature{box-shadow:none}
+  }
+</style>
+</head>
+<body>
+<button class="print-btn" onclick="window.print()">🖨 PDFで保存 / 印刷</button>
+<div class="page">
+
+  <div class="cover">
+    <div class="eyebrow">飲食・多店舗運営向け　業務システム ご提案</div>
+    <h1>店舗間ヘルプ 申請・人件費精算システム</h1>
+    <span class="name">サービス名（仮称）：ヘルプリレー</span>
+    <p class="lead">「人手が足りない店」と「応援に行ける人」を最短でつなぎ、店舗間で発生する人件費の貸し借りを“見える化”して自動精算。さらにスタッフのスキルと成長まで管理できる、ジョブカンの“応援・精算特化版”です。</p>
+    <div class="meta">
+      <span>発行：Spicy Device（飲食店向けWebツール制作）</span>
+      <span>区分：試作（たたき）→ 本開発のご提案</span>
+    </div>
+  </div>
+
+  <!-- 1 課題 -->
+  <section>
+    <h2><span class="secnum">1</span>こんな“もやもや”を解決します</h2>
+    <p class="sub">多店舗・グループ運営でよくある、店舗間ヘルプまわりの課題。</p>
+    <div class="grid2">
+      <div>
+        <div class="prob"><span class="x">✕</span><span>応援の依頼が LINE・電話・口頭でバラバラ。誰に頼んだか、来てくれるのか分かりにくい</span></div>
+        <div class="prob"><span class="x">✕</span><span>「どの店が・どの店に・いくら分」助けたのか、人件費の貸し借りが曖昧でモメる</span></div>
+        <div class="prob"><span class="x">✕</span><span>応援に呼びたくても、誰がホール・キッチン・ドリンクをどのレベルでできるか分からない</span></div>
+        <div class="prob"><span class="x">✕</span><span>月末の店舗間精算を手作業で集計していて時間がかかる</span></div>
+      </div>
+      <div>
+        <div class="arrow-sol">→ 募集から精算まで1か所に集約。<br>応援の見える化・人件費の自動精算・スキルの可視化を、現場のスマホ操作で完結します。</div>
+        <div class="pill-card" style="margin-top:12px">
+          <div class="ic">📱</div>
+          <div class="t">現場で完結</div>
+          <div class="d">アルバイトもスマホで募集確認・応募。店長は出すだけ、本部は承認するだけ。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 できること -->
+  <section>
+    <h2><span class="secnum">2</span>できること（4つの柱）</h2>
+    <div class="grid4">
+      <div class="pill-card"><div class="ic">📣</div><div class="t">募集・申請</div><div class="d">欲しい日・時間帯・ポジション・必要レベルを指定。特定の人の指名も可。</div></div>
+      <div class="pill-card"><div class="ic">🤝</div><div class="t">マッチング承認</div><div class="d">応募者を本部が確認し、最適な担当を確定。</div></div>
+      <div class="pill-card"><div class="ic">🧮</div><div class="t">人件費の自動精算</div><div class="d">確定実績から店舗間の貸借を自動計算。相殺後の精算額まで提示。</div></div>
+      <div class="pill-card"><div class="ic">🧑‍🍳</div><div class="t">スキルの見える化</div><div class="d">ポジション×レベルで誰が何をできるかを一覧管理。</div></div>
+    </div>
+  </section>
+
+  <!-- 3 フロー -->
+  <section>
+    <h2><span class="secnum">3</span>申請から精算までの流れ</h2>
+    <p class="sub">募集 → 応募 → 本部承認 → 実績化 → 自動精算。ここまでが1つの流れでつながります。</p>
+    <div class="flow">
+      <div class="step"><div class="n">1</div><div class="st">募集（申請）</div><div class="sd">店舗が「6/20・17-22時・ホール1名・可以上」を投稿。指名も可。</div></div>
+      <div class="gt">›</div>
+      <div class="step acc"><div class="n">2</div><div class="st">応募</div><div class="sd">他店スタッフが「行けます」と応募。条件を満たす人だけ応募可能。</div></div>
+      <div class="gt">›</div>
+      <div class="step acc"><div class="n">3</div><div class="st">本部が承認</div><div class="sd">応募者とスキルを見て、担当を確定。</div></div>
+      <div class="gt">›</div>
+      <div class="step cr"><div class="n">4</div><div class="st">実績化</div><div class="sd">確定で実績に自動登録。勤務時間×時給で人件費を計算。</div></div>
+      <div class="gt">›</div>
+      <div class="step cr"><div class="n">5</div><div class="st">自動精算</div><div class="sd">店舗間の貸借を集計し「どこがどこへ いくら」を提示。</div></div>
+    </div>
+  </section>
+
+  <!-- 4 役割 -->
+  <section>
+    <h2><span class="secnum">4</span>役割と権限（見える情報を分けられます）</h2>
+    <p class="sub">役割ごとにログインを分け、見える情報・できる操作をコントロールします。<b>時給は店舗スタッフには表示しません。</b></p>
+    <table>
+      <tr><th style="width:120px">役割</th><th>主な操作</th><th style="width:90px;text-align:center">時給の表示</th></tr>
+      <tr><td><span class="chip admin">本部 / オーナー</span></td><td>全店舗の閲覧・募集のマッチング承認・人件費/精算の管理・マスタ設定</td><td style="text-align:center"><span class="yes">○ 見える</span></td></tr>
+      <tr><td><span class="chip mgr">店長 / マネージャー</span></td><td>自店の募集を出す・自店スタッフのスキル編集・自店の実績/人件費の確認</td><td style="text-align:center"><span class="yes">○ 見える</span></td></tr>
+      <tr><td><span class="chip staff">店舗スタッフ（アルバイト）</span></td><td>他店募集への応募・自店への応援申請・自分のスキル/予定の確認</td><td style="text-align:center"><span class="no">✕ 非表示</span></td></tr>
+    </table>
+    <h3>スキルは「ポジション × レベル」で管理</h3>
+    <p>例：ホール <span class="lv lv4">Lv3</span>／キッチン <span class="lv lv2">可</span>／ドリンク <span class="lv lv1">研修中</span>。店長・本部が編集でき、募集の必要レベルや指名、マッチング候補の絞り込みに使われます。</p>
+  </section>
+
+  <!-- 5 将来オプション：育成・面談 -->
+  <section class="opt">
+    <h2><span class="secnum">5</span>将来オプション：スキル面談・育成モジュール</h2>
+    <p class="sub">いまのスキルデータを土台に、店長×スタッフの1on1面談と成長管理まで拡張できます。</p>
+    <div class="grid2">
+      <div>
+        <h3 style="color:var(--purple)">面談 → 3か月目標 → 進捗チェック</h3>
+        <p>面談の場でその日の会話・現状レベルを記録し、3か月後の目標を一緒に設定。次回面談で達成/未達をチェックし、レベルを更新していけます。</p>
+        <div class="talk">🗣 「今いちばん自信があるポジションは？」</div>
+        <div class="talk">🗣 「3か月後、ドリンクを <span class="lv lv1">研修中</span> → <span class="lv lv2">可</span> にしよう」</div>
+        <div class="talk">🗣 「そのために来月は週2でドリンク担当に入ろう」</div>
+      </div>
+      <div>
+        <h3 style="color:var(--purple)">蓄積されるもの</h3>
+        <table>
+          <tr><th>記録</th><th>内容</th></tr>
+          <tr><td>面談ログ</td><td>日付・店長・スタッフ・会話メモ</td></tr>
+          <tr><td>目標</td><td>対象ポジション・目標レベル・期限（3か月後など）</td></tr>
+          <tr><td>進捗</td><td>達成 / 未達・コメント・レベル更新履歴</td></tr>
+          <tr><td>推移</td><td>スキルの成長グラフ（個人・店舗）</td></tr>
+        </table>
+        <p style="margin-top:10px;font-size:12.5px;color:#6b4a12">※ 応援マッチングの精度向上（育てた人を的確にアサイン）にもつながります。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 アルバイト向け使い方 -->
+  <section>
+    <h2><span class="secnum">6</span>店舗スタッフ（アルバイト）の使い方</h2>
+    <p class="sub">この欄はそのまま印刷してスタッフ配布用にお使いいただけます。操作はスマホで3ステップ。</p>
+    <div class="guide">
+      <div class="gstep"><div class="gn">STEP 1　見る</div><div>「募集ボード」で、応援を募集している他店の予定を確認します。</div></div>
+      <div class="gstep"><div class="gn">STEP 2　応募する</div><div>行ける募集の「応募する」を押すだけ。あなたのスキルが条件に合う募集だけ表示されます。</div></div>
+      <div class="gstep"><div class="gn">STEP 3　確定を待つ</div><div>本部が承認すると「自分の予定」に確定として表示。あとは当日その店舗へ。</div></div>
+    </div>
+    <div class="note">💡 <b>安心ポイント：</b>店舗スタッフの画面には時給・人件費・精算金額は一切表示されません。見えるのは「日付・店舗・ポジション・自分のスキル」だけです。</div>
+  </section>
+
+  <!-- 7 進め方 -->
+  <section>
+    <h2><span class="secnum">7</span>今後の進め方</h2>
+    <div class="roadmap">
+      <div class="rm now"><div class="ph">PHASE 0 ・ 今ここ</div><div class="rt">たたき（試作）</div><div class="rd">流れ・役割・権限を実際に触って確認</div></div>
+      <div class="rm"><div class="ph">PHASE 1</div><div class="rt">本ヒヤリング</div><div class="rd">勤怠連携・割増・通知・締めなどを確定</div></div>
+      <div class="rm"><div class="ph">PHASE 2</div><div class="rt">本開発</div><div class="rd">ログイン認証・サーバー保存で正式版に</div></div>
+      <div class="rm"><div class="ph">PHASE 3</div><div class="rt">運用・拡張</div><div class="rd">通知連携・育成モジュール等を追加</div></div>
+    </div>
+    <div class="note" style="margin-top:16px">
+      🔐 <b>本開発で“本物”になる点：</b>いまの試作はデータが端末内にあるため、時給の非表示は「見た目だけ」です。<b>ログイン＋サーバー（本開発）</b>で、権限・データ共有・時給の非表示が技術的に正式に守られます。
+    </div>
+    <h3>いま触れる試作版</h3>
+    <div class="linkbox">
+      <span>🔗</span>
+      <div>
+        <div class="u">https://spicy-device.com/help-settle/</div>
+        <div style="font-size:12px;opacity:.85">ヘッダー右上で「本部／店長／スタッフ」を切り替えて、見え方の違いをご確認ください。</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="foot">Spicy Device — 飲食店向けWebツール制作　／　本資料は試作段階のご提案であり、仕様・価格は今後のヒヤリングで確定します。</div>
+</div>
+</body>
+</html>
