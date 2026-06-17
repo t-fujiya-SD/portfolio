@@ -3,44 +3,52 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>店舗間ヘルプ 人件費精算（試作版）</title>
+<title>店舗間ヘルプ 申請・人件費精算（試作版）</title>
 <style>
   :root{
     --bg:#f4f6f9; --card:#ffffff; --ink:#1f2a37; --sub:#6b7280; --line:#e5e7eb;
     --primary:#2563eb; --primary-d:#1d4ed8; --accent:#0d9488;
     --credit:#15803d; --credit-bg:#e7f6ec; --debit:#b91c1c; --debit-bg:#fdecec;
-    --warn:#b45309; --shadow:0 1px 3px rgba(16,24,40,.08),0 1px 2px rgba(16,24,40,.06);
+    --warn:#b45309; --warn-bg:#fff5e6; --open:#1d4ed8; --open-bg:#e8efff;
+    --shadow:0 1px 3px rgba(16,24,40,.08),0 1px 2px rgba(16,24,40,.06);
     --radius:14px;
   }
   *{box-sizing:border-box}
   body{margin:0;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,system-ui,sans-serif;
     background:var(--bg);color:var(--ink);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
-  header{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;padding:18px 22px;box-shadow:var(--shadow)}
-  header .wrap{max-width:1160px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-  header h1{font-size:19px;margin:0;font-weight:700;letter-spacing:.02em;display:flex;align-items:center;gap:10px}
+  header{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;padding:16px 22px;box-shadow:var(--shadow)}
+  header .wrap{max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  header h1{font-size:18px;margin:0;font-weight:700;letter-spacing:.02em;display:flex;align-items:center;gap:10px}
   header .badge{background:rgba(255,255,255,.2);font-size:11px;padding:2px 9px;border-radius:999px;font-weight:600}
   header p{margin:3px 0 0;font-size:12px;opacity:.85}
-  .month-pick{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);padding:6px 10px;border-radius:10px}
-  .month-pick label{font-size:12px;opacity:.9}
-  .month-pick select{border:none;border-radius:7px;padding:5px 8px;font-size:13px;font-weight:600;background:#fff;color:var(--ink)}
-  main{max-width:1160px;margin:0 auto;padding:18px 22px 60px}
+  /* role switcher */
+  .login{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.13);padding:7px 11px;border-radius:11px;flex-wrap:wrap}
+  .login .who{font-size:11px;opacity:.85;margin-right:2px}
+  .login select{border:none;border-radius:7px;padding:6px 8px;font-size:13px;font-weight:600;background:#fff;color:var(--ink)}
+  .demo-note{max-width:1180px;margin:10px auto 0;font-size:11.5px;opacity:.9;display:flex;align-items:center;gap:6px}
+  main{max-width:1180px;margin:0 auto;padding:18px 22px 60px}
+  .roleband{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin-bottom:16px;box-shadow:var(--shadow);font-size:13px}
+  .roleband .chip{font-weight:700;padding:3px 11px;border-radius:999px}
+  .roleband .chip.admin{background:#1e3a8a;color:#fff}
+  .roleband .chip.manager{background:var(--accent);color:#fff}
+  .roleband .chip.staff{background:#7c3aed;color:#fff}
+  .roleband .desc{color:var(--sub);font-size:12.5px}
   nav.tabs{display:flex;gap:4px;margin:0 0 18px;background:#e9edf3;padding:4px;border-radius:12px;width:fit-content;flex-wrap:wrap}
-  nav.tabs button{border:none;background:transparent;padding:9px 18px;border-radius:9px;font-size:13.5px;font-weight:600;color:var(--sub);cursor:pointer;transition:.15s}
+  nav.tabs button{border:none;background:transparent;padding:9px 16px;border-radius:9px;font-size:13.5px;font-weight:600;color:var(--sub);cursor:pointer;transition:.15s}
   nav.tabs button.active{background:#fff;color:var(--primary);box-shadow:var(--shadow)}
   .panel{display:none}
   .panel.active{display:block;animation:fade .25s ease}
   @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
-  .grid-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:18px}
-  .kpi{background:var(--card);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);border:1px solid var(--line)}
+  .grid-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:18px}
+  .kpi{background:var(--card);border-radius:var(--radius);padding:15px 18px;box-shadow:var(--shadow);border:1px solid var(--line)}
   .kpi .lbl{font-size:12px;color:var(--sub);font-weight:600}
-  .kpi .val{font-size:26px;font-weight:700;margin-top:4px;letter-spacing:-.01em}
+  .kpi .val{font-size:25px;font-weight:700;margin-top:4px;letter-spacing:-.01em}
   .kpi .val small{font-size:14px;font-weight:600;color:var(--sub);margin-left:2px}
   .card{background:var(--card);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);border:1px solid var(--line);margin-bottom:18px}
   .card h2{font-size:15px;margin:0 0 4px;display:flex;align-items:center;gap:8px}
   .card .hint{font-size:12px;color:var(--sub);margin:0 0 14px}
   .two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-  @media(max-width:820px){.two-col{grid-template-columns:1fr}}
-  /* bar chart */
+  @media(max-width:860px){.two-col{grid-template-columns:1fr}}
   .bar-row{display:grid;grid-template-columns:90px 1fr 110px;align-items:center;gap:10px;margin:9px 0}
   .bar-row .name{font-size:13px;font-weight:600;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .bar-track{position:relative;height:26px;background:#f1f3f7;border-radius:7px;overflow:hidden}
@@ -50,9 +58,8 @@
   .bar-fill.debit{background:var(--debit);right:50%}
   .bar-row .amt{font-size:13px;font-weight:700;text-align:left;white-space:nowrap}
   .amt.credit{color:var(--credit)} .amt.debit{color:var(--debit)}
-  /* matrix */
   table{width:100%;border-collapse:collapse;font-size:13px}
-  th,td{padding:9px 11px;text-align:left;border-bottom:1px solid var(--line)}
+  th,td{padding:9px 11px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
   th{font-size:12px;color:var(--sub);font-weight:700;background:#fafbfc}
   .matrix td,.matrix th{text-align:center;border:1px solid var(--line)}
   .matrix th.corner{background:#eef2f7;text-align:right;font-size:11px}
@@ -65,143 +72,200 @@
   .pill.debit{background:var(--debit-bg);color:var(--debit)}
   .settle-item{display:flex;align-items:center;gap:10px;padding:11px 4px;border-bottom:1px solid var(--line);font-size:14px}
   .settle-item:last-child{border-bottom:none}
-  .settle-item .who{font-weight:600}
   .settle-item .arrow{color:var(--primary);font-weight:700}
-  .settle-item .pay{margin-left:auto;font-weight:700;font-size:15px;color:var(--ink)}
+  .settle-item .pay{margin-left:auto;font-weight:700;font-size:15px}
   .empty{color:var(--sub);text-align:center;padding:26px;font-size:13px}
-  /* forms */
-  .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;align-items:end}
+  .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;align-items:end}
   .field{display:flex;flex-direction:column;gap:4px}
   .field label{font-size:12px;color:var(--sub);font-weight:600}
-  input,select{padding:9px 11px;border:1px solid var(--line);border-radius:9px;font-size:13.5px;font-family:inherit;background:#fff;color:var(--ink)}
-  input:focus,select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+  input,select,textarea{padding:9px 11px;border:1px solid var(--line);border-radius:9px;font-size:13.5px;font-family:inherit;background:#fff;color:var(--ink)}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
   .btn{border:none;border-radius:9px;padding:10px 16px;font-size:13.5px;font-weight:700;cursor:pointer;transition:.15s;font-family:inherit}
-  .btn.primary{background:var(--primary);color:#fff}
-  .btn.primary:hover{background:var(--primary-d)}
-  .btn.ghost{background:#fff;border:1px solid var(--line);color:var(--ink)}
-  .btn.ghost:hover{background:#f7f9fc}
+  .btn.primary{background:var(--primary);color:#fff} .btn.primary:hover{background:var(--primary-d)}
+  .btn.ok{background:var(--credit);color:#fff} .btn.ok:hover{filter:brightness(.95)}
+  .btn.ghost{background:#fff;border:1px solid var(--line);color:var(--ink)} .btn.ghost:hover{background:#f7f9fc}
   .btn.sm{padding:5px 10px;font-size:12px}
-  .btn.danger{color:var(--debit);background:#fff;border:1px solid #f3c7c7}
-  .btn.danger:hover{background:var(--debit-bg)}
+  .btn.danger{color:var(--debit);background:#fff;border:1px solid #f3c7c7} .btn.danger:hover{background:var(--debit-bg)}
+  .btn:disabled{opacity:.5;cursor:default}
   .toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
   .toolbar .spacer{flex:1}
   .tag-store{display:inline-block;padding:1px 8px;border-radius:6px;font-size:11.5px;font-weight:600;background:#eef2f7;color:#374151}
   .muted{color:var(--sub);font-size:12px}
+  .status{display:inline-block;padding:2px 10px;border-radius:999px;font-size:11.5px;font-weight:700}
+  .status.open{background:var(--open-bg);color:var(--open)}
+  .status.confirmed{background:var(--credit-bg);color:var(--credit)}
+  .status.cancelled{background:#eef0f3;color:var(--sub)}
+  .lv{display:inline-block;padding:1px 7px;border-radius:6px;font-size:11px;font-weight:700}
+  .lv0{background:#f1f3f7;color:#aeb6c2} .lv1{background:#fff5e6;color:#b45309}
+  .lv2{background:#e8efff;color:#1d4ed8} .lv3{background:#e7f6ec;color:#15803d} .lv4{background:#1e3a8a;color:#fff}
+  .reqcard{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:12px;background:#fff}
+  .reqcard.open{border-left:4px solid var(--open)}
+  .reqcard.confirmed{border-left:4px solid var(--credit)}
+  .reqcard.cancelled{border-left:4px solid #cbd2dc;opacity:.72}
+  .reqcard .top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+  .reqcard .title{font-weight:700;font-size:14.5px}
+  .reqcard .meta{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--sub);margin-bottom:8px}
+  .reqcard .meta b{color:var(--ink)}
+  .reqcard .act{display:flex;gap:8px;align-items:center;flex-wrap:wrap;border-top:1px dashed var(--line);padding-top:10px;margin-top:4px}
+  .nominate{background:var(--warn-bg);color:var(--warn);padding:1px 8px;border-radius:6px;font-size:11.5px;font-weight:700}
+  .apps{font-size:12px;color:var(--sub)}
   .footer-note{text-align:center;color:var(--sub);font-size:11.5px;margin-top:30px;line-height:1.7}
   .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:#1f2a37;color:#fff;padding:11px 20px;border-radius:10px;font-size:13px;font-weight:600;opacity:0;transition:.3s;pointer-events:none;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.2)}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
   .legend{display:flex;gap:16px;font-size:11.5px;color:var(--sub);margin-top:10px;flex-wrap:wrap}
   .legend span{display:inline-flex;align-items:center;gap:5px}
   .dot{width:10px;height:10px;border-radius:3px;display:inline-block}
+  .secdiv{font-size:12px;font-weight:700;color:var(--sub);margin:18px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--line)}
+  .skillgrid input.lvsel{width:100%}
 </style>
 </head>
 <body>
 <header>
   <div class="wrap">
     <div>
-      <h1>🏪 店舗間ヘルプ 人件費精算 <span class="badge">試作版 / たたき</span></h1>
-      <p>店舗をまたいだ応援（ヘルプ）勤務を記録し、店舗間の人件費の貸し借りを自動で可視化・精算します。</p>
+      <h1>🏪 店舗間ヘルプ 申請・人件費精算 <span class="badge">試作版 / たたき</span></h1>
+      <p>応援の募集 → 応募 → 本部承認 → 実績化までを一気通貫。店舗間の人件費の貸借も自動精算します。</p>
     </div>
-    <div class="month-pick">
-      <label>対象期間</label>
-      <select id="monthSel" onchange="App.setMonth(this.value)"></select>
+    <div class="login">
+      <span class="who">ログイン中</span>
+      <select id="roleSel" onchange="App.changeRole(this.value)"></select>
+      <select id="ctxSel" onchange="App.changeCtx(this.value)"></select>
     </div>
   </div>
+  <div class="demo-note">🔐 デモ用にアカウントを切り替えできます（本番はログイン制）。役割で見える情報・操作が変わります。</div>
 </header>
 
 <main>
-  <nav class="tabs">
-    <button class="tab-btn active" data-tab="dash" onclick="App.tab('dash')">📊 ダッシュボード</button>
-    <button class="tab-btn" data-tab="rec" onclick="App.tab('rec')">📝 ヘルプ記録</button>
-    <button class="tab-btn" data-tab="master" onclick="App.tab('master')">⚙️ 店舗・スタッフ管理</button>
-  </nav>
+  <div class="roleband" id="roleband"></div>
+  <nav class="tabs" id="tabs"></nav>
 
-  <!-- ============ DASHBOARD ============ -->
-  <section class="panel active" id="panel-dash">
+  <!-- DASHBOARD -->
+  <section class="panel" id="panel-dash">
     <div class="grid-kpi" id="kpis"></div>
-
     <div class="card">
       <h2>💰 店舗別 人件費バランス</h2>
-      <p class="hint">対象期間中、その店舗が「他店を応援して稼いだ額（貸し）」と「他店に応援してもらった額（借り）」の差引です。</p>
+      <p class="hint">「他店を応援して稼いだ額（貸し）」と「応援してもらった額（借り）」の差引です。</p>
       <div id="balanceChart"></div>
       <div class="legend">
-        <span><i class="dot" style="background:var(--credit)"></i>プラス（貸し越し＝受け取る側）</span>
-        <span><i class="dot" style="background:var(--debit)"></i>マイナス（借り越し＝支払う側）</span>
+        <span><i class="dot" style="background:var(--credit)"></i>プラス（受け取る側）</span>
+        <span><i class="dot" style="background:var(--debit)"></i>マイナス（支払う側）</span>
       </div>
     </div>
-
     <div class="two-col">
       <div class="card">
         <h2>🔁 店舗間 貸借マトリクス</h2>
-        <p class="hint">縦＝応援を出した店（貸し手） / 横＝応援を受けた店（借り手）。金額は発生した人件費です。</p>
+        <p class="hint">縦＝応援を出した店（貸し手） / 横＝応援を受けた店（借り手）。</p>
         <div id="matrix" style="overflow-x:auto"></div>
       </div>
       <div class="card">
         <h2>🧾 精算リスト（相殺後）</h2>
-        <p class="hint">店舗ペアごとに貸し借りを相殺した「最終的に誰が誰へいくら払うか」です。</p>
+        <p class="hint">店舗ペアごとに相殺した「誰が誰へいくら払うか」です。</p>
         <div id="settle"></div>
       </div>
     </div>
   </section>
 
-  <!-- ============ RECORDS ============ -->
-  <section class="panel" id="panel-rec">
+  <!-- BOARD / REQUESTS -->
+  <section class="panel" id="panel-board">
+    <div class="card" id="reqFormCard">
+      <h2>📣 ヘルプを募集する（申請）</h2>
+      <p class="hint">人材が欲しい日・時間帯・ポジション・必要レベルを入力します。特定の人を指名することもできます。</p>
+      <div class="form-grid">
+        <div class="field" id="f-store-wrap"><label>募集する店舗</label><select id="f-store"></select></div>
+        <div class="field"><label>日付</label><input type="date" id="f-date"></div>
+        <div class="field"><label>開始</label><input type="time" id="f-start" value="17:00"></div>
+        <div class="field"><label>終了</label><input type="time" id="f-end" value="22:00"></div>
+        <div class="field"><label>ポジション</label><select id="f-pos"></select></div>
+        <div class="field"><label>必要人数</label><input type="number" id="f-count" value="1" min="1" step="1"></div>
+        <div class="field"><label>最低レベル</label><select id="f-lv"></select></div>
+        <div class="field"><label>指名（任意）</label><select id="f-nom"></select></div>
+        <div class="field" style="grid-column:1/-1"><label>メモ（任意）</label><input id="f-note" placeholder="例：金曜ディナーで混雑。ドリンク作れる方歓迎"></div>
+        <div class="field"><button class="btn primary" onclick="App.addRequest()" style="width:100%">この内容で募集を出す</button></div>
+      </div>
+    </div>
+
     <div class="card">
-      <h2>＋ ヘルプ記録を追加</h2>
-      <p class="hint">応援に入ったスタッフ・勤務先店舗・時間を入力すると、人件費（時間×時給）が自動計算されます。</p>
+      <div class="toolbar">
+        <h2 style="margin:0" id="boardTitle">📋 募集一覧</h2>
+        <span class="muted" id="boardSub"></span>
+      </div>
+      <div id="reqList"></div>
+    </div>
+  </section>
+
+  <!-- RECORDS -->
+  <section class="panel" id="panel-rec">
+    <div class="card" id="manualCard">
+      <h2>＋ 実績を手入力</h2>
+      <p class="hint">承認フローを通さず、過去の応援実績を直接記録する場合に使います。</p>
       <div class="form-grid">
         <div class="field"><label>日付</label><input type="date" id="r-date"></div>
         <div class="field"><label>応援したスタッフ</label><select id="r-staff" onchange="App.onStaffPick()"></select></div>
-        <div class="field"><label>所属店（貸し手）</label><input id="r-from" disabled placeholder="スタッフ選択で自動"></div>
+        <div class="field"><label>所属店（貸し手）</label><input id="r-from" disabled></div>
         <div class="field"><label>勤務先店（借り手）</label><select id="r-to"></select></div>
         <div class="field"><label>勤務時間（h）</label><input type="number" id="r-hours" min="0" step="0.5" value="4"></div>
         <div class="field"><label>時給（円）</label><input type="number" id="r-wage" min="0" step="10"></div>
         <div class="field"><button class="btn primary" onclick="App.addRecord()" style="width:100%">追加する</button></div>
       </div>
     </div>
-
     <div class="card">
       <div class="toolbar">
-        <h2 style="margin:0">📋 ヘルプ記録一覧</h2>
+        <h2 style="margin:0" id="recTitle">🧾 ヘルプ実績</h2>
         <span class="muted" id="recCount"></span>
         <div class="spacer"></div>
-        <button class="btn ghost sm" onclick="App.exportRecords()">CSV出力</button>
+        <button class="btn ghost sm" id="csvBtn" onclick="App.exportRecords()">CSV出力</button>
       </div>
-      <div style="overflow-x:auto">
-        <table id="recTable"></table>
+      <div style="overflow-x:auto"><table id="recTable"></table></div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="panel" id="panel-skill">
+    <div class="card">
+      <h2>🧑‍🍳 スキル管理（ポジション × レベル）</h2>
+      <p class="hint" id="skillHint"></p>
+      <div style="overflow-x:auto"><table id="skillTable" class="skillgrid"></table></div>
+      <div class="legend" style="margin-top:14px">
+        <span><i class="lv lv1">研修中</i></span><span><i class="lv lv2">可</i></span>
+        <span><i class="lv lv3">Lv2</i></span><span><i class="lv lv4">Lv3</i></span>
+        <span class="muted">― ＝ そのポジション不可</span>
+      </div>
+    </div>
+    <div class="card" id="addStaffCard">
+      <h2>👤 スタッフを追加</h2>
+      <div class="form-grid">
+        <div class="field"><label>氏名</label><input id="m-staff-name"></div>
+        <div class="field" id="m-staff-store-wrap"><label>所属店</label><select id="m-staff-store"></select></div>
+        <div class="field"><label>時給（円）</label><input type="number" id="m-staff-wage" value="1100" step="10"></div>
+        <div class="field"><button class="btn primary" onclick="App.addStaff()" style="width:100%">追加</button></div>
       </div>
     </div>
   </section>
 
-  <!-- ============ MASTER ============ -->
-  <section class="panel" id="panel-master">
+  <!-- STORES (admin) -->
+  <section class="panel" id="panel-stores">
     <div class="two-col">
       <div class="card">
         <h2>🏪 店舗マスタ</h2>
-        <p class="hint">応援のやりとりをする店舗を登録します。</p>
         <div class="toolbar">
           <input id="m-store" placeholder="店舗名（例：渋谷店）" style="flex:1">
           <button class="btn primary sm" onclick="App.addStore()">店舗を追加</button>
         </div>
         <table id="storeTable"></table>
       </div>
-
       <div class="card">
-        <h2>👤 スタッフマスタ</h2>
-        <p class="hint">スタッフの所属店と基本時給を登録します（時給は記録時に上書き可）。</p>
-        <div class="form-grid" style="margin-bottom:12px">
-          <div class="field"><label>氏名</label><input id="m-staff-name" placeholder="氏名"></div>
-          <div class="field"><label>所属店</label><select id="m-staff-store"></select></div>
-          <div class="field"><label>時給（円）</label><input type="number" id="m-staff-wage" value="1100" step="10"></div>
-          <div class="field"><button class="btn primary" onclick="App.addStaff()" style="width:100%">追加</button></div>
+        <h2>🧩 ポジション設定</h2>
+        <p class="hint">スキル管理で使うポジション（ホール・キッチン等）です。</p>
+        <div class="toolbar">
+          <input id="m-pos" placeholder="ポジション名（例：ドリンク）" style="flex:1">
+          <button class="btn primary sm" onclick="App.addPos()">追加</button>
         </div>
-        <table id="staffTable"></table>
+        <table id="posTable"></table>
       </div>
     </div>
-
     <div class="card">
       <h2>🗂 データ管理</h2>
-      <p class="hint">この試作版はデータをブラウザ内（端末ローカル）に保存します。サーバー連携や複数人共有は本開発で対応予定です。</p>
+      <p class="hint">この試作版はデータをブラウザ内に保存します。サーバー連携・本物のログインは本開発で対応します。</p>
       <div class="toolbar">
         <button class="btn ghost sm" onclick="App.exportAll()">全データをJSON書き出し</button>
         <button class="btn ghost sm" onclick="App.reseed()">サンプルデータで初期化</button>
@@ -211,7 +275,7 @@
   </section>
 
   <div class="footer-note">
-    これは要件確認用の試作（たたき）です。実データの計算ロジック・権限・打刻連携などはヒヤリング後に詰めます。<br>
+    これは要件確認用の試作（たたき）です。ログイン認証・サーバー保存・通知などは本開発で実装します。<br>
     Spicy Device — 飲食店向けWebツール
   </div>
 </main>
@@ -220,299 +284,413 @@
 
 <script>
 const App = (()=>{
-  const KEY = 'help_settle_v1';
-  let state = { stores:[], staff:[], records:[] };
-  let month = 'all';
+  const KEY = 'help_settle_v2';
+  const LEVELS = ['―','研修中','可','Lv2','Lv3'];   // index = level 0..4
+  const ROLES = {admin:'本部 / オーナー', manager:'店長', staff:'店舗スタッフ'};
+  let state = { stores:[], staff:[], positions:[], requests:[], records:[] };
+  let user = { role:'admin', storeId:null, staffId:null };
+  let tab = 'dash';
 
   const uid = () => Math.random().toString(36).slice(2,9);
   const yen = n => '¥' + Math.round(n).toLocaleString('ja-JP');
   const $ = id => document.getElementById(id);
+  const esc = s => (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const empty = m => `<div class="empty">${m}</div>`;
 
   /* ---------- persistence ---------- */
-  function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
+  function save(){ localStorage.setItem(KEY, JSON.stringify({state,user})); }
   function load(){
     const raw = localStorage.getItem(KEY);
-    if(raw){ try{ state = JSON.parse(raw); return true; }catch(e){} }
+    if(raw){ try{ const o=JSON.parse(raw); state=o.state; if(o.user) user=o.user; return true; }catch(e){} }
     return false;
   }
 
   /* ---------- sample data ---------- */
   function seed(){
-    const s = (name)=>({id:uid(),name});
-    const st = [s('銀座本店'),s('新宿店'),s('渋谷店'),s('横浜店')];
-    const byName = n => st.find(x=>x.name===n).id;
-    const staff = [
-      {id:uid(),name:'佐藤 健',   homeStoreId:byName('銀座本店'),wage:1400},
-      {id:uid(),name:'鈴木 美咲', homeStoreId:byName('銀座本店'),wage:1200},
-      {id:uid(),name:'高橋 翔',   homeStoreId:byName('新宿店'),  wage:1300},
-      {id:uid(),name:'田中 由紀', homeStoreId:byName('新宿店'),  wage:1150},
-      {id:uid(),name:'伊藤 大輔', homeStoreId:byName('渋谷店'),  wage:1250},
-      {id:uid(),name:'渡辺 彩',   homeStoreId:byName('渋谷店'),  wage:1100},
-      {id:uid(),name:'山本 拓也', homeStoreId:byName('横浜店'),  wage:1200},
-      {id:uid(),name:'中村 葵',   homeStoreId:byName('横浜店'),  wage:1100},
+    const mkStore = n => ({id:uid(),name:n});
+    const stores=[mkStore('銀座本店'),mkStore('新宿店'),mkStore('渋谷店'),mkStore('横浜店')];
+    const sN = n => stores.find(s=>s.name===n).id;
+    const positions=[{id:uid(),name:'ホール'},{id:uid(),name:'キッチン'},{id:uid(),name:'ドリンク'},{id:uid(),name:'レジ/会計'}];
+    const pN = n => positions.find(p=>p.name===n).id;
+    const mkStaff=(name,store,wage,sk)=>{ const skills={}; for(const k in sk) skills[pN(k)]=sk[k]; return {id:uid(),name,homeStoreId:sN(store),wage,skills}; };
+    const staff=[
+      mkStaff('佐藤 健','銀座本店',1400,{'ホール':4,'ドリンク':2,'レジ/会計':3}),
+      mkStaff('鈴木 美咲','銀座本店',1200,{'ホール':2,'ドリンク':3}),
+      mkStaff('高橋 翔','新宿店',1300,{'キッチン':4,'ホール':2}),
+      mkStaff('田中 由紀','新宿店',1150,{'ホール':1,'レジ/会計':2}),
+      mkStaff('伊藤 大輔','渋谷店',1250,{'キッチン':3,'ドリンク':2}),
+      mkStaff('渡辺 彩','渋谷店',1100,{'ホール':2,'ドリンク':1}),
+      mkStaff('山本 拓也','横浜店',1200,{'ホール':3,'キッチン':2}),
+      mkStaff('中村 葵','横浜店',1100,{'ドリンク':3,'レジ/会計':2}),
     ];
-    const sid = n => staff.find(x=>x.name===n).id;
-    const mk = (date,name,to,hours)=>{
-      const stf = staff.find(x=>x.name===name);
-      return {id:uid(),date,staffId:stf.id,toStoreId:byName(to),hours,wage:stf.wage};
-    };
-    const records = [
-      mk('2026-05-03','佐藤 健','新宿店',6),
-      mk('2026-05-07','高橋 翔','銀座本店',5),
-      mk('2026-05-11','鈴木 美咲','渋谷店',4),
-      mk('2026-05-14','伊藤 大輔','新宿店',8),
-      mk('2026-05-18','山本 拓也','渋谷店',6),
-      mk('2026-05-22','渡辺 彩','横浜店',4),
-      mk('2026-05-25','田中 由紀','銀座本店',7),
-      mk('2026-05-29','中村 葵','新宿店',5),
-      mk('2026-06-02','佐藤 健','渋谷店',5),
-      mk('2026-06-05','高橋 翔','横浜店',6),
-      mk('2026-06-08','伊藤 大輔','銀座本店',4),
-      mk('2026-06-11','山本 拓也','新宿店',8),
-      mk('2026-06-13','鈴木 美咲','新宿店',5),
-      mk('2026-06-15','中村 葵','渋谷店',4),
-      mk('2026-06-16','田中 由紀','横浜店',6),
+    const stN = n => staff.find(s=>s.name===n).id;
+    const mkRec=(date,name,to,hours)=>{ const s=staff.find(x=>x.name===name); return {id:uid(),date,staffId:s.id,toStoreId:sN(to),hours,wage:s.wage,source:'manual'}; };
+    const records=[
+      mkRec('2026-06-02','佐藤 健','渋谷店',5),
+      mkRec('2026-06-05','高橋 翔','横浜店',6),
+      mkRec('2026-06-08','伊藤 大輔','銀座本店',4),
+      mkRec('2026-06-11','山本 拓也','新宿店',8),
+      mkRec('2026-06-13','鈴木 美咲','新宿店',5),
     ];
-    state = { stores:st, staff, records };
+    const requests=[
+      {id:uid(),storeId:sN('新宿店'),date:'2026-06-20',start:'17:00',end:'22:00',posId:pN('ホール'),count:1,nomId:'',minLv:2,note:'金曜ディナーで混雑予想',status:'open',applicants:[stN('佐藤 健'),stN('山本 拓也')],assigned:''},
+      {id:uid(),storeId:sN('渋谷店'),date:'2026-06-21',start:'15:00',end:'21:00',posId:pN('キッチン'),count:1,nomId:stN('高橋 翔'),minLv:2,note:'仕込み多め。経験者希望',status:'open',applicants:[],assigned:''},
+      {id:uid(),storeId:sN('横浜店'),date:'2026-06-22',start:'18:00',end:'23:00',posId:pN('ドリンク'),count:1,nomId:'',minLv:3,note:'ドリンクメイクできる方',status:'open',applicants:[stN('鈴木 美咲')],assigned:''},
+    ];
+    state={stores,staff,positions,requests,records};
+    user={role:'admin',storeId:null,staffId:null};
     save();
   }
 
   /* ---------- helpers ---------- */
   const store = id => state.stores.find(s=>s.id===id);
   const staffById = id => state.staff.find(s=>s.id===id);
-  const storeName = id => (store(id)||{name:'(削除済)'}).name;
-  const recMonth = r => r.date.slice(0,7);
-  function filtered(){ return month==='all' ? state.records : state.records.filter(r=>recMonth(r)===month); }
-  function amount(r){ return r.hours * r.wage; }
-  function months(){
-    const set = new Set(state.records.map(recMonth));
-    return [...set].sort().reverse();
-  }
+  const posById = id => state.positions.find(p=>p.id===id);
+  const sName = id => (store(id)||{name:'(削除済)'}).name;
+  const stName = id => (staffById(id)||{name:'(削除済)'}).name;
+  const pName = id => (posById(id)||{name:'-'}).name;
+  const lvOf = (st,posId) => (st && st.skills && st.skills[posId]) || 0;
+  const canWage = () => user.role!=='staff';
+  const myStoreId = () => user.role==='manager' ? user.storeId : (user.role==='staff' ? (staffById(user.staffId)||{}).homeStoreId : null);
+  function reqHours(r){ const [sh,sm]=r.start.split(':').map(Number),[eh,em]=r.end.split(':').map(Number); let m=(eh*60+em)-(sh*60+sm); if(m<0)m+=1440; return Math.round(m/60*100)/100; }
+  function amount(r){ return r.hours*r.wage; }
 
-  /* ---------- compute ---------- */
+  /* ---------- compute (records → balances) ---------- */
   function compute(){
-    const recs = filtered();
-    const ids = state.stores.map(s=>s.id);
-    const mat = {}; ids.forEach(a=>{ mat[a]={}; ids.forEach(b=>mat[a][b]=0); });
-    let totalAmt=0, totalHours=0;
-    recs.forEach(r=>{
-      const from = (staffById(r.staffId)||{}).homeStoreId;
-      const to = r.toStoreId;
-      if(!from||!to||from===to) return;
-      if(!mat[from]) mat[from]={}; if(mat[from][to]==null) mat[from][to]=0;
-      mat[from][to]+=amount(r); totalAmt+=amount(r); totalHours+=r.hours;
+    const ids=state.stores.map(s=>s.id);
+    const mat={}; ids.forEach(a=>{mat[a]={};ids.forEach(b=>mat[a][b]=0);});
+    let total=0,hours=0;
+    state.records.forEach(r=>{
+      const from=(staffById(r.staffId)||{}).homeStoreId, to=r.toStoreId;
+      if(!from||!to||from===to||!mat[from]) return;
+      mat[from][to]+=amount(r); total+=amount(r); hours+=r.hours;
     });
-    const bal={}; ids.forEach(id=>{
-      let lent=0,borrowed=0;
-      ids.forEach(o=>{ lent += (mat[id]&&mat[id][o])||0; borrowed += (mat[o]&&mat[o][id])||0; });
-      bal[id]={lent,borrowed,net:lent-borrowed};
-    });
-    // net settlement per unordered pair
+    const bal={}; ids.forEach(id=>{ let lent=0,bor=0; ids.forEach(o=>{lent+=mat[id][o]||0;bor+=mat[o][id]||0;}); bal[id]={lent,bor,net:lent-bor}; });
     const settle=[];
-    for(let i=0;i<ids.length;i++){
-      for(let j=i+1;j<ids.length;j++){
-        const a=ids[i],b=ids[j];
-        const net=(mat[a][b]||0)-(mat[b][a]||0);
-        if(net>0) settle.push({from:b,to:a,amt:net});       // b borrowed more → b pays a
-        else if(net<0) settle.push({from:a,to:b,amt:-net});
-      }
+    for(let i=0;i<ids.length;i++)for(let j=i+1;j<ids.length;j++){
+      const a=ids[i],b=ids[j],net=(mat[a][b]||0)-(mat[b][a]||0);
+      if(net>0)settle.push({from:b,to:a,amt:net}); else if(net<0)settle.push({from:a,to:b,amt:-net});
     }
     settle.sort((x,y)=>y.amt-x.amt);
-    return {recs,mat,bal,totalAmt,totalHours,ids,settle};
+    return {mat,bal,total,hours,ids,settle};
   }
+
+  /* ---------- role / context UI ---------- */
+  const TABS = {
+    admin:[['dash','📊 ダッシュボード'],['board','📣 募集・マッチング'],['rec','🧾 実績'],['skill','🧑‍🍳 スキル・スタッフ'],['stores','⚙️ 店舗管理']],
+    manager:[['dash','📊 ダッシュボード'],['board','📣 募集・申請'],['rec','🧾 自店の実績'],['skill','🧑‍🍳 自店スキル']],
+    staff:[['board','🙋 募集ボード・応募'],['rec','📅 自分の予定'],['skill','🧑‍🍳 自分のスキル']],
+  };
+  function buildLogin(){
+    $('roleSel').innerHTML = Object.entries(ROLES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
+    $('roleSel').value=user.role;
+    buildCtx();
+  }
+  function buildCtx(){
+    const c=$('ctxSel');
+    if(user.role==='manager'){
+      c.style.display=''; c.innerHTML=state.stores.map(s=>`<option value="store:${s.id}">${esc(s.name)} 店長</option>`).join('');
+      if(!user.storeId) user.storeId=state.stores[0]&&state.stores[0].id;
+      c.value='store:'+user.storeId;
+    } else if(user.role==='staff'){
+      c.style.display=''; c.innerHTML=state.staff.map(s=>`<option value="staff:${s.id}">${esc(s.name)}（${esc(sName(s.homeStoreId))}）</option>`).join('');
+      if(!user.staffId) user.staffId=state.staff[0]&&state.staff[0].id;
+      c.value='staff:'+user.staffId;
+    } else { c.style.display='none'; c.innerHTML=''; }
+  }
+  function changeRole(r){ user.role=r; user.storeId=null; user.staffId=null; buildCtx(); afterRoleChange(); }
+  function changeCtx(v){ const [k,id]=v.split(':'); if(k==='store')user.storeId=id; else user.staffId=id; afterRoleChange(); }
+  function afterRoleChange(){
+    const allowed=TABS[user.role].map(t=>t[0]); if(!allowed.includes(tab)) tab=allowed[0];
+    $('roleSel').value=user.role;
+    if(user.role==='manager') $('ctxSel').value='store:'+user.storeId;
+    else if(user.role==='staff') $('ctxSel').value='staff:'+user.staffId;
+    save(); renderTabs(); renderBand(); renderAll();
+  }
+  function renderBand(){
+    const cls=user.role; let who=ROLES[user.role], desc='';
+    if(user.role==='admin'){ desc='全店舗の閲覧・募集のマッチング承認・時給/精算の管理ができます。'; }
+    else if(user.role==='manager'){ who=sName(user.storeId)+' 店長'; desc='自店の募集を出し、自店スタッフのスキルを編集。時給・実績も確認できます。'; }
+    else { const s=staffById(user.staffId)||{}; who=(s.name||'')+'（'+sName(s.homeStoreId)+'）'; desc='他店の募集に応募・自店の応援申請。時給は表示されません。'; }
+    $('roleband').innerHTML=`<span class="chip ${cls}">${esc(who)}</span><span class="desc">${desc}</span>`;
+  }
+  function renderTabs(){
+    $('tabs').innerHTML=TABS[user.role].map(([id,label])=>
+      `<button class="${id===tab?'active':''}" onclick="App.tab('${id}')">${label}</button>`).join('');
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    const map={dash:'panel-dash',board:'panel-board',rec:'panel-rec',skill:'panel-skill',stores:'panel-stores'};
+    const p=$(map[tab]); if(p)p.classList.add('active');
+  }
+  function setTab(t){ tab=t; renderTabs(); renderAll(); window.scrollTo(0,0); }
 
   /* ---------- render: dashboard ---------- */
   function renderDash(){
-    const c = compute();
-    // KPI
-    $('kpis').innerHTML = `
-      ${kpi('ヘルプ件数', c.recs.length, '件')}
-      ${kpi('応援総時間', c.totalHours, 'h')}
-      ${kpi('人件費 移動総額', yen(c.totalAmt))}
-      ${kpi('精算 必要件数', c.settle.length, '件')}
-    `;
-    // balance chart
-    const maxAbs = Math.max(1, ...state.stores.map(s=>Math.abs(c.bal[s.id].net)));
-    const rows = [...state.stores].sort((a,b)=>c.bal[b.id].net-c.bal[a.id].net).map(s=>{
-      const n=c.bal[s.id].net; const w=Math.abs(n)/maxAbs*50;
-      const cls = n>=0?'credit':'debit';
-      const fill = n>=0
-        ? `<div class="bar-fill credit" style="width:${w}%"></div>`
-        : `<div class="bar-fill debit" style="width:${w}%"></div>`;
-      return `<div class="bar-row">
-        <div class="name">${esc(s.name)}</div>
-        <div class="bar-track"><div class="bar-center"></div>${fill}</div>
-        <div class="amt ${cls}">${n>=0?'+':'−'}${yen(Math.abs(n))}</div>
-      </div>`;
-    }).join('');
-    $('balanceChart').innerHTML = c.recs.length? rows : empty('この期間のヘルプ記録がありません');
-    // matrix
-    $('matrix').innerHTML = renderMatrix(c);
-    // settle
-    $('settle').innerHTML = c.settle.length ? c.settle.map(s=>`
-      <div class="settle-item">
-        <span class="pill debit">${esc(storeName(s.from))}</span>
-        <span class="arrow">→</span>
-        <span class="pill credit">${esc(storeName(s.to))}</span>
-        <span class="pay">${yen(s.amt)}</span>
-      </div>`).join('') : empty('精算の必要はありません');
+    if(user.role==='staff') return;
+    const c=compute();
+    $('kpis').innerHTML=`
+      ${kpi('応援実績 件数',state.records.length,'件')}
+      ${kpi('応援総時間',c.hours,'h')}
+      ${kpi('人件費 移動総額',yen(c.total))}
+      ${kpi('募集中',state.requests.filter(r=>r.status==='open').length,'件')}`;
+    const maxAbs=Math.max(1,...state.stores.map(s=>Math.abs(c.bal[s.id].net)));
+    $('balanceChart').innerHTML = state.records.length ? [...state.stores].sort((a,b)=>c.bal[b.id].net-c.bal[a.id].net).map(s=>{
+      const n=c.bal[s.id].net,w=Math.abs(n)/maxAbs*50,cls=n>=0?'credit':'debit';
+      return `<div class="bar-row"><div class="name">${esc(s.name)}</div>
+        <div class="bar-track"><div class="bar-center"></div><div class="bar-fill ${cls}" style="width:${w}%"></div></div>
+        <div class="amt ${cls}">${n>=0?'+':'−'}${yen(Math.abs(n))}</div></div>`;
+    }).join('') : empty('まだ実績がありません');
+    $('matrix').innerHTML=renderMatrix(c);
+    $('settle').innerHTML=c.settle.length?c.settle.map(s=>`
+      <div class="settle-item"><span class="pill debit">${esc(sName(s.from))}</span>
+      <span class="arrow">→</span><span class="pill credit">${esc(sName(s.to))}</span>
+      <span class="pay">${yen(s.amt)}</span></div>`).join('') : empty('精算の必要はありません');
   }
-  function kpi(lbl,val,unit=''){
-    const v = typeof val==='number'? val.toLocaleString('ja-JP'): val;
-    return `<div class="kpi"><div class="lbl">${lbl}</div><div class="val">${v}${unit?`<small>${unit}</small>`:''}</div></div>`;
-  }
+  const kpi=(l,v,u='')=>`<div class="kpi"><div class="lbl">${l}</div><div class="val">${typeof v==='number'?v.toLocaleString('ja-JP'):v}${u?`<small>${u}</small>`:''}</div></div>`;
   function renderMatrix(c){
-    if(!state.stores.length) return empty('店舗を登録してください');
-    if(!c.recs.length) return empty('この期間のヘルプ記録がありません');
-    const heads = state.stores.map(s=>`<th>${esc(s.name)}</th>`).join('');
-    const max = Math.max(1, ...c.ids.flatMap(a=>c.ids.map(b=>c.mat[a][b]||0)));
-    const body = state.stores.map(from=>{
-      const cells = state.stores.map(to=>{
-        if(from.id===to.id) return `<td class="diag">—</td>`;
-        const v=c.mat[from.id][to.id]||0;
-        if(!v) return `<td class="cell" style="color:#cbd2dc">0</td>`;
-        const a=0.10+0.55*(v/max);
-        return `<td class="cell" style="background:rgba(37,99,235,${a.toFixed(2)})">${yen(v)}</td>`;
-      }).join('');
-      return `<tr><td class="rowlbl">${esc(from.name)}</td>${cells}</tr>`;
-    }).join('');
+    if(!state.records.length) return empty('まだ実績がありません');
+    const heads=state.stores.map(s=>`<th>${esc(s.name)}</th>`).join('');
+    const max=Math.max(1,...c.ids.flatMap(a=>c.ids.map(b=>c.mat[a][b]||0)));
+    const body=state.stores.map(from=>`<tr><td class="rowlbl">${esc(from.name)}</td>${state.stores.map(to=>{
+      if(from.id===to.id)return `<td class="diag">—</td>`;
+      const v=c.mat[from.id][to.id]||0; if(!v)return `<td class="cell" style="color:#cbd2dc">0</td>`;
+      return `<td class="cell" style="background:rgba(37,99,235,${(0.10+0.55*v/max).toFixed(2)})">${yen(v)}</td>`;
+    }).join('')}</tr>`).join('');
     return `<table class="matrix"><tr><th class="corner">貸し手 ＼ 借り手</th>${heads}</tr>${body}</table>`;
+  }
+
+  /* ---------- render: board / requests ---------- */
+  function renderBoard(){
+    // form: store fixed for manager/staff
+    const fixedStore = myStoreId();
+    if(user.role==='admin'){ $('f-store-wrap').style.display=''; $('f-store').innerHTML=state.stores.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join(''); }
+    else { $('f-store-wrap').style.display='none'; }
+    $('f-pos').innerHTML=state.positions.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');
+    $('f-lv').innerHTML=LEVELS.map((l,i)=>i===0?'':`<option value="${i}">${l}以上</option>`).join('');
+    $('f-lv').value=2;
+    $('f-nom').innerHTML=`<option value="">指名なし（誰でも）</option>`+state.staff.filter(s=>s.homeStoreId!==fixedStore || user.role==='admin').map(s=>`<option value="${s.id}">${esc(s.name)}（${esc(sName(s.homeStoreId))}）</option>`).join('');
+
+    // list scope
+    let list=[...state.requests];
+    if(user.role==='manager'||user.role==='staff'){
+      // own store's requests + (for applying) other open requests
+    }
+    list.sort((a,b)=>(a.status==='open'?0:1)-(b.status==='open'?0:1) || a.date.localeCompare(b.date));
+    $('boardTitle').textContent = user.role==='admin'?'📋 募集一覧・マッチング':'📋 募集状況';
+    $('boardSub').textContent = `募集中 ${state.requests.filter(r=>r.status==='open').length}件 / 全${state.requests.length}件`;
+    $('reqList').innerHTML = list.length ? list.map(renderReqCard).join('') : empty('募集はありません');
+  }
+  function renderReqCard(r){
+    const isMine = r.storeId===myStoreId();
+    const st=staffById(r.assigned);
+    const nom=staffById(r.nomId);
+    let act='';
+    if(r.status==='open'){
+      if(user.role==='admin'){
+        // candidates: other-store staff with level>=minLv
+        const cands=state.staff.filter(s=>s.homeStoreId!==r.storeId && lvOf(s,r.posId)>=r.minLv);
+        cands.sort((a,b)=>(r.applicants.includes(b.id)?1:0)-(r.applicants.includes(a.id)?1:0));
+        const opts=cands.map(s=>`<option value="${s.id}">${esc(s.name)}（${esc(sName(s.homeStoreId))}・${pName(r.posId)}${LEVELS[lvOf(s,r.posId)]}）${r.applicants.includes(s.id)?' ★応募':''}${s.id===r.nomId?' 👈指名':''}</option>`).join('');
+        act=`<span class="apps">応募 ${r.applicants.length}名</span>
+          <select id="as-${r.id}" style="min-width:230px">${opts||'<option value="">条件に合う人材なし</option>'}</select>
+          <button class="btn ok sm" onclick="App.confirmReq('${r.id}')" ${cands.length?'':'disabled'}>承認・確定</button>
+          <button class="btn danger sm" onclick="App.cancelReq('${r.id}')">取消</button>`;
+      } else if(isMine){
+        act=`<span class="apps">応募 ${r.applicants.length}名${r.applicants.length?'：'+r.applicants.map(stName).join('、'):''}</span>
+          <span class="muted">本部の承認待ち</span>
+          <button class="btn danger sm" onclick="App.cancelReq('${r.id}')">取消</button>`;
+      } else { // other store, staff/manager may apply
+        const me = user.role==='staff'?staffById(user.staffId):null;
+        if(user.role==='staff' && me && me.homeStoreId!==r.storeId){
+          const lv=lvOf(me,r.posId); const ok=lv>=r.minLv;
+          const applied=r.applicants.includes(me.id);
+          if(applied) act=`<span class="status confirmed">応募済み</span><button class="btn ghost sm" onclick="App.withdraw('${r.id}')">応募を取り消す</button>`;
+          else if(ok) act=`<span class="apps">あなたの${pName(r.posId)}：<span class="lv lv${lv}">${LEVELS[lv]}</span></span><button class="btn primary sm" onclick="App.apply('${r.id}')">この募集に応募する</button>`;
+          else act=`<span class="muted">必要レベル（${pName(r.posId)} ${LEVELS[r.minLv]}以上）に達していないため応募できません</span>`;
+        } else {
+          act=`<span class="apps">応募 ${r.applicants.length}名</span>`;
+        }
+      }
+    } else if(r.status==='confirmed'){
+      act=`<span class="status confirmed">確定</span>
+        <span>担当：<b>${esc(stName(r.assigned))}</b>（${esc(sName(st?st.homeStoreId:null))}）→ ${esc(sName(r.storeId))}</span>`;
+      if(user.role==='admin') act+=`<button class="btn danger sm" onclick="App.cancelReq('${r.id}')">確定を取消</button>`;
+    } else {
+      act=`<span class="status cancelled">取消済み</span>`;
+    }
+    return `<div class="reqcard ${r.status}">
+      <div class="top">
+        <span class="title">${esc(sName(r.storeId))}：${esc(pName(r.posId))} ${r.count}名募集</span>
+        ${r.status==='open'?'<span class="status open">募集中</span>':''}
+        ${nom?`<span class="nominate">指名：${esc(nom.name)}</span>`:''}
+      </div>
+      <div class="meta">
+        <span>📅 <b>${r.date}</b></span>
+        <span>🕒 <b>${r.start}〜${r.end}</b>（${reqHours(r)}h）</span>
+        <span>必要レベル：<b>${esc(pName(r.posId))} ${LEVELS[r.minLv]}以上</b></span>
+        ${r.note?`<span>📝 ${esc(r.note)}</span>`:''}
+      </div>
+      <div class="act">${act}</div>
+    </div>`;
   }
 
   /* ---------- render: records ---------- */
   function renderRec(){
-    const recs = [...filtered()].sort((a,b)=>b.date.localeCompare(a.date));
-    $('recCount').textContent = `${recs.length}件（対象期間）`;
-    if(!recs.length){ $('recTable').innerHTML = `<tr><td>${empty('記録がありません。上のフォームから追加してください。')}</td></tr>`; return; }
-    const head = `<tr><th>日付</th><th>スタッフ</th><th>所属店（貸し）</th><th>勤務先（借り）</th><th class="num">時間</th><th class="num">時給</th><th class="num">人件費</th><th></th></tr>`;
-    const rows = recs.map(r=>{
-      const stf = staffById(r.staffId)||{name:'(削除済)',homeStoreId:null};
-      return `<tr>
-        <td>${r.date}</td>
-        <td>${esc(stf.name)}</td>
-        <td><span class="tag-store">${esc(storeName(stf.homeStoreId))}</span></td>
-        <td><span class="tag-store">${esc(storeName(r.toStoreId))}</span></td>
+    const staffView = user.role==='staff';
+    $('manualCard').style.display = staffView ? 'none':'';
+    $('csvBtn').style.display = staffView ? 'none':'';
+    $('recTitle').textContent = staffView ? '📅 自分のヘルプ予定・実績' : (user.role==='manager'?'🧾 自店の実績':'🧾 ヘルプ実績');
+    if(!staffView){
+      $('r-staff').innerHTML=state.staff.map(s=>`<option value="${s.id}">${esc(s.name)}（${esc(sName(s.homeStoreId))}）</option>`).join('');
+      $('r-to').innerHTML=state.stores.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');
+      onStaffPick();
+    }
+    let recs=[...state.records].sort((a,b)=>b.date.localeCompare(a.date));
+    if(user.role==='manager'){ const sid=myStoreId(); recs=recs.filter(r=>r.toStoreId===sid || (staffById(r.staffId)||{}).homeStoreId===sid); }
+    if(staffView){ recs=recs.filter(r=>r.staffId===user.staffId); }
+    $('recCount').textContent=`${recs.length}件`;
+    const w = canWage();
+    if(!recs.length){ $('recTable').innerHTML=`<tr><td>${empty('記録がありません')}</td></tr>`; return; }
+    const head=`<tr><th>日付</th><th>スタッフ</th><th>所属店（貸し）</th><th>勤務先（借り）</th><th class="num">時間</th>${w?'<th class="num">時給</th><th class="num">人件費</th>':''}<th></th></tr>`;
+    $('recTable').innerHTML=head+recs.map(r=>{
+      const stf=staffById(r.staffId)||{name:'(削除済)',homeStoreId:null};
+      const canDel = user.role==='admin' || (user.role==='manager');
+      return `<tr><td>${r.date}</td><td>${esc(stf.name)}</td>
+        <td><span class="tag-store">${esc(sName(stf.homeStoreId))}</span></td>
+        <td><span class="tag-store">${esc(sName(r.toStoreId))}</span></td>
         <td class="num">${r.hours}h</td>
-        <td class="num">${yen(r.wage)}</td>
-        <td class="num"><b>${yen(amount(r))}</b></td>
-        <td class="num"><button class="btn danger sm" onclick="App.delRecord('${r.id}')">削除</button></td>
-      </tr>`;
+        ${w?`<td class="num">${yen(r.wage)}</td><td class="num"><b>${yen(amount(r))}</b></td>`:''}
+        <td class="num">${canDel?`<button class="btn danger sm" onclick="App.delRecord('${r.id}')">削除</button>`:`<span class="status ${r.source==='request'?'confirmed':'cancelled'}">${r.source==='request'?'確定':'登録済'}</span>`}</td></tr>`;
     }).join('');
-    $('recTable').innerHTML = head+rows;
   }
 
-  /* ---------- render: master ---------- */
-  function renderMaster(){
-    // stores
-    $('storeTable').innerHTML = state.stores.length ? state.stores.map(s=>`
-      <tr><td>${esc(s.name)}</td>
+  /* ---------- render: skills ---------- */
+  function renderSkill(){
+    const staffView=user.role==='staff';
+    $('addStaffCard').style.display = (user.role==='admin'||user.role==='manager')?'':'none';
+    let list=[...state.staff];
+    let editable=false, scopeStore=null;
+    if(user.role==='admin'){ editable=true; $('skillHint').textContent='全スタッフのポジション別レベルを編集できます。'; }
+    else if(user.role==='manager'){ scopeStore=myStoreId(); list=list.filter(s=>s.homeStoreId===scopeStore); editable=true; $('skillHint').textContent='自店スタッフのレベルを編集できます。セルを変更すると即保存されます。'; }
+    else { scopeStore=myStoreId(); list=list.filter(s=>s.id===user.staffId); editable=false; $('skillHint').textContent='あなたのスキル情報です（編集は店長・本部が行います）。'; }
+    if(user.role==='admin'){ $('m-staff-store-wrap').style.display=''; $('m-staff-store').innerHTML=state.stores.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join(''); }
+    else { $('m-staff-store-wrap').style.display='none'; }
+    const w=canWage();
+    const heads=state.positions.map(p=>`<th class="num" style="text-align:center">${esc(p.name)}</th>`).join('');
+    const rows=list.map(s=>{
+      const cells=state.positions.map(p=>{
+        const lv=lvOf(s,p.id);
+        if(editable) return `<td style="text-align:center"><select class="lvsel" onchange="App.setSkill('${s.id}','${p.id}',this.value)">${LEVELS.map((l,i)=>`<option value="${i}" ${i===lv?'selected':''}>${l}</option>`).join('')}</select></td>`;
+        return `<td style="text-align:center"><span class="lv lv${lv}">${LEVELS[lv]}</span></td>`;
+      }).join('');
+      return `<tr><td><b>${esc(s.name)}</b></td><td><span class="tag-store">${esc(sName(s.homeStoreId))}</span></td>${w?`<td class="num">${yen(s.wage)}</td>`:''}${cells}${user.role==='admin'?`<td class="num"><button class="btn danger sm" onclick="App.delStaff('${s.id}')">削除</button></td>`:''}</tr>`;
+    }).join('');
+    $('skillTable').innerHTML = list.length ? `<tr><th>氏名</th><th>所属店</th>${w?'<th class="num">時給</th>':''}${heads}${user.role==='admin'?'<th></th>':''}</tr>${rows}` : `<tr><td>${empty('スタッフがいません')}</td></tr>`;
+  }
+
+  /* ---------- render: stores ---------- */
+  function renderStores(){
+    $('storeTable').innerHTML=state.stores.length?state.stores.map(s=>`<tr><td>${esc(s.name)}</td>
       <td class="num muted">所属 ${state.staff.filter(x=>x.homeStoreId===s.id).length}名</td>
-      <td class="num"><button class="btn danger sm" onclick="App.delStore('${s.id}')">削除</button></td></tr>`).join('')
-      : `<tr><td>${empty('店舗がありません')}</td></tr>`;
-    // staff
-    $('staffTable').innerHTML = state.staff.length ?
-      `<tr><th>氏名</th><th>所属店</th><th class="num">時給</th><th></th></tr>`+
-      state.staff.map(s=>`<tr>
-        <td>${esc(s.name)}</td>
-        <td><span class="tag-store">${esc(storeName(s.homeStoreId))}</span></td>
-        <td class="num">${yen(s.wage)}</td>
-        <td class="num"><button class="btn danger sm" onclick="App.delStaff('${s.id}')">削除</button></td>
-      </tr>`).join('')
-      : `<tr><td>${empty('スタッフがいません')}</td></tr>`;
-    fillStoreSelects();
+      <td class="num"><button class="btn danger sm" onclick="App.delStore('${s.id}')">削除</button></td></tr>`).join('') : `<tr><td>${empty('店舗がありません')}</td></tr>`;
+    $('posTable').innerHTML=state.positions.length?state.positions.map(p=>`<tr><td>${esc(p.name)}</td>
+      <td class="num"><button class="btn danger sm" onclick="App.delPos('${p.id}')">削除</button></td></tr>`).join('') : `<tr><td>${empty('ポジションがありません')}</td></tr>`;
   }
 
-  /* ---------- selects ---------- */
-  function fillStoreSelects(){
-    const opts = state.stores.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');
-    $('r-to').innerHTML = opts;
-    $('m-staff-store').innerHTML = opts;
-    $('r-staff').innerHTML = state.staff.map(s=>`<option value="${s.id}">${esc(s.name)}（${esc(storeName(s.homeStoreId))}）</option>`).join('');
-    onStaffPick();
+  /* ---------- manual record helpers ---------- */
+  function onStaffPick(){ const s=staffById($('r-staff').value); if(s){ $('r-from').value=sName(s.homeStoreId); $('r-wage').value=s.wage; } }
+
+  /* ---------- actions: requests ---------- */
+  function addRequest(){
+    const storeId = user.role==='admin' ? $('f-store').value : myStoreId();
+    const date=$('f-date').value, start=$('f-start').value, end=$('f-end').value;
+    const posId=$('f-pos').value, count=parseInt($('f-count').value)||1, minLv=parseInt($('f-lv').value)||2;
+    const nomId=$('f-nom').value, note=$('f-note').value.trim();
+    if(!storeId) return toast('募集する店舗が不明です');
+    if(!date) return toast('日付を入力してください');
+    if(!start||!end) return toast('時間帯を入力してください');
+    if(!posId) return toast('ポジションを選択してください');
+    state.requests.push({id:uid(),storeId,date,start,end,posId,count,nomId,minLv,note,status:'open',applicants:[],assigned:''});
+    $('f-note').value='';
+    save(); renderAll(); toast('募集を出しました');
   }
-  function onStaffPick(){
-    const stf = staffById($('r-staff').value);
-    if(stf){ $('r-from').value = storeName(stf.homeStoreId); $('r-wage').value = stf.wage; }
-    else { $('r-from').value=''; }
+  function apply(id){ const r=state.requests.find(x=>x.id===id); if(!r||r.status!=='open')return; if(!r.applicants.includes(user.staffId))r.applicants.push(user.staffId); save(); renderBoard(); toast('応募しました'); }
+  function withdraw(id){ const r=state.requests.find(x=>x.id===id); if(!r)return; r.applicants=r.applicants.filter(s=>s!==user.staffId); save(); renderBoard(); toast('応募を取り消しました'); }
+  function confirmReq(id){
+    const r=state.requests.find(x=>x.id===id); if(!r)return;
+    const sid=$('as-'+id).value; if(!sid)return toast('担当者を選択してください');
+    const s=staffById(sid); if(!s)return;
+    r.status='confirmed'; r.assigned=sid;
+    state.records.push({id:uid(),date:r.date,staffId:sid,toStoreId:r.storeId,hours:reqHours(r),wage:s.wage,source:'request',reqId:r.id});
+    save(); renderAll(); toast('承認・確定しました（実績に反映）');
   }
-  function fillMonths(){
-    const ms = months();
-    const opts = [`<option value="all">全期間</option>`].concat(
-      ms.map(m=>{ const [y,mo]=m.split('-'); return `<option value="${m}">${y}年${+mo}月</option>`; })
-    ).join('');
-    $('monthSel').innerHTML = opts;
-    if(month!=='all' && !ms.includes(month)) month='all';
-    $('monthSel').value = month;
+  function cancelReq(id){
+    const r=state.requests.find(x=>x.id===id); if(!r)return;
+    if(!confirm('この募集を取り消します。よろしいですか？'))return;
+    if(r.status==='confirmed'){ state.records=state.records.filter(x=>x.reqId!==id); }
+    r.status='cancelled';
+    save(); renderAll(); toast('取り消しました');
   }
 
-  /* ---------- actions ---------- */
+  /* ---------- actions: records ---------- */
   function addRecord(){
     const date=$('r-date').value, staffId=$('r-staff').value, toStoreId=$('r-to').value;
     const hours=parseFloat($('r-hours').value), wage=parseFloat($('r-wage').value);
     if(!date) return toast('日付を入力してください');
     if(!staffId) return toast('スタッフを選択してください');
-    if(!toStoreId) return toast('勤務先店舗を選択してください');
-    const stf = staffById(staffId);
-    if(stf.homeStoreId===toStoreId) return toast('所属店と勤務先が同じです（ヘルプではありません）');
+    const stf=staffById(staffId);
+    if(stf.homeStoreId===toStoreId) return toast('所属店と勤務先が同じです');
     if(!(hours>0)) return toast('勤務時間を入力してください');
     if(!(wage>0)) return toast('時給を入力してください');
-    state.records.push({id:uid(),date,staffId,toStoreId,hours,wage});
-    save(); fillMonths(); renderAll(); toast('ヘルプ記録を追加しました');
+    state.records.push({id:uid(),date,staffId,toStoreId,hours,wage,source:'manual'});
+    save(); renderAll(); toast('実績を追加しました');
   }
-  function delRecord(id){ state.records=state.records.filter(r=>r.id!==id); save(); fillMonths(); renderAll(); }
-  function addStore(){
-    const name=$('m-store').value.trim();
-    if(!name) return toast('店舗名を入力してください');
-    state.stores.push({id:uid(),name}); $('m-store').value=''; save(); renderAll(); toast('店舗を追加しました');
-  }
-  function delStore(id){
-    if(state.staff.some(s=>s.homeStoreId===id)) return toast('所属スタッフがいる店舗は削除できません');
-    if(state.records.some(r=>r.toStoreId===id)) return toast('ヘルプ記録に使われている店舗は削除できません');
-    state.stores=state.stores.filter(s=>s.id!==id); save(); renderAll();
-  }
+  function delRecord(id){ state.records=state.records.filter(r=>r.id!==id); save(); renderAll(); }
+
+  /* ---------- actions: master ---------- */
+  function addStore(){ const n=$('m-store').value.trim(); if(!n)return toast('店舗名を入力してください'); state.stores.push({id:uid(),name:n}); $('m-store').value=''; save(); renderAll(); buildCtx(); toast('店舗を追加しました'); }
+  function delStore(id){ if(state.staff.some(s=>s.homeStoreId===id))return toast('所属スタッフがいる店舗は削除できません'); if(state.records.some(r=>r.toStoreId===id)||state.requests.some(r=>r.storeId===id))return toast('募集/実績で使われている店舗は削除できません'); state.stores=state.stores.filter(s=>s.id!==id); save(); renderAll(); buildCtx(); }
+  function addPos(){ const n=$('m-pos').value.trim(); if(!n)return toast('ポジション名を入力してください'); state.positions.push({id:uid(),name:n}); $('m-pos').value=''; save(); renderAll(); toast('ポジションを追加しました'); }
+  function delPos(id){ if(state.requests.some(r=>r.posId===id))return toast('募集で使われているポジションは削除できません'); state.positions=state.positions.filter(p=>p.id!==id); state.staff.forEach(s=>{ if(s.skills)delete s.skills[id]; }); save(); renderAll(); }
   function addStaff(){
-    const name=$('m-staff-name').value.trim(), homeStoreId=$('m-staff-store').value, wage=parseFloat($('m-staff-wage').value);
-    if(!name) return toast('氏名を入力してください');
-    if(!homeStoreId) return toast('所属店を選択してください（先に店舗を登録）');
-    if(!(wage>0)) return toast('時給を入力してください');
-    state.staff.push({id:uid(),name,homeStoreId,wage}); $('m-staff-name').value=''; save(); renderAll(); toast('スタッフを追加しました');
+    const name=$('m-staff-name').value.trim(); const homeStoreId = user.role==='admin'?$('m-staff-store').value:myStoreId(); const wage=parseFloat($('m-staff-wage').value);
+    if(!name)return toast('氏名を入力してください'); if(!homeStoreId)return toast('所属店が不明です'); if(!(wage>0))return toast('時給を入力してください');
+    state.staff.push({id:uid(),name,homeStoreId,wage,skills:{}}); $('m-staff-name').value=''; save(); renderAll(); buildCtx(); toast('スタッフを追加しました');
   }
-  function delStaff(id){
-    if(state.records.some(r=>r.staffId===id)) return toast('ヘルプ記録があるスタッフは削除できません');
-    state.staff=state.staff.filter(s=>s.id!==id); save(); renderAll();
-  }
-  function reseed(){ if(confirm('現在のデータを消してサンプルデータで初期化します。よろしいですか？')){ seed(); month='all'; fillMonths(); renderAll(); toast('サンプルデータを読み込みました'); } }
-  function wipe(){ if(confirm('全てのデータを削除します。元に戻せません。よろしいですか？')){ state={stores:[],staff:[],records:[]}; save(); month='all'; fillMonths(); renderAll(); toast('全データを削除しました'); } }
+  function delStaff(id){ if(state.records.some(r=>r.staffId===id))return toast('実績があるスタッフは削除できません'); state.staff=state.staff.filter(s=>s.id!==id); save(); renderAll(); buildCtx(); }
+  function setSkill(staffId,posId,lv){ const s=staffById(staffId); if(!s)return; if(!s.skills)s.skills={}; s.skills[posId]=parseInt(lv); save(); toast('スキルを更新しました'); }
 
   /* ---------- export ---------- */
-  function dl(name,content,type){ const b=new Blob([content],{type}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download=name; a.click(); URL.revokeObjectURL(u); }
+  function dl(name,content,type){ const b=new Blob([content],{type}),u=URL.createObjectURL(b),a=document.createElement('a'); a.href=u;a.download=name;a.click();URL.revokeObjectURL(u); }
   function exportRecords(){
-    const head='日付,スタッフ,所属店(貸し),勤務先(借り),勤務時間,時給,人件費\n';
-    const body=filtered().map(r=>{ const s=staffById(r.staffId)||{name:'',homeStoreId:null};
-      return [r.date,s.name,storeName(s.homeStoreId),storeName(r.toStoreId),r.hours,r.wage,amount(r)].join(','); }).join('\n');
-    dl(`ヘルプ記録_${month}.csv`,'﻿'+head+body,'text/csv');
+    const head='日付,スタッフ,所属店(貸し),勤務先(借り),勤務時間,時給,人件費,登録元\n';
+    const body=state.records.map(r=>{const s=staffById(r.staffId)||{name:'',homeStoreId:null};return [r.date,s.name,sName(s.homeStoreId),sName(r.toStoreId),r.hours,r.wage,amount(r),r.source==='request'?'承認':'手入力'].join(',');}).join('\n');
+    dl('ヘルプ実績.csv','﻿'+head+body,'text/csv');
   }
-  function exportAll(){ dl('help_settle_data.json',JSON.stringify(state,null,2),'application/json'); }
+  function exportAll(){ dl('help_settle_data.json',JSON.stringify({state,user},null,2),'application/json'); }
+  function reseed(){ if(confirm('サンプルデータで初期化します。よろしいですか？')){ seed(); tab='dash'; init2(); toast('サンプルデータを読み込みました'); } }
+  function wipe(){ if(confirm('全データを削除します。元に戻せません。')){ state={stores:[],staff:[],positions:[],requests:[],records:[]}; user={role:'admin',storeId:null,staffId:null}; tab='dash'; save(); init2(); toast('全データを削除しました'); } }
 
-  /* ---------- ui plumbing ---------- */
-  function tab(name){
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
-    document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+name));
+  /* ---------- plumbing ---------- */
+  function toast(m){ const t=$('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2200); }
+  function renderAll(){
+    if(tab==='dash')renderDash();
+    if(tab==='board')renderBoard();
+    if(tab==='rec')renderRec();
+    if(tab==='skill')renderSkill();
+    if(tab==='stores')renderStores();
   }
-  function setMonth(m){ month=m; renderAll(); }
-  function renderAll(){ renderDash(); renderRec(); renderMaster(); }
-  function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2200); }
-  function esc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-  function empty(msg){ return `<div class="empty">${msg}</div>`; }
-
+  function init2(){ buildLogin(); renderBand(); renderTabs(); renderAll(); }
   function init(){
     if(!load()) seed();
-    $('r-date').value = new Date().toISOString().slice(0,10);
-    fillMonths(); renderAll();
+    if(!state.positions) state.positions=[];
+    $('f-date').value=new Date().toISOString().slice(0,10);
+    $('r-date').value=new Date().toISOString().slice(0,10);
+    init2();
   }
 
-  return { init,tab,setMonth,addRecord,delRecord,addStore,delStore,addStaff,delStaff,
-           onStaffPick,reseed,wipe,exportRecords,exportAll };
+  return { init,tab:setTab,changeRole,changeCtx,addRequest,apply,withdraw,confirmReq,cancelReq,
+           addRecord,delRecord,onStaffPick,addStore,delStore,addPos,delPos,addStaff,delStaff,setSkill,
+           exportRecords,exportAll,reseed,wipe };
 })();
 window.addEventListener('DOMContentLoaded',App.init);
 </script>
