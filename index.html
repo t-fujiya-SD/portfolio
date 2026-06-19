@@ -134,31 +134,7 @@ h1 .hl::after{content:"";position:absolute;left:-2px;right:-2px;bottom:5px;heigh
 .hs span{font-size:11.5px;color:var(--muted)}
 .hnote{font-size:11px;color:var(--muted);max-width:230px;line-height:1.6}
 @media(max-width:880px){.hero .wrap{grid-template-columns:1fr;padding-top:48px}.hero-visual{order:2;max-width:480px;margin:6px auto 0}.hero::before{width:380px;height:380px}}
-@media(max-width:560px){
-  body{overflow-x:hidden}
-  .hd{height:62px;gap:12px}
-  .logo-img{height:19px;max-width:150px}
-  .nav{min-width:0}
-  .nav-cta{gap:0}
-  .nav-cta .btn-sm{font-size:12px;padding:8px 11px;border-radius:10px}
-  .hero .wrap{padding:42px 18px 24px;gap:28px;overflow:hidden}
-  .eyebrow{max-width:100%;font-size:11.5px;letter-spacing:.02em;line-height:1.45;white-space:normal;align-items:flex-start;padding:7px 13px;margin-bottom:22px}
-  h1{font-size:clamp(26px,7.4vw,29px);line-height:1.33;letter-spacing:0;overflow-wrap:anywhere}
-  h1 .nw,h1 .hl{display:block;white-space:normal;max-width:100%;overflow-wrap:anywhere}
-  h1 .hl{display:inline-block}
-  h1 .hl::after{bottom:3px;height:7px}
-  .hero p.lead{font-size:14px;line-height:1.8;margin:20px 0 22px;overflow-wrap:anywhere}
-  .lead-who{display:block;width:100%;font-size:12px;margin:-4px 0 22px;overflow-wrap:anywhere}
-  .btns{display:grid;grid-template-columns:1fr;gap:10px}
-  .btn-lg{width:100%;justify-content:center;font-size:14.5px;padding:13px 16px;white-space:normal;text-align:center;line-height:1.35}
-  .ftags{margin-top:20px}
-  .ftags .ftrow{gap:7px}
-  .ftag{font-size:12px;padding:6px 12px;max-width:100%;overflow-wrap:anywhere}
-  .hero-visual{padding:16px 8px 42px;width:100%;max-width:100%;overflow:hidden}
-  .tablet{max-width:92%;border-radius:22px;padding:10px}
-  .iphone{width:112px;height:236px;right:-2px;bottom:-18px;border-radius:30px}
-  .iphone .island{width:36px}
-}
+@media(max-width:560px){h1{font-size:30px}.iphone{width:122px;height:258px;right:-8px;bottom:-26px}.iphone .island{width:36px}}
 
 /* section */
 section{padding:76px 0}
@@ -233,15 +209,30 @@ section{padding:76px 0}
 @media(max-width:560px){.dcards{grid-template-columns:1fr}}
 
 /* flow (5 steps) */
-.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;align-items:stretch}
-.step{position:relative;background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px 16px;text-align:center}
-.step .snum{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--accent);letter-spacing:.1em;margin-bottom:9px}
-.step .sic{width:46px;height:46px;margin:0 auto 12px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:21px}
-.step h3{font-size:14.5px;margin-bottom:6px}
-.step p{font-size:12px;color:var(--ink2);line-height:1.6}
-.flow-note{margin-top:24px;text-align:center;background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:12px;padding:15px;font-size:14px;font-weight:700;color:var(--accent-d)}
-@media(max-width:900px){.flow{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:480px){.flow{grid-template-columns:1fr}}
+.lflow{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:stretch}
+.lf-step{position:relative;background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px 22px;display:flex;flex-direction:column}
+.lf-num{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--accent);letter-spacing:.12em;margin-bottom:12px}
+.lf-step h3{font-size:16px;font-weight:900;letter-spacing:-.01em;margin-bottom:12px}
+.lf-step>p{font-size:13.5px;color:var(--ink2);line-height:1.72;margin-bottom:14px}
+/* LINE風チャット吹き出し */
+.chat{margin-top:2px}
+.bubble{position:relative;background:#06C755;color:#fff;font-size:13.5px;line-height:1.7;font-weight:600;padding:13px 16px;border-radius:16px 16px 16px 4px;max-width:100%;box-shadow:0 4px 12px rgba(6,199,85,.22)}
+.bubble::after{content:"";position:absolute;left:-6px;bottom:0;width:0;height:0;border:7px solid transparent;border-right-color:#06C755;border-bottom:0}
+.chat-meta{margin-top:10px;font-size:12px;font-weight:700;color:var(--accent-d)}
+/* 届くサンプルカード */
+.sample-card{margin-top:auto;background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:14px 15px}
+.sc-title{font-size:14px;font-weight:900;color:var(--ink);margin-bottom:4px}
+.sc-desc{font-size:12px;color:var(--ink2);line-height:1.6;margin-bottom:12px}
+.sc-link{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;font-weight:700;color:var(--accent-d);background:#fff;border:1px solid var(--accent-line);border-radius:9px;padding:10px 13px;text-decoration:none;transition:transform .15s,box-shadow .15s,border-color .15s}
+.sc-link+.sc-link{margin-top:8px}
+.sc-link:hover{border-color:var(--accent);transform:translateY(-1px);box-shadow:0 6px 14px color-mix(in srgb,var(--accent) 16%,transparent)}
+.sc-link span{font-size:12px;color:var(--muted)}
+.lf-tags{margin-top:auto;display:flex;flex-wrap:wrap;gap:7px}
+.lf-tags span{font-size:11.5px;font-weight:700;color:var(--accent-d);background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:30px;padding:5px 11px}
+.lf-note{margin-top:24px;display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;text-align:center;background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:14px;padding:18px 20px}
+.lf-note span{font-size:14.5px;font-weight:700;color:var(--ink)}
+.lf-note span b{color:var(--accent-d)}
+@media(max-width:860px){.lflow{grid-template-columns:1fr}.sample-card,.lf-tags{margin-top:16px}}
 
 /* company */
 #company{background:var(--soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
@@ -479,31 +470,6 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
 .fbottom{border-top:1px solid #34383d;padding:16px 0;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:11.5px;color:#787e85}
 @media(max-width:880px){.fmain{grid-template-columns:1fr 1fr;gap:24px}.fcontact{text-align:left;grid-column:1/-1}}
 @media(max-width:480px){.fmain{grid-template-columns:1fr}}
-
-/* mobile final guard: prevent hero/header horizontal overflow */
-@media(max-width:560px){
-  html,body{width:100%;max-width:100%;overflow-x:hidden}
-  .wrap{width:100%;max-width:100%;padding-left:18px;padding-right:18px}
-  header .hd{display:grid;grid-template-columns:minmax(0,1fr) auto;height:62px;gap:10px}
-  header .logo{min-width:0;overflow:hidden}
-  header .logo-img{height:19px;max-width:148px}
-  header .nav{justify-content:flex-end;min-width:0;gap:0}
-  header .nav-cta{min-width:0;max-width:132px}
-  header .nav-cta .btn-primary{max-width:132px;justify-content:center;overflow:hidden;text-overflow:ellipsis}
-  .hero,.hero .wrap,.hero-copy{max-width:100%;min-width:0;overflow:hidden}
-  .hero .wrap{padding-left:18px;padding-right:18px}
-  .eyebrow,.lead-who{display:block;width:100%;max-width:100%;white-space:normal}
-  h1{max-width:100%;font-size:clamp(25px,7.1vw,28px);line-height:1.34}
-  h1 .nw,h1 .hl{display:block;max-width:100%;white-space:normal;overflow-wrap:anywhere;word-break:normal}
-  h1 .hl{display:inline-block}
-  .hero p.lead{max-width:100%;white-space:normal;overflow-wrap:anywhere;word-break:normal}
-  .btns{display:grid;grid-template-columns:1fr;width:100%}
-  .btns .btn{width:100%;max-width:100%;justify-content:center}
-  .ftags,.ftags .ftrow{max-width:100%;min-width:0}
-  .ftags .ftrow{gap:7px}
-  .ftag{font-size:12px;padding:6px 11px;max-width:100%;white-space:normal;overflow-wrap:anywhere}
-  .hero-visual{max-width:100%;overflow:hidden}
-}
 </style>
 </head>
 <body id="top">
@@ -920,16 +886,39 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
 <!-- FLOW -->
 <section id="flow">
   <div class="wrap">
-    <div class="sec-head reveal"><div class="seclabel">FLOW</div><div class="sectitle"><span class="u">導入までの流れ</span></div>
-      <p class="secdesc">最初から大きなシステムは作りません。まずは1機能から、現場で使いながら育てます。</p></div>
-    <div class="flow">
-      <div class="step reveal d1"><div class="snum">STEP 01</div><div class="sic">💬</div><h3>ヒアリング</h3><p>お店の状況や課題を丁寧にヒアリングします。</p></div>
-      <div class="step reveal d2"><div class="snum">STEP 02</div><div class="sic">✏️</div><h3>試作・お試し導入</h3><p>必要な機能を小さく試作し、実際に使ってもらいます。</p></div>
-      <div class="step reveal d3"><div class="snum">STEP 03</div><div class="sic">🔧</div><h3>改善・調整</h3><p>現場のフィードバックをもとに改善を重ねます。</p></div>
-      <div class="step reveal d4"><div class="snum">STEP 04</div><div class="sic">🚀</div><h3>本格導入</h3><p>お店の運用に合わせて本格的に導入します。</p></div>
-      <div class="step reveal d4"><div class="snum">STEP 05</div><div class="sic">🎧</div><h3>運用サポート</h3><p>運用後の改善提案やサポートも継続して行います。</p></div>
+    <div class="sec-head reveal"><div class="seclabel">FLOW</div><div class="sectitle">頼み方は、<span class="u">LINEで一言</span></div>
+      <p class="secdesc">かしこまった相談は要りません。「こんなの作れる？」の雑な一言から、その場で触れるサンプルが届きます。</p></div>
+    <div class="lflow">
+      <div class="lf-step reveal d1">
+        <div class="lf-num">STEP 01</div>
+        <h3>💬 LINEで雑に一言</h3>
+        <div class="chat">
+          <div class="bubble">店舗間でヘルプに行った時の人件費の精算、毎月ぜんぶ手計算でしんどいんだけど、なんとかなる？</div>
+          <div class="chat-meta">↑ これくらいラフでOKです</div>
+        </div>
+      </div>
+      <div class="lf-step reveal d2">
+        <div class="lf-num">STEP 02</div>
+        <h3>📦 サンプルが届く</h3>
+        <p>あなたの悩みに近い〈説明ページ＋その場で触れるデモ〉を、こんな形でお渡しします。</p>
+        <div class="sample-card">
+          <div class="sc-title">■ ヘルプリレー（仮）</div>
+          <div class="sc-desc">店舗間ヘルプの申請〜人件費の精算をまとめて管理</div>
+          <a class="sc-link" href="/help-settle/about/" target="_blank" rel="noopener">▼ 説明ページ <span>はこちら →</span></a>
+          <a class="sc-link" href="/help-settle/" target="_blank" rel="noopener">▼ 触れるデモ <span>を開く →</span></a>
+        </div>
+      </div>
+      <div class="lf-step reveal d3">
+        <div class="lf-num">STEP 03</div>
+        <h3>🔧 触って調整 → 本導入</h3>
+        <p>実際に触ってみて、合いそうなら現場に合わせて調整。気に入ったら、そのまま本導入します。</p>
+        <div class="lf-tags"><span>1機能からOK</span><span>初期費用も相談OK</span><span>合わなければ断ってOK</span></div>
+      </div>
     </div>
-    <div class="flow-note reveal">まずは1機能からのお試しも可能です。お気軽にご相談ください。</div>
+    <div class="lf-note reveal">
+      <span>まずは雑な一言でOK。<b>「こんなの作れる？」</b>だけで大丈夫です。</span>
+      <a class="btn btn-line btn-lg" id="lineBtnFlow" href="#" target="_blank" rel="noopener">💬 LINEで聞いてみる</a>
+    </div>
   </div>
 </section>
 
@@ -1213,7 +1202,7 @@ if(ac==='blue'){const r=document.documentElement.style;
 window.addEventListener('DOMContentLoaded',()=>{
   const cfg=window.SITE_CONFIG||{};
   if(cfg.lineUrl){
-    ['lineBtn','lineBtnNav','lineFoot'].forEach(id=>{const el=document.getElementById(id);if(el){el.href=cfg.lineUrl;el.classList.add('show');}});
+    ['lineBtn','lineBtnNav','lineFoot','lineBtnFlow'].forEach(id=>{const el=document.getElementById(id);if(el){el.href=cfg.lineUrl;el.classList.add('show');}});
   }
 });
 </script>
