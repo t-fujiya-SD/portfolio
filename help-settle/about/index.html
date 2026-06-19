@@ -3,21 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>店舗間ヘルプ 申請・人件費精算システム ご提案資料</title>
+<title>店舗間ヘルプ 申請・人件費精算システム ご提案資料｜株式会社スパイシーデバイス</title>
+<meta name="description" content="店舗間ヘルプの募集・申請から人件費の自動精算、スキルの見える化までを1か所に。多店舗・FC運営向け業務システムのご提案資料です。">
+<link rel="canonical" href="https://spicy-device.com/help-settle/about/">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:title" content="店舗間ヘルプ 申請・人件費精算システム ご提案資料｜株式会社スパイシーデバイス">
+<meta property="og:description" content="店舗間ヘルプの募集〜人件費の自動精算・スキル見える化を1か所に。多店舗・FC向け業務システムのご提案。">
+<meta property="og:url" content="https://spicy-device.com/help-settle/about/">
+<meta property="og:image" content="https://spicy-device.com/assets/og-image.png">
 <style>
   :root{
     --ink:#1f2a37; --sub:#5b6573; --line:#e3e8ef; --bg:#f4f6f9; --card:#fff;
-    --primary:#2563eb; --primary-d:#1e3a8a; --accent:#0d9488;
+    --primary:#C32F1C; --primary-d:#9E2415; --accent:#0d9488;
     --credit:#15803d; --warn:#b45309; --purple:#7c3aed;
-    --credit-bg:#e7f6ec; --blue-bg:#e8efff; --warn-bg:#fff5e6; --purple-bg:#f3edff;
+    --credit-bg:#e7f6ec; --blue-bg:#fbeeec; --warn-bg:#fff5e6; --purple-bg:#f3edff;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
     font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,system-ui,sans-serif;
     font-size:14px;line-height:1.75;-webkit-font-smoothing:antialiased}
+  .topbar{max-width:920px;margin:0 auto;padding:16px 24px 0;display:flex;align-items:center;gap:12px;text-decoration:none}
+  .topbar img{height:22px;width:auto;display:block}
+  .topbar .back{margin-left:auto;color:var(--sub);font-size:12.5px;font-weight:700}
+  .topbar .back:hover{color:var(--primary)}
   .page{max-width:920px;margin:0 auto;padding:0 24px 60px}
-  .cover{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;border-radius:0 0 22px 22px;
-    padding:40px 44px 34px;margin-bottom:26px;box-shadow:0 8px 24px rgba(30,58,138,.18)}
+  .cover{background:linear-gradient(135deg,#9E2415,#C32F1C);color:#fff;border-radius:0 0 22px 22px;
+    padding:40px 44px 34px;margin-bottom:26px;box-shadow:0 8px 24px rgba(158,36,21,.20)}
   .cover .eyebrow{font-size:12.5px;letter-spacing:.16em;opacity:.85;font-weight:600}
   .cover h1{font-size:28px;margin:8px 0 6px;font-weight:800;letter-spacing:.01em;line-height:1.4}
   .cover .name{display:inline-block;margin-top:6px;background:rgba(255,255,255,.16);
@@ -75,7 +89,7 @@
   .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:6px}
   @media(max-width:760px){.price-grid{grid-template-columns:1fr}}
   .plan{border:1px solid var(--line);border-radius:14px;padding:18px;background:#fcfdff;display:flex;flex-direction:column}
-  .plan.feature{border:2px solid var(--primary);box-shadow:0 6px 18px rgba(37,99,235,.12)}
+  .plan.feature{border:2px solid var(--primary);box-shadow:0 6px 18px rgba(195,47,28,.12)}
   .plan .pn{font-weight:800;font-size:14.5px}
   .plan .tagm{font-size:11px;font-weight:800;color:#fff;background:var(--primary);border-radius:999px;padding:2px 9px;display:inline-block;margin-bottom:8px}
   .plan .pp{font-size:26px;font-weight:800;margin:6px 0 2px}
@@ -83,7 +97,7 @@
   .plan .pi{font-size:12px;color:var(--sub);margin-bottom:10px}
   .plan ul{margin:6px 0 0;padding-left:18px;font-size:12.5px;color:#37414f}
   .plan li{margin:4px 0}
-  .calc{background:#f0f6ff;border:1px dashed var(--primary);border-radius:13px;padding:16px 18px;margin-top:16px}
+  .calc{background:#fdf3f1;border:1px dashed var(--primary);border-radius:13px;padding:16px 18px;margin-top:16px}
   .calc .ct{font-weight:800;color:var(--primary-d);margin-bottom:8px;font-size:13.5px}
   .calc table{margin:0} .calc td{border:none;padding:4px 0;font-size:13px}
   .calc .tot{font-size:17px;font-weight:800;color:var(--primary-d)}
@@ -100,10 +114,10 @@
   .rm .rt{font-weight:800;font-size:13.5px;margin:4px 0 3px}
   .rm .rd{font-size:11.5px;color:var(--sub)}
   .foot{text-align:center;color:var(--sub);font-size:12px;margin-top:8px}
-  .linkbox{background:#0f1f3d;color:#fff;border-radius:13px;padding:16px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:6px}
+  .linkbox{background:#2f3133;color:#fff;border-radius:13px;padding:16px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:6px}
   .linkbox .u{font-weight:800;font-size:15px}
   .print-btn{position:fixed;right:18px;bottom:18px;background:var(--primary);color:#fff;border:none;border-radius:999px;
-    padding:12px 20px;font-weight:800;font-size:13.5px;cursor:pointer;box-shadow:0 6px 18px rgba(37,99,235,.35);z-index:10}
+    padding:12px 20px;font-weight:800;font-size:13.5px;cursor:pointer;box-shadow:0 6px 18px rgba(195,47,28,.35);z-index:10}
   @media print{
     body{background:#fff} .page{max-width:none;padding:0}
     .print-btn{display:none}
@@ -115,6 +129,7 @@
 </head>
 <body>
 <button class="print-btn" onclick="window.print()">🖨 PDFで保存 / 印刷</button>
+<a class="topbar" href="/"><img src="/assets/logo.png" alt="株式会社スパイシーデバイス"><span class="back">← サイトトップへ</span></a>
 <div class="page">
 
   <div class="cover">
