@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>店舗間フードリレー 食材の貸借・精算（デモ）｜株式会社スパイシーデバイス</title>
+<meta name="description" content="店舗間の食材の貸し借りを記録し、月末にまとめて金銭精算する試作デモ。『○○足りない』の申請→他店が承認→実績化まで。株式会社スパイシーデバイスの制作サンプル。">
+<link rel="canonical" href="https://spicy-device.com/food-relay/">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="店舗間フードリレー 食材の貸借・精算（デモ）｜株式会社スパイシーデバイス">
+<meta property="og:description" content="店舗間の食材の貸し借りを見える化し、月末にまとめて金銭精算する試作デモ。実際に触れます。">
+<meta property="og:url" content="https://spicy-device.com/food-relay/">
+<meta property="og:image" content="https://spicy-device.com/assets/og-image.png">
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1f2a37; --sub:#6b7280; --line:#e5e7eb;
+    --primary:#2563eb; --primary-d:#1d4ed8; --accent:#0d9488;
+    --credit:#15803d; --credit-bg:#e7f6ec; --debit:#b91c1c; --debit-bg:#fdecec;
+    --warn:#b45309; --warn-bg:#fff5e6; --open:#1d4ed8; --open-bg:#e8efff;
+    --shadow:0 1px 3px rgba(16,24,40,.08),0 1px 2px rgba(16,24,40,.06);
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,system-ui,sans-serif;
+    background:var(--bg);color:var(--ink);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  header{background:linear-gradient(135deg,#0f766e,#15803d);color:#fff;padding:16px 22px;box-shadow:var(--shadow)}
+  header .wrap{max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  header h1{font-size:18px;margin:0;font-weight:700;letter-spacing:.02em;display:flex;align-items:center;gap:10px}
+  header .badge{background:rgba(255,255,255,.2);font-size:11px;padding:2px 9px;border-radius:999px;font-weight:600}
+  header p{margin:3px 0 0;font-size:12px;opacity:.9}
+  .login{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.13);padding:7px 11px;border-radius:11px;flex-wrap:wrap}
+  .login .who{font-size:11px;opacity:.85;margin-right:2px}
+  .login select{border:none;border-radius:7px;padding:6px 8px;font-size:13px;font-weight:600;background:#fff;color:var(--ink)}
+  .demo-note{max-width:1180px;margin:10px auto 0;font-size:11.5px;opacity:.9;display:flex;align-items:center;gap:6px}
+  main{max-width:1180px;margin:0 auto;padding:18px 22px 60px}
+  .roleband{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin-bottom:16px;box-shadow:var(--shadow);font-size:13px;flex-wrap:wrap}
+  .roleband .chip{font-weight:700;padding:3px 11px;border-radius:999px}
+  .roleband .chip.admin{background:#134e4a;color:#fff}
+  .roleband .chip.manager{background:var(--accent);color:#fff}
+  .roleband .chip.staff{background:#7c3aed;color:#fff}
+  .roleband .desc{color:var(--sub);font-size:12.5px}
+  .roleband .notif{margin-left:auto;background:var(--warn-bg);color:var(--warn);font-weight:700;padding:3px 11px;border-radius:999px;font-size:12px}
+  nav.tabs{display:flex;gap:4px;margin:0 0 18px;background:#e9edf3;padding:4px;border-radius:12px;width:fit-content;flex-wrap:wrap}
+  nav.tabs button{border:none;background:transparent;padding:9px 16px;border-radius:9px;font-size:13.5px;font-weight:600;color:var(--sub);cursor:pointer;transition:.15s;position:relative}
+  nav.tabs button.active{background:#fff;color:var(--accent);box-shadow:var(--shadow)}
+  nav.tabs button .dot-n{display:inline-block;min-width:17px;height:17px;line-height:17px;text-align:center;background:var(--debit);color:#fff;border-radius:999px;font-size:10.5px;font-weight:700;margin-left:6px;padding:0 4px}
+  .panel{display:none}
+  .panel.active{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .grid-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:18px}
+  .kpi{background:var(--card);border-radius:var(--radius);padding:15px 18px;box-shadow:var(--shadow);border:1px solid var(--line)}
+  .kpi .lbl{font-size:12px;color:var(--sub);font-weight:600}
+  .kpi .val{font-size:25px;font-weight:700;margin-top:4px;letter-spacing:-.01em}
+  .kpi .val small{font-size:14px;font-weight:600;color:var(--sub);margin-left:2px}
+  .card{background:var(--card);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);border:1px solid var(--line);margin-bottom:18px}
+  .card h2{font-size:15px;margin:0 0 4px;display:flex;align-items:center;gap:8px}
+  .card .hint{font-size:12px;color:var(--sub);margin:0 0 14px}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:860px){.two-col{grid-template-columns:1fr}}
+  .bar-row{display:grid;grid-template-columns:90px 1fr 110px;align-items:center;gap:10px;margin:9px 0}
+  .bar-row .name{font-size:13px;font-weight:600;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bar-track{position:relative;height:26px;background:#f1f3f7;border-radius:7px;overflow:hidden}
+  .bar-center{position:absolute;left:50%;top:0;bottom:0;width:1px;background:#cbd2dc}
+  .bar-fill{position:absolute;top:3px;bottom:3px;border-radius:5px;transition:.4s}
+  .bar-fill.credit{background:var(--credit);left:50%}
+  .bar-fill.debit{background:var(--debit);right:50%}
+  .bar-row .amt{font-size:13px;font-weight:700;text-align:left;white-space:nowrap}
+  .amt.credit{color:var(--credit)} .amt.debit{color:var(--debit)}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:9px 11px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
+  th{font-size:12px;color:var(--sub);font-weight:700;background:#fafbfc}
+  .matrix td,.matrix th{text-align:center;border:1px solid var(--line)}
+  .matrix th.corner{background:#eef2f7;text-align:right;font-size:11px}
+  .matrix td.diag{background:#f6f7f9;color:#cbd2dc}
+  .matrix td.cell{font-weight:600;font-variant-numeric:tabular-nums}
+  .matrix .rowlbl{background:#fafbfc;font-weight:700;text-align:right}
+  .num{text-align:right;font-variant-numeric:tabular-nums}
+  .pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:700}
+  .pill.credit{background:var(--credit-bg);color:var(--credit)}
+  .pill.debit{background:var(--debit-bg);color:var(--debit)}
+  .settle-item{display:flex;align-items:center;gap:10px;padding:11px 4px;border-bottom:1px solid var(--line);font-size:14px}
+  .settle-item:last-child{border-bottom:none}
+  .settle-item .arrow{color:var(--accent);font-weight:700}
+  .settle-item .pay{margin-left:auto;font-weight:700;font-size:15px}
+  .empty{color:var(--sub);text-align:center;padding:26px;font-size:13px}
+  .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;align-items:end}
+  .field{display:flex;flex-direction:column;gap:4px}
+  .field label{font-size:12px;color:var(--sub);font-weight:600}
+  input,select,textarea{padding:9px 11px;border:1px solid var(--line);border-radius:9px;font-size:13.5px;font-family:inherit;background:#fff;color:var(--ink)}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(13,148,136,.12)}
+  .btn{border:none;border-radius:9px;padding:10px 16px;font-size:13.5px;font-weight:700;cursor:pointer;transition:.15s;font-family:inherit}
+  .btn.primary{background:var(--accent);color:#fff} .btn.primary:hover{filter:brightness(.94)}
+  .btn.ok{background:var(--credit);color:#fff} .btn.ok:hover{filter:brightness(.95)}
+  .btn.ghost{background:#fff;border:1px solid var(--line);color:var(--ink)} .btn.ghost:hover{background:#f7f9fc}
+  .btn.sm{padding:5px 10px;font-size:12px}
+  .btn.danger{color:var(--debit);background:#fff;border:1px solid #f3c7c7} .btn.danger:hover{background:var(--debit-bg)}
+  .btn:disabled{opacity:.5;cursor:default}
+  .toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+  .toolbar .spacer{flex:1}
+  .tag-store{display:inline-block;padding:1px 8px;border-radius:6px;font-size:11.5px;font-weight:600;background:#eef2f7;color:#374151}
+  .tag-item{display:inline-block;padding:1px 8px;border-radius:6px;font-size:11.5px;font-weight:600;background:#ecfdf5;color:#047857}
+  .muted{color:var(--sub);font-size:12px}
+  .status{display:inline-block;padding:2px 10px;border-radius:999px;font-size:11.5px;font-weight:700}
+  .status.open{background:var(--open-bg);color:var(--open)}
+  .status.confirmed{background:var(--credit-bg);color:var(--credit)}
+  .status.cancelled{background:#eef0f3;color:var(--sub)}
+  .reqcard{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:12px;background:#fff}
+  .reqcard.open{border-left:4px solid var(--open)}
+  .reqcard.fulfilled{border-left:4px solid var(--credit)}
+  .reqcard.cancelled{border-left:4px solid #cbd2dc;opacity:.72}
+  .reqcard .top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+  .reqcard .title{font-weight:700;font-size:14.5px}
+  .reqcard .meta{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--sub);margin-bottom:8px}
+  .reqcard .meta b{color:var(--ink)}
+  .reqcard .act{display:flex;gap:8px;align-items:center;flex-wrap:wrap;border-top:1px dashed var(--line);padding-top:10px;margin-top:4px}
+  .banner{display:flex;gap:10px;align-items:flex-start;background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46;border-radius:11px;padding:12px 15px;font-size:12.5px;line-height:1.65;margin-bottom:14px}
+  .banner .ic{font-size:16px;line-height:1.3}
+  .chk-group{display:flex;flex-wrap:wrap;gap:8px}
+  .chk{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:9px;padding:7px 11px;font-size:13px;font-weight:600;cursor:pointer;background:#fff;user-select:none}
+  .chk input{width:auto;margin:0}
+  .chk.on{border-color:var(--accent);background:#ecfdf5;color:#065f46}
+  .footer-note{text-align:center;color:var(--sub);font-size:11.5px;margin-top:30px;line-height:1.7}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:#1f2a37;color:#fff;padding:11px 20px;border-radius:10px;font-size:13px;font-weight:600;opacity:0;transition:.3s;pointer-events:none;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .legend{display:flex;gap:16px;font-size:11.5px;color:var(--sub);margin-top:10px;flex-wrap:wrap}
+  .legend span{display:inline-flex;align-items:center;gap:5px}
+  .dot{width:10px;height:10px;border-radius:3px;display:inline-block}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div>
+      <h1>🥬 店舗間フードリレー 食材の貸借・精算 <span class="badge">試作版 / たたき</span></h1>
+      <p>店舗間の食材の貸し借りを記録し、月末にまとめて金銭精算。「○○足りない」の申請 → 他店が承認 → 実績化まで一気通貫。</p>
+    </div>
+    <div class="login">
+      <span class="who">ログイン中</span>
+      <select id="roleSel" onchange="App.changeRole(this.value)"></select>
+      <select id="ctxSel" onchange="App.changeCtx(this.value)"></select>
+    </div>
+  </div>
+  <div class="demo-note">🔐 デモ用にアカウントを切り替えできます（本番はログイン制）。役割で見える情報・操作が変わります。</div>
+</header>
+
+<main>
+  <div class="roleband" id="roleband"></div>
+  <nav class="tabs" id="tabs"></nav>
+
+  <!-- DASHBOARD -->
+  <section class="panel" id="panel-dash">
+    <div class="toolbar">
+      <span class="muted">対象月</span>
+      <select id="dashMonth" onchange="App.setMonth(this.value)" style="min-width:150px"></select>
+    </div>
+    <div class="grid-kpi" id="kpis"></div>
+    <div class="card">
+      <h2>💰 店舗別 食材バランス</h2>
+      <p class="hint">「他店に貸した食材の額」と「他店から借りた食材の額」の差引です。</p>
+      <div id="balanceChart"></div>
+      <div class="legend">
+        <span><i class="dot" style="background:var(--credit)"></i>プラス（受け取る側＝多く貸した店）</span>
+        <span><i class="dot" style="background:var(--debit)"></i>マイナス（支払う側＝多く借りた店）</span>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <h2>🔁 店舗間 貸借マトリクス</h2>
+        <p class="hint">縦＝食材を貸した店（貸し手） / 横＝借りた店（借り手）。金額ベース。</p>
+        <div id="matrix" style="overflow-x:auto"></div>
+      </div>
+      <div class="card">
+        <h2>🧾 精算リスト（相殺後）</h2>
+        <p class="hint">店舗ペアごとに相殺した「誰が誰へいくら払うか」です。</p>
+        <div id="settle"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOARD / REQUESTS -->
+  <section class="panel" id="panel-board">
+    <div class="card" id="reqFormCard">
+      <h2>📣 食材を申請する（借りたい）</h2>
+      <p class="hint">足りない食材・数量・希望日を入力し、声をかけたい店舗（複数可）を選びます。選ばれた店に申請が届き、貸せる店が承認すると実績になります。</p>
+      <div class="form-grid">
+        <div class="field" id="f-borrower-wrap"><label>申請する店（借り手）</label><select id="f-borrower"></select></div>
+        <div class="field"><label>希望受渡日</label><input type="date" id="f-date"></div>
+        <div class="field"><label>品目</label><select id="f-item" onchange="App.onReqItem()"></select></div>
+        <div class="field"><label>数量</label><input type="number" id="f-qty" min="0" step="0.5" value="1"><span class="muted" id="f-unit"></span></div>
+        <div class="field" style="grid-column:1/-1"><label>メモ（任意）</label><input id="f-note" placeholder="例：週末の仕込みで不足。夕方までに受け取れると助かります"></div>
+        <div class="field" style="grid-column:1/-1"><label>声をかける店舗（複数選択）</label><div class="chk-group" id="f-targets"></div></div>
+        <div class="field"><button class="btn primary" onclick="App.addRequest()" style="width:100%">この内容で申請を送る</button></div>
+      </div>
+    </div>
+
+    <div class="card" id="incomingCard">
+      <div class="toolbar">
+        <h2 style="margin:0">📥 あなたの店に届いた申請</h2>
+        <span class="muted" id="incomingSub"></span>
+      </div>
+      <div id="incomingList"></div>
+    </div>
+
+    <div class="card">
+      <div class="toolbar">
+        <h2 style="margin:0" id="boardTitle">📋 申請一覧</h2>
+        <span class="muted" id="boardSub"></span>
+      </div>
+      <div id="reqList"></div>
+    </div>
+  </section>
+
+  <!-- RECORDS -->
+  <section class="panel" id="panel-rec">
+    <div class="card" id="manualCard">
+      <h2>＋ 貸借を手入力</h2>
+      <p class="hint">申請フローを通さず、過去の貸し借り実績を直接記録する場合に使います。</p>
+      <div class="form-grid">
+        <div class="field"><label>日付</label><input type="date" id="r-date"></div>
+        <div class="field"><label>貸した店（貸し手）</label><select id="r-from"></select></div>
+        <div class="field"><label>借りた店（借り手）</label><select id="r-to"></select></div>
+        <div class="field"><label>品目</label><select id="r-item" onchange="App.onRecItem()"></select></div>
+        <div class="field"><label>数量</label><input type="number" id="r-qty" min="0" step="0.5" value="1"><span class="muted" id="r-unit"></span></div>
+        <div class="field"><label>単価（円）</label><input type="number" id="r-price" min="0" step="10"></div>
+        <div class="field"><button class="btn primary" onclick="App.addRecord()" style="width:100%">追加する</button></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="toolbar">
+        <h2 style="margin:0" id="recTitle">🧾 貸借記録</h2>
+        <span class="muted" id="recCount"></span>
+        <div class="spacer"></div>
+        <span class="muted">対象月</span>
+        <select id="recMonth" onchange="App.setMonth(this.value)" style="min-width:140px"></select>
+        <button class="btn ghost sm" id="csvBtn" onclick="App.exportRecords()">CSV出力</button>
+      </div>
+      <div style="overflow-x:auto"><table id="recTable"></table></div>
+    </div>
+  </section>
+
+  <!-- ITEMS -->
+  <section class="panel" id="panel-items">
+    <div class="banner">
+      <span class="ic">💡</span>
+      <div>本番では <b>発注サイト（インフォマート等）の仕入単価を自動で取込</b> し、標準単価が常に最新の原価に同期されます。
+      貸借金額はこの標準単価 × 数量で自動計算（記録時に上書きも可）。<br>下のボタンで「取込」のイメージを体験できます。</div>
+    </div>
+    <div class="card">
+      <div class="toolbar">
+        <h2 style="margin:0">🥬 品目マスタ</h2>
+        <div class="spacer"></div>
+        <button class="btn ghost sm" id="syncBtn" onclick="App.syncPrices()">🔄 発注サイトから仕入単価を取込（デモ）</button>
+      </div>
+      <div class="form-grid" id="itemFormGrid">
+        <div class="field"><label>食材名</label><input id="m-item-name" placeholder="例：トマト"></div>
+        <div class="field"><label>単位</label><input id="m-item-unit" placeholder="例：kg / 本 / 樽" value="kg"></div>
+        <div class="field"><label>標準単価（円）</label><input type="number" id="m-item-price" min="0" step="10" value="500"></div>
+        <div class="field"><button class="btn primary" onclick="App.addItem()" style="width:100%">品目を追加</button></div>
+      </div>
+      <div style="overflow-x:auto;margin-top:14px"><table id="itemTable"></table></div>
+    </div>
+  </section>
+
+  <!-- STORES (admin) -->
+  <section class="panel" id="panel-stores">
+    <div class="card">
+      <h2>🏪 店舗マスタ</h2>
+      <p class="hint">ヘルプリレー（人件費精算）と同じ店舗マスタです。将来は人件費＋食材を合算して月末精算する前提で揃えています。</p>
+      <div class="toolbar">
+        <input id="m-store" placeholder="店舗名（例：渋谷店）" style="flex:1">
+        <button class="btn primary sm" onclick="App.addStore()">店舗を追加</button>
+      </div>
+      <table id="storeTable"></table>
+    </div>
+    <div class="card">
+      <h2>🗂 データ管理</h2>
+      <p class="hint">この試作版はデータをブラウザ内に保存します。サーバー連携・本物のログイン・発注サイト連携は本開発で対応します。</p>
+      <div class="toolbar">
+        <button class="btn ghost sm" onclick="App.exportAll()">全データをJSON書き出し</button>
+        <button class="btn ghost sm" onclick="App.reseed()">サンプルデータで初期化</button>
+        <button class="btn danger sm" onclick="App.wipe()">全データ削除</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer-note">
+    これは要件確認用の試作（たたき）です。ログイン認証・サーバー保存・発注サイト連携・通知などは本開発で実装します。<br>
+    Spicy Device — 飲食店向けWebツール
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const App = (()=>{
+  const KEY = 'food_relay_v1';
+  const ROLES = {admin:'本部 / オーナー', manager:'店長', staff:'店舗スタッフ'};
+  let state = { stores:[], items:[], records:[], requests:[] };
+  let user = { role:'admin', storeId:null };
+  let tab = 'dash';
+  let selMonth = '';   // '' = 全期間
+
+  const uid = () => Math.random().toString(36).slice(2,9);
+  const yen = n => '¥' + Math.round(n).toLocaleString('ja-JP');
+  const num = n => (Math.round(n*100)/100).toLocaleString('ja-JP');
+  const $ = id => document.getElementById(id);
+  const esc = s => (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const empty = m => `<div class="empty">${m}</div>`;
+
+  /* ---------- persistence ---------- */
+  function save(){ localStorage.setItem(KEY, JSON.stringify({state,user})); }
+  function load(){
+    const raw = localStorage.getItem(KEY);
+    if(raw){ try{ const o=JSON.parse(raw); state=o.state; if(o.user) user=o.user; return true; }catch(e){} }
+    return false;
+  }
+
+  /* ---------- sample data ---------- */
+  function seed(){
+    const mkStore = n => ({id:uid(),name:n});
+    const stores=[mkStore('銀座本店'),mkStore('新宿店'),mkStore('渋谷店'),mkStore('横浜店')];
+    const sN = n => stores.find(s=>s.name===n).id;
+    const items=[
+      {id:uid(),name:'トマト',unit:'kg',price:600},
+      {id:uid(),name:'牛肉（国産）',unit:'kg',price:2800},
+      {id:uid(),name:'鶏もも',unit:'kg',price:850},
+      {id:uid(),name:'醤油',unit:'本',price:900},
+      {id:uid(),name:'生ビール',unit:'樽',price:11000},
+      {id:uid(),name:'米',unit:'kg',price:480},
+      {id:uid(),name:'レモン',unit:'個',price:60},
+      {id:uid(),name:'白ワイン',unit:'本',price:1400},
+    ];
+    const iN = n => items.find(i=>i.name===n);
+    const mkRec=(date,from,to,item,qty,src)=>{ const it=iN(item); return {id:uid(),date,fromStoreId:sN(from),toStoreId:sN(to),itemId:it.id,qty,unitPrice:it.price,source:src||'manual'}; };
+    const records=[
+      mkRec('2026-06-02','銀座本店','渋谷店','牛肉（国産）',3),
+      mkRec('2026-06-04','新宿店','横浜店','生ビール',1),
+      mkRec('2026-06-06','渋谷店','銀座本店','トマト',5),
+      mkRec('2026-06-09','横浜店','新宿店','醤油',4),
+      mkRec('2026-06-12','銀座本店','新宿店','鶏もも',6),
+      mkRec('2026-06-15','渋谷店','横浜店','米',10),
+      mkRec('2026-06-18','新宿店','銀座本店','白ワイン',3),
+      mkRec('2026-06-20','横浜店','渋谷店','レモン',30),
+    ];
+    // 成立済み申請とその実績
+    const reqF=uid();
+    records.push((()=>{ const it=iN('牛肉（国産）'); return {id:uid(),date:'2026-06-16',fromStoreId:sN('銀座本店'),toStoreId:sN('渋谷店'),itemId:it.id,qty:2,unitPrice:it.price,source:'request',reqId:reqF}; })());
+    const requests=[
+      {id:uid(),date:'2026-06-23',borrowerId:sN('新宿店'),itemId:iN('トマト').id,qty:4,note:'週末の仕込みで不足',targets:[sN('銀座本店'),sN('渋谷店')],status:'open',lenderId:''},
+      {id:uid(),date:'2026-06-24',borrowerId:sN('横浜店'),itemId:iN('生ビール').id,qty:1,note:'イベントでビール不足見込み',targets:[sN('新宿店')],status:'open',lenderId:''},
+      {id:reqF,date:'2026-06-16',borrowerId:sN('渋谷店'),itemId:iN('牛肉（国産）').id,qty:2,note:'急な団体予約で不足',targets:[sN('銀座本店')],status:'fulfilled',lenderId:sN('銀座本店')},
+      {id:uid(),date:'2026-06-21',borrowerId:sN('横浜店'),itemId:iN('醤油').id,qty:2,note:'自店で確保できたため取消',targets:[sN('渋谷店')],status:'cancelled',lenderId:''},
+    ];
+    state={stores,items,records,requests};
+    user={role:'admin',storeId:null};
+    save();
+  }
+
+  /* ---------- helpers ---------- */
+  const store = id => state.stores.find(s=>s.id===id);
+  const itemById = id => state.items.find(i=>i.id===id);
+  const sName = id => (store(id)||{name:'(削除済)'}).name;
+  const iName = id => (itemById(id)||{name:'(削除済)'}).name;
+  const iUnit = id => (itemById(id)||{unit:''}).unit;
+  const canEditMaster = () => user.role!=='staff';
+  const canApprove = () => user.role!=='staff';
+  const myStoreId = () => user.role==='admin' ? null : user.storeId;
+  const amount = r => r.qty*r.unitPrice;
+  function months(){ const set=[...new Set(state.records.map(r=>r.date.slice(0,7)))].sort().reverse(); return set; }
+  function recordsView(){ return selMonth ? state.records.filter(r=>r.date.slice(0,7)===selMonth) : state.records; }
+
+  /* ---------- compute (records → balances) ---------- */
+  function compute(recs){
+    const ids=state.stores.map(s=>s.id);
+    const mat={}; ids.forEach(a=>{mat[a]={};ids.forEach(b=>mat[a][b]=0);});
+    let total=0,qtyCnt=recs.length;
+    recs.forEach(r=>{
+      const from=r.fromStoreId, to=r.toStoreId;
+      if(!from||!to||from===to||!mat[from]) return;
+      mat[from][to]+=amount(r); total+=amount(r);
+    });
+    const bal={}; ids.forEach(id=>{ let lent=0,bor=0; ids.forEach(o=>{lent+=mat[id][o]||0;bor+=mat[o][id]||0;}); bal[id]={lent,bor,net:lent-bor}; });
+    const settle=[];
+    for(let i=0;i<ids.length;i++)for(let j=i+1;j<ids.length;j++){
+      const a=ids[i],b=ids[j],net=(mat[a][b]||0)-(mat[b][a]||0);
+      if(net>0)settle.push({from:b,to:a,amt:net}); else if(net<0)settle.push({from:a,to:b,amt:-net});
+    }
+    settle.sort((x,y)=>y.amt-x.amt);
+    return {mat,bal,total,qtyCnt,ids,settle};
+  }
+
+  /* ---------- role / context UI ---------- */
+  const TABS = {
+    admin:[['dash','📊 ダッシュボード'],['board','🤝 食材リレー申請'],['rec','🧾 貸借記録'],['items','🥬 品目マスタ'],['stores','⚙️ 店舗管理']],
+    manager:[['dash','📊 ダッシュボード'],['board','🤝 申請・承認'],['rec','🧾 自店の記録'],['items','🥬 品目マスタ']],
+    staff:[['board','🤝 申請を出す'],['rec','📅 自店の記録']],
+  };
+  function incomingFor(sid){ return sid ? state.requests.filter(r=>r.status==='open' && r.targets.includes(sid) && r.borrowerId!==sid) : state.requests.filter(r=>r.status==='open'); }
+  function buildLogin(){
+    $('roleSel').innerHTML = Object.entries(ROLES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
+    $('roleSel').value=user.role;
+    buildCtx();
+  }
+  function buildCtx(){
+    const c=$('ctxSel');
+    if(user.role==='manager'||user.role==='staff'){
+      c.style.display=''; const lbl=user.role==='manager'?'店長':'スタッフ';
+      c.innerHTML=state.stores.map(s=>`<option value="store:${s.id}">${esc(s.name)} ${lbl}</option>`).join('');
+      if(!user.storeId) user.storeId=state.stores[0]&&state.stores[0].id;
+      c.value='store:'+user.storeId;
+    } else { c.style.display='none'; c.innerHTML=''; }
+  }
+  function changeRole(r){ user.role=r; user.storeId=null; buildCtx(); afterRoleChange(); }
+  function changeCtx(v){ const [k,id]=v.split(':'); if(k==='store')user.storeId=id; afterRoleChange(); }
+  function afterRoleChange(){
+    const allowed=TABS[user.role].map(t=>t[0]); if(!allowed.includes(tab)) tab=allowed[0];
+    $('roleSel').value=user.role;
+    if(user.role!=='admin') $('ctxSel').value='store:'+user.storeId;
+    save(); renderTabs(); renderBand(); renderAll();
+  }
+  function renderBand(){
+    const cls=user.role; let who=ROLES[user.role], desc='';
+    if(user.role==='admin'){ who='本部 / オーナー'; desc='全店舗の閲覧・品目マスタと標準単価の管理・申請の承認・精算管理ができます。'; }
+    else if(user.role==='manager'){ who=sName(user.storeId)+' 店長'; desc='自店の食材申請を出し、他店からの申請を承認。記録・精算・品目も確認できます。'; }
+    else { who=sName(user.storeId)+' スタッフ'; desc='自店の食材申請を出し、貸借の状況を確認できます。'; }
+    const inc = incomingFor(myStoreId()).length;
+    const notif = (user.role!=='admin' && inc) ? `<span class="notif">📥 申請が ${inc}件 届いています</span>` : '';
+    $('roleband').innerHTML=`<span class="chip ${cls}">${esc(who)}</span><span class="desc">${desc}</span>${notif}`;
+  }
+  function renderTabs(){
+    const inc = incomingFor(myStoreId()).length;
+    $('tabs').innerHTML=TABS[user.role].map(([id,label])=>{
+      const badge = (id==='board' && inc) ? `<span class="dot-n">${inc}</span>` : '';
+      return `<button class="${id===tab?'active':''}" onclick="App.tab('${id}')">${label}${badge}</button>`;
+    }).join('');
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    const map={dash:'panel-dash',board:'panel-board',rec:'panel-rec',items:'panel-items',stores:'panel-stores'};
+    const p=$(map[tab]); if(p)p.classList.add('active');
+  }
+  function setTab(t){ tab=t; renderTabs(); renderAll(); window.scrollTo(0,0); }
+
+  /* ---------- month selectors ---------- */
+  function buildMonthSelectors(){
+    const opts=`<option value="">全期間</option>`+months().map(m=>`<option value="${m}">${m.replace('-','年')}月</option>`).join('');
+    ['dashMonth','recMonth'].forEach(id=>{ const el=$(id); if(el){ el.innerHTML=opts; el.value=selMonth; } });
+  }
+  function setMonth(m){ selMonth=m; buildMonthSelectors(); renderAll(); }
+
+  /* ---------- render: dashboard ---------- */
+  function renderDash(){
+    const recs=recordsView();
+    const c=compute(recs);
+    const settleTotal=c.settle.reduce((a,b)=>a+b.amt,0);
+    $('kpis').innerHTML=`
+      ${kpi('貸借記録 件数',recs.length,'件')}
+      ${kpi('食材移動 総額',yen(c.total))}
+      ${kpi('精算で動くお金',yen(settleTotal))}
+      ${kpi('申請中',state.requests.filter(r=>r.status==='open').length,'件')}`;
+    const maxAbs=Math.max(1,...state.stores.map(s=>Math.abs(c.bal[s.id].net)));
+    $('balanceChart').innerHTML = recs.length ? [...state.stores].sort((a,b)=>c.bal[b.id].net-c.bal[a.id].net).map(s=>{
+      const n=c.bal[s.id].net,w=Math.abs(n)/maxAbs*50,cls=n>=0?'credit':'debit';
+      return `<div class="bar-row"><div class="name">${esc(s.name)}</div>
+        <div class="bar-track"><div class="bar-center"></div><div class="bar-fill ${cls}" style="width:${w}%"></div></div>
+        <div class="amt ${cls}">${n>=0?'+':'−'}${yen(Math.abs(n))}</div></div>`;
+    }).join('') : empty('この期間の記録がありません');
+    $('matrix').innerHTML=renderMatrix(c,recs);
+    $('settle').innerHTML=c.settle.length?c.settle.map(s=>`
+      <div class="settle-item"><span class="pill debit">${esc(sName(s.from))}</span>
+      <span class="arrow">→</span><span class="pill credit">${esc(sName(s.to))}</span>
+      <span class="pay">${yen(s.amt)}</span></div>`).join('') : empty('精算の必要はありません');
+  }
+  const kpi=(l,v,u='')=>`<div class="kpi"><div class="lbl">${l}</div><div class="val">${typeof v==='number'?v.toLocaleString('ja-JP'):v}${u?`<small>${u}</small>`:''}</div></div>`;
+  function renderMatrix(c,recs){
+    if(!recs.length) return empty('この期間の記録がありません');
+    const heads=state.stores.map(s=>`<th>${esc(s.name)}</th>`).join('');
+    const max=Math.max(1,...c.ids.flatMap(a=>c.ids.map(b=>c.mat[a][b]||0)));
+    const body=state.stores.map(from=>`<tr><td class="rowlbl">${esc(from.name)}</td>${state.stores.map(to=>{
+      if(from.id===to.id)return `<td class="diag">—</td>`;
+      const v=c.mat[from.id][to.id]||0; if(!v)return `<td class="cell" style="color:#cbd2dc">0</td>`;
+      return `<td class="cell" style="background:rgba(13,148,136,${(0.10+0.55*v/max).toFixed(2)})">${yen(v)}</td>`;
+    }).join('')}</tr>`).join('');
+    return `<table class="matrix"><tr><th class="corner">貸し手 ＼ 借り手</th>${heads}</tr>${body}</table>`;
+  }
+
+  /* ---------- render: board / requests ---------- */
+  function renderBoard(){
+    const me = myStoreId();
+    // form: borrower fixed for manager/staff
+    if(user.role==='admin'){ $('f-borrower-wrap').style.display=''; $('f-borrower').innerHTML=state.stores.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join(''); }
+    else { $('f-borrower-wrap').style.display='none'; }
+    $('f-item').innerHTML=state.items.map(i=>`<option value="${i.id}">${esc(i.name)}</option>`).join('');
+    onReqItem();
+    renderTargets();
+
+    // incoming (actionable)
+    const inc=incomingFor(me);
+    $('incomingSub').textContent = user.role==='admin' ? `募集中の全申請 ${inc.length}件` : `${inc.length}件（あなたの店が声をかけられています）`;
+    $('incomingList').innerHTML = inc.length ? inc.map(renderIncoming).join('') : empty(user.role==='admin'?'届いている申請はありません':'あなたの店に届いた申請はありません');
+
+    // history list
+    let list=[...state.requests];
+    if(user.role!=='admin') list=list.filter(r=>r.borrowerId===me || r.targets.includes(me) || r.lenderId===me);
+    list.sort((a,b)=>(a.status==='open'?0:1)-(b.status==='open'?0:1) || b.date.localeCompare(a.date));
+    $('boardTitle').textContent = user.role==='admin'?'📋 申請一覧（全店）':'📋 申請一覧（自店関連）';
+    $('boardSub').textContent = `募集中 ${state.requests.filter(r=>r.status==='open').length}件 / 全${state.requests.length}件`;
+    $('reqList').innerHTML = list.length ? list.map(renderReqCard).join('') : empty('申請はありません');
+  }
+  function renderTargets(){
+    const me=myStoreId();
+    const cands=state.stores.filter(s=> user.role==='admin' ? true : s.id!==me);
+    $('f-targets').innerHTML = cands.map(s=>`<label class="chk" id="chk-${s.id}"><input type="checkbox" value="${s.id}" onchange="App.toggleChk('${s.id}')">${esc(s.name)}</label>`).join('');
+  }
+  function toggleChk(id){ const el=$('chk-'+id); const cb=el.querySelector('input'); el.classList.toggle('on',cb.checked); }
+  function renderIncoming(r){
+    const it=itemById(r.itemId)||{name:'(削除済)',unit:'',price:0};
+    const amt = r.qty*(it.price||0);
+    let act;
+    if(user.role==='admin'){
+      const opts=r.targets.map(t=>`<option value="${t}">${esc(sName(t))}</option>`).join('');
+      act=`<span class="muted">貸す店：</span><select id="lender-${r.id}" style="min-width:140px">${opts}</select>
+        <button class="btn ok sm" onclick="App.approve('${r.id}')">承認・実績化</button>
+        <button class="btn danger sm" onclick="App.cancelReq('${r.id}')">却下</button>`;
+    } else if(canApprove()){
+      act=`<button class="btn ok sm" onclick="App.approve('${r.id}','${myStoreId()}')">この食材を貸す・承認</button>
+        <button class="btn ghost sm" onclick="App.decline('${r.id}')">今回は辞退</button>`;
+    } else {
+      act=`<span class="muted">店長・本部の承認待ち</span>`;
+    }
+    return `<div class="reqcard open">
+      <div class="top">
+        <span class="title">${esc(sName(r.borrowerId))} が「${esc(it.name)} ${num(r.qty)}${esc(it.unit)}」を希望</span>
+        <span class="status open">募集中</span>
+      </div>
+      <div class="meta">
+        <span>📅 希望受渡：<b>${r.date}</b></span>
+        <span>💴 目安：<b>${yen(amt)}</b>（標準単価 ${yen(it.price||0)}）</span>
+        <span>📨 声がけ先：${r.targets.map(t=>`<span class="tag-store">${esc(sName(t))}</span>`).join(' ')}</span>
+        ${r.note?`<span>📝 ${esc(r.note)}</span>`:''}
+      </div>
+      <div class="act">${act}</div>
+    </div>`;
+  }
+  function renderReqCard(r){
+    const it=itemById(r.itemId)||{name:'(削除済)',unit:'',price:0};
+    let act='';
+    if(r.status==='open'){
+      const isMine = r.borrowerId===myStoreId();
+      if(isMine) act=`<span class="muted">承認待ち（声がけ先：${r.targets.map(sName).join('、')}）</span>
+        <button class="btn danger sm" onclick="App.cancelReq('${r.id}')">申請を取消</button>`;
+      else act=`<span class="muted">声がけ先 ${r.targets.length}店</span>`;
+    } else if(r.status==='fulfilled'){
+      act=`<span class="status confirmed">成立</span>
+        <span><b>${esc(sName(r.lenderId))}</b>（貸し手）→ ${esc(sName(r.borrowerId))}（借り手）／実績に反映済み</span>`;
+      if(user.role==='admin') act+=`<button class="btn danger sm" onclick="App.cancelReq('${r.id}')">成立を取消</button>`;
+    } else {
+      act=`<span class="status cancelled">取消済み</span>`;
+    }
+    return `<div class="reqcard ${r.status}">
+      <div class="top">
+        <span class="title">${esc(sName(r.borrowerId))}：${esc(it.name)} ${num(r.qty)}${esc(it.unit)}</span>
+        ${r.status==='open'?'<span class="status open">募集中</span>':''}
+      </div>
+      <div class="meta">
+        <span>📅 <b>${r.date}</b></span>
+        <span>💴 目安：<b>${yen(r.qty*(it.price||0))}</b></span>
+        ${r.note?`<span>📝 ${esc(r.note)}</span>`:''}
+      </div>
+      <div class="act">${act}</div>
+    </div>`;
+  }
+
+  /* ---------- render: records ---------- */
+  function renderRec(){
+    const staffView = user.role==='staff';
+    $('manualCard').style.display = staffView ? 'none':'';
+    $('recTitle').textContent = user.role==='admin' ? '🧾 貸借記録' : (staffView?'📅 自店の貸借記録':'🧾 自店の記録');
+    if(!staffView){
+      const opts=state.stores.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');
+      $('r-from').innerHTML=opts; $('r-to').innerHTML=opts;
+      $('r-item').innerHTML=state.items.map(i=>`<option value="${i.id}">${esc(i.name)}</option>`).join('');
+      if(user.role==='manager'){ $('r-from').value=myStoreId(); }
+      onRecItem();
+    }
+    let recs=recordsView().slice().sort((a,b)=>b.date.localeCompare(a.date));
+    if(user.role!=='admin'){ const sid=myStoreId(); recs=recs.filter(r=>r.fromStoreId===sid || r.toStoreId===sid); }
+    $('recCount').textContent=`${recs.length}件`;
+    if(!recs.length){ $('recTable').innerHTML=`<tr><td>${empty('この期間の記録がありません')}</td></tr>`; return; }
+    const canDel = user.role!=='staff';
+    const head=`<tr><th>日付</th><th>貸し手</th><th>借り手</th><th>品目</th><th class="num">数量</th><th class="num">単価</th><th class="num">金額</th><th>登録元</th>${canDel?'<th></th>':''}</tr>`;
+    $('recTable').innerHTML=head+recs.map(r=>{
+      return `<tr><td>${r.date}</td>
+        <td><span class="tag-store">${esc(sName(r.fromStoreId))}</span></td>
+        <td><span class="tag-store">${esc(sName(r.toStoreId))}</span></td>
+        <td><span class="tag-item">${esc(iName(r.itemId))}</span></td>
+        <td class="num">${num(r.qty)}${esc(iUnit(r.itemId))}</td>
+        <td class="num">${yen(r.unitPrice)}</td>
+        <td class="num"><b>${yen(amount(r))}</b></td>
+        <td>${r.source==='request'?'<span class="status confirmed">申請成立</span>':'<span class="status cancelled">手入力</span>'}</td>
+        ${canDel?`<td class="num"><button class="btn danger sm" onclick="App.delRecord('${r.id}')">削除</button></td>`:''}</tr>`;
+    }).join('');
+  }
+
+  /* ---------- render: items ---------- */
+  function renderItems(){
+    const editable=canEditMaster();
+    $('itemFormGrid').style.display = editable?'':'none';
+    $('syncBtn').style.display = editable?'':'none';
+    const head=`<tr><th>食材名</th><th>単位</th><th class="num">標準単価</th><th class="num">貸借に登場</th>${editable?'<th></th>':''}</tr>`;
+    const rows=state.items.map(i=>{
+      const used=state.records.filter(r=>r.itemId===i.id).length;
+      const priceCell = editable
+        ? `<td class="num"><input type="number" value="${i.price}" min="0" step="10" style="width:110px;text-align:right" onchange="App.setPrice('${i.id}',this.value)"></td>`
+        : `<td class="num">${yen(i.price)}</td>`;
+      return `<tr><td><b>${esc(i.name)}</b></td><td>${esc(i.unit)}</td>${priceCell}
+        <td class="num muted">${used}件</td>
+        ${editable?`<td class="num"><button class="btn danger sm" onclick="App.delItem('${i.id}')">削除</button></td>`:''}</tr>`;
+    }).join('');
+    $('itemTable').innerHTML = state.items.length ? head+rows : `<tr><td>${empty('品目がありません')}</td></tr>`;
+  }
+
+  /* ---------- render: stores ---------- */
+  function renderStores(){
+    $('storeTable').innerHTML=state.stores.length?`<tr><th>店舗名</th><th class="num">貸し</th><th class="num">借り</th><th></th></tr>`+state.stores.map(s=>{
+      const lent=state.records.filter(r=>r.fromStoreId===s.id).length;
+      const bor=state.records.filter(r=>r.toStoreId===s.id).length;
+      return `<tr><td><b>${esc(s.name)}</b></td><td class="num muted">${lent}件</td><td class="num muted">${bor}件</td>
+      <td class="num"><button class="btn danger sm" onclick="App.delStore('${s.id}')">削除</button></td></tr>`;
+    }).join('') : `<tr><td>${empty('店舗がありません')}</td></tr>`;
+  }
+
+  /* ---------- form helpers ---------- */
+  function onReqItem(){ const i=itemById($('f-item').value); $('f-unit').textContent = i?('単位：'+i.unit):''; }
+  function onRecItem(){ const i=itemById($('r-item').value); if(i){ $('r-unit').textContent='単位：'+i.unit; $('r-price').value=i.price; } }
+
+  /* ---------- actions: requests ---------- */
+  function addRequest(){
+    const borrowerId = user.role==='admin' ? $('f-borrower').value : myStoreId();
+    const date=$('f-date').value, itemId=$('f-item').value, qty=parseFloat($('f-qty').value), note=$('f-note').value.trim();
+    const targets=[...document.querySelectorAll('#f-targets input:checked')].map(c=>c.value).filter(t=>t!==borrowerId);
+    if(!borrowerId) return toast('申請する店舗が不明です');
+    if(!date) return toast('希望受渡日を入力してください');
+    if(!itemId) return toast('品目を選択してください');
+    if(!(qty>0)) return toast('数量を入力してください');
+    if(!targets.length) return toast('声をかける店舗を1つ以上選んでください');
+    state.requests.push({id:uid(),date,borrowerId,itemId,qty,note,targets,status:'open',lenderId:''});
+    $('f-note').value=''; document.querySelectorAll('#f-targets .chk').forEach(c=>c.classList.remove('on'));
+    save(); renderTabs(); renderBand(); renderAll(); toast('申請を送りました');
+  }
+  function approve(id,lenderId){
+    const r=state.requests.find(x=>x.id===id); if(!r||r.status!=='open')return;
+    const lid = lenderId || $('lender-'+id).value;
+    if(!lid) return toast('貸す店を選択してください');
+    const it=itemById(r.itemId); if(!it) return toast('品目が見つかりません');
+    r.status='fulfilled'; r.lenderId=lid;
+    state.records.push({id:uid(),date:r.date,fromStoreId:lid,toStoreId:r.borrowerId,itemId:r.itemId,qty:r.qty,unitPrice:it.price,source:'request',reqId:r.id});
+    save(); renderTabs(); renderBand(); renderAll(); toast('承認しました（貸借記録に反映）');
+  }
+  function decline(id){
+    const r=state.requests.find(x=>x.id===id); if(!r)return;
+    const me=myStoreId();
+    r.targets=r.targets.filter(t=>t!==me);
+    if(!r.targets.length) r.status='cancelled';
+    save(); renderTabs(); renderBand(); renderAll(); toast('辞退しました');
+  }
+  function cancelReq(id){
+    const r=state.requests.find(x=>x.id===id); if(!r)return;
+    if(!confirm('この申請を取り消します。よろしいですか？'))return;
+    if(r.status==='fulfilled'){ state.records=state.records.filter(x=>x.reqId!==id); }
+    r.status='cancelled';
+    save(); renderTabs(); renderBand(); renderAll(); toast('取り消しました');
+  }
+
+  /* ---------- actions: records ---------- */
+  function addRecord(){
+    const date=$('r-date').value, fromStoreId=$('r-from').value, toStoreId=$('r-to').value, itemId=$('r-item').value;
+    const qty=parseFloat($('r-qty').value), unitPrice=parseFloat($('r-price').value);
+    if(!date) return toast('日付を入力してください');
+    if(fromStoreId===toStoreId) return toast('貸し手と借り手が同じです');
+    if(!itemId) return toast('品目を選択してください');
+    if(!(qty>0)) return toast('数量を入力してください');
+    if(!(unitPrice>0)) return toast('単価を入力してください');
+    state.records.push({id:uid(),date,fromStoreId,toStoreId,itemId,qty,unitPrice,source:'manual'});
+    save(); buildMonthSelectors(); renderAll(); toast('記録を追加しました');
+  }
+  function delRecord(id){ const r=state.records.find(x=>x.id===id); if(r&&r.reqId){ const rq=state.requests.find(x=>x.id===r.reqId); if(rq){rq.status='open';rq.lenderId='';} } state.records=state.records.filter(r=>r.id!==id); save(); buildMonthSelectors(); renderTabs(); renderBand(); renderAll(); }
+
+  /* ---------- actions: items ---------- */
+  function addItem(){
+    const name=$('m-item-name').value.trim(), unit=$('m-item-unit').value.trim()||'個', price=parseFloat($('m-item-price').value);
+    if(!name)return toast('食材名を入力してください'); if(!(price>0))return toast('標準単価を入力してください');
+    state.items.push({id:uid(),name,unit,price}); $('m-item-name').value=''; save(); renderAll(); toast('品目を追加しました');
+  }
+  function delItem(id){ if(state.records.some(r=>r.itemId===id))return toast('記録で使われている品目は削除できません'); if(state.requests.some(r=>r.itemId===id&&r.status==='open'))return toast('申請中で使われている品目は削除できません'); state.items=state.items.filter(i=>i.id!==id); save(); renderAll(); }
+  function setPrice(id,v){ const i=itemById(id); if(!i)return; i.price=parseFloat(v)||0; save(); toast('標準単価を更新しました'); }
+  function syncPrices(){
+    if(!confirm('発注サイトから最新の仕入単価を取り込みます（デモ：単価が変動します）。よろしいですか？'))return;
+    state.items.forEach(i=>{ const f=0.95+Math.random()*0.13; i.price=Math.max(10,Math.round(i.price*f/10)*10); });
+    save(); renderItems(); toast('発注サイトから最新の仕入単価を取得しました（デモ）');
+  }
+
+  /* ---------- actions: stores ---------- */
+  function addStore(){ const n=$('m-store').value.trim(); if(!n)return toast('店舗名を入力してください'); state.stores.push({id:uid(),name:n}); $('m-store').value=''; save(); renderAll(); buildCtx(); toast('店舗を追加しました'); }
+  function delStore(id){ if(state.records.some(r=>r.fromStoreId===id||r.toStoreId===id))return toast('記録で使われている店舗は削除できません'); if(state.requests.some(r=>r.borrowerId===id||r.targets.includes(id)))return toast('申請で使われている店舗は削除できません'); state.stores=state.stores.filter(s=>s.id!==id); save(); renderAll(); buildCtx(); }
+
+  /* ---------- export ---------- */
+  function dl(name,content,type){ const b=new Blob([content],{type}),u=URL.createObjectURL(b),a=document.createElement('a'); a.href=u;a.download=name;a.click();URL.revokeObjectURL(u); }
+  function exportRecords(){
+    let recs=recordsView().slice().sort((a,b)=>a.date.localeCompare(b.date));
+    const head='日付,貸し手,借り手,品目,単位,数量,単価,金額,登録元\n';
+    const body=recs.map(r=>[r.date,sName(r.fromStoreId),sName(r.toStoreId),iName(r.itemId),iUnit(r.itemId),r.qty,r.unitPrice,amount(r),r.source==='request'?'申請成立':'手入力'].join(',')).join('\n');
+    const suffix=selMonth?('_'+selMonth):'';
+    dl('フードリレー貸借記録'+suffix+'.csv','﻿'+head+body,'text/csv');
+  }
+  function exportAll(){ dl('food_relay_data.json',JSON.stringify({state,user},null,2),'application/json'); }
+  function reseed(){ if(confirm('サンプルデータで初期化します。よろしいですか？')){ seed(); tab='dash'; selMonth=''; init2(); toast('サンプルデータを読み込みました'); } }
+  function wipe(){ if(confirm('全データを削除します。元に戻せません。')){ state={stores:[],items:[],records:[],requests:[]}; user={role:'admin',storeId:null}; tab='dash'; selMonth=''; save(); init2(); toast('全データを削除しました'); } }
+
+  /* ---------- plumbing ---------- */
+  function toast(m){ const t=$('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2200); }
+  function renderAll(){
+    if(tab==='dash')renderDash();
+    if(tab==='board')renderBoard();
+    if(tab==='rec')renderRec();
+    if(tab==='items')renderItems();
+    if(tab==='stores')renderStores();
+  }
+  function init2(){ buildLogin(); buildMonthSelectors(); renderBand(); renderTabs(); renderAll(); }
+  function init(){
+    if(!load()) seed();
+    if(!state.items) state.items=[];
+    if(!state.requests) state.requests=[];
+    $('f-date').value=new Date().toISOString().slice(0,10);
+    $('r-date').value=new Date().toISOString().slice(0,10);
+    init2();
+  }
+
+  return { init,tab:setTab,changeRole,changeCtx,setMonth,toggleChk,onReqItem,onRecItem,
+           addRequest,approve,decline,cancelReq,addRecord,delRecord,
+           addItem,delItem,setPrice,syncPrices,addStore,delStore,
+           exportRecords,exportAll,reseed,wipe };
+})();
+window.addEventListener('DOMContentLoaded',App.init);
+</script>
+</body>
+</html>
