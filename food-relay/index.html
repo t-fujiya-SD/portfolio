@@ -101,6 +101,10 @@
   .settle-item .pay{margin-left:auto;font-weight:700;font-size:15px}
   .empty{color:var(--sub);text-align:center;padding:26px;font-size:13px}
   .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;align-items:end}
+  .qty-row{display:flex;align-items:center;gap:6px}
+  .qty-row input{flex:1;min-width:0}
+  .qty-row .unit{white-space:nowrap}
+  .form-grid .field>input,.form-grid .field>select,.form-grid .qty-row input{height:40px}
   .field{display:flex;flex-direction:column;gap:4px}
   .field label{font-size:12px;color:var(--sub);font-weight:600}
   input,select,textarea{padding:9px 11px;border:1px solid var(--line);border-radius:9px;font-size:13.5px;font-family:inherit;background:#fff;color:var(--ink)}
@@ -203,7 +207,7 @@
         <div class="field" id="f-borrower-wrap" style="display:none"><label>申請する店（借り手）</label><select id="f-borrower"></select></div>
         <div class="field"><label>希望受渡日</label><input type="date" id="f-date"></div>
         <div class="field"><label>品目</label><select id="f-item" onchange="App.onReqItem()"></select></div>
-        <div class="field"><label>数量</label><input type="number" id="f-qty" min="0" step="0.5" value="1"><span class="muted" id="f-unit"></span></div>
+        <div class="field"><label>数量</label><div class="qty-row"><input type="number" id="f-qty" min="0" step="0.5" value="1"><span class="muted unit" id="f-unit"></span></div></div>
         <div class="field"><label>仕入先（任意）</label><input id="f-supplier" list="supplierList" placeholder="例：やまと青果"></div>
         <div class="field" style="grid-column:1/-1"><label>メモ（任意）</label><input id="f-note" placeholder="例：週末の仕込みで不足。夕方までに受け取れると助かります"></div>
         <div class="field" style="grid-column:1/-1"><label>声をかける店舗（複数選択）</label><div class="chk-group" id="f-targets"></div></div>
@@ -242,7 +246,7 @@
         <div class="field"><label>貸した店（貸し手）</label><select id="r-from"></select></div>
         <div class="field"><label>借りた店（借り手）</label><select id="r-to"></select></div>
         <div class="field"><label>品目</label><select id="r-item" onchange="App.onRecItem()"></select></div>
-        <div class="field"><label>数量</label><input type="number" id="r-qty" min="0" step="0.5" value="1"><span class="muted" id="r-unit"></span></div>
+        <div class="field"><label>数量</label><div class="qty-row"><input type="number" id="r-qty" min="0" step="0.5" value="1"><span class="muted unit" id="r-unit"></span></div></div>
         <div class="field"><label>単価（円）</label><input type="number" id="r-price" min="0" step="10"></div>
         <div class="field"><label>仕入先（任意）</label><input id="r-supplier" list="supplierList" placeholder="例：丸八ミート"></div>
         <div class="field"><button class="btn primary" onclick="App.addRecord()" style="width:100%">追加する</button></div>
@@ -604,7 +608,7 @@ const App = (()=>{
         <input type="number" id="qa-${r.id}" value="${remaining}" min="0" step="0.5" max="${remaining}" style="width:84px">
         <span class="muted">${esc(it.unit)}（最大 ${num(remaining)}）</span>
         <button class="btn ok sm" onclick="App.approve('${r.id}','${myStoreId()}')">この数量を貸す・承認</button>
-        <button class="btn ghost sm" onclick="App.decline('${r.id}')">今回はごめんなさい🙏</button>`;
+        <button class="btn ghost sm" onclick="App.decline('${r.id}')">ごめんなさい🙏</button>`;
     return `<div class="reqcard open">
       <div class="top">
         <span class="title">${esc(sName(r.borrowerId))} が「${esc(it.name)} ${num(r.qty)}${esc(it.unit)}」を希望</span>
@@ -720,8 +724,8 @@ const App = (()=>{
   }
 
   /* ---------- form helpers ---------- */
-  function onReqItem(){ const i=itemById($('f-item').value); $('f-unit').textContent = i?('単位：'+i.unit):''; }
-  function onRecItem(){ const i=itemById($('r-item').value); if(i){ $('r-unit').textContent='単位：'+i.unit; $('r-price').value=i.price; } }
+  function onReqItem(){ const i=itemById($('f-item').value); $('f-unit').textContent = i?i.unit:''; }
+  function onRecItem(){ const i=itemById($('r-item').value); if(i){ $('r-unit').textContent=i.unit; $('r-price').value=i.price; } }
 
   /* ---------- actions: requests ---------- */
   function addRequest(){
@@ -760,7 +764,7 @@ const App = (()=>{
     const me=myStoreId();
     r.targets=r.targets.filter(t=>t!==me);
     if(!r.targets.length) r.status='cancelled';
-    save(); renderTabs(); renderBand(); renderAll(); toast('今回はお見送りにしました🙏');
+    save(); renderTabs(); renderBand(); renderAll(); toast('お見送りにしました🙏');
   }
   function cancelReq(id){
     const r=state.requests.find(x=>x.id===id); if(!r)return;
