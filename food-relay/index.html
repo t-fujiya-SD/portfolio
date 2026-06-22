@@ -246,12 +246,15 @@
     <div class="banner">
       <span class="ic">💡</span>
       <div>本番では <b>発注サイト（インフォマート等）の仕入単価を自動で取込</b> し、標準単価が常に最新の原価に同期されます。
-      貸借金額はこの標準単価 × 数量で自動計算（記録時に上書きも可）。<br>下のボタンで「取込」のイメージを体験できます。</div>
+      貸借金額はこの標準単価 × 数量で自動計算（記録時に上書きも可）。<br>手元の品目リストは <b>CSV / Excel で一括取込</b> できます（同じ食材名は単価を更新）。下のボタンで「取込」のイメージも体験できます。</div>
     </div>
     <div class="card">
       <div class="toolbar">
         <h2 style="margin:0">🥬 品目マスタ</h2>
         <div class="spacer"></div>
+        <button class="btn ghost sm" id="tmplBtn" onclick="App.downloadItemTemplate()">⬇ CSVテンプレート</button>
+        <button class="btn ghost sm" id="importBtn" onclick="document.getElementById('itemFile').click()">📥 CSV / Excel 取込</button>
+        <input type="file" id="itemFile" accept=".csv,.xlsx,.xls" style="display:none" onchange="App.importItems(this)">
         <button class="btn ghost sm" id="syncBtn" onclick="App.syncPrices()">🔄 発注サイトから仕入単価を取込（デモ）</button>
       </div>
       <div class="form-grid" id="itemFormGrid">
@@ -607,7 +610,7 @@ const App = (()=>{
   function renderItems(){
     const editable=canEditMaster();
     $('itemFormGrid').style.display = editable?'':'none';
-    $('syncBtn').style.display = editable?'':'none';
+    ['syncBtn','tmplBtn','importBtn'].forEach(id=>{ const el=$(id); if(el) el.style.display = editable?'':'none'; });
     const head=`<tr><th>食材名</th><th>単位</th><th class="num">標準単価</th><th class="num">貸借に登場</th>${editable?'<th></th>':''}</tr>`;
     const rows=state.items.map(i=>{
       const used=state.records.filter(r=>r.itemId===i.id).length;
@@ -700,6 +703,75 @@ const App = (()=>{
     state.items.forEach(i=>{ const f=0.95+Math.random()*0.13; i.price=Math.max(10,Math.round(i.price*f/10)*10); });
     save(); renderItems(); toast('発注サイトから最新の仕入単価を取得しました（デモ）');
   }
+  /* ---------- items: CSV / Excel 取込 ---------- */
+  function downloadItemTemplate(){
+    const head='食材名,単位,標準単価\n';
+    const body = state.items.length ? state.items.map(i=>[i.name,i.unit,i.price].join(',')).join('\n')
+      : 'トマト,kg,600\n牛肉（国産）,kg,2800\n醤油,本,900\n生ビール,樽,11000';
+    dl('品目マスタ_テンプレート.csv','﻿'+head+body,'text/csv');
+  }
+  function importItems(input){
+    const file=input.files&&input.files[0]; if(!file)return;
+    const ext=(file.name.split('.').pop()||'').toLowerCase();
+    if(ext==='csv'){
+      const rd=new FileReader();
+      rd.onload=()=>{ applyItemRows(parseCSV(rd.result)); input.value=''; };
+      rd.onerror=()=>{ toast('ファイルの読み込みに失敗しました'); input.value=''; };
+      rd.readAsText(file);
+    } else {
+      loadXLSX(()=>{
+        const rd=new FileReader();
+        rd.onload=()=>{ try{
+          const wb=XLSX.read(new Uint8Array(rd.result),{type:'array'});
+          const ws=wb.Sheets[wb.SheetNames[0]];
+          applyItemRows(XLSX.utils.sheet_to_json(ws,{header:1,blankrows:false}));
+        }catch(e){ toast('Excelの読み込みに失敗しました'); } input.value=''; };
+        rd.onerror=()=>{ toast('ファイルの読み込みに失敗しました'); input.value=''; };
+        rd.readAsArrayBuffer(file);
+      });
+    }
+  }
+  function parseCSV(text){
+    text=String(text).replace(/^﻿/,'');
+    const rows=[]; let row=[],cell='',q=false;
+    for(let k=0;k<text.length;k++){ const c=text[k];
+      if(q){ if(c==='"'){ if(text[k+1]==='"'){cell+='"';k++;} else q=false; } else cell+=c; }
+      else if(c==='"'){ q=true; }
+      else if(c===','){ row.push(cell); cell=''; }
+      else if(c==='\n'){ row.push(cell); rows.push(row); row=[]; cell=''; }
+      else if(c!=='\r'){ cell+=c; }
+    }
+    if(cell.length||row.length){ row.push(cell); rows.push(row); }
+    return rows;
+  }
+  function applyItemRows(rows){
+    if(!rows||!rows.length) return toast('取り込めるデータがありません');
+    const first=rows[0].map(x=>String(x==null?'':x).trim());
+    const isHdr=first.some(h=>/食材|品目|名前|name/i.test(h)) || first.some(h=>/単価|価格|原価|price/i.test(h));
+    let nameI=0,unitI=1,priceI=2;
+    if(isHdr){ first.forEach((h,i)=>{ if(/食材|品目|名前|name/i.test(h))nameI=i; if(/単位|unit/i.test(h))unitI=i; if(/単価|価格|原価|price/i.test(h))priceI=i; }); }
+    let added=0,updated=0,skipped=0;
+    for(let r=isHdr?1:0;r<rows.length;r++){
+      const cols=rows[r]||[];
+      const name=String(cols[nameI]==null?'':cols[nameI]).trim();
+      if(!name){ skipped++; continue; }
+      const unit=String(cols[unitI]==null?'':cols[unitI]).trim()||'個';
+      const price=Math.round(parseFloat(String(cols[priceI]==null?'':cols[priceI]).replace(/[^0-9.\-]/g,''))||0);
+      const ex=state.items.find(i=>i.name===name);
+      if(ex){ if(unit)ex.unit=unit; if(price>0)ex.price=price; updated++; }
+      else { state.items.push({id:uid(),name,unit,price:price>0?price:0}); added++; }
+    }
+    save(); renderItems(); toast(`取込完了：${added}件追加 / ${updated}件更新${skipped?` / ${skipped}件スキップ`:''}`);
+  }
+  function loadXLSX(cb){
+    if(window.XLSX) return cb();
+    toast('Excel読み込みの準備中…');
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+    s.onload=()=>cb();
+    s.onerror=()=>toast('Excel読み込みライブラリの取得に失敗しました（CSVをお試しください）');
+    document.head.appendChild(s);
+  }
 
   /* ---------- actions: stores ---------- */
   function addStore(){ const n=$('m-store').value.trim(); if(!n)return toast('店舗名を入力してください'); state.stores.push({id:uid(),name:n}); $('m-store').value=''; save(); renderAll(); buildCtx(); toast('店舗を追加しました'); }
@@ -739,7 +811,7 @@ const App = (()=>{
 
   return { init,tab:setTab,changeRole,changeCtx,setMonth,toggleChk,onReqItem,onRecItem,
            addRequest,approve,decline,cancelReq,addRecord,delRecord,
-           addItem,delItem,setPrice,syncPrices,addStore,delStore,
+           addItem,delItem,setPrice,syncPrices,downloadItemTemplate,importItems,addStore,delStore,
            exportRecords,exportAll,reseed,wipe };
 })();
 window.addEventListener('DOMContentLoaded',App.init);
