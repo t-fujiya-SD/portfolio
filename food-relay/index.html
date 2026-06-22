@@ -194,33 +194,38 @@
     </div>
   </section>
 
-  <!-- BOARD / REQUESTS -->
-  <section class="panel" id="panel-board">
+  <!-- APPLY (申請する) -->
+  <section class="panel" id="panel-apply">
     <div class="card" id="reqFormCard">
       <h2>📣 食材を申請する（借りたい）</h2>
       <p class="hint">足りない食材・数量・希望日を入力し、声をかけたい店舗（複数可）を選びます。選ばれた店に申請が届き、貸せる店が承認すると実績になります。</p>
       <div class="form-grid">
-        <div class="field" id="f-borrower-wrap"><label>申請する店（借り手）</label><select id="f-borrower"></select></div>
+        <div class="field" id="f-borrower-wrap" style="display:none"><label>申請する店（借り手）</label><select id="f-borrower"></select></div>
         <div class="field"><label>希望受渡日</label><input type="date" id="f-date"></div>
         <div class="field"><label>品目</label><select id="f-item" onchange="App.onReqItem()"></select></div>
         <div class="field"><label>数量</label><input type="number" id="f-qty" min="0" step="0.5" value="1"><span class="muted" id="f-unit"></span></div>
+        <div class="field"><label>仕入先（任意）</label><input id="f-supplier" list="supplierList" placeholder="例：やまと青果"></div>
         <div class="field" style="grid-column:1/-1"><label>メモ（任意）</label><input id="f-note" placeholder="例：週末の仕込みで不足。夕方までに受け取れると助かります"></div>
         <div class="field" style="grid-column:1/-1"><label>声をかける店舗（複数選択）</label><div class="chk-group" id="f-targets"></div></div>
         <div class="field"><button class="btn primary" onclick="App.addRequest()" style="width:100%">この内容で申請を送る</button></div>
       </div>
     </div>
+  </section>
 
+  <!-- BOARD (申請を受ける・掲示板) -->
+  <section class="panel" id="panel-board">
     <div class="card" id="incomingCard">
       <div class="toolbar">
         <h2 style="margin:0">📥 あなたの店に届いた申請</h2>
         <span class="muted" id="incomingSub"></span>
       </div>
+      <p class="hint">他店から「貸してほしい」と声をかけられた申請です。貸せるものは「承認」すると、その場で貸借記録（実績）になります。</p>
       <div id="incomingList"></div>
     </div>
 
     <div class="card">
       <div class="toolbar">
-        <h2 style="margin:0" id="boardTitle">📋 申請一覧</h2>
+        <h2 style="margin:0" id="boardTitle">📋 申請一覧（掲示板）</h2>
         <span class="muted" id="boardSub"></span>
       </div>
       <div id="reqList"></div>
@@ -239,6 +244,7 @@
         <div class="field"><label>品目</label><select id="r-item" onchange="App.onRecItem()"></select></div>
         <div class="field"><label>数量</label><input type="number" id="r-qty" min="0" step="0.5" value="1"><span class="muted" id="r-unit"></span></div>
         <div class="field"><label>単価（円）</label><input type="number" id="r-price" min="0" step="10"></div>
+        <div class="field"><label>仕入先（任意）</label><input id="r-supplier" list="supplierList" placeholder="例：丸八ミート"></div>
         <div class="field"><button class="btn primary" onclick="App.addRecord()" style="width:100%">追加する</button></div>
       </div>
     </div>
@@ -309,6 +315,7 @@
   </div>
 </main>
 
+<datalist id="supplierList"></datalist>
 <nav class="tabbar-bottom" id="tabsBottom"></nav>
 <div class="toast" id="toast"></div>
 
@@ -352,24 +359,24 @@ const App = (()=>{
       {id:uid(),name:'白ワイン',unit:'本',price:1400},
     ];
     const iN = n => items.find(i=>i.name===n);
-    const mkRec=(date,from,to,item,qty,src)=>{ const it=iN(item); return {id:uid(),date,fromStoreId:sN(from),toStoreId:sN(to),itemId:it.id,qty,unitPrice:it.price,source:src||'manual'}; };
+    const mkRec=(date,from,to,item,qty,supplier)=>{ const it=iN(item); return {id:uid(),date,fromStoreId:sN(from),toStoreId:sN(to),itemId:it.id,qty,unitPrice:it.price,supplier:supplier||'',source:'manual'}; };
     const records=[
-      mkRec('2026-06-02','銀座本店','渋谷店','牛肉（国産）',3),
-      mkRec('2026-06-04','新宿店','横浜店','生ビール',1),
-      mkRec('2026-06-06','渋谷店','銀座本店','トマト',5),
+      mkRec('2026-06-02','銀座本店','渋谷店','牛肉（国産）',3,'丸八ミート'),
+      mkRec('2026-06-04','新宿店','横浜店','生ビール',1,'アサヒ流通'),
+      mkRec('2026-06-06','渋谷店','銀座本店','トマト',5,'やまと青果'),
       mkRec('2026-06-09','横浜店','新宿店','醤油',4),
-      mkRec('2026-06-12','銀座本店','新宿店','鶏もも',6),
-      mkRec('2026-06-15','渋谷店','横浜店','米',10),
-      mkRec('2026-06-18','新宿店','銀座本店','白ワイン',3),
-      mkRec('2026-06-20','横浜店','渋谷店','レモン',30),
+      mkRec('2026-06-12','銀座本店','新宿店','鶏もも',6,'丸八ミート'),
+      mkRec('2026-06-15','渋谷店','横浜店','米',10,'こめ問屋 田中'),
+      mkRec('2026-06-18','新宿店','銀座本店','白ワイン',3,'ヴィノス・ジャパン'),
+      mkRec('2026-06-20','横浜店','渋谷店','レモン',30,'やまと青果'),
     ];
     // 成立済み申請とその実績
     const reqF=uid();
-    records.push((()=>{ const it=iN('牛肉（国産）'); return {id:uid(),date:'2026-06-16',fromStoreId:sN('銀座本店'),toStoreId:sN('渋谷店'),itemId:it.id,qty:2,unitPrice:it.price,source:'request',reqId:reqF}; })());
+    records.push((()=>{ const it=iN('牛肉（国産）'); return {id:uid(),date:'2026-06-16',fromStoreId:sN('銀座本店'),toStoreId:sN('渋谷店'),itemId:it.id,qty:2,unitPrice:it.price,supplier:'丸八ミート',source:'request',reqId:reqF}; })());
     const requests=[
-      {id:uid(),date:'2026-06-23',borrowerId:sN('新宿店'),itemId:iN('トマト').id,qty:4,note:'週末の仕込みで不足',targets:[sN('銀座本店'),sN('渋谷店')],status:'open',lenderId:''},
-      {id:uid(),date:'2026-06-24',borrowerId:sN('横浜店'),itemId:iN('生ビール').id,qty:1,note:'イベントでビール不足見込み',targets:[sN('新宿店')],status:'open',lenderId:''},
-      {id:reqF,date:'2026-06-16',borrowerId:sN('渋谷店'),itemId:iN('牛肉（国産）').id,qty:2,note:'急な団体予約で不足',targets:[sN('銀座本店')],status:'fulfilled',lenderId:sN('銀座本店')},
+      {id:uid(),date:'2026-06-23',borrowerId:sN('新宿店'),itemId:iN('トマト').id,qty:4,note:'週末の仕込みで不足',supplier:'やまと青果',targets:[sN('銀座本店'),sN('渋谷店')],status:'open',lenderId:''},
+      {id:uid(),date:'2026-06-24',borrowerId:sN('横浜店'),itemId:iN('生ビール').id,qty:1,note:'イベントでビール不足見込み',supplier:'',targets:[sN('新宿店')],status:'open',lenderId:''},
+      {id:reqF,date:'2026-06-16',borrowerId:sN('渋谷店'),itemId:iN('牛肉（国産）').id,qty:2,note:'急な団体予約で不足',supplier:'丸八ミート',targets:[sN('銀座本店')],status:'fulfilled',lenderId:sN('銀座本店')},
       {id:uid(),date:'2026-06-21',borrowerId:sN('横浜店'),itemId:iN('醤油').id,qty:2,note:'自店で確保できたため取消',targets:[sN('渋谷店')],status:'cancelled',lenderId:''},
     ];
     state={stores,items,records,requests};
@@ -384,7 +391,7 @@ const App = (()=>{
   const iName = id => (itemById(id)||{name:'(削除済)'}).name;
   const iUnit = id => (itemById(id)||{unit:''}).unit;
   const canEditMaster = () => user.role!=='staff';
-  const canApprove = () => user.role!=='staff';
+  const canApprove = () => user.role==='manager' || user.role==='staff';   // 受けた店の店長・スタッフ両方が承認可
   const myStoreId = () => user.role==='admin' ? null : user.storeId;
   const amount = r => r.qty*r.unitPrice;
   function months(){ const set=[...new Set(state.records.map(r=>r.date.slice(0,7)))].sort().reverse(); return set; }
@@ -412,10 +419,11 @@ const App = (()=>{
 
   /* ---------- role / context UI ---------- */
   const TABS = {
-    admin:[['dash','📊 ダッシュボード'],['board','🤝 食材リレー申請'],['rec','🧾 貸借記録'],['items','🥬 品目マスタ'],['stores','⚙️ 店舗管理']],
-    manager:[['dash','📊 ダッシュボード'],['board','🤝 申請・承認'],['rec','🧾 自店の記録'],['items','🥬 品目マスタ']],
-    staff:[['board','🤝 申請を出す'],['rec','📅 自店の記録']],
+    admin:[['dash','📊 ダッシュボード'],['rec','🧾 貸借記録'],['items','🥬 品目マスタ'],['stores','⚙️ 店舗管理']],
+    manager:[['dash','📊 ダッシュボード'],['apply','📣 申請する'],['board','📥 申請を受ける・掲示板'],['rec','🧾 自店の記録'],['items','🥬 品目マスタ']],
+    staff:[['apply','📣 申請する'],['board','📥 申請を受ける・掲示板'],['rec','📅 自店の記録']],
   };
+  const SHORT={dash:['📊','集計'],apply:['📣','申請'],board:['📥','受付'],rec:['🧾','記録'],items:['🥬','品目'],stores:['⚙️','店舗']};
   function incomingFor(sid){ return sid ? state.requests.filter(r=>r.status==='open' && r.targets.includes(sid) && r.borrowerId!==sid) : state.requests.filter(r=>r.status==='open'); }
   function buildLogin(){
     $('roleSel').innerHTML = Object.entries(ROLES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
@@ -441,7 +449,7 @@ const App = (()=>{
   }
   function renderBand(){
     const cls=user.role; let who=ROLES[user.role], desc='';
-    if(user.role==='admin'){ who='本部 / オーナー'; desc='全店舗の閲覧・品目マスタと標準単価の管理・申請の承認・精算管理ができます。'; }
+    if(user.role==='admin'){ who='本部 / オーナー'; desc='全店舗の閲覧・品目マスタと標準単価の管理・精算管理ができます（申請のやり取りは各店舗が行います）。'; }
     else if(user.role==='manager'){ who=sName(user.storeId)+' 店長'; desc='自店の食材申請を出し、他店からの申請を承認。記録・精算・品目も確認できます。'; }
     else { who=sName(user.storeId)+' スタッフ'; desc='自店の食材申請を出し、貸借の状況を確認できます。'; }
     const inc = incomingFor(myStoreId()).length;
@@ -454,14 +462,13 @@ const App = (()=>{
       const badge = (id==='board' && inc) ? `<span class="dot-n">${inc}</span>` : '';
       return `<button class="${id===tab?'active':''}" onclick="App.tab('${id}')">${label}${badge}</button>`;
     }).join('');
-    const SHORT={dash:['📊','集計'],board:['🤝','申請'],rec:['🧾','記録'],items:['🥬','品目'],stores:['⚙️','店舗']};
     $('tabsBottom').innerHTML=TABS[user.role].map(([id])=>{
       const [ic,lbl]=SHORT[id]||['•',id];
       const badge = (id==='board' && inc) ? `<span class="bn">${inc}</span>` : '';
       return `<button class="${id===tab?'active':''}" onclick="App.tab('${id}')"><span class="ic">${ic}</span>${badge}${lbl}</button>`;
     }).join('');
     document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-    const map={dash:'panel-dash',board:'panel-board',rec:'panel-rec',items:'panel-items',stores:'panel-stores'};
+    const map={dash:'panel-dash',apply:'panel-apply',board:'panel-board',rec:'panel-rec',items:'panel-items',stores:'panel-stores'};
     const p=$(map[tab]); if(p)p.classList.add('active');
   }
   function setTab(t){ tab=t; renderTabs(); renderAll(); window.scrollTo(0,0); }
@@ -509,50 +516,41 @@ const App = (()=>{
     return `<table class="matrix"><tr><th class="corner">貸し手 ＼ 借り手</th>${heads}</tr>${body}</table>`;
   }
 
-  /* ---------- render: board / requests ---------- */
-  function renderBoard(){
-    const me = myStoreId();
-    // form: borrower fixed for manager/staff
-    if(user.role==='admin'){ $('f-borrower-wrap').style.display=''; $('f-borrower').innerHTML=state.stores.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join(''); }
-    else { $('f-borrower-wrap').style.display='none'; }
+  /* ---------- render: apply (申請する) ---------- */
+  function renderApply(){
+    buildSupplierList();
+    $('f-borrower-wrap').style.display='none';   // 借り手＝自店に固定
     $('f-item').innerHTML=state.items.map(i=>`<option value="${i.id}">${esc(i.name)}</option>`).join('');
     onReqItem();
     renderTargets();
-
+  }
+  /* ---------- render: board (申請を受ける・掲示板) ---------- */
+  function renderBoard(){
+    const me = myStoreId();
     // incoming (actionable)
     const inc=incomingFor(me);
-    $('incomingSub').textContent = user.role==='admin' ? `募集中の全申請 ${inc.length}件` : `${inc.length}件（あなたの店が声をかけられています）`;
-    $('incomingList').innerHTML = inc.length ? inc.map(renderIncoming).join('') : empty(user.role==='admin'?'届いている申請はありません':'あなたの店に届いた申請はありません');
+    $('incomingSub').textContent = `${inc.length}件（あなたの店が声をかけられています）`;
+    $('incomingList').innerHTML = inc.length ? inc.map(renderIncoming).join('') : empty('あなたの店に届いた申請はありません');
 
-    // history list
-    let list=[...state.requests];
-    if(user.role!=='admin') list=list.filter(r=>r.borrowerId===me || r.targets.includes(me) || r.lenderId===me);
+    // 掲示板：自店に関係する申請のみ
+    let list=[...state.requests].filter(r=>r.borrowerId===me || r.targets.includes(me) || r.lenderId===me);
     list.sort((a,b)=>(a.status==='open'?0:1)-(b.status==='open'?0:1) || b.date.localeCompare(a.date));
-    $('boardTitle').textContent = user.role==='admin'?'📋 申請一覧（全店）':'📋 申請一覧（自店関連）';
-    $('boardSub').textContent = `募集中 ${state.requests.filter(r=>r.status==='open').length}件 / 全${state.requests.length}件`;
-    $('reqList').innerHTML = list.length ? list.map(renderReqCard).join('') : empty('申請はありません');
+    const openCnt=list.filter(r=>r.status==='open').length;
+    $('boardTitle').textContent = '📋 申請一覧（掲示板・自店関連）';
+    $('boardSub').textContent = `募集中 ${openCnt}件 / 自店関連 ${list.length}件`;
+    $('reqList').innerHTML = list.length ? list.map(renderReqCard).join('') : empty('自店に関係する申請はありません');
   }
   function renderTargets(){
     const me=myStoreId();
-    const cands=state.stores.filter(s=> user.role==='admin' ? true : s.id!==me);
+    const cands=state.stores.filter(s=>s.id!==me);
     $('f-targets').innerHTML = cands.map(s=>`<label class="chk" id="chk-${s.id}"><input type="checkbox" value="${s.id}" onchange="App.toggleChk('${s.id}')">${esc(s.name)}</label>`).join('');
   }
   function toggleChk(id){ const el=$('chk-'+id); const cb=el.querySelector('input'); el.classList.toggle('on',cb.checked); }
   function renderIncoming(r){
     const it=itemById(r.itemId)||{name:'(削除済)',unit:'',price:0};
     const amt = r.qty*(it.price||0);
-    let act;
-    if(user.role==='admin'){
-      const opts=r.targets.map(t=>`<option value="${t}">${esc(sName(t))}</option>`).join('');
-      act=`<span class="muted">貸す店：</span><select id="lender-${r.id}" style="min-width:140px">${opts}</select>
-        <button class="btn ok sm" onclick="App.approve('${r.id}')">承認・実績化</button>
-        <button class="btn danger sm" onclick="App.cancelReq('${r.id}')">却下</button>`;
-    } else if(canApprove()){
-      act=`<button class="btn ok sm" onclick="App.approve('${r.id}','${myStoreId()}')">この食材を貸す・承認</button>
+    const act=`<button class="btn ok sm" onclick="App.approve('${r.id}','${myStoreId()}')">この食材を貸す・承認</button>
         <button class="btn ghost sm" onclick="App.decline('${r.id}')">今回は辞退</button>`;
-    } else {
-      act=`<span class="muted">店長・本部の承認待ち</span>`;
-    }
     return `<div class="reqcard open">
       <div class="top">
         <span class="title">${esc(sName(r.borrowerId))} が「${esc(it.name)} ${num(r.qty)}${esc(it.unit)}」を希望</span>
@@ -562,6 +560,7 @@ const App = (()=>{
         <span>📅 希望受渡：<b>${r.date}</b></span>
         <span>💴 目安：<b>${yen(amt)}</b>（標準単価 ${yen(it.price||0)}）</span>
         <span>📨 声がけ先：${r.targets.map(t=>`<span class="tag-store">${esc(sName(t))}</span>`).join(' ')}</span>
+        ${r.supplier?`<span>🏭 仕入先：<b>${esc(r.supplier)}</b></span>`:''}
         ${r.note?`<span>📝 ${esc(r.note)}</span>`:''}
       </div>
       <div class="act">${act}</div>
@@ -590,6 +589,7 @@ const App = (()=>{
       <div class="meta">
         <span>📅 <b>${r.date}</b></span>
         <span>💴 目安：<b>${yen(r.qty*(it.price||0))}</b></span>
+        ${r.supplier?`<span>🏭 ${esc(r.supplier)}</span>`:''}
         ${r.note?`<span>📝 ${esc(r.note)}</span>`:''}
       </div>
       <div class="act">${act}</div>
@@ -607,13 +607,14 @@ const App = (()=>{
       $('r-item').innerHTML=state.items.map(i=>`<option value="${i.id}">${esc(i.name)}</option>`).join('');
       if(user.role==='manager'){ $('r-from').value=myStoreId(); }
       onRecItem();
+      buildSupplierList();
     }
     let recs=recordsView().slice().sort((a,b)=>b.date.localeCompare(a.date));
     if(user.role!=='admin'){ const sid=myStoreId(); recs=recs.filter(r=>r.fromStoreId===sid || r.toStoreId===sid); }
     $('recCount').textContent=`${recs.length}件`;
     if(!recs.length){ $('recTable').innerHTML=`<tr><td>${empty('この期間の記録がありません')}</td></tr>`; return; }
     const canDel = user.role!=='staff';
-    const head=`<tr><th>日付</th><th>貸し手</th><th>借り手</th><th>品目</th><th class="num">数量</th><th class="num">単価</th><th class="num">金額</th><th>登録元</th>${canDel?'<th></th>':''}</tr>`;
+    const head=`<tr><th>日付</th><th>貸し手</th><th>借り手</th><th>品目</th><th class="num">数量</th><th class="num">単価</th><th class="num">金額</th><th>仕入先</th><th>登録元</th>${canDel?'<th></th>':''}</tr>`;
     $('recTable').innerHTML=head+recs.map(r=>{
       return `<tr><td>${r.date}</td>
         <td><span class="tag-store">${esc(sName(r.fromStoreId))}</span></td>
@@ -622,9 +623,14 @@ const App = (()=>{
         <td class="num">${num(r.qty)}${esc(iUnit(r.itemId))}</td>
         <td class="num">${yen(r.unitPrice)}</td>
         <td class="num"><b>${yen(amount(r))}</b></td>
+        <td class="muted">${r.supplier?esc(r.supplier):'—'}</td>
         <td>${r.source==='request'?'<span class="status confirmed">申請成立</span>':'<span class="status cancelled">手入力</span>'}</td>
         ${canDel?`<td class="num"><button class="btn danger sm" onclick="App.delRecord('${r.id}')">削除</button></td>`:''}</tr>`;
     }).join('');
+  }
+  function buildSupplierList(){
+    const set=[...new Set([...state.records.map(r=>r.supplier),...state.requests.map(r=>r.supplier)].filter(Boolean))].sort();
+    const dl=$('supplierList'); if(dl) dl.innerHTML=set.map(s=>`<option value="${esc(s)}">`).join('');
   }
 
   /* ---------- render: items ---------- */
@@ -661,16 +667,16 @@ const App = (()=>{
 
   /* ---------- actions: requests ---------- */
   function addRequest(){
-    const borrowerId = user.role==='admin' ? $('f-borrower').value : myStoreId();
-    const date=$('f-date').value, itemId=$('f-item').value, qty=parseFloat($('f-qty').value), note=$('f-note').value.trim();
+    const borrowerId = (user.role==='admin' && $('f-borrower-wrap').style.display!=='none') ? $('f-borrower').value : myStoreId();
+    const date=$('f-date').value, itemId=$('f-item').value, qty=parseFloat($('f-qty').value), note=$('f-note').value.trim(), supplier=$('f-supplier').value.trim();
     const targets=[...document.querySelectorAll('#f-targets input:checked')].map(c=>c.value).filter(t=>t!==borrowerId);
     if(!borrowerId) return toast('申請する店舗が不明です');
     if(!date) return toast('希望受渡日を入力してください');
     if(!itemId) return toast('品目を選択してください');
     if(!(qty>0)) return toast('数量を入力してください');
     if(!targets.length) return toast('声をかける店舗を1つ以上選んでください');
-    state.requests.push({id:uid(),date,borrowerId,itemId,qty,note,targets,status:'open',lenderId:''});
-    $('f-note').value=''; document.querySelectorAll('#f-targets .chk').forEach(c=>c.classList.remove('on'));
+    state.requests.push({id:uid(),date,borrowerId,itemId,qty,note,supplier,targets,status:'open',lenderId:''});
+    $('f-note').value=''; $('f-supplier').value=''; document.querySelectorAll('#f-targets .chk').forEach(c=>c.classList.remove('on'));
     save(); renderTabs(); renderBand(); renderAll(); toast('申請を送りました');
   }
   function approve(id,lenderId){
@@ -679,7 +685,7 @@ const App = (()=>{
     if(!lid) return toast('貸す店を選択してください');
     const it=itemById(r.itemId); if(!it) return toast('品目が見つかりません');
     r.status='fulfilled'; r.lenderId=lid;
-    state.records.push({id:uid(),date:r.date,fromStoreId:lid,toStoreId:r.borrowerId,itemId:r.itemId,qty:r.qty,unitPrice:it.price,source:'request',reqId:r.id});
+    state.records.push({id:uid(),date:r.date,fromStoreId:lid,toStoreId:r.borrowerId,itemId:r.itemId,qty:r.qty,unitPrice:it.price,supplier:r.supplier||'',source:'request',reqId:r.id});
     save(); renderTabs(); renderBand(); renderAll(); toast('承認しました（貸借記録に反映）');
   }
   function decline(id){
@@ -700,13 +706,14 @@ const App = (()=>{
   /* ---------- actions: records ---------- */
   function addRecord(){
     const date=$('r-date').value, fromStoreId=$('r-from').value, toStoreId=$('r-to').value, itemId=$('r-item').value;
-    const qty=parseFloat($('r-qty').value), unitPrice=parseFloat($('r-price').value);
+    const qty=parseFloat($('r-qty').value), unitPrice=parseFloat($('r-price').value), supplier=$('r-supplier').value.trim();
     if(!date) return toast('日付を入力してください');
     if(fromStoreId===toStoreId) return toast('貸し手と借り手が同じです');
     if(!itemId) return toast('品目を選択してください');
     if(!(qty>0)) return toast('数量を入力してください');
     if(!(unitPrice>0)) return toast('単価を入力してください');
-    state.records.push({id:uid(),date,fromStoreId,toStoreId,itemId,qty,unitPrice,source:'manual'});
+    state.records.push({id:uid(),date,fromStoreId,toStoreId,itemId,qty,unitPrice,supplier,source:'manual'});
+    $('r-supplier').value='';
     save(); buildMonthSelectors(); renderAll(); toast('記録を追加しました');
   }
   function delRecord(id){ const r=state.records.find(x=>x.id===id); if(r&&r.reqId){ const rq=state.requests.find(x=>x.id===r.reqId); if(rq){rq.status='open';rq.lenderId='';} } state.records=state.records.filter(r=>r.id!==id); save(); buildMonthSelectors(); renderTabs(); renderBand(); renderAll(); }
@@ -802,8 +809,9 @@ const App = (()=>{
   function dl(name,content,type){ const b=new Blob([content],{type}),u=URL.createObjectURL(b),a=document.createElement('a'); a.href=u;a.download=name;a.click();URL.revokeObjectURL(u); }
   function exportRecords(){
     let recs=recordsView().slice().sort((a,b)=>a.date.localeCompare(b.date));
-    const head='日付,貸し手,借り手,品目,単位,数量,単価,金額,登録元\n';
-    const body=recs.map(r=>[r.date,sName(r.fromStoreId),sName(r.toStoreId),iName(r.itemId),iUnit(r.itemId),r.qty,r.unitPrice,amount(r),r.source==='request'?'申請成立':'手入力'].join(',')).join('\n');
+    const q=v=>{ const s=String(v==null?'':v); return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; };
+    const head='日付,貸し手,借り手,品目,単位,数量,単価,金額,仕入先,登録元\n';
+    const body=recs.map(r=>[r.date,sName(r.fromStoreId),sName(r.toStoreId),iName(r.itemId),iUnit(r.itemId),r.qty,r.unitPrice,amount(r),r.supplier||'',r.source==='request'?'申請成立':'手入力'].map(q).join(',')).join('\n');
     const suffix=selMonth?('_'+selMonth):'';
     dl('フードリレー貸借記録'+suffix+'.csv','﻿'+head+body,'text/csv');
   }
@@ -815,6 +823,7 @@ const App = (()=>{
   function toast(m){ const t=$('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2200); }
   function renderAll(){
     if(tab==='dash')renderDash();
+    if(tab==='apply')renderApply();
     if(tab==='board')renderBoard();
     if(tab==='rec')renderRec();
     if(tab==='items')renderItems();
