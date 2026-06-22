@@ -9,17 +9,17 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png"><link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="株式会社スパイシーデバイス">
-<meta property="og:title" content="飲食店の「めんどうな業務」を、売上と利益に変える仕組みに。">
-<meta property="og:description" content="飲食店向けオーダーメイドWebツール制作・購買/原価改善・集客支援。実際に動くデモを公開中。1機能の小さな試作からご相談いただけます。">
+<meta property="og:title" content="飲食店専門のWebツール制作 ― 現場の「めんどう」を1機能から">
+<meta property="og:description" content="現場の「めんどう」を、飲食店専用のWebツールでなくす。レジ集計・予約・原価・日報…あなたの店のやり方に合わせて1機能から制作します。実際に動くデモを公開中。">
 <meta property="og:url" content="https://spicy-device.com/">
-<meta property="og:image" content="https://spicy-device.com/assets/og-image.png">
+<meta property="og:image" content="https://spicy-device.com/assets/og-image.png?v=2">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="飲食店の「めんどうな業務」を、売上と利益に変える仕組みに。">
-<meta name="twitter:description" content="飲食店向けオーダーメイドWebツール制作・購買/原価改善・集客支援。実際に動くデモを公開中。">
-<meta name="twitter:image" content="https://spicy-device.com/assets/og-image.png">
+<meta name="twitter:title" content="飲食店専門のWebツール制作 ― 現場の「めんどう」を1機能から">
+<meta name="twitter:description" content="現場の「めんどう」を、飲食店専用のWebツールで。1機能から、あなたの店に合わせて制作します。動くデモ公開中。">
+<meta name="twitter:image" content="https://spicy-device.com/assets/og-image.png?v=2">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -107,7 +107,9 @@ h1 .hl::after{content:"";position:absolute;left:-2px;right:-2px;bottom:5px;heigh
 .btn-primary.btn-lg{box-shadow:0 12px 26px color-mix(in srgb,var(--accent) 26%,transparent)}
 .btn-primary.btn-lg:hover{transform:translateY(-2px)}
 /* hero visual */
-.hero-visual{position:relative;padding:30px 14px 56px}
+.hero-visual{position:relative;padding:46px 14px 56px}
+.hv-cap{position:absolute;top:4px;left:50%;transform:translateX(-50%);background:#fff;border:1px solid var(--accent-line);color:var(--accent-d);font-size:11.5px;font-weight:700;padding:6px 14px;border-radius:30px;box-shadow:0 6px 16px rgba(40,44,50,.10);white-space:nowrap;z-index:5}
+@media(max-width:560px){.hv-cap{font-size:10.5px;white-space:normal;text-align:center;max-width:90%;line-height:1.45}}
 .tablet{position:relative;width:100%;max-width:500px;margin:0 auto;background:#23262a;border-radius:28px;padding:14px;box-shadow:0 40px 70px rgba(40,44,50,.24);transform:rotate(-3deg);animation:floatT 7s ease-in-out infinite}
 .tablet::after{content:"";position:absolute;top:7px;left:50%;transform:translateX(-50%);width:6px;height:6px;border-radius:50%;background:#454a50}
 .tablet img{width:100%;display:block;border-radius:11px}
@@ -497,10 +499,10 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
 <div class="hero">
   <div class="wrap">
     <div class="hero-copy">
-      <span class="eyebrow"><span class="zap">⚡</span>一店舗でも、多店舗でも。数字で勝つチームへ</span>
-      <h1><span class="nw">飲食店の</span><span class="nw">「めんどうな業務」を、</span><span class="hl">売上と利益</span><span class="nw">に変える仕組みに。</span></h1>
-      <p class="lead">レジ・予約媒体・SNS・仕入れ・原価・日報。バラバラな数字を、見て終わりにせず"次の打ち手"まで。店長・マネージャーが現場を動かし、数字で成果を出すための武器にします。一店舗でも、多店舗でも。</p>
-      <p class="lead-who">こんな方へ — 数字で店を良くしたい店長・エリアマネージャー・多店舗/FCの管理者</p>
+      <span class="eyebrow"><span class="zap">⚡</span>飲食店専門のWebツール制作</span>
+      <h1><span class="nw">現場の「めんどう」を、</span><span class="nw">飲食店専用の</span><span class="hl">Webツール</span><span class="nw">でなくす。</span></h1>
+      <p class="lead">レジ集計・予約管理・原価・シフト・日報…。既製品では届かない"あなたの店のやり方"に合わせて、必要な機能を1つから作ります。今のExcelやLINE運用のまま、ラフにご相談ください。</p>
+      <p class="lead-who">こんな方へ — 店長・エリアマネージャー・多店舗/FC管理者。ITが苦手でも大丈夫です。</p>
       <div class="btns">
         <a class="btn btn-primary btn-lg" href="#cta">⚡ 無料で相談する</a>
         <a class="btn btn-ghost btn-lg" href="#works">🖥 デモを見てみる</a>
@@ -514,6 +516,7 @@ footer{background:#23262a;color:#a7adb4;font-size:13px}
       </div>
     </div>
     <div class="hero-visual">
+      <div class="hv-cap">📊 これも実際に作ったツールの例（月次レポート / Instagram分析）</div>
       <div class="tablet">
         <img src="assets/tablet-report.png" alt="月次業績レポートのグラフ">
         <span class="tap tap1"></span>
