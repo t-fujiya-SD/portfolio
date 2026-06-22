@@ -47,6 +47,20 @@
   nav.tabs button{border:none;background:transparent;padding:9px 16px;border-radius:9px;font-size:13.5px;font-weight:600;color:var(--sub);cursor:pointer;transition:.15s;position:relative}
   nav.tabs button.active{background:#fff;color:var(--accent);box-shadow:var(--shadow)}
   nav.tabs button .dot-n{display:inline-block;min-width:17px;height:17px;line-height:17px;text-align:center;background:var(--debit);color:#fff;border-radius:999px;font-size:10.5px;font-weight:700;margin-left:6px;padding:0 4px}
+  /* mobile bottom tab bar */
+  .tabbar-bottom{display:none}
+  @media(max-width:640px){
+    nav.tabs{display:none}
+    main{padding-bottom:78px}
+    .tabbar-bottom{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:40;background:#fff;border-top:1px solid var(--line);
+      box-shadow:0 -2px 12px rgba(16,24,40,.08);padding:6px 2px calc(6px + env(safe-area-inset-bottom));justify-content:space-around}
+    .tabbar-bottom button{flex:1;min-width:0;border:none;background:transparent;display:flex;flex-direction:column;align-items:center;gap:3px;
+      font-size:10.5px;font-weight:700;color:var(--sub);cursor:pointer;padding:4px 2px;position:relative;font-family:inherit;transition:.15s}
+    .tabbar-bottom button.active{color:var(--accent)}
+    .tabbar-bottom button .ic{font-size:20px;line-height:1}
+    .tabbar-bottom button .bn{position:absolute;top:-1px;left:50%;margin-left:5px;background:var(--debit);color:#fff;border-radius:999px;
+      font-size:9.5px;font-weight:700;min-width:15px;height:15px;line-height:15px;text-align:center;padding:0 3px}
+  }
   .panel{display:none}
   .panel.active{display:block;animation:fade .25s ease}
   @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
@@ -295,6 +309,7 @@
   </div>
 </main>
 
+<nav class="tabbar-bottom" id="tabsBottom"></nav>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -438,6 +453,12 @@ const App = (()=>{
     $('tabs').innerHTML=TABS[user.role].map(([id,label])=>{
       const badge = (id==='board' && inc) ? `<span class="dot-n">${inc}</span>` : '';
       return `<button class="${id===tab?'active':''}" onclick="App.tab('${id}')">${label}${badge}</button>`;
+    }).join('');
+    const SHORT={dash:['📊','集計'],board:['🤝','申請'],rec:['🧾','記録'],items:['🥬','品目'],stores:['⚙️','店舗']};
+    $('tabsBottom').innerHTML=TABS[user.role].map(([id])=>{
+      const [ic,lbl]=SHORT[id]||['•',id];
+      const badge = (id==='board' && inc) ? `<span class="bn">${inc}</span>` : '';
+      return `<button class="${id===tab?'active':''}" onclick="App.tab('${id}')"><span class="ic">${ic}</span>${badge}${lbl}</button>`;
     }).join('');
     document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
     const map={dash:'panel-dash',board:'panel-board',rec:'panel-rec',items:'panel-items',stores:'panel-stores'};
