@@ -172,23 +172,23 @@
     </div>
     <div class="grid-kpi" id="kpis"></div>
     <div class="card">
-      <h2>💰 店舗別 食材バランス</h2>
-      <p class="hint">「他店に貸した食材の額」と「他店から借りた食材の額」の差引です。</p>
+      <h2 id="balTitle">💰 店舗別 食材バランス</h2>
+      <p class="hint" id="balHint">「他店に貸した食材の額」と「他店から借りた食材の額」の差引です。</p>
       <div id="balanceChart"></div>
       <div class="legend">
-        <span><i class="dot" style="background:var(--credit)"></i>プラス（受け取る側＝多く貸した店）</span>
-        <span><i class="dot" style="background:var(--debit)"></i>マイナス（支払う側＝多く借りた店）</span>
+        <span><i class="dot" style="background:var(--credit)"></i><span id="legCredit">プラス（受け取る側＝多く貸した店）</span></span>
+        <span><i class="dot" style="background:var(--debit)"></i><span id="legDebit">マイナス（支払う側＝多く借りた店）</span></span>
       </div>
     </div>
     <div class="two-col">
-      <div class="card">
+      <div class="card" id="matrixCard">
         <h2>🔁 店舗間 貸借マトリクス</h2>
         <p class="hint">縦＝食材を貸した店（貸し手） / 横＝借りた店（借り手）。金額ベース。</p>
         <div id="matrix" style="overflow-x:auto"></div>
       </div>
       <div class="card">
-        <h2>🧾 精算リスト（相殺後）</h2>
-        <p class="hint">店舗ペアごとに相殺した「誰が誰へいくら払うか」です。</p>
+        <h2 id="settleTitle">🧾 精算リスト（相殺後）</h2>
+        <p class="hint" id="settleHint">店舗ペアごとに相殺した「誰が誰へいくら払うか」です。</p>
         <div id="settle"></div>
       </div>
     </div>
@@ -370,14 +370,17 @@ const App = (()=>{
       mkRec('2026-06-18','新宿店','銀座本店','白ワイン',3,'ヴィノス・ジャパン'),
       mkRec('2026-06-20','横浜店','渋谷店','レモン',30,'やまと青果'),
     ];
-    // 成立済み申請とその実績
-    const reqF=uid();
-    records.push((()=>{ const it=iN('牛肉（国産）'); return {id:uid(),date:'2026-06-16',fromStoreId:sN('銀座本店'),toStoreId:sN('渋谷店'),itemId:it.id,qty:2,unitPrice:it.price,supplier:'丸八ミート',source:'request',reqId:reqF}; })());
+    // 成立済み申請（牛肉2）とその実績
+    const reqF=uid(), recF=uid();
+    records.push({id:recF,date:'2026-06-16',fromStoreId:sN('銀座本店'),toStoreId:sN('渋谷店'),itemId:iN('牛肉（国産）').id,qty:2,unitPrice:iN('牛肉（国産）').price,supplier:'丸八ミート',source:'request',reqId:reqF});
+    // 一部成立（トマト10個中4個）の募集中申請＋部分実績
+    const reqT=uid(), recT=uid();
+    records.push({id:recT,date:'2026-06-19',fromStoreId:sN('渋谷店'),toStoreId:sN('新宿店'),itemId:iN('トマト').id,qty:4,unitPrice:iN('トマト').price,supplier:'やまと青果',source:'request',reqId:reqT});
     const requests=[
-      {id:uid(),date:'2026-06-23',borrowerId:sN('新宿店'),itemId:iN('トマト').id,qty:4,note:'週末の仕込みで不足',supplier:'やまと青果',targets:[sN('銀座本店'),sN('渋谷店')],status:'open',lenderId:''},
-      {id:uid(),date:'2026-06-24',borrowerId:sN('横浜店'),itemId:iN('生ビール').id,qty:1,note:'イベントでビール不足見込み',supplier:'',targets:[sN('新宿店')],status:'open',lenderId:''},
-      {id:reqF,date:'2026-06-16',borrowerId:sN('渋谷店'),itemId:iN('牛肉（国産）').id,qty:2,note:'急な団体予約で不足',supplier:'丸八ミート',targets:[sN('銀座本店')],status:'fulfilled',lenderId:sN('銀座本店')},
-      {id:uid(),date:'2026-06-21',borrowerId:sN('横浜店'),itemId:iN('醤油').id,qty:2,note:'自店で確保できたため取消',targets:[sN('渋谷店')],status:'cancelled',lenderId:''},
+      {id:reqT,date:'2026-06-23',borrowerId:sN('新宿店'),itemId:iN('トマト').id,qty:10,note:'週末の仕込みで大量に不足',supplier:'やまと青果',targets:[sN('銀座本店'),sN('渋谷店')],status:'open',qtyFilled:4,fills:[{storeId:sN('渋谷店'),qty:4,recId:recT}],lenderId:''},
+      {id:uid(),date:'2026-06-24',borrowerId:sN('横浜店'),itemId:iN('生ビール').id,qty:1,note:'イベントでビール不足見込み',supplier:'',targets:[sN('新宿店')],status:'open',qtyFilled:0,fills:[],lenderId:''},
+      {id:reqF,date:'2026-06-16',borrowerId:sN('渋谷店'),itemId:iN('牛肉（国産）').id,qty:2,note:'急な団体予約で不足',supplier:'丸八ミート',targets:[sN('銀座本店')],status:'fulfilled',qtyFilled:2,fills:[{storeId:sN('銀座本店'),qty:2,recId:recF}],lenderId:sN('銀座本店')},
+      {id:uid(),date:'2026-06-21',borrowerId:sN('横浜店'),itemId:iN('醤油').id,qty:2,note:'自店で確保できたため取消',supplier:'',targets:[sN('渋谷店')],status:'cancelled',qtyFilled:0,fills:[],lenderId:''},
     ];
     state={stores,items,records,requests};
     user={role:'admin',storeId:null};
@@ -394,6 +397,7 @@ const App = (()=>{
   const canApprove = () => user.role==='manager' || user.role==='staff';   // 受けた店の店長・スタッフ両方が承認可
   const myStoreId = () => user.role==='admin' ? null : user.storeId;
   const amount = r => r.qty*r.unitPrice;
+  const reqRemaining = r => Math.max(0,(r.qty||0)-(r.qtyFilled||0));
   function months(){ const set=[...new Set(state.records.map(r=>r.date.slice(0,7)))].sort().reverse(); return set; }
   function recordsView(){ return selMonth ? state.records.filter(r=>r.date.slice(0,7)===selMonth) : state.records; }
 
@@ -421,7 +425,7 @@ const App = (()=>{
   const TABS = {
     admin:[['dash','📊 ダッシュボード'],['rec','🧾 貸借記録'],['items','🥬 品目マスタ'],['stores','⚙️ 店舗管理']],
     manager:[['dash','📊 ダッシュボード'],['apply','📣 申請する'],['board','📥 申請を受ける・掲示板'],['rec','🧾 自店の記録'],['items','🥬 品目マスタ']],
-    staff:[['apply','📣 申請する'],['board','📥 申請を受ける・掲示板'],['rec','📅 自店の記録']],
+    staff:[['dash','📊 ダッシュボード'],['apply','📣 申請する'],['board','📥 申請を受ける・掲示板'],['rec','📅 自店の記録']],
   };
   const SHORT={dash:['📊','集計'],apply:['📣','申請'],board:['📥','受付'],rec:['🧾','記録'],items:['🥬','品目'],stores:['⚙️','店舗']};
   function incomingFor(sid){ return sid ? state.requests.filter(r=>r.status==='open' && r.targets.includes(sid) && r.borrowerId!==sid) : state.requests.filter(r=>r.status==='open'); }
@@ -481,10 +485,18 @@ const App = (()=>{
   function setMonth(m){ selMonth=m; buildMonthSelectors(); renderAll(); }
 
   /* ---------- render: dashboard ---------- */
-  function renderDash(){
+  function renderDash(){ if(user.role==='admin') renderDashAll(); else renderDashStore(); }
+  function renderDashAll(){
     const recs=recordsView();
     const c=compute(recs);
     const settleTotal=c.settle.reduce((a,b)=>a+b.amt,0);
+    $('balTitle').textContent='💰 店舗別 食材バランス';
+    $('balHint').textContent='「他店に貸した食材の額」と「他店から借りた食材の額」の差引です。';
+    $('legCredit').textContent='プラス（受け取る側＝多く貸した店）';
+    $('legDebit').textContent='マイナス（支払う側＝多く借りた店）';
+    $('matrixCard').style.display='';
+    $('settleTitle').textContent='🧾 精算リスト（相殺後）';
+    $('settleHint').textContent='店舗ペアごとに相殺した「誰が誰へいくら払うか」です。';
     $('kpis').innerHTML=`
       ${kpi('貸借記録 件数',recs.length,'件')}
       ${kpi('食材移動 総額',yen(c.total))}
@@ -502,6 +514,43 @@ const App = (()=>{
       <div class="settle-item"><span class="pill debit">${esc(sName(s.from))}</span>
       <span class="arrow">→</span><span class="pill credit">${esc(sName(s.to))}</span>
       <span class="pay">${yen(s.amt)}</span></div>`).join('') : empty('精算の必要はありません');
+  }
+  function renderDashStore(){
+    const me=myStoreId();
+    const recs=recordsView();
+    const c=compute(recs);
+    const partners=state.stores.filter(s=>s.id!==me);
+    let lentTotal=0,borTotal=0; partners.forEach(o=>{ lentTotal+=c.mat[me][o.id]||0; borTotal+=c.mat[o.id][me]||0; });
+    const net=lentTotal-borTotal;
+    const myRecCount=recs.filter(r=>r.fromStoreId===me||r.toStoreId===me).length;
+    // titles → 自店視点
+    $('balTitle').textContent='💰 自店の貸し借り（相手店別）';
+    $('balHint').textContent='自店から見た相手店ごとの差引です。プラス＝自店が受け取る側／マイナス＝自店が支払う側。';
+    $('legCredit').textContent='プラス（自店が受け取る）';
+    $('legDebit').textContent='マイナス（自店が支払う）';
+    $('matrixCard').style.display='none';            // 他店同士が見える全店マトリクスは非表示
+    $('settleTitle').textContent='🧾 自店の精算（相殺後）';
+    $('settleHint').textContent='自店が関わる「自店→相手」「相手→自店」だけを表示しています。';
+    $('kpis').innerHTML=`
+      ${kpi('自店の貸借記録',myRecCount,'件')}
+      ${kpi('貸した額（自店→他店）',yen(lentTotal))}
+      ${kpi('借りた額（他店→自店）',yen(borTotal))}
+      ${kpi(net>=0?'差引（受け取り）':'差引（支払い）',(net>=0?'+':'−')+yen(Math.abs(net)))}`;
+    const partnerNets=partners.map(o=>({o, net:(c.mat[me][o.id]||0)-(c.mat[o.id][me]||0)}));
+    const maxAbs=Math.max(1,...partnerNets.map(p=>Math.abs(p.net)));
+    $('balanceChart').innerHTML = myRecCount ? partnerNets.sort((a,b)=>b.net-a.net).map(p=>{
+      const n=p.net,w=Math.abs(n)/maxAbs*50,cls=n>=0?'credit':'debit';
+      return `<div class="bar-row"><div class="name">${esc(p.o.name)}</div>
+        <div class="bar-track"><div class="bar-center"></div><div class="bar-fill ${cls}" style="width:${w}%"></div></div>
+        <div class="amt ${cls}">${n>=0?'+':'−'}${yen(Math.abs(n))}</div></div>`;
+    }).join('') : empty('この期間、自店の記録がありません');
+    const mine=c.settle.filter(s=>s.from===me||s.to===me);
+    $('settle').innerHTML = mine.length ? mine.map(s=>{
+      const fromLbl = s.from===me?'自店':sName(s.from), toLbl = s.to===me?'自店':sName(s.to);
+      return `<div class="settle-item"><span class="pill debit">${esc(fromLbl)}</span>
+        <span class="arrow">→</span><span class="pill credit">${esc(toLbl)}</span>
+        <span class="pay">${yen(s.amt)}</span></div>`;
+    }).join('') : empty('精算の必要はありません');
   }
   const kpi=(l,v,u='')=>`<div class="kpi"><div class="lbl">${l}</div><div class="val">${typeof v==='number'?v.toLocaleString('ja-JP'):v}${u?`<small>${u}</small>`:''}</div></div>`;
   function renderMatrix(c,recs){
@@ -548,18 +597,25 @@ const App = (()=>{
   function toggleChk(id){ const el=$('chk-'+id); const cb=el.querySelector('input'); el.classList.toggle('on',cb.checked); }
   function renderIncoming(r){
     const it=itemById(r.itemId)||{name:'(削除済)',unit:'',price:0};
-    const amt = r.qty*(it.price||0);
-    const act=`<button class="btn ok sm" onclick="App.approve('${r.id}','${myStoreId()}')">この食材を貸す・承認</button>
+    const remaining=reqRemaining(r);
+    const amt = remaining*(it.price||0);
+    const partial=(r.qtyFilled||0)>0;
+    const act=`<span class="muted">貸せる数量</span>
+        <input type="number" id="qa-${r.id}" value="${remaining}" min="0" step="0.5" max="${remaining}" style="width:84px">
+        <span class="muted">${esc(it.unit)}（最大 ${num(remaining)}）</span>
+        <button class="btn ok sm" onclick="App.approve('${r.id}','${myStoreId()}')">この数量を貸す・承認</button>
         <button class="btn ghost sm" onclick="App.decline('${r.id}')">今回は辞退</button>`;
     return `<div class="reqcard open">
       <div class="top">
         <span class="title">${esc(sName(r.borrowerId))} が「${esc(it.name)} ${num(r.qty)}${esc(it.unit)}」を希望</span>
         <span class="status open">募集中</span>
+        ${partial?`<span class="status" style="background:var(--warn-bg);color:var(--warn)">残り ${num(remaining)}${esc(it.unit)}</span>`:''}
       </div>
       <div class="meta">
         <span>📅 希望受渡：<b>${r.date}</b></span>
-        <span>💴 目安：<b>${yen(amt)}</b>（標準単価 ${yen(it.price||0)}）</span>
+        <span>💴 残り目安：<b>${yen(amt)}</b>（標準単価 ${yen(it.price||0)}）</span>
         <span>📨 声がけ先：${r.targets.map(t=>`<span class="tag-store">${esc(sName(t))}</span>`).join(' ')}</span>
+        ${partial?`<span>✅ 既に ${num(r.qtyFilled)}${esc(it.unit)} 成立${r.fills&&r.fills.length?`（${r.fills.map(f=>esc(sName(f.storeId))+' '+num(f.qty)+it.unit).join('、')}）`:''}</span>`:''}
         ${r.supplier?`<span>🏭 仕入先：<b>${esc(r.supplier)}</b></span>`:''}
         ${r.note?`<span>📝 ${esc(r.note)}</span>`:''}
       </div>
@@ -569,15 +625,17 @@ const App = (()=>{
   function renderReqCard(r){
     const it=itemById(r.itemId)||{name:'(削除済)',unit:'',price:0};
     let act='';
+    const partial=(r.qtyFilled||0)>0;
+    const prog = partial?` ・ ${num(r.qtyFilled)}/${num(r.qty)}${it.unit} 成立（残り ${num(reqRemaining(r))}${it.unit}）`:'';
     if(r.status==='open'){
       const isMine = r.borrowerId===myStoreId();
-      if(isMine) act=`<span class="muted">承認待ち（声がけ先：${r.targets.map(sName).join('、')}）</span>
+      if(isMine) act=`<span class="muted">募集中（声がけ先：${r.targets.map(sName).join('、')}）${prog}</span>
         <button class="btn danger sm" onclick="App.cancelReq('${r.id}')">申請を取消</button>`;
-      else act=`<span class="muted">声がけ先 ${r.targets.length}店</span>`;
+      else act=`<span class="muted">声がけ先 ${r.targets.length}店${prog}</span>`;
     } else if(r.status==='fulfilled'){
+      const who = r.fills&&r.fills.length ? r.fills.map(f=>`${esc(sName(f.storeId))}（${num(f.qty)}${it.unit}）`).join('、') : esc(sName(r.lenderId));
       act=`<span class="status confirmed">成立</span>
-        <span><b>${esc(sName(r.lenderId))}</b>（貸し手）→ ${esc(sName(r.borrowerId))}（借り手）／実績に反映済み</span>`;
-      if(user.role==='admin') act+=`<button class="btn danger sm" onclick="App.cancelReq('${r.id}')">成立を取消</button>`;
+        <span>貸し手：<b>${who}</b> → ${esc(sName(r.borrowerId))}（借り手）／実績に反映済み</span>`;
     } else {
       act=`<span class="status cancelled">取消済み</span>`;
     }
@@ -675,18 +733,27 @@ const App = (()=>{
     if(!itemId) return toast('品目を選択してください');
     if(!(qty>0)) return toast('数量を入力してください');
     if(!targets.length) return toast('声をかける店舗を1つ以上選んでください');
-    state.requests.push({id:uid(),date,borrowerId,itemId,qty,note,supplier,targets,status:'open',lenderId:''});
+    state.requests.push({id:uid(),date,borrowerId,itemId,qty,note,supplier,targets,status:'open',qtyFilled:0,fills:[],lenderId:''});
     $('f-note').value=''; $('f-supplier').value=''; document.querySelectorAll('#f-targets .chk').forEach(c=>c.classList.remove('on'));
     save(); renderTabs(); renderBand(); renderAll(); toast('申請を送りました');
   }
   function approve(id,lenderId){
     const r=state.requests.find(x=>x.id===id); if(!r||r.status!=='open')return;
-    const lid = lenderId || $('lender-'+id).value;
-    if(!lid) return toast('貸す店を選択してください');
+    const lid = lenderId || myStoreId(); if(!lid) return toast('貸す店が不明です');
     const it=itemById(r.itemId); if(!it) return toast('品目が見つかりません');
-    r.status='fulfilled'; r.lenderId=lid;
-    state.records.push({id:uid(),date:r.date,fromStoreId:lid,toStoreId:r.borrowerId,itemId:r.itemId,qty:r.qty,unitPrice:it.price,supplier:r.supplier||'',source:'request',reqId:r.id});
-    save(); renderTabs(); renderBand(); renderAll(); toast('承認しました（貸借記録に反映）');
+    const remaining=reqRemaining(r);
+    const inp=$('qa-'+id); let q = inp ? parseFloat(inp.value) : remaining;
+    if(!(q>0)) return toast('貸せる数量を入力してください');
+    if(q>remaining) q=remaining;
+    const recId=uid();
+    state.records.push({id:recId,date:r.date,fromStoreId:lid,toStoreId:r.borrowerId,itemId:r.itemId,qty:q,unitPrice:it.price,supplier:r.supplier||'',source:'request',reqId:r.id});
+    if(!r.fills) r.fills=[];
+    r.fills.push({storeId:lid,qty:q,recId});
+    r.qtyFilled=(r.qtyFilled||0)+q;
+    const left=reqRemaining(r);
+    if(left<=0){ r.status='fulfilled'; r.lenderId=lid; }
+    save(); buildMonthSelectors(); renderTabs(); renderBand(); renderAll();
+    toast(left<=0 ? `承認しました（${num(q)}${it.unit} 成立・実績に反映）` : `${num(q)}${it.unit} 承認しました（残り ${num(left)}${it.unit}は募集継続）`);
   }
   function decline(id){
     const r=state.requests.find(x=>x.id===id); if(!r)return;
@@ -716,7 +783,18 @@ const App = (()=>{
     $('r-supplier').value='';
     save(); buildMonthSelectors(); renderAll(); toast('記録を追加しました');
   }
-  function delRecord(id){ const r=state.records.find(x=>x.id===id); if(r&&r.reqId){ const rq=state.requests.find(x=>x.id===r.reqId); if(rq){rq.status='open';rq.lenderId='';} } state.records=state.records.filter(r=>r.id!==id); save(); buildMonthSelectors(); renderTabs(); renderBand(); renderAll(); }
+  function delRecord(id){
+    const rec=state.records.find(x=>x.id===id);
+    if(rec&&rec.reqId){ const rq=state.requests.find(x=>x.id===rec.reqId);
+      if(rq){
+        if(rq.fills&&rq.fills.length){ const fi=rq.fills.findIndex(f=>f.recId===id); if(fi>=0){ rq.qtyFilled=Math.max(0,(rq.qtyFilled||0)-rq.fills[fi].qty); rq.fills.splice(fi,1); } }
+        else { rq.qtyFilled=0; }
+        if(rq.status!=='cancelled' && reqRemaining(rq)>0){ rq.status='open'; rq.lenderId=''; }
+      }
+    }
+    state.records=state.records.filter(r=>r.id!==id);
+    save(); buildMonthSelectors(); renderTabs(); renderBand(); renderAll();
+  }
 
   /* ---------- actions: items ---------- */
   function addItem(){
