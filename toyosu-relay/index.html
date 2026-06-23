@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>豊洲リレー 卸の在庫マッチング掲示板（デモ）｜株式会社スパイシーデバイス</title>
+<meta name="description" content="豊洲の卸業者向け。『在庫が足りない／余った』を仲間以外にも掲示で共有し、電話で詰めた取引を記録に残して月末に精算する試作デモ。株式会社スパイシーデバイスの制作サンプル。">
+<meta name="robots" content="noindex">
+<meta property="og:type" content="website">
+<meta property="og:title" content="豊洲リレー 卸の在庫マッチング掲示板（デモ）">
+<meta property="og:description" content="卸の『求む／出す』を掲示で共有し、電話で詰めた取引を記録に残して月末精算。実際に触れます。">
+<style>
+  :root{
+    --bg:#f3f5f8; --card:#ffffff; --ink:#1f2a37; --sub:#6b7280; --line:#e5e7eb;
+    --primary:#1d4ed8; --primary-d:#1e3a8a; --accent:#1d4ed8;
+    --want:#1d4ed8; --want-bg:#e8efff; --offer:#ea580c; --offer-bg:#fff1e7;
+    --credit:#15803d; --credit-bg:#e7f6ec; --debit:#b91c1c; --debit-bg:#fdecec;
+    --warn:#b45309; --warn-bg:#fff5e6; --open:#1d4ed8; --open-bg:#e8efff;
+    --shadow:0 1px 3px rgba(16,24,40,.08),0 1px 2px rgba(16,24,40,.06);
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,system-ui,sans-serif;
+    background:var(--bg);color:var(--ink);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  header{background:linear-gradient(135deg,#0f2557,#1d4ed8);color:#fff;padding:16px 22px;box-shadow:var(--shadow)}
+  header .wrap{max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  header h1{font-size:18px;margin:0;font-weight:700;letter-spacing:.02em;display:flex;align-items:center;gap:10px}
+  header .badge{background:rgba(255,255,255,.2);font-size:11px;padding:2px 9px;border-radius:999px;font-weight:600}
+  header p{margin:3px 0 0;font-size:12px;opacity:.9}
+  .login{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.13);padding:7px 11px;border-radius:11px;flex-wrap:wrap}
+  .login .who{font-size:11px;opacity:.85;margin-right:2px}
+  .login select{border:none;border-radius:7px;padding:6px 8px;font-size:13px;font-weight:600;background:#fff;color:var(--ink)}
+  .demo-note{max-width:1180px;margin:10px auto 0;font-size:11.5px;opacity:.9;display:flex;align-items:center;gap:6px}
+  main{max-width:1180px;margin:0 auto;padding:18px 22px 60px}
+  .roleband{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin-bottom:16px;box-shadow:var(--shadow);font-size:13px;flex-wrap:wrap}
+  .roleband .chip{font-weight:700;padding:3px 11px;border-radius:999px}
+  .roleband .chip.admin{background:#0f2557;color:#fff}
+  .roleband .chip.company{background:var(--accent);color:#fff}
+  .roleband .desc{color:var(--sub);font-size:12.5px}
+  .roleband .notif{margin-left:auto;background:var(--warn-bg);color:var(--warn);font-weight:700;padding:3px 11px;border-radius:999px;font-size:12px}
+  /* closing banner */
+  .closing-banner{display:flex;gap:12px;align-items:center;background:#fff3f3;border:1.5px solid #f3b4b4;color:#9b1c1c;border-radius:12px;padding:13px 16px;margin-bottom:16px;font-size:13px;box-shadow:var(--shadow)}
+  .closing-banner .ic{font-size:20px}
+  .closing-banner b{color:#7f1212}
+  .closing-banner .go{margin-left:auto;background:var(--debit);color:#fff;border:none;border-radius:9px;padding:9px 15px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;white-space:nowrap}
+  .closing-banner .go:hover{filter:brightness(.94)}
+  nav.tabs{display:flex;gap:4px;margin:0 0 18px;background:#e7ebf2;padding:4px;border-radius:12px;width:fit-content;flex-wrap:wrap}
+  nav.tabs button{border:none;background:transparent;padding:9px 16px;border-radius:9px;font-size:13.5px;font-weight:600;color:var(--sub);cursor:pointer;transition:.15s;position:relative}
+  nav.tabs button.active{background:#fff;color:var(--accent);box-shadow:var(--shadow)}
+  nav.tabs button .dot-n{display:inline-block;min-width:17px;height:17px;line-height:17px;text-align:center;background:var(--debit);color:#fff;border-radius:999px;font-size:10.5px;font-weight:700;margin-left:6px;padding:0 4px}
+  .tabbar-bottom{display:none}
+  @media(max-width:640px){
+    nav.tabs{display:none}
+    main{padding-bottom:78px}
+    .tabbar-bottom{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:40;background:#fff;border-top:1px solid var(--line);
+      box-shadow:0 -2px 12px rgba(16,24,40,.08);padding:6px 2px calc(6px + env(safe-area-inset-bottom));justify-content:space-around}
+    .tabbar-bottom button{flex:1;min-width:0;border:none;background:transparent;display:flex;flex-direction:column;align-items:center;gap:3px;
+      font-size:10.5px;font-weight:700;color:var(--sub);cursor:pointer;padding:4px 2px;position:relative;font-family:inherit;transition:.15s}
+    .tabbar-bottom button.active{color:var(--accent)}
+    .tabbar-bottom button .ic{font-size:20px;line-height:1}
+    .tabbar-bottom button .bn{position:absolute;top:-1px;left:50%;margin-left:5px;background:var(--debit);color:#fff;border-radius:999px;
+      font-size:9.5px;font-weight:700;min-width:15px;height:15px;line-height:15px;text-align:center;padding:0 3px}
+    .closing-banner{flex-direction:column;align-items:stretch;text-align:left}
+    .closing-banner .go{margin-left:0;width:100%;margin-top:4px}
+    .post-grid{grid-template-columns:1fr}
+  }
+  .panel{display:none}
+  .panel.active{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .grid-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:18px}
+  .kpi{background:var(--card);border-radius:var(--radius);padding:15px 18px;box-shadow:var(--shadow);border:1px solid var(--line)}
+  .kpi .lbl{font-size:12px;color:var(--sub);font-weight:600}
+  .kpi .val{font-size:24px;font-weight:700;margin-top:4px;letter-spacing:-.01em}
+  .kpi .val small{font-size:14px;font-weight:600;color:var(--sub);margin-left:2px}
+  .card{background:var(--card);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);border:1px solid var(--line);margin-bottom:18px}
+  .card h2{font-size:15px;margin:0 0 4px;display:flex;align-items:center;gap:8px}
+  .card .hint{font-size:12px;color:var(--sub);margin:0 0 14px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:9px 11px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
+  th{font-size:12px;color:var(--sub);font-weight:700;background:#fafbfc}
+  .num{text-align:right;font-variant-numeric:tabular-nums}
+  .empty{color:var(--sub);text-align:center;padding:26px;font-size:13px}
+  .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;align-items:end}
+  .qty-row{display:flex;align-items:center;gap:6px}
+  .qty-row input{flex:1;min-width:0}
+  .qty-row .unit{white-space:nowrap}
+  .form-grid .field>input,.form-grid .field>select,.form-grid .qty-row input{height:40px}
+  .field{display:flex;flex-direction:column;gap:4px}
+  .field label{font-size:12px;color:var(--sub);font-weight:600}
+  .field .req{color:var(--debit);margin-left:2px}
+  input,select,textarea{padding:9px 11px;border:1px solid var(--line);border-radius:9px;font-size:13.5px;font-family:inherit;background:#fff;color:var(--ink)}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(29,78,216,.12)}
+  .field.err>input,.field.err>select,.field.err .qty-row input{border-color:var(--debit);background:#fff7f7;box-shadow:0 0 0 3px rgba(185,28,28,.15)}
+  .field.err{animation:shake .3s}
+  .field .errmsg{display:none;color:var(--debit);font-size:11px;font-weight:600}
+  .field.err .errmsg{display:block}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+  .btn{border:none;border-radius:9px;padding:10px 16px;font-size:13.5px;font-weight:700;cursor:pointer;transition:.15s;font-family:inherit}
+  .btn.primary{background:var(--accent);color:#fff} .btn.primary:hover{filter:brightness(.94)}
+  .btn.want{background:var(--want);color:#fff} .btn.offer{background:var(--offer);color:#fff}
+  .btn.ok{background:var(--credit);color:#fff} .btn.ok:hover{filter:brightness(.95)}
+  .btn.ghost{background:#fff;border:1px solid var(--line);color:var(--ink)} .btn.ghost:hover{background:#f7f9fc}
+  .btn.sm{padding:6px 12px;font-size:12px}
+  .btn.danger{color:var(--debit);background:#fff;border:1px solid #f3c7c7} .btn.danger:hover{background:var(--debit-bg)}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+  .toolbar .spacer{flex:1}
+  .muted{color:var(--sub);font-size:12px}
+  .status{display:inline-block;padding:2px 10px;border-radius:999px;font-size:11.5px;font-weight:700}
+  .status.open{background:var(--open-bg);color:var(--open)}
+  .status.dealing{background:var(--warn-bg);color:var(--warn)}
+  .status.closed{background:var(--credit-bg);color:var(--credit)}
+  /* post / segmented */
+  .seg{display:inline-flex;background:#eef1f6;border-radius:10px;padding:3px;gap:3px}
+  .seg button{border:none;background:transparent;padding:8px 16px;border-radius:8px;font-weight:700;font-size:13px;color:var(--sub);cursor:pointer;font-family:inherit}
+  .seg button.on-want{background:var(--want);color:#fff}
+  .seg button.on-offer{background:var(--offer);color:#fff}
+  .filterbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+  .fchip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 13px;font-size:12.5px;font-weight:700;color:var(--sub);cursor:pointer}
+  .fchip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .fchip.on.want{background:var(--want);border-color:var(--want)}
+  .fchip.on.offer{background:var(--offer);border-color:var(--offer)}
+  .post-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+  .pcard{border:1px solid var(--line);border-radius:13px;padding:0;background:#fff;overflow:hidden;display:flex;flex-direction:column}
+  .pcard .head{padding:11px 15px;display:flex;align-items:center;gap:9px;color:#fff}
+  .pcard.want .head{background:linear-gradient(135deg,#1d4ed8,#3b6ef0)}
+  .pcard.offer .head{background:linear-gradient(135deg,#ea580c,#f6883f)}
+  .pcard .head .ttype{font-weight:800;font-size:13px;letter-spacing:.04em}
+  .pcard .head .titem{font-weight:800;font-size:16px;margin-left:2px}
+  .pcard.closed{opacity:.66}
+  .pcard .body{padding:13px 15px;flex:1}
+  .spec-grid{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:12.5px;margin-bottom:10px}
+  .spec-grid .k{color:var(--sub);white-space:nowrap}
+  .spec-grid .v{font-weight:600}
+  .pcard .price{font-size:18px;font-weight:800;color:var(--ink)}
+  .pcard .price .u{font-size:12px;color:var(--sub);font-weight:600}
+  .contact{display:flex;align-items:center;gap:8px;background:#f7f9fc;border:1px solid var(--line);border-radius:10px;padding:8px 11px;font-size:12.5px;margin-top:10px}
+  .contact .co{font-weight:800}
+  .contact .ph{margin-left:auto;font-weight:800;color:var(--primary-d);white-space:nowrap}
+  .pcard .foot{border-top:1px solid var(--line);padding:11px 15px;background:#fafbfc}
+  .respform{margin-top:10px;border-top:1px dashed var(--line);padding-top:11px}
+  .respform .row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
+  .respform .field{flex:1;min-width:90px}
+  .respform .amt{font-weight:800;font-size:15px;color:var(--credit)}
+  .inbox-card{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:12px;background:#fff}
+  .inbox-card.confirm{border-left:4px solid var(--warn)}
+  .inbox-card.waiting{border-left:4px solid var(--open)}
+  .inbox-card .top{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:7px}
+  .inbox-card .title{font-weight:700;font-size:14.5px}
+  .inbox-card .deal-amt{font-weight:800;font-size:16px;color:var(--ink)}
+  .inbox-card .act{display:flex;gap:8px;align-items:center;flex-wrap:wrap;border-top:1px dashed var(--line);padding-top:10px;margin-top:9px}
+  .group-block{border:1px solid var(--line);border-radius:12px;margin-bottom:12px;overflow:hidden}
+  .group-block .gh{display:flex;align-items:center;gap:9px;padding:11px 15px;background:#fafbfc;border-bottom:1px solid var(--line);font-weight:700}
+  .group-block .gh .dir{color:var(--sub);font-size:12px}
+  .group-block .gh .gt{margin-left:auto;font-size:16px;font-weight:800}
+  .group-block.sell .gt{color:var(--credit)} .group-block.buy .gt{color:var(--debit)}
+  .banner{display:flex;gap:10px;align-items:flex-start;background:#eef4ff;border:1px solid #c5d8ff;color:#1e3a8a;border-radius:11px;padding:12px 15px;font-size:12.5px;line-height:1.65;margin-bottom:14px}
+  .banner .ic{font-size:16px;line-height:1.3}
+  .pill-grade{display:inline-block;padding:1px 7px;border-radius:6px;font-size:11px;font-weight:700;background:#eef2f7;color:#374151}
+  .footer-note{text-align:center;color:var(--sub);font-size:11.5px;margin-top:30px;line-height:1.7}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:#1f2a37;color:#fff;padding:11px 20px;border-radius:10px;font-size:13px;font-weight:600;opacity:0;transition:.3s;pointer-events:none;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.2);max-width:90vw;text-align:center}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast.good{background:#0f7a3d}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div>
+      <h1>🐟 豊洲リレー <span class="badge">卸の在庫マッチング掲示板 / たたき</span></h1>
+      <p>「在庫が足りない・余った」を仲間以外にも掲示で共有 → 電話で詰めた取引を記録に残し、月末にまとめて精算。</p>
+    </div>
+    <div class="login">
+      <span class="who">ログイン中</span>
+      <select id="roleSel" onchange="App.changeRole(this.value)"></select>
+      <select id="ctxSel" onchange="App.changeCtx(this.value)"></select>
+    </div>
+  </div>
+  <div class="demo-note">🔐 デモ用にアカウントを切り替えできます（本番はログイン制）。運営／各卸業者で見える情報・操作が変わります。</div>
+</header>
+
+<main>
+  <div id="closingBanner"></div>
+  <div class="roleband" id="roleband"></div>
+  <nav class="tabs" id="tabs"></nav>
+
+  <!-- BOARD（掲示板） -->
+  <section class="panel" id="panel-board">
+    <div class="card">
+      <div class="toolbar">
+        <h2 style="margin:0">📋 在庫マッチング掲示板</h2>
+        <span class="muted" id="boardSub"></span>
+      </div>
+      <p class="hint">全社の「求む（足りない）」「出す（余った）」が並びます。仲間内だけでなく、つながりの薄い相手の在庫も見つかります。良さそうな相手には電話して、まとまったら「応じる」で記録に残します。</p>
+      <div class="filterbar" id="boardFilter"></div>
+      <div class="post-grid" id="boardList"></div>
+    </div>
+  </section>
+
+  <!-- POST（投稿する） -->
+  <section class="panel" id="panel-post">
+    <div class="card">
+      <h2>✏️ 掲示を投稿する</h2>
+      <p class="hint">「求む（足りない）」か「出す（余った）」を選んで入力。掲示板に出て、他社から連絡・申し込みが来ます。</p>
+      <div style="margin-bottom:16px">
+        <div class="seg" id="typeSeg">
+          <button type="button" data-t="want" onclick="App.setPostType('want')">🙋 求む（足りない）</button>
+          <button type="button" data-t="offer" onclick="App.setPostType('offer')">📦 出す（余った）</button>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="field" style="grid-column:1/-1"><label>品目<span class="req">*</span></label>
+          <input id="p-item" list="itemNameList" placeholder="例：トマト / ホワイトアスパラガス"><span class="errmsg">品目を入力してください</span></div>
+        <div class="field"><label>サイズ・規格</label><input id="p-spec" placeholder="例：2L / L / 中"></div>
+        <div class="field"><label>数量<span class="req">*</span></label>
+          <div class="qty-row"><input type="number" id="p-qty" min="0" step="1" value="10"><input id="p-unit" style="width:74px" placeholder="単位" value="個"></div><span class="errmsg">数量を入力してください</span></div>
+        <div class="field"><label id="p-price-lbl">希望単価（円・上限）<span class="req">*</span></label>
+          <input type="number" id="p-price" min="0" step="10" placeholder="例：200" oninput="App.calcPostAmt()"><span class="errmsg">単価を入力してください</span></div>
+        <div class="field"><label>金額めやす</label><input id="p-amt" readonly style="background:#f7f9fc;font-weight:700"></div>
+        <div class="field"><label>品質</label><select id="p-grade">
+          <option value="">指定なし</option><option>Aランク</option><option>Bランク</option><option>Cランク</option></select></div>
+        <div class="field"><label>ブランド</label><input id="p-brand" placeholder="指定なし"></div>
+        <div class="field"><label>産地</label><input id="p-origin" placeholder="指定なし"></div>
+        <div class="field"><label id="p-deadline-lbl">ほしい時間</label><input id="p-deadline" placeholder="例：本日17時まで"></div>
+        <div class="field"><label>受渡</label><select id="p-delivery">
+          <option value="pickup">受け取りに行く</option><option value="deliver">渡しに行く</option></select></div>
+        <div class="field" style="grid-column:1/-1"><label>備考</label><input id="p-note" placeholder="例：すぐ使えるものだと助かります"></div>
+        <div class="field" style="grid-column:1/-1"><button class="btn primary" id="p-submit" onclick="App.addPost()" style="width:100%">この内容で掲示する</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INBOX（やりとり） -->
+  <section class="panel" id="panel-inbox">
+    <div class="card">
+      <h2 style="margin:0 0 4px">✅ あなたの確認待ち</h2>
+      <p class="hint">あなたの掲示に「これで申し込みます」と来た取引です。金額を確認して「確認して成立」を押すと、取引が記録に残ります。</p>
+      <div id="inboxConfirm"></div>
+    </div>
+    <div class="card">
+      <h2 style="margin:0 0 4px">⏳ 相手の確認待ち</h2>
+      <p class="hint">あなたが「応じる」で申し込み、相手の確認を待っている取引です。</p>
+      <div id="inboxWaiting"></div>
+    </div>
+    <div class="card">
+      <h2 style="margin:0 0 4px">📒 最近成立した取引</h2>
+      <div id="inboxDone"></div>
+    </div>
+  </section>
+
+  <!-- SETTLE（月次精算・締め） -->
+  <section class="panel" id="panel-settle">
+    <div class="toolbar">
+      <span class="muted">対象月</span>
+      <select id="settleMonth" onchange="App.setMonth(this.value)" style="min-width:150px"></select>
+      <div class="spacer"></div>
+      <button class="btn ghost sm" onclick="App.exportDeals()">CSV出力</button>
+    </div>
+    <div id="settleBody"></div>
+  </section>
+
+  <!-- DEALS（取引記録・運営） -->
+  <section class="panel" id="panel-deals">
+    <div class="card">
+      <div class="toolbar">
+        <h2 style="margin:0">🧾 取引記録（全社）</h2>
+        <span class="muted" id="dealCount"></span>
+        <div class="spacer"></div>
+        <span class="muted">対象月</span>
+        <select id="dealsMonth" onchange="App.setMonth(this.value)" style="min-width:140px"></select>
+        <button class="btn ghost sm" onclick="App.exportDeals()">CSV出力</button>
+      </div>
+      <div style="overflow-x:auto"><table id="dealTable"></table></div>
+    </div>
+  </section>
+
+  <!-- ITEMS（品目マスタ） -->
+  <section class="panel" id="panel-items">
+    <div class="banner">
+      <span class="ic">💡</span>
+      <div>品目マスタの参考単価は、投稿フォームの金額めやすに使います。本番では <b>発注サイトの仕入単価を自動取込</b> して原価を最新化する想定です。手元の品目リストは <b>CSV / Excel で一括取込</b> できます（同じ品目名は単価を更新）。</div>
+    </div>
+    <div class="card">
+      <div class="toolbar">
+        <h2 style="margin:0">🥬 品目マスタ（参考単価）</h2>
+        <div class="spacer"></div>
+        <button class="btn ghost sm" id="tmplBtn" onclick="App.downloadItemTemplate()">⬇ CSVテンプレート</button>
+        <button class="btn ghost sm" id="importBtn" onclick="document.getElementById('itemFile').click()">📥 CSV / Excel 取込</button>
+        <input type="file" id="itemFile" accept=".csv,.xlsx,.xls" style="display:none" onchange="App.importItems(this)">
+      </div>
+      <div class="form-grid" id="itemFormGrid">
+        <div class="field"><label>品目名</label><input id="m-item-name" placeholder="例：トマト"></div>
+        <div class="field"><label>単位</label><input id="m-item-unit" placeholder="例：個 / kg / 本" value="個"></div>
+        <div class="field"><label>参考単価（円）</label><input type="number" id="m-item-price" min="0" step="10" value="200"></div>
+        <div class="field"><button class="btn primary" onclick="App.addItem()" style="width:100%">品目を追加</button></div>
+      </div>
+      <div style="overflow-x:auto;margin-top:14px"><table id="itemTable"></table></div>
+    </div>
+  </section>
+
+  <!-- COMPANIES（企業管理・運営） -->
+  <section class="panel" id="panel-companies">
+    <div class="card">
+      <h2>🏢 卸業者マスタ</h2>
+      <p class="hint">掲示板に参加する卸業者と連絡先です。連絡先は掲示カードに常時表示され、電話で直接やり取りできます。</p>
+      <div class="form-grid">
+        <div class="field"><label>企業名</label><input id="m-co-name" placeholder="例：丸豊青果"></div>
+        <div class="field"><label>担当者</label><input id="m-co-contact" placeholder="例：岡野"></div>
+        <div class="field"><label>連絡先</label><input id="m-co-phone" placeholder="例：090-0000-0000"></div>
+        <div class="field"><button class="btn primary" onclick="App.addCompany()" style="width:100%">追加</button></div>
+      </div>
+      <table id="companyTable" style="margin-top:14px"></table>
+    </div>
+    <div class="card">
+      <h2>🗂 データ管理</h2>
+      <p class="hint">この試作版はデータをブラウザ内に保存します。サーバー連携・本物のログイン・発注サイト連携は本開発で対応します。</p>
+      <div class="toolbar">
+        <button class="btn ghost sm" onclick="App.exportAll()">全データをJSON書き出し</button>
+        <button class="btn ghost sm" onclick="App.reseed()">サンプルデータで初期化</button>
+        <button class="btn danger sm" onclick="App.wipe()">全データ削除</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer-note">
+    これは要件確認用の試作（たたき）です。ログイン認証・サーバー保存・発注サイト連携・SMS/プッシュ通知などは本開発で実装します。<br>
+    Spicy Device — 飲食・卸向けWebツール
+  </div>
+</main>
+
+<datalist id="itemNameList"></datalist>
+<nav class="tabbar-bottom" id="tabsBottom"></nav>
+<div class="toast" id="toast"></div>
+
+<script>
+const App = (()=>{
+  const KEY = 'toyosu_relay_v1';
+  const ROLES = {admin:'運営事務局', company:'卸業者'};
+  const TODAY = '2026-06-23';
+  const CUR_MONTH = '2026-06';
+  let state = { companies:[], items:[], posts:[], deals:[], closings:{} };
+  let user = { role:'company', companyId:null };
+  let tab = 'board';
+  let selMonth = '';
+  let postType = 'want';
+  let boardFilter = 'all';
+  let respOpen = {};   // postId -> bool
+
+  const uid = () => Math.random().toString(36).slice(2,9);
+  const yen = n => '¥' + Math.round(n).toLocaleString('ja-JP');
+  const num = n => (Math.round(n*100)/100).toLocaleString('ja-JP');
+  const $ = id => document.getElementById(id);
+  const esc = s => (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const empty = m => `<div class="empty">${m}</div>`;
+
+  /* ---------- persistence ---------- */
+  function save(){ localStorage.setItem(KEY, JSON.stringify({state,user})); }
+  function load(){
+    const raw = localStorage.getItem(KEY);
+    if(raw){ try{ const o=JSON.parse(raw); state=o.state; if(o.user) user=o.user; if(!state.closings)state.closings={}; return true; }catch(e){} }
+    return false;
+  }
+
+  /* ---------- sample data ---------- */
+  function seed(){
+    const mkCo=(name,contact,phone)=>({id:uid(),name,contact,phone});
+    const companies=[
+      mkCo('丸豊青果（デモ）','岡野','090-1111-0001'),
+      mkCo('東水フードサプライ（デモ）','坂本','090-2222-0002'),
+      mkCo('やまと水産（デモ）','三浦','090-3333-0003'),
+      mkCo('築地大同物産（デモ）','林','090-4444-0004'),
+    ];
+    const cN=n=>companies.find(c=>c.name.startsWith(n)).id;
+    const items=[
+      {id:uid(),name:'トマト',unit:'個',price:200},
+      {id:uid(),name:'ホワイトアスパラガス',unit:'本',price:300},
+      {id:uid(),name:'マスクメロン',unit:'個',price:4000},
+      {id:uid(),name:'レモン',unit:'個',price:60},
+      {id:uid(),name:'本まぐろ',unit:'kg',price:6000},
+      {id:uid(),name:'ぶり',unit:'kg',price:1200},
+      {id:uid(),name:'ホタテ',unit:'kg',price:2500},
+      {id:uid(),name:'大葉',unit:'束',price:80},
+    ];
+    const mkDeal=(date,seller,buyer,item,spec,grade,qty,unit,price,postId,proposerId,status)=>(
+      {id:uid(),date,sellerId:cN(seller),buyerId:cN(buyer),itemName:item,spec,grade,qty,unit,unitPrice:price,amount:qty*price,
+       postId:postId||'',proposerId:proposerId||cN(seller),status:status||'confirmed',month:date.slice(0,7)});
+    const deals=[
+      // 6月・成立済み（イメージ例の 丸豊青果→東水フードサプライ 計12,000）
+      mkDeal('2026-06-12','丸豊','東水','トマト','2L','Aランク',40,'個',200),
+      mkDeal('2026-06-12','丸豊','東水','マスクメロン','L','Aランク',1,'個',4000),
+      mkDeal('2026-06-15','やまと','築地','ぶり','中','Aランク',20,'kg',1200),
+      mkDeal('2026-06-18','東水','やまと','レモン','2L','',100,'個',60),
+      // 5月・成立済みだが月次の締めが未確定（締め体験用）
+      mkDeal('2026-05-20','丸豊','やまと','大葉','','',30,'束',80),
+      mkDeal('2026-05-22','築地','東水','ホタテ','L','Aランク',10,'kg',2500),
+    ];
+    // 募集中の掲示
+    const posts=[
+      mkPost('want','東水','トマト','2L',10,'個',200,'Aランク','','','本日17時まで','pickup','すぐ使えるものを探しています','open','2026-06-23'),
+      mkPost('offer','やまと','ホワイトアスパラガス','2L',40,'本',300,'Aランク','','長野','明日(6/24)まで','deliver','朝採れ。鮮度良好です','open','2026-06-23'),
+      mkPost('want','築地','本まぐろ','',5,'kg',6000,'','','','明後日まで','pickup','','open','2026-06-22'),
+      mkPost('offer','丸豊','レモン','2L',80,'個',55,'','','','明後日まで','deliver','箱で出します','open','2026-06-23'),
+    ];
+    // 確認待ち（proposed）— inbox 体験用
+    const offerAspa=posts[1]; offerAspa.status='dealing';
+    const wantMaguro=posts[2]; wantMaguro.status='dealing';
+    deals.push({id:uid(),date:'2026-06-23',sellerId:cN('やまと'),buyerId:cN('築地'),itemName:'ホワイトアスパラガス',spec:'2L',grade:'Aランク',
+      qty:40,unit:'本',unitPrice:300,amount:12000,postId:offerAspa.id,proposerId:cN('築地'),status:'proposed',month:'2026-06'});
+    deals.push({id:uid(),date:'2026-06-23',sellerId:cN('丸豊'),buyerId:cN('築地'),itemName:'本まぐろ',spec:'',grade:'',
+      qty:5,unit:'kg',unitPrice:5800,amount:29000,postId:wantMaguro.id,proposerId:cN('丸豊'),status:'proposed',month:'2026-06'});
+
+    function mkPost(type,co,item,spec,qty,unit,price,grade,brand,origin,deadline,delivery,note,status,date){
+      return {id:uid(),type,companyId:cN(co),itemName:item,spec,qty,unit,unitPrice:price,grade,brand,origin,deadline,delivery,note,status:status||'open',date:date||TODAY};
+    }
+    state={companies,items,posts,deals,closings:{}};
+    user={role:'company',companyId:cN('丸豊')};
+    save();
+  }
+
+  /* ---------- helpers ---------- */
+  const company = id => state.companies.find(c=>c.id===id);
+  const itemByName = n => state.items.find(i=>i.name===n);
+  const cName = id => (company(id)||{name:'(削除済)'}).name;
+  const myCoId = () => user.role==='admin' ? null : user.companyId;
+  const deal = id => state.deals.find(d=>d.id===id);
+  const post = id => state.posts.find(p=>p.id===id);
+  const closingKey = (cid,m) => cid+'|'+m;
+  const isClosed = (cid,m) => !!state.closings[closingKey(cid,m)];
+  function dealMonths(){ return [...new Set(state.deals.map(d=>d.month))].sort().reverse(); }
+  function dealsView(){ return selMonth ? state.deals.filter(d=>d.month===selMonth) : state.deals; }
+  function confirmedDeals(){ return state.deals.filter(d=>d.status==='confirmed'); }
+  // 自社が締めるべき過去月（取引あり・当月より前・未締め）の最古を返す
+  function closingNeeded(cid){
+    if(!cid) return '';
+    const months=[...new Set(confirmedDeals().filter(d=>(d.sellerId===cid||d.buyerId===cid)&&d.month<CUR_MONTH).map(d=>d.month))].sort();
+    return months.find(m=>!isClosed(cid,m)) || '';
+  }
+  function incomingConfirm(cid){ return cid ? state.deals.filter(d=>d.status==='proposed' && post(d.postId) && post(d.postId).companyId===cid) : []; }
+
+  /* ---------- role / context UI ---------- */
+  const TABS = {
+    admin:[['board','📋 掲示板'],['deals','🧾 取引記録'],['settle','💰 月次精算'],['items','🥬 品目マスタ'],['companies','⚙️ 卸業者管理']],
+    company:[['board','📋 掲示板'],['post','✏️ 投稿する'],['inbox','📥 やりとり'],['settle','💰 精算・締め'],['items','🥬 品目マスタ']],
+  };
+  const SHORT={board:['📋','掲示板'],post:['✏️','投稿'],inbox:['📥','やりとり'],settle:['💰','精算'],deals:['🧾','記録'],items:['🥬','品目'],companies:['⚙️','業者']};
+
+  function buildLogin(){
+    $('roleSel').innerHTML = Object.entries(ROLES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
+    $('roleSel').value=user.role; buildCtx();
+  }
+  function buildCtx(){
+    const c=$('ctxSel');
+    if(user.role==='company'){
+      c.style.display='';
+      c.innerHTML=state.companies.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');
+      if(!user.companyId) user.companyId=state.companies[0]&&state.companies[0].id;
+      c.value=user.companyId;
+    } else { c.style.display='none'; c.innerHTML=''; }
+  }
+  function changeRole(r){ user.role=r; user.companyId = r==='company' ? (state.companies[0]&&state.companies[0].id) : null; buildCtx(); afterRoleChange(); }
+  function changeCtx(v){ user.companyId=v; afterRoleChange(); }
+  function afterRoleChange(){
+    const allowed=TABS[user.role].map(t=>t[0]); if(!allowed.includes(tab)) tab=allowed[0];
+    $('roleSel').value=user.role;
+    save(); renderTabs(); renderBand(); renderClosingBanner(); renderAll();
+  }
+  function renderBand(){
+    const cls=user.role; let who,desc;
+    if(user.role==='admin'){ who='運営事務局'; desc='全社の掲示・取引・精算を俯瞰し、卸業者マスタと品目マスタを管理します。'; }
+    else { who=cName(user.companyId); desc='掲示板で求む／出すを投稿し、電話で詰めた取引を記録。月末に自社分を精算・締めします。'; }
+    const n=incomingConfirm(myCoId()).length;
+    const notif = (user.role==='company' && n) ? `<span class="notif">📥 確認待ちが ${n}件 あります</span>` : '';
+    $('roleband').innerHTML=`<span class="chip ${cls}">${esc(who)}</span><span class="desc">${desc}</span>${notif}`;
+  }
+  function renderClosingBanner(){
+    const el=$('closingBanner'); el.innerHTML='';
+    if(user.role!=='company') return;
+    const m=closingNeeded(myCoId()); if(!m) return;
+    el.innerHTML=`<div class="closing-banner"><span class="ic">⚠️</span>
+      <div><b>${m.replace('-','年')}月分の精算がまだ確定していません。</b><br>
+      月末の締め期間（毎月30日〜翌2日）に内容を確認して確定してください。確定するまで新しい投稿はできません。</div>
+      <button class="go" onclick="App.gotoClosing('${m}')">${m.slice(5)}月分を確認して締める</button></div>`;
+  }
+  function gotoClosing(m){ selMonth=m; tab='settle'; buildMonthSelectors(); renderTabs(); renderAll(); window.scrollTo(0,0); }
+  function renderTabs(){
+    const n=incomingConfirm(myCoId()).length;
+    $('tabs').innerHTML=TABS[user.role].map(([id,label])=>{
+      const badge=(id==='inbox'&&n)?`<span class="dot-n">${n}</span>`:'';
+      return `<button class="${id===tab?'active':''}" onclick="App.tab('${id}')">${label}${badge}</button>`;
+    }).join('');
+    $('tabsBottom').innerHTML=TABS[user.role].map(([id])=>{
+      const [ic,lbl]=SHORT[id]||['•',id];
+      const badge=(id==='inbox'&&n)?`<span class="bn">${n}</span>`:'';
+      return `<button class="${id===tab?'active':''}" onclick="App.tab('${id}')"><span class="ic">${ic}</span>${badge}${lbl}</button>`;
+    }).join('');
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    const map={board:'panel-board',post:'panel-post',inbox:'panel-inbox',settle:'panel-settle',deals:'panel-deals',items:'panel-items',companies:'panel-companies'};
+    const p=$(map[tab]); if(p)p.classList.add('active');
+  }
+  function setTab(t){ tab=t; renderTabs(); renderAll(); window.scrollTo(0,0); }
+
+  function buildMonthSelectors(){
+    const opts=`<option value="">全期間</option>`+dealMonths().map(m=>`<option value="${m}">${m.replace('-','年')}月</option>`).join('');
+    ['settleMonth','dealsMonth'].forEach(id=>{ const el=$(id); if(el){ el.innerHTML=opts; el.value=selMonth; } });
+  }
+  function setMonth(m){ selMonth=m; buildMonthSelectors(); renderAll(); }
+
+  /* ---------- BOARD ---------- */
+  function renderBoard(){
+    const me=myCoId();
+    const filters=[['all','すべて'],['want','🙋 求む'],['offer','📦 出す']];
+    $('boardFilter').innerHTML=filters.map(([k,l])=>`<button class="fchip ${boardFilter===k?'on '+k:''}" onclick="App.setBoardFilter('${k}')">${l}</button>`).join('');
+    let list=[...state.posts].filter(p=>p.status!=='closed' || true);
+    if(boardFilter!=='all') list=list.filter(p=>p.type===boardFilter);
+    list.sort((a,b)=>(a.status==='open'?0:1)-(b.status==='open'?0:1) || b.date.localeCompare(a.date));
+    const openCnt=state.posts.filter(p=>p.status==='open').length;
+    $('boardSub').textContent=`募集中 ${openCnt}件 / 全${state.posts.length}件`;
+    $('boardList').innerHTML = list.length ? list.map(p=>renderPostCard(p,me)).join('') : empty('掲示はありません');
+  }
+  function setBoardFilter(k){ boardFilter=k; renderBoard(); }
+  function renderPostCard(p,me){
+    const co=company(p.companyId)||{name:'(削除済)',contact:'',phone:''};
+    const typeLbl = p.type==='want'?'🙋 求む（足りない）':'📦 出す（余った）';
+    const priceLbl = p.type==='want' ? `${yen(p.unitPrice)}以下` : yen(p.unitPrice);
+    const dlLbl = p.type==='want' ? 'ほしい時間' : 'いつまで';
+    const rows=[
+      ['サイズ・規格', p.spec||'指定なし'],
+      ['数量', `${num(p.qty)}${esc(p.unit)}`],
+      ['品質', p.grade?`<span class="pill-grade">${esc(p.grade)}</span>`:'指定なし'],
+      ['ブランド', p.brand||'指定なし'],
+      ['産地', p.origin||'指定なし'],
+      [dlLbl, p.deadline||'指定なし'],
+      ['受渡', p.delivery==='pickup'?'受け取りに行く':'渡しに行く'],
+    ];
+    if(p.note) rows.push(['備考', esc(p.note)]);
+    const specHtml=rows.map(([k,v])=>`<span class="k">${k}</span><span class="v">${v}</span>`).join('');
+    const isMine = p.companyId===me;
+    let foot='';
+    if(p.status==='closed'){ foot=`<span class="status closed">✅ 成立</span>`; }
+    else if(p.status==='dealing'){ foot=`<span class="status dealing">⏳ 商談中（確認待ち）</span>`; }
+    else if(isMine){ foot=`<span class="status open">募集中（自社の投稿）</span> <button class="btn danger sm" onclick="App.cancelPost('${p.id}')">取り下げ</button>`; }
+    else if(user.role==='company'){
+      foot=`<button class="btn ${p.type==='want'?'offer':'ok'} sm" onclick="App.toggleResp('${p.id}')">${p.type==='want'?'📦 出せます（応じる）':'🛒 買います（応じる）'}</button>`;
+      if(respOpen[p.id]) foot+=renderRespForm(p);
+    } else { foot=`<span class="status open">募集中</span>`; }
+    return `<div class="pcard ${p.type} ${p.status==='closed'?'closed':''}">
+      <div class="head"><span class="ttype">${typeLbl}</span><span class="titem">${esc(p.itemName)}</span></div>
+      <div class="body">
+        <div class="price">${priceLbl}<span class="u"> / ${esc(p.unit)}</span> ・ 計 ${yen(p.qty*p.unitPrice)}</div>
+        <div class="spec-grid" style="margin-top:10px">${specHtml}</div>
+        <div class="contact"><span class="co">${esc(co.name)}</span><span class="muted">${esc(co.contact)}</span><span class="ph">☎ ${esc(co.phone)}</span></div>
+      </div>
+      <div class="foot">${foot}</div>
+    </div>`;
+  }
+  function renderRespForm(p){
+    return `<div class="respform" id="resp-${p.id}">
+      <div class="row">
+        <div class="field"><label>数量</label><div class="qty-row"><input type="number" id="rq-${p.id}" value="${p.qty}" min="0" step="1" oninput="App.calcResp('${p.id}')"><span class="muted unit">${esc(p.unit)}</span></div></div>
+        <div class="field"><label>単価（円）</label><input type="number" id="rp-${p.id}" value="${p.unitPrice}" min="0" step="10" oninput="App.calcResp('${p.id}')"></div>
+        <div class="field"><label>取引日</label><input type="date" id="rd-${p.id}" value="${TODAY}"></div>
+      </div>
+      <div class="row" style="margin-top:10px;align-items:center">
+        <div>金額：<span class="amt" id="ra-${p.id}">${yen(p.qty*p.unitPrice)}</span></div>
+        <div class="spacer" style="flex:1"></div>
+        <button class="btn primary sm" onclick="App.submitResp('${p.id}')">この内容で申し込む</button>
+        <button class="btn ghost sm" onclick="App.toggleResp('${p.id}')">やめる</button>
+      </div>
+      <div class="muted" style="margin-top:6px">※申し込むと相手（${esc(cName(p.companyId))}）に確認依頼が届きます。電話で詰めた内容を入れてください。</div>
+    </div>`;
+  }
+  function toggleResp(id){ respOpen[id]=!respOpen[id]; renderBoard(); }
+  function calcResp(id){ const p=post(id); if(!p)return; const q=parseFloat($('rq-'+id).value)||0,pr=parseFloat($('rp-'+id).value)||0; $('ra-'+id).textContent=yen(q*pr); }
+  function submitResp(id){
+    const p=post(id); if(!p||p.status!=='open')return;
+    const me=myCoId(); if(!me) return toast('卸業者でログインしてください');
+    const q=parseFloat($('rq-'+id).value), pr=parseFloat($('rp-'+id).value), date=$('rd-'+id).value;
+    if(!(q>0)) return toast('数量を入力してください');
+    if(!(pr>0)) return toast('単価を入力してください');
+    if(!date) return toast('取引日を入力してください');
+    // want投稿に応じる＝自社が売り手 / offer投稿に応じる＝自社が買い手
+    const sellerId = p.type==='want' ? me : p.companyId;
+    const buyerId  = p.type==='want' ? p.companyId : me;
+    state.deals.push({id:uid(),date,sellerId,buyerId,itemName:p.itemName,spec:p.spec,grade:p.grade,
+      qty:q,unit:p.unit,unitPrice:pr,amount:q*pr,postId:p.id,proposerId:me,status:'proposed',month:date.slice(0,7)});
+    p.status='dealing'; respOpen[id]=false;
+    save(); buildMonthSelectors(); renderTabs(); renderBand(); renderAll();
+    toast('申し込みました。相手の確認を待っています');
+  }
+  function cancelPost(id){ const p=post(id); if(!p)return; if(!confirm('この掲示を取り下げます。よろしいですか？'))return;
+    state.deals=state.deals.filter(d=>!(d.postId===id&&d.status==='proposed'));
+    p.status='closed'; save(); renderTabs(); renderBand(); renderAll(); toast('掲示を取り下げました'); }
+
+  /* ---------- INBOX ---------- */
+  function renderInbox(){
+    const me=myCoId();
+    const confirmList=incomingConfirm(me);
+    $('inboxConfirm').innerHTML = confirmList.length ? confirmList.map(d=>renderConfirmCard(d)).join('') : empty('確認待ちの取引はありません');
+    const waiting=state.deals.filter(d=>d.status==='proposed' && d.proposerId===me);
+    $('inboxWaiting').innerHTML = waiting.length ? waiting.map(d=>renderWaitingCard(d)).join('') : empty('相手の確認待ちはありません');
+    const done=state.deals.filter(d=>d.status==='confirmed' && (d.sellerId===me||d.buyerId===me)).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,6);
+    $('inboxDone').innerHTML = done.length ? done.map(d=>{
+      const side=d.sellerId===me?'売り':'仕入';
+      return `<div class="inbox-card"><div class="top"><span class="title">${esc(d.itemName)} ${d.spec?esc(d.spec)+' ':''}${num(d.qty)}${esc(d.unit)}</span>
+        <span class="status closed">成立</span><span class="deal-amt" style="margin-left:auto">${yen(d.amount)}</span></div>
+        <div class="muted">${d.date}・${side}：${esc(cName(d.sellerId))} → ${esc(cName(d.buyerId))}</div></div>`;
+    }).join('') : empty('まだ成立した取引はありません');
+  }
+  function renderConfirmCard(d){
+    const otherCo = d.proposerId;
+    return `<div class="inbox-card confirm">
+      <div class="top"><span class="title">${esc(d.itemName)} ${d.spec?esc(d.spec)+' ':''}${num(d.qty)}${esc(d.unit)}</span>
+        <span class="status dealing">確認待ち</span><span class="deal-amt" style="margin-left:auto">${yen(d.amount)}</span></div>
+      <div class="muted">${d.date}・売り手 ${esc(cName(d.sellerId))} → 買い手 ${esc(cName(d.buyerId))}（単価 ${yen(d.unitPrice)}）<br>
+        申込：<b>${esc(cName(otherCo))}</b> さんから</div>
+      <div class="act">
+        <button class="btn ok sm" onclick="App.confirmDeal('${d.id}')">✅ 確認して成立</button>
+        <button class="btn ghost sm" onclick="App.rejectDeal('${d.id}')">内容が違う（差し戻す）</button>
+      </div></div>`;
+  }
+  function renderWaitingCard(d){
+    return `<div class="inbox-card waiting">
+      <div class="top"><span class="title">${esc(d.itemName)} ${d.spec?esc(d.spec)+' ':''}${num(d.qty)}${esc(d.unit)}</span>
+        <span class="status open">相手の確認待ち</span><span class="deal-amt" style="margin-left:auto">${yen(d.amount)}</span></div>
+      <div class="muted">${d.date}・${esc(cName(d.sellerId))} → ${esc(cName(d.buyerId))}</div>
+      <div class="act"><button class="btn danger sm" onclick="App.cancelProposal('${d.id}')">申し込みを取り消す</button></div></div>`;
+  }
+  function confirmDeal(id){
+    const d=deal(id); if(!d||d.status!=='proposed')return;
+    d.status='confirmed';
+    const p=post(d.postId); if(p) p.status='closed';
+    save(); renderTabs(); renderBand(); renderClosingBanner(); renderAll();
+    toastGood(`🎉 ${esc(d.itemName)} ${yen(d.amount)} の取引が成立しました（記録に追加）`);
+  }
+  function rejectDeal(id){
+    const d=deal(id); if(!d)return;
+    const p=post(d.postId); if(p&&p.status==='dealing') p.status='open';
+    state.deals=state.deals.filter(x=>x.id!==id);
+    save(); renderTabs(); renderBand(); renderAll(); toast('差し戻しました（再び募集中）');
+  }
+  function cancelProposal(id){
+    const d=deal(id); if(!d)return; if(!confirm('この申し込みを取り消します。よろしいですか？'))return;
+    const p=post(d.postId); if(p&&p.status==='dealing') p.status='open';
+    state.deals=state.deals.filter(x=>x.id!==id);
+    save(); renderTabs(); renderBand(); renderAll(); toast('申し込みを取り消しました');
+  }
+
+  /* ---------- SETTLE ---------- */
+  function renderSettle(){
+    if(user.role==='admin') renderSettleAdmin(); else renderSettleCompany();
+  }
+  function pairGroups(recs){
+    const map={};
+    recs.forEach(d=>{ const k=d.sellerId+'>'+d.buyerId; (map[k]=map[k]||{sellerId:d.sellerId,buyerId:d.buyerId,items:[],total:0}); map[k].items.push(d); map[k].total+=d.amount; });
+    return Object.values(map).sort((a,b)=>b.total-a.total);
+  }
+  function lineRow(d){
+    return `<tr><td>${d.date}</td><td><b>${esc(d.itemName)}</b> ${d.spec?`<span class="muted">${esc(d.spec)}</span>`:''}</td>
+      <td class="num">${num(d.qty)}${esc(d.unit)}</td><td class="num">${yen(d.unitPrice)}</td><td class="num"><b>${yen(d.amount)}</b></td></tr>`;
+  }
+  function renderSettleCompany(){
+    const me=myCoId();
+    const recs=confirmedDeals().filter(d=>d.month===(selMonth||CUR_MONTH));
+    const m=selMonth||CUR_MONTH;
+    const sales=recs.filter(d=>d.sellerId===me);
+    const purch=recs.filter(d=>d.buyerId===me);
+    const salesTotal=sales.reduce((a,b)=>a+b.amount,0), purchTotal=purch.reduce((a,b)=>a+b.amount,0);
+    const closed=isClosed(me,m);
+    const canClose = !closed && recs.length>0;
+    let html=`<div class="grid-kpi">
+      ${kpi('売上（自社が売り手）',yen(salesTotal))}
+      ${kpi('仕入（自社が買い手）',yen(purchTotal))}
+      ${kpi('差引',(salesTotal-purchTotal>=0?'+':'−')+yen(Math.abs(salesTotal-purchTotal)))}
+      ${kpi('自社の取引件数',sales.length+purch.length,'件')}</div>`;
+
+    html+=`<div class="card"><div class="toolbar"><h2 style="margin:0">📤 売上（請求する分・相手別）</h2><span class="muted" style="margin-left:auto">${m.replace('-','年')}月</span></div>`;
+    const sg=pairGroups(sales);
+    html+= sg.length ? sg.map(g=>`<div class="group-block sell"><div class="gh"><span class="dir">請求先 →</span> ${esc(cName(g.buyerId))}<span class="gt">${yen(g.total)}</span></div>
+      <table><tr><th>取引日</th><th>品目</th><th class="num">数量</th><th class="num">単価</th><th class="num">金額</th></tr>${g.items.map(lineRow).join('')}</table></div>`).join('') : empty('この月の売上はありません');
+    html+=`</div>`;
+
+    html+=`<div class="card"><div class="toolbar"><h2 style="margin:0">📥 仕入（支払う分・相手別）</h2><span class="muted" style="margin-left:auto">${m.replace('-','年')}月</span></div>`;
+    const pg=pairGroups(purch);
+    html+= pg.length ? pg.map(g=>`<div class="group-block buy"><div class="gh"><span class="dir">支払先 →</span> ${esc(cName(g.sellerId))}<span class="gt">${yen(g.total)}</span></div>
+      <table><tr><th>取引日</th><th>品目</th><th class="num">数量</th><th class="num">単価</th><th class="num">金額</th></tr>${g.items.map(lineRow).join('')}</table></div>`).join('') : empty('この月の仕入はありません');
+    html+=`</div>`;
+
+    html+=`<div class="card"><h2 style="margin:0 0 4px">🔒 ${m.replace('-','年')}月分の締め</h2>`;
+    if(closed){
+      html+=`<p class="hint" style="margin:0">この月は <b style="color:var(--credit)">確定済み</b> です。請求書発行・支払いに進めます。</p>
+        <div class="toolbar" style="margin-top:10px"><span class="status closed">✅ ${m.slice(5)}月分 確定済み</span>
+        <button class="btn ghost sm" onclick="App.reopenMonth('${m}')">確定を取り消す</button></div>`;
+    } else if(recs.length){
+      html+=`<p class="hint" style="margin:0">内容を確認し、間違いなければ確定してください。<b>確定するまで翌月の新規投稿はできません。</b></p>
+        <div class="toolbar" style="margin-top:10px"><button class="btn ok" onclick="App.closeMonth('${m}')">この内容で ${m.slice(5)}月分を確定する</button></div>`;
+    } else {
+      html+=`<p class="hint" style="margin:0">この月は取引がないため、締めは不要です。</p>`;
+    }
+    html+=`</div>`;
+    $('settleBody').innerHTML=html;
+  }
+  function renderSettleAdmin(){
+    const recs=confirmedDeals().filter(d=>!selMonth||d.month===selMonth);
+    const total=recs.reduce((a,b)=>a+b.amount,0);
+    const groups=pairGroups(recs);
+    let html=`<div class="grid-kpi">
+      ${kpi('成立取引',recs.length,'件')}
+      ${kpi('取引総額',yen(total))}
+      ${kpi('参加卸業者',state.companies.length,'社')}
+      ${kpi('募集中の掲示',state.posts.filter(p=>p.status==='open').length,'件')}</div>`;
+    html+=`<div class="card"><h2 style="margin:0 0 4px">💰 売り手 → 買い手 別 精算（相殺なし）</h2>
+      <p class="hint">各取引を方向どおりに集計しています。そのまま各社の請求項目になります。</p>`;
+    html+= groups.length ? groups.map(g=>`<div class="group-block sell"><div class="gh">${esc(cName(g.sellerId))} <span class="dir">→</span> ${esc(cName(g.buyerId))}<span class="gt">${yen(g.total)}</span></div>
+      <table><tr><th>取引日</th><th>品目</th><th class="num">数量</th><th class="num">単価</th><th class="num">金額</th></tr>${g.items.map(lineRow).join('')}</table></div>`).join('') : empty('この期間の成立取引はありません');
+    html+=`</div>`;
+    // 締め状況
+    html+=`<div class="card"><h2 style="margin:0 0 4px">🔒 月次締めの状況</h2><table><tr><th>卸業者</th><th>対象月</th><th>状況</th></tr>`;
+    const rows=[];
+    state.companies.forEach(c=>{
+      const months=[...new Set(confirmedDeals().filter(d=>(d.sellerId===c.id||d.buyerId===c.id)).map(d=>d.month))].sort().reverse();
+      months.forEach(m=>{ rows.push(`<tr><td><b>${esc(c.name)}</b></td><td>${m.replace('-','年')}月</td>
+        <td>${isClosed(c.id,m)?'<span class="status closed">確定済み</span>':(m<CUR_MONTH?'<span class="status dealing">未確定（締め待ち）</span>':'<span class="status open">進行中</span>')}</td></tr>`); });
+    });
+    html+= rows.length?rows.join(''):`<tr><td colspan="3">${empty('データなし')}</td></tr>`;
+    html+=`</table></div>`;
+    $('settleBody').innerHTML=html;
+  }
+  function closeMonth(m){ const me=myCoId(); if(!me)return; state.closings[closingKey(me,m)]=true; save(); renderClosingBanner(); renderAll(); toastGood(`✅ ${m.slice(5)}月分を確定しました`); }
+  function reopenMonth(m){ const me=myCoId(); if(!me)return; if(!confirm('確定を取り消すと、再び締めが必要になります。よろしいですか？'))return; delete state.closings[closingKey(me,m)]; save(); renderClosingBanner(); renderAll(); toast('確定を取り消しました'); }
+
+  const kpi=(l,v,u='')=>`<div class="kpi"><div class="lbl">${l}</div><div class="val">${typeof v==='number'?v.toLocaleString('ja-JP'):v}${u?`<small>${u}</small>`:''}</div></div>`;
+
+  /* ---------- DEALS (admin) ---------- */
+  function renderDeals(){
+    let recs=dealsView().filter(d=>d.status==='confirmed').slice().sort((a,b)=>b.date.localeCompare(a.date));
+    $('dealCount').textContent=`${recs.length}件`;
+    if(!recs.length){ $('dealTable').innerHTML=`<tr><td>${empty('この期間の取引がありません')}</td></tr>`; return; }
+    const head=`<tr><th>取引日</th><th>売り手</th><th>買い手</th><th>品目</th><th>規格</th><th>品質</th><th class="num">数量</th><th class="num">単価</th><th class="num">金額</th></tr>`;
+    $('dealTable').innerHTML=head+recs.map(d=>`<tr><td>${d.date}</td>
+      <td>${esc(cName(d.sellerId))}</td><td>${esc(cName(d.buyerId))}</td>
+      <td><b>${esc(d.itemName)}</b></td><td>${esc(d.spec)||'—'}</td><td>${d.grade?`<span class="pill-grade">${esc(d.grade)}</span>`:'—'}</td>
+      <td class="num">${num(d.qty)}${esc(d.unit)}</td><td class="num">${yen(d.unitPrice)}</td><td class="num"><b>${yen(d.amount)}</b></td></tr>`).join('');
+  }
+
+  /* ---------- POST form ---------- */
+  function setPostType(t){
+    postType=t;
+    document.querySelectorAll('#typeSeg button').forEach(b=>{ b.className = b.dataset.t===t ? (t==='want'?'on-want':'on-offer') : ''; });
+    $('p-price-lbl').innerHTML = t==='want' ? '希望単価（円・上限）<span class="req">*</span>' : '単価（円）<span class="req">*</span>';
+    $('p-deadline-lbl').textContent = t==='want' ? 'ほしい時間' : 'いつまで';
+    $('p-deadline').placeholder = t==='want' ? '例：本日17時まで' : '例：明日まで';
+    $('p-delivery').value = t==='want' ? 'pickup' : 'deliver';
+    $('p-submit').className = 'btn '+(t==='want'?'want':'offer');
+    $('p-submit').textContent = t==='want' ? 'この内容で「求む」を掲示する' : 'この内容で「出す」を掲示する';
+  }
+  function calcPostAmt(){ const q=parseFloat($('p-qty').value)||0,p=parseFloat($('p-price').value)||0; $('p-amt').value = (q&&p)?yen(q*p):''; }
+  function clearErr(){ document.querySelectorAll('#panel-post .field.err').forEach(f=>f.classList.remove('err')); }
+  function markErr(id){ const el=$(id); if(el){ const f=el.closest('.field'); if(f){ f.classList.add('err'); el.focus(); } } }
+  function addPost(){
+    clearErr();
+    const me=myCoId(); if(!me) return toast('卸業者でログインしてください');
+    const need=closingNeeded(me);
+    if(need){ toast(`先に ${need.slice(5)}月分の精算を確定してください`); gotoClosing(need); return; }
+    const itemName=$('p-item').value.trim(), qty=parseFloat($('p-qty').value), unitPrice=parseFloat($('p-price').value);
+    let bad=false;
+    if(!itemName){ markErr('p-item'); bad=true; }
+    if(!(qty>0)){ markErr('p-qty'); bad=true; }
+    if(!(unitPrice>0)){ markErr('p-price'); bad=true; }
+    if(bad) return toast('赤い欄を確認してください');
+    state.posts.push({id:uid(),type:postType,companyId:me,itemName,spec:$('p-spec').value.trim(),
+      qty,unit:$('p-unit').value.trim()||'個',unitPrice,grade:$('p-grade').value,brand:$('p-brand').value.trim(),
+      origin:$('p-origin').value.trim(),deadline:$('p-deadline').value.trim(),delivery:$('p-delivery').value,
+      note:$('p-note').value.trim(),status:'open',date:TODAY});
+    ['p-item','p-spec','p-brand','p-origin','p-deadline','p-note'].forEach(id=>$(id).value='');
+    $('p-amt').value='';
+    save(); buildMonthSelectors(); renderTabs(); renderBand(); tab='board'; renderTabs(); renderAll();
+    toastGood('掲示しました。掲示板に表示されています');
+  }
+
+  /* ---------- ITEMS ---------- */
+  function renderItems(){
+    const editable = user.role==='admin' || user.role==='company';
+    $('itemFormGrid').style.display = editable?'':'none';
+    rebuildItemDatalist();
+    const head=`<tr><th>品目名</th><th>単位</th><th class="num">参考単価</th>${editable?'<th></th>':''}</tr>`;
+    const rows=state.items.map(i=>{
+      const priceCell = editable
+        ? `<td class="num"><input type="number" value="${i.price}" min="0" step="10" style="width:110px;text-align:right" onchange="App.setPrice('${i.id}',this.value)"></td>`
+        : `<td class="num">${yen(i.price)}</td>`;
+      return `<tr><td><b>${esc(i.name)}</b></td><td>${esc(i.unit)}</td>${priceCell}
+        ${editable?`<td class="num"><button class="btn danger sm" onclick="App.delItem('${i.id}')">削除</button></td>`:''}</tr>`;
+    }).join('');
+    $('itemTable').innerHTML = state.items.length ? head+rows : `<tr><td>${empty('品目がありません')}</td></tr>`;
+  }
+  function rebuildItemDatalist(){ const dl=$('itemNameList'); if(dl) dl.innerHTML=state.items.map(i=>`<option value="${esc(i.name)}">`).join(''); }
+  function addItem(){
+    const name=$('m-item-name').value.trim(), unit=$('m-item-unit').value.trim()||'個', price=parseFloat($('m-item-price').value);
+    if(!name)return toast('品目名を入力してください'); if(!(price>0))return toast('参考単価を入力してください');
+    if(itemByName(name)) return toast('同じ品目名があります');
+    state.items.push({id:uid(),name,unit,price}); $('m-item-name').value=''; save(); renderItems(); toast('品目を追加しました');
+  }
+  function delItem(id){ state.items=state.items.filter(i=>i.id!==id); save(); renderItems(); }
+  function setPrice(id,v){ const i=state.items.find(x=>x.id===id); if(!i)return; i.price=parseFloat(v)||0; save(); toast('参考単価を更新しました'); }
+
+  /* ---------- items: CSV / Excel 取込 ---------- */
+  function downloadItemTemplate(){
+    const head='品目名,単位,参考単価\n';
+    const body = state.items.length ? state.items.map(i=>[i.name,i.unit,i.price].join(',')).join('\n')
+      : 'トマト,個,200\nホワイトアスパラガス,本,300\n本まぐろ,kg,6000';
+    dl('品目マスタ_テンプレート.csv','﻿'+head+body,'text/csv');
+  }
+  function importItems(input){
+    const file=input.files&&input.files[0]; if(!file)return;
+    const ext=(file.name.split('.').pop()||'').toLowerCase();
+    if(ext==='csv'){
+      const rd=new FileReader();
+      rd.onload=()=>{ applyItemRows(parseCSV(rd.result)); input.value=''; };
+      rd.onerror=()=>{ toast('ファイルの読み込みに失敗しました'); input.value=''; };
+      rd.readAsText(file);
+    } else {
+      loadXLSX(()=>{
+        const rd=new FileReader();
+        rd.onload=()=>{ try{
+          const wb=XLSX.read(new Uint8Array(rd.result),{type:'array'});
+          const ws=wb.Sheets[wb.SheetNames[0]];
+          applyItemRows(XLSX.utils.sheet_to_json(ws,{header:1,blankrows:false}));
+        }catch(e){ toast('Excelの読み込みに失敗しました'); } input.value=''; };
+        rd.onerror=()=>{ toast('ファイルの読み込みに失敗しました'); input.value=''; };
+        rd.readAsArrayBuffer(file);
+      });
+    }
+  }
+  function parseCSV(text){
+    text=String(text).replace(/^﻿/,'');
+    const rows=[]; let row=[],cell='',q=false;
+    for(let k=0;k<text.length;k++){ const c=text[k];
+      if(q){ if(c==='"'){ if(text[k+1]==='"'){cell+='"';k++;} else q=false; } else cell+=c; }
+      else if(c==='"'){ q=true; }
+      else if(c===','){ row.push(cell); cell=''; }
+      else if(c==='\n'){ row.push(cell); rows.push(row); row=[]; cell=''; }
+      else if(c!=='\r'){ cell+=c; }
+    }
+    if(cell.length||row.length){ row.push(cell); rows.push(row); }
+    return rows;
+  }
+  function applyItemRows(rows){
+    if(!rows||!rows.length) return toast('取り込めるデータがありません');
+    const first=rows[0].map(x=>String(x==null?'':x).trim());
+    const isHdr=first.some(h=>/品目|食材|名前|name/i.test(h)) || first.some(h=>/単価|価格|原価|price/i.test(h));
+    let nameI=0,unitI=1,priceI=2;
+    if(isHdr){ first.forEach((h,i)=>{ if(/品目|食材|名前|name/i.test(h))nameI=i; if(/単位|unit/i.test(h))unitI=i; if(/単価|価格|原価|price/i.test(h))priceI=i; }); }
+    let added=0,updated=0,skipped=0;
+    for(let r=isHdr?1:0;r<rows.length;r++){
+      const cols=rows[r]||[];
+      const name=String(cols[nameI]==null?'':cols[nameI]).trim();
+      if(!name){ skipped++; continue; }
+      const unit=String(cols[unitI]==null?'':cols[unitI]).trim()||'個';
+      const price=Math.round(parseFloat(String(cols[priceI]==null?'':cols[priceI]).replace(/[^0-9.\-]/g,''))||0);
+      const ex=itemByName(name);
+      if(ex){ if(unit)ex.unit=unit; if(price>0)ex.price=price; updated++; }
+      else { state.items.push({id:uid(),name,unit,price:price>0?price:0}); added++; }
+    }
+    save(); renderItems(); toast(`取込完了：${added}件追加 / ${updated}件更新${skipped?` / ${skipped}件スキップ`:''}`);
+  }
+  function loadXLSX(cb){
+    if(window.XLSX) return cb();
+    toast('Excel読み込みの準備中…');
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+    s.onload=()=>cb();
+    s.onerror=()=>toast('Excel読み込みライブラリの取得に失敗しました（CSVをお試しください）');
+    document.head.appendChild(s);
+  }
+
+  /* ---------- COMPANIES ---------- */
+  function renderCompanies(){
+    const head=`<tr><th>企業名</th><th>担当者</th><th>連絡先</th><th class="num">取引</th><th></th></tr>`;
+    $('companyTable').innerHTML=state.companies.length? head+state.companies.map(c=>{
+      const n=confirmedDeals().filter(d=>d.sellerId===c.id||d.buyerId===c.id).length;
+      return `<tr><td><b>${esc(c.name)}</b></td><td>${esc(c.contact||'—')}</td><td>${esc(c.phone||'—')}</td>
+        <td class="num muted">${n}件</td><td class="num"><button class="btn danger sm" onclick="App.delCompany('${c.id}')">削除</button></td></tr>`;
+    }).join('') : `<tr><td>${empty('卸業者がありません')}</td></tr>`;
+  }
+  function addCompany(){
+    const name=$('m-co-name').value.trim(),contact=$('m-co-contact').value.trim(),phone=$('m-co-phone').value.trim();
+    if(!name)return toast('企業名を入力してください');
+    state.companies.push({id:uid(),name,contact,phone});
+    ['m-co-name','m-co-contact','m-co-phone'].forEach(id=>$(id).value='');
+    save(); renderCompanies(); buildCtx(); toast('卸業者を追加しました');
+  }
+  function delCompany(id){
+    if(state.deals.some(d=>d.sellerId===id||d.buyerId===id))return toast('取引のある業者は削除できません');
+    if(state.posts.some(p=>p.companyId===id&&p.status!=='closed'))return toast('掲示中の業者は削除できません');
+    state.companies=state.companies.filter(c=>c.id!==id); save(); renderCompanies(); buildCtx();
+  }
+
+  /* ---------- export ---------- */
+  function dl(name,content,type){ const b=new Blob([content],{type}),u=URL.createObjectURL(b),a=document.createElement('a'); a.href=u;a.download=name;a.click();URL.revokeObjectURL(u); }
+  function exportDeals(){
+    let recs=dealsView().filter(d=>d.status==='confirmed').slice().sort((a,b)=>a.date.localeCompare(b.date));
+    if(user.role==='company'){ const me=myCoId(); recs=recs.filter(d=>d.sellerId===me||d.buyerId===me); }
+    const q=v=>{ const s=String(v==null?'':v); return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; };
+    const head='取引日,売り手,買い手,品目,規格,品質,数量,単位,単価,金額\n';
+    const body=recs.map(d=>[d.date,cName(d.sellerId),cName(d.buyerId),d.itemName,d.spec,d.grade,d.qty,d.unit,d.unitPrice,d.amount].map(q).join(',')).join('\n');
+    const suffix=selMonth?('_'+selMonth):'';
+    dl('豊洲リレー取引記録'+suffix+'.csv','﻿'+head+body,'text/csv');
+  }
+  function exportAll(){ dl('toyosu_relay_data.json',JSON.stringify({state,user},null,2),'application/json'); }
+  function reseed(){ if(confirm('サンプルデータで初期化します。よろしいですか？')){ seed(); tab='board'; selMonth=''; respOpen={}; init2(); toast('サンプルデータを読み込みました'); } }
+  function wipe(){ if(confirm('全データを削除します。元に戻せません。')){ state={companies:[],items:[],posts:[],deals:[],closings:{}}; user={role:'admin',companyId:null}; tab='board'; selMonth=''; save(); init2(); toast('全データを削除しました'); } }
+
+  /* ---------- plumbing ---------- */
+  function toast(m){ const t=$('toast'); t.className='toast'; t.textContent=m; void t.offsetWidth; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2400); }
+  function toastGood(m){ const t=$('toast'); t.className='toast good'; t.textContent=m; void t.offsetWidth; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2800); }
+  function renderAll(){
+    if(tab==='board')renderBoard();
+    if(tab==='post')renderPostForm();
+    if(tab==='inbox')renderInbox();
+    if(tab==='settle')renderSettle();
+    if(tab==='deals')renderDeals();
+    if(tab==='items')renderItems();
+    if(tab==='companies')renderCompanies();
+  }
+  function renderPostForm(){ rebuildItemDatalist(); setPostType(postType); calcPostAmt(); }
+  function init2(){ buildLogin(); buildMonthSelectors(); renderBand(); renderClosingBanner(); renderTabs(); renderAll(); }
+  function init(){
+    if(!load()) seed();
+    if(!state.companies) state.companies=[];
+    if(!state.items) state.items=[];
+    if(!state.posts) state.posts=[];
+    if(!state.deals) state.deals=[];
+    if(!state.closings) state.closings={};
+    init2();
+  }
+
+  return { init,tab:setTab,changeRole,changeCtx,setMonth,setPostType,calcPostAmt,addPost,
+           setBoardFilter,toggleResp,calcResp,submitResp,cancelPost,
+           confirmDeal,rejectDeal,cancelProposal,gotoClosing,closeMonth,reopenMonth,
+           addItem,delItem,setPrice,downloadItemTemplate,importItems,
+           addCompany,delCompany,exportDeals,exportAll,reseed,wipe };
+})();
+window.addEventListener('DOMContentLoaded',App.init);
+</script>
+</body>
+</html>
