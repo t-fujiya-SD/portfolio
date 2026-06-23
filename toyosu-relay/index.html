@@ -115,13 +115,14 @@
   .status.closed{background:var(--credit-bg);color:var(--credit)}
   .status.part{background:#fff5e6;color:var(--warn)}
   .seg-label{font-size:12px;color:var(--sub);font-weight:700;margin:0 0 6px}
-  .seg{display:inline-flex;background:#eef1f6;border-radius:10px;padding:3px;gap:3px;flex-wrap:wrap;margin-bottom:12px}
-  .seg button{border:none;background:transparent;padding:8px 14px;border-radius:8px;font-weight:700;font-size:13px;color:var(--sub);cursor:pointer;font-family:inherit}
-  .seg button.on-want{background:var(--want);color:#fff}
-  .seg button.on-offer{background:var(--offer);color:#fff}
-  .seg button.on-bring{background:var(--bring);color:#fff}
-  .seg button.on-need{background:var(--need);color:#fff}
-  .seg button.on-consult{background:var(--consult);color:#fff}
+  .seg{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:8px;margin-bottom:12px}
+  .seg button{border:1.5px solid var(--line);background:#fff;padding:12px 14px;border-radius:11px;font-weight:700;font-size:13.5px;color:var(--ink);cursor:pointer;font-family:inherit;text-align:left;transition:.15s}
+  .seg button:hover{border-color:#c7cfdb;background:#fafbfc}
+  .seg button.on-want{border-color:var(--want);background:var(--want-bg);color:var(--want)}
+  .seg button.on-offer{border-color:var(--offer);background:var(--offer-bg);color:var(--offer)}
+  .seg button.on-bring{border-color:var(--bring);background:#e7f6f4;color:var(--bring)}
+  .seg button.on-need{border-color:var(--need);background:#f1e9fd;color:var(--need)}
+  .seg button.on-consult{border-color:var(--consult);background:#e6f2fb;color:var(--consult)}
   .filterbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
   .fchip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 13px;font-size:12.5px;font-weight:700;color:var(--sub);cursor:pointer}
   .fchip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
@@ -182,11 +183,17 @@
   .pr-badge{background:var(--primary-d);color:#fff;font-size:10.5px;padding:2px 8px;border-radius:5px;letter-spacing:.1em}
   .pr-sub{color:var(--sub);font-weight:600}
   .pr-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
-  .pr-card{border:1px solid var(--line);border-left:4px solid var(--pc,#1d4ed8);border-radius:10px;padding:11px 13px;background:#fff;display:flex;flex-direction:column;gap:5px}
-  .pr-tag{font-size:10.5px;font-weight:800;color:var(--pc,#1d4ed8)}
-  .pr-title{font-weight:800;font-size:14px}
+  .pr-card{border:1px solid var(--line);border-radius:12px;background:#fff;overflow:hidden;cursor:pointer;transition:.15s;display:flex;flex-direction:column}
+  .pr-card:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(16,24,40,.14);border-color:var(--pc,#1d4ed8)}
+  .pr-thumb{position:relative;aspect-ratio:16/10;background:#eef1f5;overflow:hidden}
+  .pr-thumb img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block;transition:.25s}
+  .pr-card:hover .pr-thumb img{transform:scale(1.04)}
+  .pr-tag{position:absolute;top:8px;left:8px;font-size:10.5px;font-weight:800;color:#fff;background:var(--pc,#1d4ed8);padding:3px 9px;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+  .pr-body{padding:11px 13px 13px;display:flex;flex-direction:column;gap:5px;flex:1}
+  .pr-title{font-weight:800;font-size:14.5px}
   .pr-desc{font-size:12px;color:var(--sub);flex:1;line-height:1.5}
-  .pr-btn{align-self:flex-start;background:var(--pc,#1d4ed8);color:#fff;margin-top:5px}
+  .pr-cta{align-self:flex-start;background:var(--pc,#1d4ed8);color:#fff;font-weight:700;font-size:12.5px;padding:8px 14px;border-radius:8px;margin-top:5px}
+  .pr-card:hover .pr-cta{filter:brightness(.93)}
   /* デモモーダル */
   .demo-modal{position:fixed;inset:0;background:rgba(15,20,30,.72);display:none;z-index:90;padding:18px}
   .demo-modal.show{display:flex;align-items:center;justify-content:center}
@@ -421,9 +428,9 @@ const App = (()=>{
   };
   // 掲示板の「すべて／相談」上部に出すPR枠（自社ツールの告知・その場でデモを開ける）
   const PROMOS=[
-    {tag:'売上レポート',title:'月次業績レポート',desc:'POSの売上を自動集計 → グラフ＆PowerPointで月次報告。',url:'../monthly-report/',color:'#1d4ed8'},
-    {tag:'仕入れ・卸',title:'仕入れ見える化レポート',desc:'仕入データを可視化してコスト・原価を管理。卸／多店舗向け。',url:'../procurement-report/',color:'#0d9488'},
-    {tag:'店舗間',title:'フードリレー',desc:'店舗間の食材の貸し借りを金額で見える化し、月末に精算。',url:'../food-relay/',color:'#ea580c'},
+    {tag:'売上レポート',title:'月次業績レポート',desc:'POSの売上を自動集計 → グラフ＆PowerPointで月次報告。',url:'../monthly-report/',img:'../assets/shot-report.png',color:'#1d4ed8'},
+    {tag:'仕入れ・卸',title:'仕入れ見える化レポート',desc:'仕入データを可視化してコスト・原価を管理。卸／多店舗向け。',url:'../procurement-report/',img:'../assets/shot-procurement.png',color:'#0d9488'},
+    {tag:'店舗間',title:'フードリレー',desc:'店舗間の食材の貸し借りを金額で見える化し、月末に精算。',url:'../food-relay/',img:'../assets/shot-food-relay.png',color:'#ea580c'},
   ];
   let state = { companies:[], items:[], posts:[], deals:[], closings:{} };
   let user = { role:'company', companyId:null };
@@ -619,11 +626,13 @@ const App = (()=>{
     z.innerHTML=`<div class="pr-wrap">
       <div class="pr-head"><span class="pr-badge">PR</span> スパイシーデバイスの飲食・卸向けツール<span class="pr-sub">（ボタンでデモをその場で開けます）</span></div>
       <div class="pr-row">${PROMOS.map((p,i)=>`
-        <div class="pr-card" style="--pc:${p.color}">
-          <div class="pr-tag">${esc(p.tag)}</div>
-          <div class="pr-title">${esc(p.title)}</div>
-          <div class="pr-desc">${esc(p.desc)}</div>
-          <button class="btn sm pr-btn" onclick="App.openDemo(${i})">▶ デモを見る</button>
+        <div class="pr-card" style="--pc:${p.color}" onclick="App.openDemo(${i})" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openDemo(${i})}">
+          <div class="pr-thumb"><img src="${p.img}" alt="${esc(p.title)}の画面" loading="lazy"><span class="pr-tag">${esc(p.tag)}</span></div>
+          <div class="pr-body">
+            <div class="pr-title">${esc(p.title)}</div>
+            <div class="pr-desc">${esc(p.desc)}</div>
+            <span class="pr-cta">▶ デモを見る</span>
+          </div>
         </div>`).join('')}</div>
     </div>`;
   }
