@@ -176,6 +176,28 @@
   .lightbox{position:fixed;inset:0;background:rgba(15,20,30,.84);display:none;align-items:center;justify-content:center;z-index:80;padding:20px;cursor:zoom-out}
   .lightbox.show{display:flex}
   .lightbox img{max-width:92vw;max-height:88vh;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+  /* PR枠 */
+  .pr-wrap{border:1px solid #d6e1f5;background:linear-gradient(135deg,#eef4ff,#ffffff);border-radius:13px;padding:13px 15px;margin-bottom:16px}
+  .pr-head{font-size:12.5px;font-weight:700;color:var(--primary-d);margin-bottom:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .pr-badge{background:var(--primary-d);color:#fff;font-size:10.5px;padding:2px 8px;border-radius:5px;letter-spacing:.1em}
+  .pr-sub{color:var(--sub);font-weight:600}
+  .pr-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+  .pr-card{border:1px solid var(--line);border-left:4px solid var(--pc,#1d4ed8);border-radius:10px;padding:11px 13px;background:#fff;display:flex;flex-direction:column;gap:5px}
+  .pr-tag{font-size:10.5px;font-weight:800;color:var(--pc,#1d4ed8)}
+  .pr-title{font-weight:800;font-size:14px}
+  .pr-desc{font-size:12px;color:var(--sub);flex:1;line-height:1.5}
+  .pr-btn{align-self:flex-start;background:var(--pc,#1d4ed8);color:#fff;margin-top:5px}
+  /* デモモーダル */
+  .demo-modal{position:fixed;inset:0;background:rgba(15,20,30,.72);display:none;z-index:90;padding:18px}
+  .demo-modal.show{display:flex;align-items:center;justify-content:center}
+  .demo-card{background:#fff;border-radius:14px;width:min(1120px,96vw);height:min(880px,92vh);display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.45)}
+  .demo-bar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);background:#fafbfc;flex-wrap:wrap}
+  .demo-ttl{font-weight:800;font-size:14px}
+  .demo-pr{font-size:10.5px;font-weight:800;color:#fff;background:var(--primary-d);padding:2px 8px;border-radius:5px}
+  .demo-open{margin-left:auto;font-size:12px;font-weight:700;color:var(--primary-d);text-decoration:none}
+  .demo-x{border:none;background:#eef1f6;border-radius:8px;padding:7px 12px;font-weight:700;cursor:pointer;font-family:inherit}
+  .demo-x:hover{background:#e2e7ef}
+  .demo-frame{flex:1;width:100%;border:0;background:#fff}
   .footer-note{text-align:center;color:var(--sub);font-size:11.5px;margin-top:30px;line-height:1.7}
   .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:#1f2a37;color:#fff;padding:11px 20px;border-radius:10px;font-size:13px;font-weight:600;opacity:0;transition:.3s;pointer-events:none;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.2);max-width:90vw;text-align:center}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -212,6 +234,7 @@
       </div>
       <p class="hint">全社の「求む（足りない）」「出す（余った）」と、配送・ヘルプの相談が並びます。良さそうな相手には電話して、まとまったら「応じる」で記録・日程に残します。</p>
       <div class="filterbar" id="boardFilter"></div>
+      <div id="prZone"></div>
       <div class="post-grid" id="boardList"></div>
     </div>
   </section>
@@ -368,6 +391,17 @@
 <datalist id="itemNameList"></datalist>
 <nav class="tabbar-bottom" id="tabsBottom"></nav>
 <div class="lightbox" id="lightbox" onclick="App.closeLightbox()"><img id="lightboxImg" src="" alt="拡大写真"></div>
+<div class="demo-modal" id="demoModal">
+  <div class="demo-card">
+    <div class="demo-bar">
+      <span class="demo-pr">PRデモ</span>
+      <span class="demo-ttl" id="demoTitle"></span>
+      <a class="demo-open" id="demoOpen" href="#" target="_blank" rel="noopener">新しいタブで開く ↗</a>
+      <button class="demo-x" onclick="App.closeDemo()">✕ 閉じる</button>
+    </div>
+    <iframe class="demo-frame" id="demoFrame" src="" title="ツールのデモ" loading="lazy"></iframe>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -385,6 +419,12 @@ const App = (()=>{
     need:'自社では行けない拠点へ「持って行ってくれる？」と依頼します。引き受けてくれた相手とやりとりで日程を調整します。',
     consult:'人手・仕入先・繁忙など、何でも自由に相談できます。乗ってくれた相手とやりとりで日程・段取りを調整します。',
   };
+  // 掲示板の「すべて／相談」上部に出すPR枠（自社ツールの告知・その場でデモを開ける）
+  const PROMOS=[
+    {tag:'売上レポート',title:'月次業績レポート',desc:'POSの売上を自動集計 → グラフ＆PowerPointで月次報告。',url:'../monthly-report/',color:'#1d4ed8'},
+    {tag:'仕入れ・卸',title:'仕入れ見える化レポート',desc:'仕入データを可視化してコスト・原価を管理。卸／多店舗向け。',url:'../procurement-report/',color:'#0d9488'},
+    {tag:'店舗間',title:'フードリレー',desc:'店舗間の食材の貸し借りを金額で見える化し、月末に精算。',url:'../food-relay/',color:'#ea580c'},
+  ];
   let state = { companies:[], items:[], posts:[], deals:[], closings:{} };
   let user = { role:'company', companyId:null };
   let tab = 'board';
@@ -561,6 +601,7 @@ const App = (()=>{
   /* ---------- BOARD ---------- */
   function renderBoard(){
     const me=myCoId();
+    renderPromo();
     const filters=[['all','すべて'],['want','🙋 求む'],['offer','📦 出す'],['relay','🚚 相談']];
     $('boardFilter').innerHTML=filters.map(([k,l])=>`<button class="fchip ${boardFilter===k?'on '+k:''}" onclick="App.setBoardFilter('${k}')">${l}</button>`).join('');
     let list=[...state.posts];
@@ -572,6 +613,26 @@ const App = (()=>{
     $('boardList').innerHTML = list.length ? list.map(p=>isTrade(p.kind)?renderTradeCard(p,me):renderRelayCard(p,me)).join('') : empty('掲示はありません');
   }
   function setBoardFilter(k){ boardFilter=k; renderBoard(); }
+  function renderPromo(){
+    const z=$('prZone'); if(!z)return;
+    if(boardFilter!=='all' && boardFilter!=='relay'){ z.innerHTML=''; return; }   // 「すべて」「相談」のみ表示
+    z.innerHTML=`<div class="pr-wrap">
+      <div class="pr-head"><span class="pr-badge">PR</span> スパイシーデバイスの飲食・卸向けツール<span class="pr-sub">（ボタンでデモをその場で開けます）</span></div>
+      <div class="pr-row">${PROMOS.map((p,i)=>`
+        <div class="pr-card" style="--pc:${p.color}">
+          <div class="pr-tag">${esc(p.tag)}</div>
+          <div class="pr-title">${esc(p.title)}</div>
+          <div class="pr-desc">${esc(p.desc)}</div>
+          <button class="btn sm pr-btn" onclick="App.openDemo(${i})">▶ デモを見る</button>
+        </div>`).join('')}</div>
+    </div>`;
+  }
+  function openDemo(i){
+    const p=PROMOS[i]; if(!p)return;
+    $('demoTitle').textContent=p.title; $('demoFrame').src=p.url; $('demoOpen').href=p.url;
+    $('demoModal').classList.add('show'); document.body.style.overflow='hidden';
+  }
+  function closeDemo(){ $('demoModal').classList.remove('show'); $('demoFrame').src='about:blank'; document.body.style.overflow=''; }
 
   function renderTradeCard(p,me){
     const co=company(p.companyId)||{name:'(削除済)',contact:'',phone:''};
@@ -1157,7 +1218,7 @@ const App = (()=>{
 
   return { init,tab:setTab,changeRole,changeCtx,setMonth,setKind,calcPostAmt,addPost,
            onPhoto,clearPhoto,openLightbox,closeLightbox,
-           setBoardFilter,toggleResp,calcResp,submitResp,toggleRelay,submitRelay,closePost,
+           setBoardFilter,openDemo,closeDemo,toggleResp,calcResp,submitResp,toggleRelay,submitRelay,closePost,
            confirmDeal,rejectDeal,cancelProposal,confirmRelay,rejectRelay,cancelRelay,
            gotoClosing,closeMonth,reopenMonth,
            addItem,delItem,setPrice,downloadItemTemplate,importItems,
