@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>豊洲リレー 卸の在庫マッチング掲示板（デモ）｜株式会社スパイシーデバイス</title>
+<title>TOYO LINK 卸の在庫マッチング掲示板（デモ）｜株式会社スパイシーデバイス</title>
 <meta name="description" content="豊洲の卸業者向け。『在庫が足りない／余った』や配送・ヘルプの相談を仲間以外にも掲示で共有し、電話で詰めた取引を記録に残して月末に精算する試作デモ。株式会社スパイシーデバイスの制作サンプル。">
 <meta name="robots" content="noindex">
 <meta property="og:type" content="website">
-<meta property="og:title" content="豊洲リレー 卸の在庫マッチング掲示板（デモ）">
+<meta property="og:title" content="TOYO LINK 卸の在庫マッチング掲示板（デモ）">
 <meta property="og:description" content="卸の『求む／出す』や配送・ヘルプの相談を掲示で共有し、電話で詰めた取引を記録に残して月末精算。実際に触れます。">
 <style>
   :root{
@@ -208,8 +208,8 @@
 <header>
   <div class="wrap">
     <div>
-      <h1>🐟 豊洲リレー <span class="badge">卸の在庫マッチング掲示板 / たたき</span></h1>
-      <p>「在庫が足りない・余った」や配送・ヘルプの相談を仲間以外にも掲示で共有 → 電話で詰めた取引を記録に残し、月末にまとめて精算。</p>
+      <h1>🧺 TOYO LINK <span class="badge">卸の在庫マッチング掲示板 / たたき</span></h1>
+      <p>豊洲の卸どうしをつなぐ。余った在庫はまわし、足りない在庫はまわってくる。在庫の過不足・配送・ヘルプを仲間以外にも掲示で共有 → 電話で詰めた取引を記録に残し、月末にまとめて精算。</p>
     </div>
     <div class="login">
       <span class="who">ログイン中</span>
@@ -1186,7 +1186,7 @@ const App = (()=>{
     const head='取引日,売り手,買い手,品目,規格,品質,数量,単位,単価,金額\n';
     const body=recs.map(d=>[d.date,cName(d.sellerId),cName(d.buyerId),d.itemName,d.spec,d.grade,d.qty,d.unit,d.unitPrice,d.amount].map(q).join(',')).join('\n');
     const suffix=selMonth?('_'+selMonth):'';
-    dl('豊洲リレー取引記録'+suffix+'.csv','﻿'+head+body,'text/csv');
+    dl('TOYO LINK取引記録'+suffix+'.csv','﻿'+head+body,'text/csv');
   }
   function exportAll(){ dl('toyosu_relay_data.json',JSON.stringify({state,user},null,2),'application/json'); }
   function reseed(){ if(confirm('サンプルデータで初期化します。よろしいですか？')){ seed(); tab='board'; selMonth=''; respOpen={}; relayOpen={}; pendingPhoto=''; init2(); toast('サンプルデータを読み込みました'); } }
