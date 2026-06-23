@@ -182,7 +182,7 @@
   .pr-head{font-size:12.5px;font-weight:700;color:var(--primary-d);margin-bottom:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   .pr-badge{background:var(--primary-d);color:#fff;font-size:10.5px;padding:2px 8px;border-radius:5px;letter-spacing:.1em}
   .pr-sub{color:var(--sub);font-weight:600}
-  .pr-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+  .pr-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
   .pr-card{border:1px solid var(--line);border-radius:12px;background:#fff;overflow:hidden;cursor:pointer;transition:.15s;display:flex;flex-direction:column}
   .pr-card:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(16,24,40,.14);border-color:var(--pc,#1d4ed8)}
   .pr-thumb{position:relative;aspect-ratio:16/10;background:#eef1f5;overflow:hidden}
@@ -428,9 +428,8 @@ const App = (()=>{
   };
   // 掲示板の「すべて／相談」上部に出すPR枠（自社ツールの告知・その場でデモを開ける）
   const PROMOS=[
-    {tag:'売上レポート',title:'月次業績レポート',desc:'POSの売上を自動集計 → グラフ＆PowerPointで月次報告。',url:'../monthly-report/',img:'../assets/shot-report.png',color:'#1d4ed8'},
     {tag:'仕入れ・卸',title:'仕入れ見える化レポート',desc:'仕入データを可視化してコスト・原価を管理。卸／多店舗向け。',url:'../procurement-report/',img:'../assets/shot-procurement.png',color:'#0d9488'},
-    {tag:'店舗間',title:'フードリレー',desc:'店舗間の食材の貸し借りを金額で見える化し、月末に精算。',url:'../food-relay/',img:'../assets/shot-food-relay.png',color:'#ea580c'},
+    {tag:'配送・ドライバー',title:'ルートミー（RoutMe）',desc:'卸・委託本部・ドライバーを束ねる配送管理。注文設定→割当→締め承認→単価・コストまで。',url:'https://partner-a-delivery-app.vercel.app/',img:'../assets/shot-routme.svg',color:'#7c3aed',external:true},
   ];
   let state = { companies:[], items:[], posts:[], deals:[], closings:{} };
   let user = { role:'company', companyId:null };
@@ -631,13 +630,14 @@ const App = (()=>{
           <div class="pr-body">
             <div class="pr-title">${esc(p.title)}</div>
             <div class="pr-desc">${esc(p.desc)}</div>
-            <span class="pr-cta">▶ デモを見る</span>
+            <span class="pr-cta">${p.external?'▶ 実際のアプリを開く':'▶ デモを見る'}</span>
           </div>
         </div>`).join('')}</div>
     </div>`;
   }
   function openDemo(i){
     const p=PROMOS[i]; if(!p)return;
+    if(p.external){ window.open(p.url,'_blank','noopener'); return; }   // 認証付きアプリ等は別タブで
     $('demoTitle').textContent=p.title; $('demoFrame').src=p.url; $('demoOpen').href=p.url;
     $('demoModal').classList.add('show'); document.body.style.overflow='hidden';
   }

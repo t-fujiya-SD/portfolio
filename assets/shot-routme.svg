@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 800" font-family="'Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5b21b6"/><stop offset="1" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="scr" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7c3aed"/><stop offset="1" stop-color="#6d28d9"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="800" fill="url(#bg)"/>
+  <!-- スマホ -->
+  <g transform="translate(150 150)">
+    <rect x="0" y="0" width="320" height="500" rx="40" fill="#ffffff"/>
+    <rect x="20" y="22" width="280" height="86" rx="18" fill="url(#scr)"/>
+    <text x="44" y="62" fill="#ffffff" font-size="22" font-weight="700">🚚 今日のルート</text>
+    <text x="44" y="90" fill="#e9d5ff" font-size="16">山田さん ・ 12件 / 完了 7</text>
+    <g fill="#f5f3ff" stroke="#e9d5ff">
+      <rect x="20" y="124" width="280" height="58" rx="12"/>
+      <rect x="20" y="190" width="280" height="58" rx="12"/>
+      <rect x="20" y="256" width="280" height="58" rx="12"/>
+      <rect x="20" y="322" width="280" height="58" rx="12"/>
+    </g>
+    <g fill="#15803d"><circle cx="50" cy="153" r="9"/><circle cx="50" cy="219" r="9"/></g>
+    <g fill="#cbd5e1"><circle cx="50" cy="285" r="9"/><circle cx="50" cy="351" r="9"/></g>
+    <g fill="#4b5563" font-size="15">
+      <text x="74" y="158">和ビストロ 彩り ・ ¥1,200</text>
+      <text x="74" y="224">中華ダイニング 鳳来 ・ ¥900</text>
+      <text x="74" y="290">海鮮処 みなと ・ ¥1,500</text>
+      <text x="74" y="356">カフェ 木洩れ日 ・ ¥800</text>
+    </g>
+    <rect x="20" y="402" width="280" height="76" rx="16" fill="#7c3aed"/>
+    <text x="160" y="448" fill="#ffffff" font-size="20" font-weight="700" text-anchor="middle">本日の配送を締める</text>
+  </g>
+  <!-- 右テキスト -->
+  <g transform="translate(560 196)">
+    <text x="0" y="40" fill="#ffffff" font-size="76" font-weight="800" letter-spacing="1">RoutMe</text>
+    <text x="4" y="92" fill="#e9d5ff" font-size="28" font-weight="700">卸・委託本部・ドライバーの配送管理</text>
+    <g fill="#ffffff" font-size="26">
+      <text x="0" y="168">✓ 注文設定 → 当日割り当て</text>
+      <text x="0" y="216">✓ 配送の締め・承認フロー</text>
+      <text x="0" y="264">✓ 単価設定・コスト集計</text>
+      <text x="0" y="312">✓ ヘルプ便マーケット・点呼/日報</text>
+    </g>
+  </g>
+</svg>
