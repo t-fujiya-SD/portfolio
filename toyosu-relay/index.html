@@ -170,6 +170,12 @@
   .banner{display:flex;gap:10px;align-items:flex-start;background:#eef4ff;border:1px solid #c5d8ff;color:#1e3a8a;border-radius:11px;padding:12px 15px;font-size:12.5px;line-height:1.65;margin-bottom:14px}
   .banner .ic{font-size:16px;line-height:1.3}
   .pill-grade{display:inline-block;padding:1px 7px;border-radius:6px;font-size:11px;font-weight:700;background:#eef2f7;color:#374151}
+  .pcard .photo{width:100%;height:160px;object-fit:cover;border-radius:9px;border:1px solid var(--line);margin-bottom:11px;cursor:zoom-in;background:#eef1f5;display:block}
+  .photo-prev{margin-top:6px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .photo-prev img{width:74px;height:74px;object-fit:cover;border-radius:9px;border:1px solid var(--line)}
+  .lightbox{position:fixed;inset:0;background:rgba(15,20,30,.84);display:none;align-items:center;justify-content:center;z-index:80;padding:20px;cursor:zoom-out}
+  .lightbox.show{display:flex}
+  .lightbox img{max-width:92vw;max-height:88vh;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.5)}
   .footer-note{text-align:center;color:var(--sub);font-size:11.5px;margin-top:30px;line-height:1.7}
   .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:#1f2a37;color:#fff;padding:11px 20px;border-radius:10px;font-size:13px;font-weight:600;opacity:0;transition:.3s;pointer-events:none;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.2);max-width:90vw;text-align:center}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -246,6 +252,9 @@
         <div class="field tradeF"><label id="p-deadline-lbl">ほしい時間</label><input id="p-deadline" placeholder="例：本日17時まで"></div>
         <div class="field tradeF"><label>受渡</label><select id="p-delivery">
           <option value="pickup">受け取りに行く</option><option value="deliver">渡しに行く</option></select></div>
+        <div class="field span-all offerF"><label>📷 写真（任意・1枚／自動で縮小されます）</label>
+          <input type="file" id="p-photo" accept="image/*" onchange="App.onPhoto(this)">
+          <div class="photo-prev" id="p-photo-prev"></div></div>
 
         <!-- relay fields -->
         <div class="field relayF" id="f-route-wrap"><label id="p-route-lbl">方面・行き先</label><input id="p-route" placeholder="例：大田市場方面"></div>
@@ -358,6 +367,7 @@
 
 <datalist id="itemNameList"></datalist>
 <nav class="tabbar-bottom" id="tabsBottom"></nav>
+<div class="lightbox" id="lightbox" onclick="App.closeLightbox()"><img id="lightboxImg" src="" alt="拡大写真"></div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -383,6 +393,7 @@ const App = (()=>{
   let boardFilter = 'all';
   let respOpen = {};      // postId -> bool（trade応答フォーム）
   let relayOpen = {};     // postId -> bool（相談に乗るフォーム）
+  let pendingPhoto = '';  // 投稿フォームで選択中の写真（base64・出すのみ）
 
   const uid = () => Math.random().toString(36).slice(2,9);
   const yen = n => '¥' + Math.round(n).toLocaleString('ja-JP');
@@ -393,7 +404,7 @@ const App = (()=>{
   const isTrade = k => TRADE.includes(k);
 
   /* ---------- persistence ---------- */
-  function save(){ localStorage.setItem(KEY, JSON.stringify({state,user})); }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify({state,user})); }catch(e){ toast('保存容量の上限です。写真の枚数を減らしてください'); } }
   function load(){
     const raw = localStorage.getItem(KEY);
     if(raw){ try{ const o=JSON.parse(raw); state=o.state; if(o.user) user=o.user; if(!state.closings)state.closings={}; return true; }catch(e){} }
@@ -440,6 +451,7 @@ const App = (()=>{
       mkRelay('need','築地','足立方面に届けたい','足立市場','6/25 14時ごろ','発泡2箱。自社の車が出払っていて運べません。','片道だけでも助かります'),
       mkRelay('consult','やまと','夕方の人手が足りません','','明日の夕方','繁忙で荷さばきの手が足りません。2時間だけ手伝える方いませんか。',''),
     ];
+    posts[1].photo = "data:image/svg+xml;charset=utf-8,"+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='400' height='260'><rect width='400' height='260' fill='#0d9488'/><text x='200' y='120' fill='#ffffff' font-size='22' font-family='sans-serif' text-anchor='middle'>商品写真（サンプル）</text><text x='200' y='154' fill='#cdeee9' font-size='14' font-family='sans-serif' text-anchor='middle'>ホワイトアスパラガス 2L 朝採れ</text></svg>");
     state={companies,items,posts,deals,closings:{}};
     user={role:'company',companyId:cN('丸豊')};
     save();
@@ -595,6 +607,7 @@ const App = (()=>{
     return `<div class="pcard ${p.kind} ${p.status==='closed'?'closed':''}">
       <div class="head"><span class="ttype">${KIND_LABEL[p.kind]}</span><span class="titem">${esc(p.itemName)}</span></div>
       <div class="body">
+        ${p.photo?`<img class="photo" src="${p.photo}" alt="${esc(p.itemName)}の写真" onclick="App.openLightbox(this.src)">`:''}
         <div class="price">${priceLbl}<span class="u"> / ${esc(p.unit)}</span> ・ 計 ${yen((remain||p.qty)*p.unitPrice)}${remain&&remain!==p.qty?`<span class="remain">残り ${num(remain)}${esc(p.unit)}</span>`:''}</div>
         <div class="spec-grid" style="margin-top:10px">${specHtml}</div>
         <div class="contact"><span class="co">${esc(co.name)}</span><span class="muted">${esc(co.contact)}</span><span class="ph">☎ ${esc(co.phone)}</span></div>
@@ -908,6 +921,8 @@ const App = (()=>{
     const trade=isTrade(k);
     document.querySelectorAll('.tradeF').forEach(el=>el.style.display = trade?'':'none');
     document.querySelectorAll('.relayF').forEach(el=>el.style.display = trade?'none':'');
+    document.querySelectorAll('.offerF').forEach(el=>el.style.display = k==='offer'?'':'none');
+    if($('p-photo-prev')) renderPhotoPrev();
     $('kindHint').textContent=KIND_HINT[k];
     if(trade){
       $('p-item-lbl').innerHTML='品目<span class="req">*</span>';
@@ -933,6 +948,26 @@ const App = (()=>{
       : (k==='bring'?'この内容で「持ってくよ」を掲示する':(k==='need'?'この内容で「持ってける？」を掲示する':'この内容で「相談」を掲示する'));
   }
   function calcPostAmt(){ const q=parseFloat($('p-qty').value)||0,p=parseFloat($('p-price').value)||0; $('p-amt').value = (q&&p)?yen(q*p):''; }
+  /* ---------- 写真（出すのみ・端末側で縮小してbase64保存） ---------- */
+  function onPhoto(input){
+    const f=input.files&&input.files[0]; if(!f) return;
+    if(!/^image\//.test(f.type)){ toast('画像ファイルを選んでください'); input.value=''; return; }
+    const rd=new FileReader();
+    rd.onload=()=>{ const img=new Image(); img.onload=()=>{
+      const max=900; let w=img.width,h=img.height;
+      if(w>max||h>max){ const r=Math.min(max/w,max/h); w=Math.round(w*r); h=Math.round(h*r); }
+      const cv=document.createElement('canvas'); cv.width=w; cv.height=h;
+      cv.getContext('2d').drawImage(img,0,0,w,h);
+      pendingPhoto=cv.toDataURL('image/jpeg',0.72); renderPhotoPrev();
+    }; img.onerror=()=>toast('画像を読み込めませんでした'); img.src=rd.result; };
+    rd.onerror=()=>toast('画像を読み込めませんでした');
+    rd.readAsDataURL(f); input.value='';
+  }
+  function renderPhotoPrev(){ const el=$('p-photo-prev'); if(!el)return;
+    el.innerHTML = pendingPhoto ? `<img src="${pendingPhoto}" alt="プレビュー"><button type="button" class="btn ghost sm" onclick="App.clearPhoto()">写真を削除</button>` : '<span class="muted">未選択（任意）</span>'; }
+  function clearPhoto(){ pendingPhoto=''; renderPhotoPrev(); }
+  function openLightbox(src){ $('lightboxImg').src=src; $('lightbox').classList.add('show'); }
+  function closeLightbox(){ $('lightbox').classList.remove('show'); $('lightboxImg').src=''; }
   function clearErr(){ document.querySelectorAll('#panel-post .field.err').forEach(f=>f.classList.remove('err')); }
   function markErr(id){ const el=$(id); if(el){ const f=el.closest('.field'); if(f){ f.classList.add('err'); el.focus(); } } }
   function addPost(){
@@ -951,8 +986,9 @@ const App = (()=>{
       state.posts.push({id:uid(),kind,companyId:me,itemName,spec:$('p-spec').value.trim(),
         qty,qtyFilled:0,unit:$('p-unit').value.trim()||'個',unitPrice,grade:$('p-grade').value,brand:$('p-brand').value.trim(),
         origin:$('p-origin').value.trim(),deadline:$('p-deadline').value.trim(),delivery:$('p-delivery').value,
-        note:$('p-note').value.trim(),status:'open',date:TODAY});
+        note:$('p-note').value.trim(),photo:kind==='offer'?pendingPhoto:'',status:'open',date:TODAY});
       ['p-item','p-spec','p-brand','p-origin','p-deadline','p-note'].forEach(id=>$(id).value=''); $('p-amt').value='';
+      pendingPhoto=''; renderPhotoPrev();
     } else {
       if(!itemName){ markErr('p-item'); return toast('赤い欄を確認してください'); }
       state.posts.push({id:uid(),kind,companyId:me,itemName,route:$('p-route').value.trim(),when:$('p-when').value.trim(),
@@ -1092,7 +1128,7 @@ const App = (()=>{
     dl('豊洲リレー取引記録'+suffix+'.csv','﻿'+head+body,'text/csv');
   }
   function exportAll(){ dl('toyosu_relay_data.json',JSON.stringify({state,user},null,2),'application/json'); }
-  function reseed(){ if(confirm('サンプルデータで初期化します。よろしいですか？')){ seed(); tab='board'; selMonth=''; respOpen={}; relayOpen={}; init2(); toast('サンプルデータを読み込みました'); } }
+  function reseed(){ if(confirm('サンプルデータで初期化します。よろしいですか？')){ seed(); tab='board'; selMonth=''; respOpen={}; relayOpen={}; pendingPhoto=''; init2(); toast('サンプルデータを読み込みました'); } }
   function wipe(){ if(confirm('全データを削除します。元に戻せません。')){ state={companies:[],items:[],posts:[],deals:[],closings:{}}; user={role:'admin',companyId:null}; tab='board'; selMonth=''; save(); init2(); toast('全データを削除しました'); } }
 
   /* ---------- plumbing ---------- */
@@ -1120,6 +1156,7 @@ const App = (()=>{
   }
 
   return { init,tab:setTab,changeRole,changeCtx,setMonth,setKind,calcPostAmt,addPost,
+           onPhoto,clearPhoto,openLightbox,closeLightbox,
            setBoardFilter,toggleResp,calcResp,submitResp,toggleRelay,submitRelay,closePost,
            confirmDeal,rejectDeal,cancelProposal,confirmRelay,rejectRelay,cancelRelay,
            gotoClosing,closeMonth,reopenMonth,
