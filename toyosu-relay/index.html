@@ -123,6 +123,20 @@
   .seg button.on-bring{border-color:var(--bring);background:#e7f6f4;color:var(--bring)}
   .seg button.on-need{border-color:var(--need);background:#f1e9fd;color:var(--need)}
   .seg button.on-consult{border-color:var(--consult);background:#e6f2fb;color:var(--consult)}
+  /* 掲示板トップのヒーロー */
+  .hero{background:linear-gradient(135deg,#0f2557,#1d4ed8);border-radius:14px;padding:15px;margin-bottom:16px;box-shadow:var(--shadow)}
+  .hero-acts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .hero-btn{display:flex;flex-direction:column;align-items:center;gap:2px;border:none;border-radius:12px;padding:15px 10px;cursor:pointer;font-family:inherit;color:#fff;font-weight:800;background:rgba(255,255,255,.15);transition:.15s}
+  .hero-btn:hover{background:rgba(255,255,255,.27);transform:translateY(-2px)}
+  .hero-btn .hi{font-size:30px;line-height:1.1}
+  .hero-btn .ht{font-size:19px}
+  .hero-btn .hs{font-size:11.5px;opacity:.88;font-weight:600}
+  .hero-turn{display:flex;gap:9px;margin-top:13px;flex-wrap:wrap;align-items:center}
+  .hero-turn-lbl{color:#fff;opacity:.8;font-size:12px;font-weight:700}
+  .turn-chip{background:rgba(255,255,255,.16);color:#fff;border-radius:999px;padding:7px 14px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none}
+  .turn-chip:hover{background:rgba(255,255,255,.28)}
+  .turn-chip.on{background:#fff;color:var(--primary-d)}
+  .turn-chip b{font-size:15px;margin-left:2px}
   .filterbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
   .fchip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 13px;font-size:12.5px;font-weight:700;color:var(--sub);cursor:pointer}
   .fchip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
@@ -272,6 +286,7 @@
 
   <!-- BOARD（掲示板） -->
   <section class="panel" id="panel-board">
+    <div id="boardHero"></div>
     <div class="card">
       <div class="toolbar">
         <h2 style="margin:0">📋 在庫・相談マッチング掲示板</h2>
@@ -669,6 +684,7 @@ const App = (()=>{
   /* ---------- BOARD ---------- */
   function renderBoard(){
     const me=myCoId();
+    renderBoardHero();
     renderPromo();
     const filters=[['all','すべて'],['want','🙋 求む'],['offer','📦 出す'],['relay','🚚 相談']];
     $('boardFilter').innerHTML=filters.map(([k,l])=>`<button class="fchip ${boardFilter===k?'on '+k:''}" onclick="App.setBoardFilter('${k}')">${l}</button>`).join('');
@@ -681,6 +697,26 @@ const App = (()=>{
     $('boardList').innerHTML = list.length ? list.map(p=>isTrade(p.kind)?renderTradeCard(p,me):renderRelayCard(p,me)).join('') : empty('掲示はありません');
   }
   function setBoardFilter(k){ boardFilter=k; renderBoard(); }
+  // 掲示板トップ：でかい2ボタン＋「あなたの番」（卸ログイン時のみ）
+  function renderBoardHero(){
+    const host=$('boardHero'); if(!host)return;
+    const me=myCoId();
+    if(!me){ host.innerHTML=''; return; }
+    const waiting=incomingConfirm(me).length;
+    const fresh=state.posts.filter(p=>p.status==='open' && p.companyId!==me).length;
+    host.innerHTML=`<div class="hero">
+      <div class="hero-acts">
+        <button class="hero-btn" onclick="App.quickPost('want')"><span class="hi">🔍</span><span class="ht">さがす</span><span class="hs">足りない物を募集する</span></button>
+        <button class="hero-btn" onclick="App.quickPost('offer')"><span class="hi">📦</span><span class="ht">だす</span><span class="hs">余った物を出す</span></button>
+      </div>
+      <div class="hero-turn">
+        <span class="hero-turn-lbl">あなたの番</span>
+        <a class="turn-chip ${waiting?'on':''}" onclick="App.tab('inbox')">📥 確認待ち <b>${waiting}</b></a>
+        <a class="turn-chip" onclick="App.setBoardFilter('all')">🆕 新着の掲示 <b>${fresh}</b></a>
+      </div>
+    </div>`;
+  }
+  function quickPost(k){ tab='post'; renderTabs(); renderAll(); setKind(k); window.scrollTo(0,0); }
   function renderPromo(){
     const z=$('prZone'); if(!z)return;
     if(boardFilter!=='all' && boardFilter!=='relay'){ z.innerHTML=''; return; }   // 「すべて」「相談」のみ表示
@@ -1372,7 +1408,7 @@ const App = (()=>{
     init2();
   }
 
-  return { init,tab:setTab,changeRole,changeCtx,setMonth,setKind,calcPostAmt,addPost,
+  return { init,tab:setTab,changeRole,changeCtx,setMonth,setKind,calcPostAmt,addPost,quickPost,
            onPhoto,clearPhoto,openLightbox,closeLightbox,
            setBoardFilter,openDemo,closeDemo,setNewsFilter,toggleCard,toggleResp,calcResp,submitResp,toggleRelay,submitRelay,closePost,
            confirmDeal,rejectDeal,cancelProposal,confirmRelay,rejectRelay,cancelRelay,sendThanks,
