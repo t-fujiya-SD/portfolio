@@ -205,6 +205,12 @@
   .demo-x{border:none;background:#eef1f6;border-radius:8px;padding:7px 12px;font-weight:700;cursor:pointer;font-family:inherit}
   .demo-x:hover{background:#e2e7ef}
   .demo-frame{flex:1;width:100%;border:0;background:#fff}
+  .news-item{display:block;border:1px solid var(--line);border-radius:11px;padding:13px 15px;margin-bottom:10px;background:#fff;text-decoration:none;color:var(--ink);transition:.15s}
+  .news-item:hover{border-color:var(--accent);box-shadow:var(--shadow);transform:translateY(-1px)}
+  .news-ttl{font-weight:700;font-size:14px;line-height:1.55;margin-bottom:7px}
+  .news-meta{display:flex;align-items:center;gap:10px;font-size:11.5px;color:var(--sub);flex-wrap:wrap}
+  .news-src{font-weight:700;color:var(--primary-d);background:#eef4ff;padding:1px 8px;border-radius:5px}
+  .news-go{margin-left:auto;color:var(--accent);font-weight:700;white-space:nowrap}
   .footer-note{text-align:center;color:var(--sub);font-size:11.5px;margin-top:30px;line-height:1.7}
   .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:#1f2a37;color:#fff;padding:11px 20px;border-radius:10px;font-size:13px;font-weight:600;opacity:0;transition:.3s;pointer-events:none;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.2);max-width:90vw;text-align:center}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -389,6 +395,18 @@
     </div>
   </section>
 
+  <!-- NEWS（業界ニュース） -->
+  <section class="panel" id="panel-news">
+    <div class="card">
+      <div class="toolbar">
+        <h2 style="margin:0">📰 業界ニュース</h2>
+        <span class="muted" id="newsMeta"></span>
+      </div>
+      <p class="hint">卸売市場・食品卸・水産／青果の最新ニュース見出しです。毎朝とりまとめて更新します。見出しと出典のみを表示し、記事は各媒体のサイトで開きます。</p>
+      <div id="newsList"></div>
+    </div>
+  </section>
+
   <div class="footer-note">
     これは要件確認用の試作（たたき）です。ログイン認証・サーバー保存・発注サイト連携・SMS/プッシュ通知などは本開発で実装します。<br>
     Spicy Device — 飲食・卸向けWebツール
@@ -538,10 +556,10 @@ const App = (()=>{
 
   /* ---------- role / context UI ---------- */
   const TABS = {
-    admin:[['board','📋 掲示板'],['deals','🧾 取引記録'],['settle','💰 月次精算'],['items','🥬 品目マスタ'],['companies','⚙️ 卸業者管理']],
-    company:[['board','📋 掲示板'],['post','✏️ 投稿する'],['inbox','📥 やりとり'],['settle','💰 精算・締め'],['items','🥬 品目マスタ']],
+    admin:[['board','📋 掲示板'],['news','📰 業界ニュース'],['deals','🧾 取引記録'],['settle','💰 月次精算'],['items','🥬 品目マスタ'],['companies','⚙️ 卸業者管理']],
+    company:[['board','📋 掲示板'],['news','📰 業界ニュース'],['post','✏️ 投稿する'],['inbox','📥 やりとり'],['settle','💰 精算・締め'],['items','🥬 品目マスタ']],
   };
-  const SHORT={board:['📋','掲示板'],post:['✏️','投稿'],inbox:['📥','やりとり'],settle:['💰','精算'],deals:['🧾','記録'],items:['🥬','品目'],companies:['⚙️','業者']};
+  const SHORT={board:['📋','掲示板'],news:['📰','ニュース'],post:['✏️','投稿'],inbox:['📥','やりとり'],settle:['💰','精算'],deals:['🧾','記録'],items:['🥬','品目'],companies:['⚙️','業者']};
 
   function buildLogin(){
     $('roleSel').innerHTML = Object.entries(ROLES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
@@ -593,7 +611,7 @@ const App = (()=>{
       return `<button class="${id===tab?'active':''}" onclick="App.tab('${id}')"><span class="ic">${ic}</span>${badge}${lbl}</button>`;
     }).join('');
     document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-    const map={board:'panel-board',post:'panel-post',inbox:'panel-inbox',settle:'panel-settle',deals:'panel-deals',items:'panel-items',companies:'panel-companies'};
+    const map={board:'panel-board',news:'panel-news',post:'panel-post',inbox:'panel-inbox',settle:'panel-settle',deals:'panel-deals',items:'panel-items',companies:'panel-companies'};
     const p=$(map[tab]); if(p)p.classList.add('active');
   }
   function setTab(t){ tab=t; renderTabs(); renderAll(); window.scrollTo(0,0); }
@@ -642,6 +660,23 @@ const App = (()=>{
     $('demoModal').classList.add('show'); document.body.style.overflow='hidden';
   }
   function closeDemo(){ $('demoModal').classList.remove('show'); $('demoFrame').src='about:blank'; document.body.style.overflow=''; }
+
+  /* ---------- NEWS（業界ニュース・news.json を読む） ---------- */
+  let _newsCache=null;
+  function renderNews(){
+    const host=$('newsList'), meta=$('newsMeta');
+    const draw=(d)=>{
+      if(!d||!d.items||!d.items.length){ host.innerHTML=empty('ニュースを取得できませんでした'); return; }
+      meta.textContent='更新: '+((d.updated||'').replace('T',' ').slice(0,16)||'-')+'　/　出典: '+(d.source||'Google ニュース');
+      host.innerHTML=d.items.map(n=>`<a class="news-item" href="${encodeURI(n.link||'#')}" target="_blank" rel="noopener">
+        <div class="news-ttl">${esc(n.title)}</div>
+        <div class="news-meta">${n.source?`<span class="news-src">${esc(n.source)}</span>`:''}${n.date?`<span>${esc(n.date)}</span>`:''}<span class="news-go">記事を読む ↗</span></div></a>`).join('');
+    };
+    if(_newsCache){ draw(_newsCache); return; }
+    host.innerHTML='<div class="empty">読み込み中…</div>';
+    fetch('news.json',{cache:'no-store'}).then(r=>r.json()).then(d=>{ _newsCache=d; try{localStorage.setItem('toyosu_news_cache',JSON.stringify(d));}catch(e){} draw(d); })
+      .catch(()=>{ let c=null; try{c=JSON.parse(localStorage.getItem('toyosu_news_cache'));}catch(e){} c?draw(c):(host.innerHTML=empty('ニュースを取得できませんでした（時間をおいて再度お試しください）')); });
+  }
 
   function renderTradeCard(p,me){
     const co=company(p.companyId)||{name:'(削除済)',contact:'',phone:''};
@@ -1210,6 +1245,7 @@ const App = (()=>{
     if(tab==='inbox')renderInbox();
     if(tab==='settle')renderSettle();
     if(tab==='deals')renderDeals();
+    if(tab==='news')renderNews();
     if(tab==='items')renderItems();
     if(tab==='companies')renderCompanies();
   }
