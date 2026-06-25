@@ -13,8 +13,8 @@
   :root{
     --bg:#f3f5f8; --card:#ffffff; --ink:#1f2a37; --sub:#6b7280; --line:#e5e7eb;
     --primary:#1d4ed8; --primary-d:#1e3a8a; --accent:#1d4ed8;
-    --want:#1d4ed8; --want-bg:#e8efff; --offer:#ea580c; --offer-bg:#fff1e7;
-    --bring:#0d9488; --need:#7c3aed; --consult:#0369a1;
+    --want:#dc2626; --want-bg:#fdecec; --offer:#15803d; --offer-bg:#e7f6ec;
+    --bring:#0d9488; --need:#d97706; --consult:#0369a1;
     --credit:#15803d; --credit-bg:#e7f6ec; --debit:#b91c1c; --debit-bg:#fdecec;
     --warn:#b45309; --warn-bg:#fff5e6; --open:#1d4ed8; --open-bg:#e8efff;
     --shadow:0 1px 3px rgba(16,24,40,.08),0 1px 2px rgba(16,24,40,.06);
@@ -121,7 +121,7 @@
   .seg button.on-want{border-color:var(--want);background:var(--want-bg);color:var(--want)}
   .seg button.on-offer{border-color:var(--offer);background:var(--offer-bg);color:var(--offer)}
   .seg button.on-bring{border-color:var(--bring);background:#e7f6f4;color:var(--bring)}
-  .seg button.on-need{border-color:var(--need);background:#f1e9fd;color:var(--need)}
+  .seg button.on-need{border-color:var(--need);background:#fff5e6;color:var(--need)}
   .seg button.on-consult{border-color:var(--consult);background:#e6f2fb;color:var(--consult)}
   /* 掲示板トップのヒーロー */
   .hero{background:linear-gradient(135deg,#0f2557,#1d4ed8);border-radius:14px;padding:15px;margin-bottom:16px;box-shadow:var(--shadow)}
@@ -131,9 +131,8 @@
   .hero-btn .hi{font-size:30px;line-height:1.1}
   .hero-btn .ht{font-size:19px}
   .hero-btn .hs{font-size:11.5px;opacity:.88;font-weight:600}
-  .hero-turn{display:flex;gap:9px;margin-top:13px;flex-wrap:wrap;align-items:center}
-  .hero-turn-lbl{color:#fff;opacity:.8;font-size:12px;font-weight:700}
-  .turn-chip{background:rgba(255,255,255,.16);color:#fff;border-radius:999px;padding:7px 14px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none}
+  .hero-turn{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+  .turn-chip{background:rgba(255,255,255,.16);color:#fff;border-radius:12px;padding:11px 12px;font-size:13.5px;font-weight:700;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:7px}
   .turn-chip:hover{background:rgba(255,255,255,.28)}
   .turn-chip.on{background:#fff;color:var(--primary-d)}
   .turn-chip b{font-size:15px;margin-left:2px}
@@ -166,7 +165,7 @@
   .contact .ph{margin-left:auto;font-weight:800;color:var(--primary-d);white-space:nowrap}
   .pcard .foot{border-top:1px solid var(--line);padding:11px 15px;background:#fafbfc}
   /* コンパクトカード（タップで展開） */
-  .pcard.want{--kc:#1d4ed8}.pcard.offer{--kc:#ea580c}.pcard.bring{--kc:#0d9488}.pcard.need{--kc:#7c3aed}.pcard.consult{--kc:#0369a1}
+  .pcard.want{--kc:#dc2626;background:#fff8f7}.pcard.offer{--kc:#15803d}.pcard.bring{--kc:#0d9488}.pcard.need{--kc:#d97706;background:#fffbf2}.pcard.consult{--kc:#0369a1}
   .pcard{border-left:4px solid var(--kc,#1d4ed8)}
   .phead{padding:12px 14px;cursor:pointer;user-select:none}
   .phead .l1{display:flex;align-items:center;gap:8px}
@@ -706,11 +705,10 @@ const App = (()=>{
     const fresh=state.posts.filter(p=>p.status==='open' && p.companyId!==me).length;
     host.innerHTML=`<div class="hero">
       <div class="hero-acts">
-        <button class="hero-btn" onclick="App.quickPost('want')"><span class="hi">🔍</span><span class="ht">さがす</span><span class="hs">足りない物を募集する</span></button>
-        <button class="hero-btn" onclick="App.quickPost('offer')"><span class="hi">📦</span><span class="ht">だす</span><span class="hs">余った物を出す</span></button>
+        <button class="hero-btn want" onclick="App.quickPost('want')"><span class="hi">🙋</span><span class="ht">求む</span><span class="hs">足りない物をさがす</span></button>
+        <button class="hero-btn offer" onclick="App.quickPost('offer')"><span class="hi">📦</span><span class="ht">出す</span><span class="hs">余った物をだす</span></button>
       </div>
       <div class="hero-turn">
-        <span class="hero-turn-lbl">あなたの番</span>
         <a class="turn-chip ${waiting?'on':''}" onclick="App.tab('inbox')">📥 確認待ち <b>${waiting}</b></a>
         <a class="turn-chip" onclick="App.setBoardFilter('all')">🆕 新着の掲示 <b>${fresh}</b></a>
       </div>
