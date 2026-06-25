@@ -1,0 +1,42 @@
+name: TOYO LINK 業界ニュース更新
+
+on:
+  schedule:
+    - cron: '30 21 * * *'   # 毎日 06:30 JST (= 21:30 UTC)
+  workflow_dispatch:          # 手動実行も可
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  update-news:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 業界ニュースを取得して news.json を更新
+        id: news
+        run: |
+          python3 .github/scripts/fetch_news.py toyosu-relay/news.json
+          if git diff --quiet -- toyosu-relay/news.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "変更なし"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: コミット＆プッシュ
+        if: steps.news.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add toyosu-relay/news.json
+          git commit -m "chore(news): TOYO LINK 業界ニュースを自動更新"
+          git push
+
+      - name: GitHub Pages の再ビルドを要求
+        if: steps.news.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh api -X POST repos/${{ github.repository }}/pages/builds || true
