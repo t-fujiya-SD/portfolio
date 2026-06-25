@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-25T11:01:56+09:00",
+  "updated": "2026-06-25T11:04:58+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -22,6 +22,13 @@
       "source": "日本経済新聞",
       "date": "2026-06-22",
       "cat": "business"
+    },
+    {
+      "title": "＜画像3 / 12＞見学の後も楽しみ！ 札幌市中央卸売市場のせり見学レポート",
+      "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTE5mem4zZFFEQU8tV3VWaDBWMU9TVGJtVGoxMi1sXzRnanRhalpqUXhydS03ajBhU3pYd1hEY1BoX3RmUmIwbmV1NkZUb0xTbHRrR25haU82Uk1oNy1oTUo0NTVfUHF6YUFTMWNwUlV1NDNJYmMxRmJIM2Z5UQ?oc=5",
+      "source": "ウォーカープラス",
+      "date": "2026-06-21",
+      "cat": "market"
     },
     {
       "title": "【新会社設立のお知らせ】中部圏の青果卸売会社12社が結束し、「チームフレッシュロジ中部株式会社（TFL中部）」を設立",
@@ -71,13 +78,6 @@
       "source": "note",
       "date": "2026-06-08",
       "cat": "business"
-    },
-    {
-      "title": "「今の時期しか食べられない」旬！山形県産サクランボ『初入荷』（仙台市中央卸売市場）",
-      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTFBicnhmNl80cVZ6cVF1dmE0MnJhUkx0djBYb1UtTnhncEx4SUJueGRRYVhhTVM4YlFhR1RZS1ZjMVp3M1JiOTdmUEdKQnpLU0Fia3UzbTZuZUhNbWM1Mno4ZTQtV0c0VDVoUlRWcjVGYlAwaFdMeVNCbVRYazE5anc?oc=5",
-      "source": "日テレNEWS NNN",
-      "date": "2026-06-07",
-      "cat": "market"
     },
     {
       "title": "２６２０ 資金ショートは２０５６年度に８年前倒し 東京都中央卸売市場会計、２０２６年経営レポート どらったら！！",
