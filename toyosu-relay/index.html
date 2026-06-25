@@ -151,6 +151,22 @@
   .contact .co{font-weight:800}
   .contact .ph{margin-left:auto;font-weight:800;color:var(--primary-d);white-space:nowrap}
   .pcard .foot{border-top:1px solid var(--line);padding:11px 15px;background:#fafbfc}
+  /* コンパクトカード（タップで展開） */
+  .pcard.want{--kc:#1d4ed8}.pcard.offer{--kc:#ea580c}.pcard.bring{--kc:#0d9488}.pcard.need{--kc:#7c3aed}.pcard.consult{--kc:#0369a1}
+  .pcard{border-left:4px solid var(--kc,#1d4ed8)}
+  .phead{padding:12px 14px;cursor:pointer;user-select:none}
+  .phead .l1{display:flex;align-items:center;gap:8px}
+  .ptag{font-size:11px;font-weight:800;color:#fff;background:var(--kc,#1d4ed8);padding:2px 8px;border-radius:6px;white-space:nowrap}
+  .pitem{font-weight:800;font-size:15.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .phead .chev{margin-left:auto;color:var(--sub);font-size:13px;transition:.2s;flex-shrink:0}
+  .pcard.open .phead .chev{transform:rotate(180deg)}
+  .phead .l2{display:flex;align-items:center;gap:5px 12px;margin-top:6px;font-size:12.5px;color:var(--sub);flex-wrap:wrap}
+  .phead .price-s{font-weight:800;color:var(--ink);font-size:13.5px}
+  .phead .pco{font-weight:600}
+  .pcard .pbody{display:none;padding:2px 14px 13px;animation:fade .2s ease}
+  .pcard.open .pbody{display:block}
+  .pcard .pbody .foot{border-top:1px dashed var(--line);background:transparent;padding:11px 0 0;margin-top:10px}
+  .pcard .pbody .contact{margin-top:10px}
   .respform{margin-top:10px;border-top:1px dashed var(--line);padding-top:11px}
   .respform .row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
   .respform .field{flex:1;min-width:90px}
@@ -463,6 +479,7 @@ const App = (()=>{
   let respOpen = {};      // postId -> bool（trade応答フォーム）
   let relayOpen = {};     // postId -> bool（相談に乗るフォーム）
   let pendingPhoto = '';  // 投稿フォームで選択中の写真（base64・出すのみ）
+  let openCards = {};     // postId -> bool（掲示カードの展開状態）
 
   const uid = () => Math.random().toString(36).slice(2,9);
   const yen = n => '¥' + Math.round(n).toLocaleString('ja-JP');
@@ -718,15 +735,22 @@ const App = (()=>{
       else { foot=`<button class="btn ${p.kind==='want'?'offer':'ok'} sm" onclick="App.toggleResp('${p.id}')">${p.kind==='want'?'📦 出せます（応じる）':'🛒 買います（応じる）'}</button>`;
         if(respOpen[p.id]) foot+=renderRespForm(p); }
     } else { foot=`<span class="status open">募集中</span>`; }
-    return `<div class="pcard ${p.kind} ${p.status==='closed'?'closed':''}">
-      <div class="head"><span class="ttype">${KIND_LABEL[p.kind]}</span><span class="titem">${esc(p.itemName)}</span></div>
-      <div class="body">
+    const open=!!openCards[p.id];
+    const tagS=p.kind==='want'?'🙋 求む':'📦 出す';
+    const pill = p.status==='closed' ? (filled>0?'<span class="status closed">成立</span>':'<span class="status closed">終了</span>')
+      : (filled>0?`<span class="status part">残${num(remain)}${esc(p.unit)}</span>`:'');
+    return `<div class="pcard ${p.kind} ${p.status==='closed'?'closed':''} ${open?'open':''}">
+      <div class="phead" onclick="App.toggleCard('${p.id}')">
+        <div class="l1"><span class="ptag">${tagS}</span><span class="pitem">${esc(p.itemName)}</span>${pill}<span class="chev">▾</span></div>
+        <div class="l2"><span class="price-s">${priceLbl} / ${esc(p.unit)}</span><span>${num(remain||p.qty)}${esc(p.unit)}</span><span class="pco">🏢 ${esc(co.name)}</span></div>
+      </div>
+      <div class="pbody">
         ${p.photo?`<img class="photo" src="${p.photo}" alt="${esc(p.itemName)}の写真" onclick="App.openLightbox(this.src)">`:''}
         <div class="price">${priceLbl}<span class="u"> / ${esc(p.unit)}</span> ・ 計 ${yen((remain||p.qty)*p.unitPrice)}${remain&&remain!==p.qty?`<span class="remain">残り ${num(remain)}${esc(p.unit)}</span>`:''}</div>
         <div class="spec-grid" style="margin-top:10px">${specHtml}</div>
         <div class="contact"><span class="co">${esc(co.name)}</span><span class="muted">${esc(co.contact)}</span><span class="ph">☎ ${esc(co.phone)}</span></div>
+        <div class="foot">${foot}</div>
       </div>
-      <div class="foot">${foot}</div>
     </div>`;
   }
   function renderRespForm(p){
@@ -769,13 +793,19 @@ const App = (()=>{
       foot=`<button class="btn ${p.kind} sm" onclick="App.toggleRelay('${p.id}')">${p.kind==='bring'?'🙋 乗せてほしい（相談する）':(p.kind==='need'?'🚚 持って行く（相談に乗る）':'💬 相談に乗る')}</button>`;
       if(relayOpen[p.id]) foot+=renderRelayForm(p);
     } else { foot=`<span class="status open">相談募集中</span>`; }
-    return `<div class="pcard ${p.kind} ${p.status==='done'?'closed':''}">
-      <div class="head"><span class="ttype">${KIND_LABEL[p.kind]}</span><span class="titem">${esc(p.itemName)}</span></div>
-      <div class="body">
+    const open=!!openCards[p.id];
+    const tagMap={bring:'🚚 持ってくよ',need:'🆘 持ってける？',consult:'💬 相談'};
+    const pill = p.status==='done'?'<span class="status closed">調整済</span>':(p.status==='scheduling'?'<span class="status dealing">商談中</span>':'');
+    return `<div class="pcard ${p.kind} ${p.status==='done'?'closed':''} ${open?'open':''}">
+      <div class="phead" onclick="App.toggleCard('${p.id}')">
+        <div class="l1"><span class="ptag">${tagMap[p.kind]}</span><span class="pitem">${esc(p.itemName)}</span>${pill}<span class="chev">▾</span></div>
+        <div class="l2"><span>📅 ${esc(p.when||'相談')}</span><span class="pco">🏢 ${esc(co.name)}</span></div>
+      </div>
+      <div class="pbody">
         <div class="spec-grid">${specHtml}</div>
         <div class="contact"><span class="co">${esc(co.name)}</span><span class="muted">${esc(co.contact)}</span><span class="ph">☎ ${esc(co.phone)}</span></div>
+        <div class="foot">${foot}</div>
       </div>
-      <div class="foot">${foot}</div>
     </div>`;
   }
   function renderRelayForm(p){
@@ -794,6 +824,7 @@ const App = (()=>{
       <div class="muted" style="margin-top:6px">※送ると相手（${esc(cName(p.companyId))}）のやりとりに届きます。日程は電話で詰めてもOKです。</div>
     </div>`;
   }
+  function toggleCard(id){ openCards[id]=!openCards[id]; renderBoard(); }
   function toggleResp(id){ respOpen[id]=!respOpen[id]; renderBoard(); }
   function calcResp(id){ const p=post(id); if(!p)return; const q=parseFloat($('rq-'+id).value)||0,pr=parseFloat($('rp-'+id).value)||0; $('ra-'+id).textContent=yen(q*pr); }
   function submitResp(id){
@@ -1272,7 +1303,7 @@ const App = (()=>{
 
   return { init,tab:setTab,changeRole,changeCtx,setMonth,setKind,calcPostAmt,addPost,
            onPhoto,clearPhoto,openLightbox,closeLightbox,
-           setBoardFilter,openDemo,closeDemo,setNewsFilter,toggleResp,calcResp,submitResp,toggleRelay,submitRelay,closePost,
+           setBoardFilter,openDemo,closeDemo,setNewsFilter,toggleCard,toggleResp,calcResp,submitResp,toggleRelay,submitRelay,closePost,
            confirmDeal,rejectDeal,cancelProposal,confirmRelay,rejectRelay,cancelRelay,
            gotoClosing,closeMonth,reopenMonth,
            addItem,delItem,setPrice,downloadItemTemplate,importItems,
