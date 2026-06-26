@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-26T07:55:32+09:00",
+  "updated": "2026-06-27T07:45:04+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -136,13 +136,6 @@
       "cat": "toyosu"
     },
     {
-      "title": "インターネット都政モニターアンケート結果 生鮮食料品等の購買意識 〉 Q16 東京都中央卸売市場の認知|1月",
-      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE4wNEFBMThJRExadlJ6WDQ2d25pVXhNck1ldHBrcG1KVXhndDdkcWNfU2tlSW9lM0EzTGZMN2pSQlRTQjliU2JLVG1ZMlVSa3ljOWpxcTBaNmNzdUlEWFlrTXZTWmNDVzlLYmEtaGxTWWRGM3FQ?oc=5",
-      "source": "metro.tokyo.lg.jp",
-      "date": "2026-01-21",
-      "cat": "toyosu"
-    },
-    {
       "title": "初競り、威勢よく景気づけ 宇都宮市中央卸売市場 冷凍メバチマグロなど入荷",
       "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBFU1NDVmw0OVlSNDV3VFktUWRpNUdkc0JvWnlIbXQ5RERQeVVvU01KQlhNMGR6RlRFdVZSanBsQ19Ybkd1czBkMl9RQ1cxdkM2SzI0ZXZUc2ZMV1E?oc=5",
       "source": "下野新聞社",
@@ -183,6 +176,13 @@
       "source": "フーズチャネル",
       "date": "2025-11-21",
       "cat": "business"
+    },
+    {
+      "title": "中央卸売市場足立市場「あだち市場の日感謝祭」を開催|10月",
+      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE9YbjNQZkVLaVdGYkhyaGk4aEtJYVRoeUVEX3FkY3I0aDRpNlJ3SzcwVW82QW50a1JJTFFBMklKSVNjbVdQbDlTNDBERlY0cUwyazBkRmtta21EUHd4cE9UZDdJZjZENjBDSG1idld2aVdad3pO?oc=5",
+      "source": "metro.tokyo.lg.jp",
+      "date": "2025-10-31",
+      "cat": "toyosu"
     }
   ]
 }
