@@ -260,6 +260,40 @@
   .badges{display:flex;flex-wrap:wrap;gap:8px}
   .badge-chip{font-size:12px;font-weight:700;padding:5px 11px;border-radius:999px;background:#f1f3f7;color:#9aa3b0}
   .badge-chip.got{background:#fff7e6;color:#b45309;border:1px solid #f5d990}
+  /* ホーム（朝イチ・ダッシュボード） */
+  .home-hero{background:linear-gradient(135deg,#0f2557,#1d4ed8);color:#fff;border-radius:14px;padding:18px 20px;margin-bottom:16px;box-shadow:var(--shadow)}
+  .home-hero h2{margin:0;font-size:18px}
+  .home-hero .sub{font-size:12.5px;opacity:.92;margin-top:5px;line-height:1.7}
+  .home-hero .sub b{font-weight:800}
+  .home-hero .reminds{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}
+  .remind-chip{background:rgba(255,255,255,.16);color:#fff;border:none;border-radius:10px;padding:9px 13px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px}
+  .remind-chip:hover{background:rgba(255,255,255,.3)}
+  .remind-chip b{font-size:14px}
+  .home-row{display:grid;grid-template-columns:1.35fr 1fr;gap:16px;align-items:start}
+  @media(max-width:840px){.home-row{grid-template-columns:1fr}}
+  .mini{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:4px solid var(--kc,#1d4ed8);border-radius:10px;margin-bottom:9px;background:#fff;cursor:pointer;transition:.12s}
+  .mini:hover{box-shadow:var(--shadow);transform:translateY(-1px)}
+  .mini .mtag{font-size:10.5px;font-weight:800;color:#fff;background:var(--kc,#1d4ed8);padding:3px 8px;border-radius:6px;white-space:nowrap}
+  .mini .mitem{font-weight:800;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mini .mmeta{color:var(--sub);font-size:11.5px;margin-left:auto;text-align:right;white-space:nowrap;line-height:1.5}
+  .mini .mph{color:var(--primary-d);font-weight:800}
+  .shortbar{display:flex;align-items:center;gap:10px;margin-bottom:9px;font-size:13px}
+  .shortbar .nm{font-weight:700;min-width:92px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .shortbar .track{flex:1;height:14px;background:#eef1f6;border-radius:999px;overflow:hidden}
+  .shortbar .fill{height:100%;background:linear-gradient(90deg,#dc2626,#f0716e);border-radius:999px}
+  .shortbar .ct{font-weight:800;color:var(--want);white-space:nowrap;min-width:78px;text-align:right}
+  /* 信用バッジ・プロフィール */
+  .trustline{display:flex;align-items:center;gap:6px 7px;flex-wrap:wrap;font-size:11px;margin-top:9px}
+  .tbadge{display:inline-flex;align-items:center;gap:3px;font-weight:700;padding:2px 8px;border-radius:999px;background:#eef2f7;color:#475569}
+  .tbadge.ok{background:#e7f6ec;color:#15803d}
+  .tbadge.warn{background:#fdecec;color:#b91c1c}
+  .tbadge.resp{background:#eef4ff;color:#1e3a8a}
+  .trustline .more{margin-left:auto;color:var(--primary-d);font-weight:700;cursor:pointer;text-decoration:underline;white-space:nowrap}
+  .cat-chip{display:inline-block;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:999px;background:#eef4ff;color:#1e3a8a;margin:0 5px 5px 0}
+  .prof-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(108px,1fr));gap:10px;margin:15px 0}
+  .prof-kpi .pk{background:#fafbfc;border:1px solid var(--line);border-radius:10px;padding:11px 12px;text-align:center}
+  .prof-kpi .pk .v{font-size:20px;font-weight:800;letter-spacing:-.01em}
+  .prof-kpi .pk .l{font-size:11px;color:var(--sub);font-weight:600;margin-top:2px}
 </style>
 </head>
 <body>
@@ -282,6 +316,11 @@
   <div id="closingBanner"></div>
   <div class="roleband" id="roleband"></div>
   <nav class="tabs" id="tabs"></nav>
+
+  <!-- HOME（朝イチ・ダッシュボード） -->
+  <section class="panel" id="panel-home">
+    <div id="homeBody"></div>
+  </section>
 
   <!-- BOARD（掲示板） -->
   <section class="panel" id="panel-board">
@@ -475,6 +514,15 @@
     <iframe class="demo-frame" id="demoFrame" src="" title="ツールのデモ" loading="lazy"></iframe>
   </div>
 </div>
+<div class="demo-modal" id="profileModal">
+  <div class="demo-card" style="height:auto;max-height:90vh;width:min(560px,96vw)">
+    <div class="demo-bar">
+      <span class="demo-ttl" id="profTitle"></span>
+      <button class="demo-x" style="margin-left:auto" onclick="App.closeProfile()">✕ 閉じる</button>
+    </div>
+    <div id="profBody" style="padding:18px 20px;overflow:auto"></div>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -499,7 +547,7 @@ const App = (()=>{
   ];
   let state = { companies:[], items:[], posts:[], deals:[], closings:{}, thanks:[] };
   let user = { role:'company', companyId:null };
-  let tab = 'board';
+  let tab = 'home';
   let selMonth = '';
   let kind = 'want';
   let boardFilter = 'all';
@@ -526,12 +574,12 @@ const App = (()=>{
 
   /* ---------- sample data ---------- */
   function seed(){
-    const mkCo=(name,contact,phone)=>({id:uid(),name,contact,phone});
+    const mkCo=(name,contact,phone,prof)=>({id:uid(),name,contact,phone,...prof});
     const companies=[
-      mkCo('丸豊青果（デモ）','岡野','090-1111-0001'),
-      mkCo('東都青果（デモ）','坂本','090-2222-0002'),
-      mkCo('やまと水産（デモ）','三浦','090-3333-0003'),
-      mkCo('築地大同物産（デモ）','林','090-4444-0004'),
+      mkCo('丸豊青果（デモ）','岡野','090-1111-0001',{verified:true,zone:'青果棟 7街区',dept:'青果部会',cats:['野菜','果実'],respMin:12}),
+      mkCo('東都青果（デモ）','坂本','090-2222-0002',{verified:true,zone:'青果棟 5街区',dept:'青果部会',cats:['野菜','加工野菜'],respMin:35}),
+      mkCo('やまと水産（デモ）','三浦','090-3333-0003',{verified:true,zone:'水産仲卸棟 3街区',dept:'水産物部会',cats:['鮮魚','貝類'],respMin:20}),
+      mkCo('築地大同物産（デモ）','林','090-4444-0004',{verified:true,zone:'水産卸売場棟',dept:'水産物部会',cats:['冷凍','加工水産'],respMin:50}),
     ];
     const cN=n=>companies.find(c=>c.name.startsWith(n)).id;
     const items=[
@@ -586,6 +634,58 @@ const App = (()=>{
     }
   }
 
+  /* ---------- 企業プロフィール / 与信レイヤー ---------- */
+  const PROFILE_DEFAULTS={
+    '丸豊青果':{verified:true,zone:'青果棟 7街区',dept:'青果部会',cats:['野菜','果実'],respMin:12},
+    '東都青果':{verified:true,zone:'青果棟 5街区',dept:'青果部会',cats:['野菜','加工野菜'],respMin:35},
+    'やまと水産':{verified:true,zone:'水産仲卸棟 3街区',dept:'水産物部会',cats:['鮮魚','貝類'],respMin:20},
+    '築地大同物産':{verified:true,zone:'水産卸売場棟',dept:'水産物部会',cats:['冷凍','加工水産'],respMin:50},
+  };
+  // 旧データ（プロフィール欄なし）に既定値を補完する
+  function ensureProfiles(){
+    state.companies.forEach(c=>{
+      if(c.respMin!=null && c.verified!=null) { if(!Array.isArray(c.cats))c.cats=[]; return; }
+      const key=Object.keys(PROFILE_DEFAULTS).find(k=>(c.name||'').startsWith(k));
+      Object.assign(c, {verified:false,zone:'',dept:'',cats:[],respMin:30}, key?PROFILE_DEFAULTS[key]:{});
+      if(!Array.isArray(c.cats)) c.cats=[];
+    });
+  }
+  function respTier(min){ if(min==null)return'—'; if(min<=15)return'早い'; if(min<=45)return'ふつう'; return'ゆっくり'; }
+  // カードに出す信用バッジの1行
+  function trustLine(cid){
+    const c=company(cid); if(!c) return '';
+    const v = c.verified ? '<span class="tbadge ok">✅ 実名確認</span>' : '<span class="tbadge warn">⚠️ 確認中</span>';
+    const r = c.respMin!=null ? `<span class="tbadge resp">⏱ 応答約${c.respMin}分</span>` : '';
+    return `<div class="trustline">${v}<span class="tbadge">🤝 取引${myDealCount(cid)}</span><span class="tbadge">🙏 ${thanksReceived(cid)}</span>${r}<span class="more" onclick="event.stopPropagation();App.openProfile('${cid}')">会社情報 ›</span></div>`;
+  }
+  function openProfile(cid){
+    const c=company(cid); if(!c) return;
+    const lv=levelOf(cid), dc=myDealCount(cid), th=thanksReceived(cid), hc=myHelpCount(cid), cm=closingNeeded(cid);
+    const recent=confirmedDeals().filter(d=>d.sellerId===cid||d.buyerId===cid).slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,4);
+    $('profTitle').innerHTML=`🏢 ${esc(c.name)} ${c.verified?'<span class="tbadge ok">✅ 実名確認済み</span>':'<span class="tbadge warn">⚠️ 確認中</span>'}`;
+    let html=`<div class="spec-grid" style="grid-template-columns:auto 1fr;font-size:13px">
+      <span class="k">市場区画</span><span class="v">${esc(c.zone||'—')}</span>
+      <span class="k">所属部会</span><span class="v">${esc(c.dept||'—')}</span>
+      <span class="k">担当者</span><span class="v">${esc(c.contact||'—')}</span>
+      <span class="k">連絡先</span><span class="v"><b style="color:var(--primary-d)">☎ ${esc(c.phone||'—')}</b></span>
+      <span class="k">応答の速さ</span><span class="v">${c.respMin!=null?`約${c.respMin}分・${respTier(c.respMin)}`:'—'}</span></div>
+      <div style="margin-top:13px"><div class="seg-label">主な取扱</div>${(c.cats&&c.cats.length)?c.cats.map(x=>`<span class="cat-chip">${esc(x)}</span>`).join(''):'<span class="muted">未設定</span>'}</div>
+      <div class="prof-kpi">
+        <div class="pk"><div class="v">${dc}</div><div class="l">成立取引</div></div>
+        <div class="pk"><div class="v">🙏 ${th}</div><div class="l">ありがとう</div></div>
+        <div class="pk"><div class="v">${hc}</div><div class="l">配送・相談</div></div>
+        <div class="pk"><div class="v">Lv.${lv.lv}</div><div class="l">活動レベル</div></div></div>
+      <div class="trustline" style="font-size:12px">${cm?'<span class="tbadge warn">⚠️ 未精算の月があります</span>':'<span class="tbadge ok">✅ 精算クリーン</span>'}</div>`;
+    if(recent.length){
+      html+=`<h2 style="font-size:14px;margin:16px 0 6px">直近の成立取引</h2><table><tr><th>日付</th><th>品目</th><th>方向</th><th class="num">金額</th></tr>`+
+        recent.map(d=>`<tr><td>${d.date}</td><td><b>${esc(d.itemName)}</b></td><td class="muted">${esc(cName(d.sellerId))}→${esc(cName(d.buyerId))}</td><td class="num">${yen(d.amount)}</td></tr>`).join('')+`</table>`;
+    }
+    html+=`<p class="muted" style="margin-top:14px">※ 本番では実名・市場区画・部会は運営が確認のうえ表示します（与信の見える化）。</p>`;
+    $('profBody').innerHTML=html;
+    $('profileModal').classList.add('show'); document.body.style.overflow='hidden';
+  }
+  function closeProfile(){ $('profileModal').classList.remove('show'); document.body.style.overflow=''; }
+
   /* ---------- helpers ---------- */
   const company = id => state.companies.find(c=>c.id===id);
   const itemByName = n => state.items.find(i=>i.name===n);
@@ -614,10 +714,10 @@ const App = (()=>{
 
   /* ---------- role / context UI ---------- */
   const TABS = {
-    admin:[['board','📋 掲示板'],['news','📰 業界ニュース'],['deals','🧾 取引記録'],['settle','💰 月次精算'],['items','🥬 品目マスタ'],['companies','⚙️ 卸業者管理']],
-    company:[['board','📋 掲示板'],['news','📰 業界ニュース'],['post','✏️ 投稿する'],['inbox','📥 やりとり'],['settle','💰 精算・締め'],['items','🥬 品目マスタ']],
+    admin:[['home','🌅 今朝のうごき'],['board','📋 掲示板'],['news','📰 業界ニュース'],['deals','🧾 取引記録'],['settle','💰 月次精算'],['items','🥬 品目マスタ'],['companies','⚙️ 卸業者管理']],
+    company:[['home','🌅 今朝のうごき'],['board','📋 掲示板'],['post','✏️ 投稿する'],['inbox','📥 やりとり'],['settle','💰 精算・締め'],['news','📰 業界ニュース'],['items','🥬 品目マスタ']],
   };
-  const SHORT={board:['📋','掲示板'],news:['📰','ニュース'],post:['✏️','投稿'],inbox:['📥','やりとり'],settle:['💰','精算'],deals:['🧾','記録'],items:['🥬','品目'],companies:['⚙️','業者']};
+  const SHORT={home:['🌅','今朝'],board:['📋','掲示板'],news:['📰','ニュース'],post:['✏️','投稿'],inbox:['📥','やりとり'],settle:['💰','精算'],deals:['🧾','記録'],items:['🥬','品目'],companies:['⚙️','業者']};
 
   function buildLogin(){
     $('roleSel').innerHTML = Object.entries(ROLES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
@@ -669,7 +769,7 @@ const App = (()=>{
       return `<button class="${id===tab?'active':''}" onclick="App.tab('${id}')"><span class="ic">${ic}</span>${badge}${lbl}</button>`;
     }).join('');
     document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-    const map={board:'panel-board',news:'panel-news',post:'panel-post',inbox:'panel-inbox',settle:'panel-settle',deals:'panel-deals',items:'panel-items',companies:'panel-companies'};
+    const map={home:'panel-home',board:'panel-board',news:'panel-news',post:'panel-post',inbox:'panel-inbox',settle:'panel-settle',deals:'panel-deals',items:'panel-items',companies:'panel-companies'};
     const p=$(map[tab]); if(p)p.classList.add('active');
   }
   function setTab(t){ tab=t; renderTabs(); renderAll(); window.scrollTo(0,0); }
@@ -739,6 +839,96 @@ const App = (()=>{
   }
   function closeDemo(){ $('demoModal').classList.remove('show'); $('demoFrame').src='about:blank'; document.body.style.overflow=''; }
 
+  /* ---------- HOME（朝イチ・ダッシュボード） ---------- */
+  function gotoPost(id){
+    openCards[id]=true; boardFilter='all'; tab='board'; renderTabs(); renderAll();
+    setTimeout(()=>{ const el=$('pc-'+id); if(el) el.scrollIntoView({behavior:'smooth',block:'center'}); }, 70);
+  }
+  function homeNewsTop(host){
+    if(!host)return;
+    const draw=d=>{
+      if(!d||!d.items||!d.items.length){ host.innerHTML=empty('ニュースを取得できませんでした'); return; }
+      host.innerHTML=d.items.slice(0,3).map(n=>`<a class="news-item" href="${encodeURI(n.link||'#')}" target="_blank" rel="noopener" style="margin-bottom:8px">
+        <div class="news-ttl" style="font-size:13px;margin-bottom:5px">${esc(n.title)}</div>
+        <div class="news-meta">${n.source?`<span class="news-src">${esc(n.source)}</span>`:''}${n.date?`<span>${esc(n.date)}</span>`:''}</div></a>`).join('')
+        +`<a class="news-go" style="cursor:pointer;font-weight:700;color:var(--primary-d)" onclick="App.tab('news')">すべての市場ニュースを見る →</a>`;
+    };
+    if(_newsCache){ draw(_newsCache); return; }
+    host.innerHTML='<div class="empty">読み込み中…</div>';
+    fetch('news.json',{cache:'no-store'}).then(r=>r.json()).then(d=>{ _newsCache=d; draw(d); })
+      .catch(()=>{ let c=null; try{c=JSON.parse(localStorage.getItem('toyosu_news_cache'));}catch(e){} c?draw(c):host.innerHTML=empty('ニュースを取得できませんでした'); });
+  }
+  function renderHome(){
+    const host=$('homeBody'); if(!host)return;
+    const me=myCoId();
+    const openPosts=state.posts.filter(p=>p.status==='open');
+    const wantOpen=openPosts.filter(p=>p.kind==='want');
+    const offerOpen=openPosts.filter(p=>p.kind==='offer');
+    const bringOpen=openPosts.filter(p=>p.kind==='bring');
+    const needOpen=openPosts.filter(p=>p.kind==='need');
+    // 急募 = 求む＋持ってける？（自社以外）
+    let urgent=[...wantOpen,...needOpen];
+    if(me) urgent=urgent.filter(p=>p.companyId!==me);
+    urgent.sort((a,b)=>b.date.localeCompare(a.date));
+    const waiting = me?incomingConfirm(me).length:0;
+    // ヒーロー
+    const hi = me ? `おはようございます、${esc(cName(me))} さん` : 'おはようございます（運営事務局）';
+    const dstr = TODAY.replace(/-/g,'/');
+    let reminds='';
+    if(me){
+      const cm=closingNeeded(me);
+      if(waiting) reminds+=`<button class="remind-chip" onclick="App.tab('inbox')">📥 確認待ち <b>${waiting}</b> 件</button>`;
+      if(cm) reminds+=`<button class="remind-chip" onclick="App.gotoClosing('${cm}')">🔒 ${cm.slice(5)}月分の精算が<b>未確定</b></button>`;
+      if(!reminds) reminds=`<button class="remind-chip" onclick="App.quickPost('want')">🙋 求むを出す</button><button class="remind-chip" onclick="App.quickPost('offer')">📦 出すを出す</button>`;
+    }
+    let html=`<div class="home-hero">
+      <h2>🌅 ${hi}</h2>
+      <div class="sub">${dstr}（豊洲）・今朝は <b>急募 ${urgent.length}件</b>・出物 ${offerOpen.length}件・運搬余力 ${bringOpen.length}件 です。</div>
+      ${reminds?`<div class="reminds">${reminds}</div>`:''}</div>`;
+    html+=`<div class="grid-kpi">
+      ${kpi('🙋 急募（求む＋持ってける？）',urgent.length,'件')}
+      ${kpi('📦 出物（出す）',offerOpen.length,'件')}
+      ${kpi('🚚 運搬余力',bringOpen.length,'件')}
+      ${kpi('📥 あなたの確認待ち',waiting,'件')}</div>`;
+    html+=`<div class="home-row"><div>`;
+    // 今朝の急募
+    html+=`<div class="card"><h2 style="margin:0 0 4px">🔥 今朝の急募</h2>
+      <p class="hint">急いで探している「求む」と「持ってける？」です。電話して、まとまったら掲示板で記録に残します。</p>`;
+    html+= urgent.length ? urgent.slice(0,6).map(p=>{
+      const co=company(p.companyId)||{}; const kc=p.kind;
+      const tag = p.kind==='want'?'🙋 求む':'🆘 持ってける？';
+      const meta = p.kind==='want' ? `${num(remainOf(p)||p.qty)}${esc(p.unit)}・${esc(p.deadline||'時間相談')}` : esc(p.when||p.route||'相談');
+      return `<div class="mini" style="--kc:${kc==='want'?'#dc2626':'#d97706'}" onclick="App.gotoPost('${p.id}')">
+        <span class="mtag" style="background:${kc==='want'?'#dc2626':'#d97706'}">${tag}</span><span class="mitem">${esc(p.itemName)}</span>
+        <span class="mmeta">${meta}<br><span class="mph">☎ ${esc(co.phone||'')}</span> ・ ${esc(co.name||'')}</span></div>`;
+    }).join('') : empty('今朝の急募はありません');
+    html+=`</div>`;
+    // いま不足が多い品目
+    const wmap={}; wantOpen.forEach(p=>{ const k=p.itemName; (wmap[k]=wmap[k]||{n:0,qty:0,unit:p.unit}); wmap[k].n++; wmap[k].qty+=remainOf(p)||p.qty; });
+    const shortItems=Object.entries(wmap).sort((a,b)=>b[1].n-a[1].n||b[1].qty-a[1].qty).slice(0,5);
+    const maxN=shortItems.reduce((m,[,v])=>Math.max(m,v.n),0)||1;
+    html+=`<div class="card"><h2 style="margin:0 0 4px">📊 いま不足が多い品目</h2>
+      <p class="hint">「求む」が多い順です。在庫がある品目は出すと早くまとまります。</p>`;
+    html+= shortItems.length ? shortItems.map(([nm,v])=>`<div class="shortbar">
+      <span class="nm">${esc(nm)}</span><span class="track"><span class="fill" style="width:${Math.round(v.n/maxN*100)}%"></span></span>
+      <span class="ct">${v.n}件 / ${num(v.qty)}${esc(v.unit)}</span></div>`).join('') : empty('いまは不足の掲示がありません');
+    html+=`</div></div><div>`;
+    // 今日の運搬余力
+    html+=`<div class="card"><h2 style="margin:0 0 4px">🚚 今日の運搬余力</h2>
+      <p class="hint">「持ってくよ（配送ルートの空き）」です。相乗りで運べないか相談できます。</p>`;
+    html+= bringOpen.length ? bringOpen.slice(0,5).map(p=>{ const co=company(p.companyId)||{};
+      return `<div class="mini" style="--kc:#2563eb" onclick="App.gotoPost('${p.id}')">
+        <span class="mtag" style="background:#2563eb">🚚 持ってくよ</span><span class="mitem">${esc(p.itemName)}</span>
+        <span class="mmeta">${esc(p.when||'時間相談')}<br><span class="mph">☎ ${esc(co.phone||'')}</span> ・ ${esc(co.name||'')}</span></div>`;
+    }).join('') : empty('今日の運搬余力の掲示はありません');
+    html+=`</div>`;
+    // 市場ニュース
+    html+=`<div class="card"><h2 style="margin:0 0 4px">📰 市場ニュース（今朝）</h2><div id="homeNews"></div></div>`;
+    html+=`</div></div>`;
+    host.innerHTML=html;
+    homeNewsTop($('homeNews'));
+  }
+
   /* ---------- NEWS（業界ニュース・news.json を読む／カテゴリ切替） ---------- */
   let _newsCache=null, newsFilter='all';
   function renderNews(){
@@ -795,7 +985,7 @@ const App = (()=>{
     const tagS=p.kind==='want'?'🙋 求む':'📦 出す';
     const pill = p.status==='closed' ? (filled>0?'<span class="status closed">成立</span>':'<span class="status closed">終了</span>')
       : (filled>0?`<span class="status part">残${num(remain)}${esc(p.unit)}</span>`:'');
-    return `<div class="pcard ${p.kind} ${p.status==='closed'?'closed':''} ${open?'open':''}">
+    return `<div class="pcard ${p.kind} ${p.status==='closed'?'closed':''} ${open?'open':''}" id="pc-${p.id}">
       <div class="phead" onclick="App.toggleCard('${p.id}')">
         <div class="l1"><span class="ptag">${tagS}</span><span class="pitem">${esc(p.itemName)}</span>${pill}<span class="chev">▾</span></div>
         <div class="l2"><span class="price-s">${priceLbl} / ${esc(p.unit)}</span><span>${num(remain||p.qty)}${esc(p.unit)}</span><span class="pco">🏢 ${esc(co.name)}</span></div>
@@ -805,6 +995,7 @@ const App = (()=>{
         <div class="price">${priceLbl}<span class="u"> / ${esc(p.unit)}</span> ・ 計 ${yen((remain||p.qty)*p.unitPrice)}${remain&&remain!==p.qty?`<span class="remain">残り ${num(remain)}${esc(p.unit)}</span>`:''}</div>
         <div class="spec-grid" style="margin-top:10px">${specHtml}</div>
         <div class="contact"><span class="co">${esc(co.name)}</span><span class="muted">${esc(co.contact)}</span><span class="ph">☎ ${esc(co.phone)}</span></div>
+        ${trustLine(p.companyId)}
         <div class="foot">${foot}</div>
       </div>
     </div>`;
@@ -852,7 +1043,7 @@ const App = (()=>{
     const open=!!openCards[p.id];
     const tagMap={bring:'🚚 持ってくよ',need:'🆘 持ってける？',consult:'💬 相談'};
     const pill = p.status==='done'?'<span class="status closed">調整済</span>':(p.status==='scheduling'?'<span class="status dealing">商談中</span>':'');
-    return `<div class="pcard ${p.kind} ${p.status==='done'?'closed':''} ${open?'open':''}">
+    return `<div class="pcard ${p.kind} ${p.status==='done'?'closed':''} ${open?'open':''}" id="pc-${p.id}">
       <div class="phead" onclick="App.toggleCard('${p.id}')">
         <div class="l1"><span class="ptag">${tagMap[p.kind]}</span><span class="pitem">${esc(p.itemName)}</span>${pill}<span class="chev">▾</span></div>
         <div class="l2"><span>📅 ${esc(p.when||'相談')}</span><span class="pco">🏢 ${esc(co.name)}</span></div>
@@ -860,6 +1051,7 @@ const App = (()=>{
       <div class="pbody">
         <div class="spec-grid">${specHtml}</div>
         <div class="contact"><span class="co">${esc(co.name)}</span><span class="muted">${esc(co.contact)}</span><span class="ph">☎ ${esc(co.phone)}</span></div>
+        ${trustLine(p.companyId)}
         <div class="foot">${foot}</div>
       </div>
     </div>`;
@@ -1377,13 +1569,14 @@ const App = (()=>{
     dl('TOYO LINK取引記録'+suffix+'.csv','﻿'+head+body,'text/csv');
   }
   function exportAll(){ dl('toyosu_relay_data.json',JSON.stringify({state,user},null,2),'application/json'); }
-  function reseed(){ if(confirm('サンプルデータで初期化します。よろしいですか？')){ seed(); tab='board'; selMonth=''; respOpen={}; relayOpen={}; pendingPhoto=''; init2(); toast('サンプルデータを読み込みました'); } }
-  function wipe(){ if(confirm('全データを削除します。元に戻せません。')){ state={companies:[],items:[],posts:[],deals:[],closings:{},thanks:[]}; user={role:'admin',companyId:null}; tab='board'; selMonth=''; save(); init2(); toast('全データを削除しました'); } }
+  function reseed(){ if(confirm('サンプルデータで初期化します。よろしいですか？')){ seed(); tab='home'; selMonth=''; respOpen={}; relayOpen={}; pendingPhoto=''; init2(); toast('サンプルデータを読み込みました'); } }
+  function wipe(){ if(confirm('全データを削除します。元に戻せません。')){ state={companies:[],items:[],posts:[],deals:[],closings:{},thanks:[]}; user={role:'admin',companyId:null}; tab='home'; selMonth=''; save(); init2(); toast('全データを削除しました'); } }
 
   /* ---------- plumbing ---------- */
   function toast(m){ const t=$('toast'); t.className='toast'; t.textContent=m; void t.offsetWidth; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2400); }
   function toastGood(m){ const t=$('toast'); t.className='toast good'; t.textContent=m; void t.offsetWidth; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),3000); }
   function renderAll(){
+    if(tab==='home')renderHome();
     if(tab==='board')renderBoard();
     if(tab==='post')renderPostForm();
     if(tab==='inbox')renderInbox();
@@ -1403,11 +1596,12 @@ const App = (()=>{
     if(!state.deals) state.deals=[];
     if(!state.closings) state.closings={};
     if(!state.thanks) state.thanks=[];
+    ensureProfiles();
     init2();
   }
 
   return { init,tab:setTab,changeRole,changeCtx,setMonth,setKind,calcPostAmt,addPost,quickPost,
-           onPhoto,clearPhoto,openLightbox,closeLightbox,
+           onPhoto,clearPhoto,openLightbox,closeLightbox,gotoPost,openProfile,closeProfile,
            setBoardFilter,openDemo,closeDemo,setNewsFilter,toggleCard,toggleResp,calcResp,submitResp,toggleRelay,submitRelay,closePost,
            confirmDeal,rejectDeal,cancelProposal,confirmRelay,rejectRelay,cancelRelay,sendThanks,
            gotoClosing,closeMonth,reopenMonth,
