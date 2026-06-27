@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-27T07:45:04+09:00",
+  "updated": "2026-06-28T07:35:46+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -17,17 +17,17 @@
   ],
   "items": [
     {
+      "title": "中部の青果卸１２社、共同物流で新会社",
+      "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE1fMk5qVDdFLWc1SEJOSWxJVW5RMXhXQXpmZ0ZUT1RXeWpMUGxwMHhvNjgtU050RXg0d0NVNFMwek5HOXcyNlNlUWRGNlFfaEZ6emxCamFkTQ?oc=5",
+      "source": "日本農業新聞",
+      "date": "2026-06-27",
+      "cat": "business"
+    },
+    {
       "title": "決算:長野の青果卸R&CHD、純利益38％減 26年3月期",
       "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9FZ2Qwak5sY1VXM2tzWU1MTDNaS3pfZ2tQZkRpcWEyc3BFM3RiOHc1eU5nNU5CeXJ4R19VV3hWRVM3djZmWnFNQlo4dXo1eG5yWGwwUG5ldlI4QkVsRnkyTk1KV1VhMDk0SmQwMw?oc=5",
       "source": "日本経済新聞",
       "date": "2026-06-22",
-      "cat": "business"
-    },
-    {
-      "title": "【新会社設立のお知らせ】中部圏の青果卸売会社12社が結束し、「チームフレッシュロジ中部株式会社（TFL中部）」を設立",
-      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE1YTktXaGw5aURibHhxeS1GTjk2S2l0Z0ZKOEdBX05ZLXpGSlY0REFVUk1PWEI2VW4zQjhfVl9CTXgyUEdCVFNrTDBNTFd1enVoc0hTRktHZkxrLWtFWHAxU2ZYVGFENV9MQzdF?oc=5",
-      "source": "時事ドットコム",
-      "date": "2026-06-20",
       "cat": "business"
     },
     {
@@ -52,6 +52,13 @@
       "cat": "business"
     },
     {
+      "title": "【新会社設立のお知らせ】中部圏の青果卸売会社12社が結束し、「チームフレッシュロジ中部株式会社（TFL中部）」を設立",
+      "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTFA2UDZNNXY1S0tKTm9nYzNhYzJFM1EwVFVVS0s1RzQ2cGdYRzNCRHF3VmdLTUdEUzcwYWdxaVVyNVFYR2x0ZHNnN3dtR0F4TWZtMGYxNHVFd2tJbnRFVHlzOFVsb3EzX2dkV1E?oc=5",
+      "source": "PR TIMES",
+      "date": "2026-06-16",
+      "cat": "business"
+    },
+    {
       "title": "三菱食品 伊藤社長インタビュー　新たな経営体制で「食品卸」の価値を最大化する",
       "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBwcUl2UXF5OTA3Sjc2b19LSzVZQTNWeklNcklKeFc0bW9NNUpZeDQ4UkVRZ1Z1Rmt4VUg5SWl3M0l1MXhyWTJ2SVYySVA4b1pXWXQ0eHNrZlpISmdRMXFJQktyd0LSAWpBVV95cUxQdnBuenZXVUhIR3NMaTYzVDJYNnJoeG9IZS1aSHVUU0lNVmtBQko1ZFhlYVBISjkwdGxXdHFuV3RYUmpRQ1hoTEZCVHh0eTVRbURJaENDY3NhdzNSbVZJUldDb2VqVnJoMWVn?oc=5",
       "source": "ダイヤモンド・チェーンストアオンライン",
@@ -66,25 +73,25 @@
       "cat": "market"
     },
     {
-      "title": "ナガスクジラが仙台市中央卸売市場に初入荷",
-      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBldTVPSjVRVVAxRmFuWkZTUlduWHhyR0QwemxxaWhSWDFkbXhFR0g2cnQ4YXUzamhhRm9MclhCcTZhcXA1Q1FkV2lvd3FWdWM?oc=5",
-      "source": "khb東日本放送",
+      "title": "ナガスクジラが仙台市中央卸売市場に初入荷（khb東日本放送）",
+      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTFBTRUZlaXVDRXktVDdFQU80YWtaZ2RkZnVHQnNkTTRpVUlNVDcweDlVZ1BJVHVSME8tZlJYNFdMZFp3Ni1PWFBTUTFDMk9oR2w5dkNta0dGYWRjZ1dBc29XZEpvSGhFeVpCTE1ESUpZVUtGYmVNSEh3UURoZ1FZbE0?oc=5",
+      "source": "Yahoo!ニュース",
       "date": "2026-06-09",
       "cat": "market"
     },
     {
-      "title": "値上げは“卸”の味方だった――食品インフレで先回り買いしたい監視銘柄20社リスト｜日本個別株デューデリジェンスセンター",
-      "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE1OQXRzTThEQjZsc2g3QVlyZHN1MGZnS2VoelJKanlqcFZZX0ZLdmU2V1F2X0JYRkM5cHNEaHVldHB2QXllLVNTYk9MZVY2WEpudTFEYTBLWkNWT1U?oc=5",
-      "source": "note",
-      "date": "2026-06-08",
-      "cat": "business"
+      "title": "「牛肉を食べているような感じ」仙台港に水揚げ『ナガスクジラ』の生肉 初入荷・仙台市中央卸売市場",
+      "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE9VWkYtU2FTTVFLUXFEMWotMGlUTm4yZGVURkNqdlRpbGVEWFlUWldaejh0MEhieXI0Y1hucDl2Q2p3d29YUElkTmhJSQ?oc=5",
+      "source": "TVer",
+      "date": "2026-06-09",
+      "cat": "market"
     },
     {
-      "title": "「今の時期しか食べられない」旬！山形県産サクランボ『初入荷』（仙台市中央卸売市場）",
-      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTFBicnhmNl80cVZ6cVF1dmE0MnJhUkx0djBYb1UtTnhncEx4SUJueGRRYVhhTVM4YlFhR1RZS1ZjMVp3M1JiOTdmUEdKQnpLU0Fia3UzbTZuZUhNbWM1Mno4ZTQtV0c0VDVoUlRWcjVGYlAwaFdMeVNCbVRYazE5anc?oc=5",
-      "source": "日テレNEWS NNN",
-      "date": "2026-06-07",
-      "cat": "market"
+      "title": "【中央卸売市場】6月イベント情報",
+      "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE5PcDc2eVQyazR0U182SHJzUmlCUVJxTGxORVNsSmU4Ymhtc2ltLVY5b3BrbnpYTVVxOU1YVVQ5cDZqWjV2QnBrcEpyemhudUpmc3JMUWwxV3VhUVo0OV9aWDFDVEY0dXhi?oc=5",
+      "source": "my.metro.tokyo.lg.jp",
+      "date": "2026-06-08",
+      "cat": "toyosu"
     },
     {
       "title": "２６２０ 資金ショートは２０５６年度に８年前倒し 東京都中央卸売市場会計、２０２６年経営レポート どらったら！！",
@@ -94,11 +101,18 @@
       "cat": "toyosu"
     },
     {
-      "title": "物流アップデート＞中部圏物流共同化へ 青果卸、産地など１９組織 「２４年問題」対策で協議会設立",
-      "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE12bEo1OG1NN2RfSnZvRjltcVhzanE4TTBVRHNhYnlEMTFjMVBWYUJRT1diN0xqY014UE1wZHBiNllJT09ncFdnVDhwU3pXTGN3LVNwU3V1Zw?oc=5",
-      "source": "日本農業新聞",
-      "date": "2026-05-24",
+      "title": "「物流こそ復興の命綱」… 食品卸大手トップを突き動かした郷土愛 ヤマエグループHD・網田会長が語る熊本地震10年",
+      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9xYWdYcW9UT2pVTTRxY2tJWTBScXlGaDNUWGs3YXpXUUVsZHlERk85aTdWZkdudG1TQnM5VC0zVkg4aTRuM1lYeXFHZFItbjQ?oc=5",
+      "source": "熊本日日新聞社",
+      "date": "2026-05-21",
       "cat": "business"
+    },
+    {
+      "title": "カツオの入荷が本格化 数量は安定の見込み 仙台市中央卸売市場",
+      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE50azM4X0J6OWdSSUpzaE42aTFVdGlWMy1QajgtYkpsc011UmMtY08tN0VCUjU0SDcyZm9KWFdkUFJUUzBwWER5UTZ3U0ozdlk?oc=5",
+      "source": "khb東日本放送",
+      "date": "2026-05-15",
+      "cat": "market"
     },
     {
       "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年5月、東京都中央卸売市場）：関東農政局",
@@ -136,13 +150,6 @@
       "cat": "toyosu"
     },
     {
-      "title": "初競り、威勢よく景気づけ 宇都宮市中央卸売市場 冷凍メバチマグロなど入荷",
-      "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBFU1NDVmw0OVlSNDV3VFktUWRpNUdkc0JvWnlIbXQ5RERQeVVvU01KQlhNMGR6RlRFdVZSanBsQ19Ybkd1czBkMl9RQ1cxdkM2SzI0ZXZUc2ZMV1E?oc=5",
-      "source": "下野新聞社",
-      "date": "2026-01-05",
-      "cat": "market"
-    },
-    {
       "title": "東京都中央卸売市場・豊洲市場",
       "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9abnUyLWI2TWtuY0tKa1FoZlMwRUtHeDVsejhNTmwwck1sZi1iZ2ZhWlQ2OHgyU2xsQUdnM05mdzdpY1hNZGhGMzZoZTlFOWxQMHBiRVFwZmM3enM?oc=5",
       "source": "go tokyo",
@@ -176,13 +183,6 @@
       "source": "フーズチャネル",
       "date": "2025-11-21",
       "cat": "business"
-    },
-    {
-      "title": "中央卸売市場足立市場「あだち市場の日感謝祭」を開催|10月",
-      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE9YbjNQZkVLaVdGYkhyaGk4aEtJYVRoeUVEX3FkY3I0aDRpNlJ3SzcwVW82QW50a1JJTFFBMklKSVNjbVdQbDlTNDBERlY0cUwyazBkRmtta21EUHd4cE9UZDdJZjZENjBDSG1idld2aVdad3pO?oc=5",
-      "source": "metro.tokyo.lg.jp",
-      "date": "2025-10-31",
-      "cat": "toyosu"
     }
   ]
 }
