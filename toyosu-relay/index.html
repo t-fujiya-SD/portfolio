@@ -294,6 +294,12 @@
   .prof-kpi .pk{background:#fafbfc;border:1px solid var(--line);border-radius:10px;padding:11px 12px;text-align:center}
   .prof-kpi .pk .v{font-size:20px;font-weight:800;letter-spacing:-.01em}
   .prof-kpi .pk .l{font-size:11px;color:var(--sub);font-weight:600;margin-top:2px}
+  /* フォロー（卸・品目） */
+  .favstar{cursor:pointer;font-weight:700;color:#b45309;white-space:nowrap;user-select:none}
+  .favstar:not(.on){color:#9aa3b0}
+  .favstar.sm{font-size:12px}
+  .favitem-row{margin:7px 0 2px}
+  .fchip.on.fav{background:#d97706;border-color:#d97706;color:#fff}
 </style>
 </head>
 <body>
@@ -561,6 +567,7 @@ const App = (()=>{
   const num = n => (Math.round(n*100)/100).toLocaleString('ja-JP');
   const $ = id => document.getElementById(id);
   const esc = s => (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const jsq = s => String(s==null?'':s).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
   const empty = m => `<div class="empty">${m}</div>`;
   const isTrade = k => TRADE.includes(k);
 
@@ -582,6 +589,9 @@ const App = (()=>{
       mkCo('築地大同物産（デモ）','林','090-4444-0004',{verified:true,zone:'水産卸売場棟',dept:'水産物部会',cats:['冷凍','加工水産'],respMin:50}),
     ];
     const cN=n=>companies.find(c=>c.name.startsWith(n)).id;
+    // デモ：丸豊がフォロー中の卸＝やまと水産、フォロー中の品目＝本まぐろ・ホタテ
+    const _maruho=companies.find(c=>c.name.startsWith('丸豊'));
+    _maruho.favCos=[cN('やまと')]; _maruho.favItems=['本まぐろ','ホタテ'];
     const items=[
       {id:uid(),name:'トマト',unit:'個',price:200},
       {id:uid(),name:'ホワイトアスパラガス',unit:'本',price:300},
@@ -644,10 +654,13 @@ const App = (()=>{
   // 旧データ（プロフィール欄なし）に既定値を補完する
   function ensureProfiles(){
     state.companies.forEach(c=>{
-      if(c.respMin!=null && c.verified!=null) { if(!Array.isArray(c.cats))c.cats=[]; return; }
-      const key=Object.keys(PROFILE_DEFAULTS).find(k=>(c.name||'').startsWith(k));
-      Object.assign(c, {verified:false,zone:'',dept:'',cats:[],respMin:30}, key?PROFILE_DEFAULTS[key]:{});
+      if(!(c.respMin!=null && c.verified!=null)){
+        const key=Object.keys(PROFILE_DEFAULTS).find(k=>(c.name||'').startsWith(k));
+        Object.assign(c, {verified:false,zone:'',dept:'',cats:[],respMin:30}, key?PROFILE_DEFAULTS[key]:{});
+      }
       if(!Array.isArray(c.cats)) c.cats=[];
+      if(!Array.isArray(c.favCos)) c.favCos=[];
+      if(!Array.isArray(c.favItems)) c.favItems=[];
     });
   }
   function respTier(min){ if(min==null)return'—'; if(min<=15)return'早い'; if(min<=45)return'ふつう'; return'ゆっくり'; }
@@ -656,14 +669,18 @@ const App = (()=>{
     const c=company(cid); if(!c) return '';
     const v = c.verified ? '<span class="tbadge ok">✅ 実名確認</span>' : '<span class="tbadge warn">⚠️ 確認中</span>';
     const r = c.respMin!=null ? `<span class="tbadge resp">⏱ 応答約${c.respMin}分</span>` : '';
-    return `<div class="trustline">${v}<span class="tbadge">🤝 取引${myDealCount(cid)}</span><span class="tbadge">🙏 ${thanksReceived(cid)}</span>${r}<span class="more" onclick="event.stopPropagation();App.openProfile('${cid}')">会社情報 ›</span></div>`;
+    const star = (user.role==='company' && cid!==myCoId())
+      ? `<span class="favstar ${isFavCo(cid)?'on':''}" title="この卸をフォロー" onclick="event.stopPropagation();App.toggleFavCo('${cid}')">${isFavCo(cid)?'★ フォロー中':'☆ フォロー'}</span>` : '';
+    return `<div class="trustline">${v}<span class="tbadge">🤝 取引${myDealCount(cid)}</span><span class="tbadge">🙏 ${thanksReceived(cid)}</span>${r}${star}<span class="more" onclick="event.stopPropagation();App.openProfile('${cid}')">会社情報 ›</span></div>`;
   }
   function openProfile(cid){
     const c=company(cid); if(!c) return;
     const lv=levelOf(cid), dc=myDealCount(cid), th=thanksReceived(cid), hc=myHelpCount(cid), cm=closingNeeded(cid);
     const recent=confirmedDeals().filter(d=>d.sellerId===cid||d.buyerId===cid).slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,4);
     $('profTitle').innerHTML=`🏢 ${esc(c.name)} ${c.verified?'<span class="tbadge ok">✅ 実名確認済み</span>':'<span class="tbadge warn">⚠️ 確認中</span>'}`;
-    let html=`<div class="spec-grid" style="grid-template-columns:auto 1fr;font-size:13px">
+    const favBtn = (user.role==='company' && cid!==myCoId())
+      ? `<div style="margin-bottom:13px"><button class="btn ${isFavCo(cid)?'ok':'ghost'} sm" onclick="App.toggleFavCo('${cid}');App.openProfile('${cid}')">${isFavCo(cid)?'★ フォロー中（解除する）':'☆ この卸をフォロー'}</button></div>` : '';
+    let html=favBtn+`<div class="spec-grid" style="grid-template-columns:auto 1fr;font-size:13px">
       <span class="k">市場区画</span><span class="v">${esc(c.zone||'—')}</span>
       <span class="k">所属部会</span><span class="v">${esc(c.dept||'—')}</span>
       <span class="k">担当者</span><span class="v">${esc(c.contact||'—')}</span>
@@ -685,6 +702,26 @@ const App = (()=>{
     $('profileModal').classList.add('show'); document.body.style.overflow='hidden';
   }
   function closeProfile(){ $('profileModal').classList.remove('show'); document.body.style.overflow=''; }
+
+  /* ---------- フォロー（卸・品目／内部キーは favCos/favItems） ---------- */
+  function myFavs(){ const c=company(myCoId()); return c?{cos:c.favCos||[],items:c.favItems||[]}:{cos:[],items:[]}; }
+  const isFavCo = id => myFavs().cos.includes(id);
+  const isFavItem = nm => myFavs().items.includes(nm);
+  const postIsFav = p => isFavCo(p.companyId) || isFavItem(p.itemName);
+  function favOpenPosts(){ const me=myCoId(); if(!me) return []; return state.posts.filter(p=>p.status==='open' && p.companyId!==me && postIsFav(p)); }
+  function toggleFavCo(id){
+    const c=company(myCoId()); if(!c) return toast('卸業者でログインしてください');
+    if(id===c.id) return; c.favCos=c.favCos||[]; const i=c.favCos.indexOf(id);
+    if(i<0){ c.favCos.push(id); toastGood('⭐ '+cName(id)+' をフォローしました'); } else { c.favCos.splice(i,1); toast(cName(id)+' のフォローを解除しました'); }
+    save(); renderAll();
+  }
+  function toggleFavItem(nm){
+    const c=company(myCoId()); if(!c) return toast('卸業者でログインしてください');
+    c.favItems=c.favItems||[]; const i=c.favItems.indexOf(nm);
+    if(i<0){ c.favItems.push(nm); toastGood('⭐ '+nm+'（品目）をフォローしました'); } else { c.favItems.splice(i,1); toast(nm+'（品目）のフォローを解除しました'); }
+    save(); renderAll();
+  }
+  function gotoFav(){ boardFilter='fav'; tab='board'; renderTabs(); renderAll(); window.scrollTo(0,0); }
 
   /* ---------- helpers ---------- */
   const company = id => state.companies.find(c=>c.id===id);
@@ -786,14 +823,17 @@ const App = (()=>{
     renderBoardHero();
     renderPromo();
     const filters=[['all','すべて'],['want','🙋 求む'],['offer','📦 出す'],['relay','🚚 相談']];
+    if(me) filters.push(['fav','⭐ フォロー中']);
     $('boardFilter').innerHTML=filters.map(([k,l])=>`<button class="fchip ${boardFilter===k?'on '+k:''}" onclick="App.setBoardFilter('${k}')">${l}</button>`).join('');
     let list=[...state.posts];
-    if(boardFilter==='relay') list=list.filter(p=>RELAY.includes(p.kind));
+    if(boardFilter==='fav') list=list.filter(p=>postIsFav(p));
+    else if(boardFilter==='relay') list=list.filter(p=>RELAY.includes(p.kind));
     else if(boardFilter!=='all') list=list.filter(p=>p.kind===boardFilter);
     list.sort((a,b)=>(a.status!=='open'?1:0)-(b.status!=='open'?1:0) || b.date.localeCompare(a.date));
     const openCnt=state.posts.filter(p=>p.status==='open').length;
     $('boardSub').textContent=`募集中 ${openCnt}件 / 全${state.posts.length}件`;
-    $('boardList').innerHTML = list.length ? list.map(p=>isTrade(p.kind)?renderTradeCard(p,me):renderRelayCard(p,me)).join('') : empty('掲示はありません');
+    const emptyMsg = boardFilter==='fav' ? 'フォロー中の卸・品目の掲示がここに出ます（カードの☆や品目マスタの☆でフォロー）' : '掲示はありません';
+    $('boardList').innerHTML = list.length ? list.map(p=>isTrade(p.kind)?renderTradeCard(p,me):renderRelayCard(p,me)).join('') : empty(emptyMsg);
   }
   function setBoardFilter(k){ boardFilter=k; renderBoard(); }
   // 掲示板トップ：でかい2ボタン＋「あなたの番」（卸ログイン時のみ）
@@ -874,9 +914,11 @@ const App = (()=>{
     // ヒーロー
     const hi = me ? `おはようございます、${esc(cName(me))} さん` : 'おはようございます（運営事務局）';
     const dstr = TODAY.replace(/-/g,'/');
+    const favPosts = me ? favOpenPosts() : [];
     let reminds='';
     if(me){
       const cm=closingNeeded(me);
+      if(favPosts.length) reminds+=`<button class="remind-chip" onclick="App.gotoFav()">⭐ フォロー中に新着 <b>${favPosts.length}</b> 件</button>`;
       if(waiting) reminds+=`<button class="remind-chip" onclick="App.tab('inbox')">📥 確認待ち <b>${waiting}</b> 件</button>`;
       if(cm) reminds+=`<button class="remind-chip" onclick="App.gotoClosing('${cm}')">🔒 ${cm.slice(5)}月分の精算が<b>未確定</b></button>`;
       if(!reminds) reminds=`<button class="remind-chip" onclick="App.quickPost('want')">🙋 求むを出す</button><button class="remind-chip" onclick="App.quickPost('offer')">📦 出すを出す</button>`;
@@ -891,6 +933,23 @@ const App = (()=>{
       ${kpi('🚚 運搬余力',bringOpen.length,'件')}
       ${kpi('📥 あなたの確認待ち',waiting,'件')}</div>`;
     html+=`<div class="home-row"><div>`;
+    // ⭐ フォロー中の新着（卸・品目をフォローしているときだけ）
+    const fav=me?myFavs():{cos:[],items:[]};
+    if(me && (fav.cos.length || fav.items.length)){
+      html+=`<div class="card"><h2 style="margin:0 0 4px">⭐ フォロー中の新着</h2>
+        <p class="hint">フォロー中の卸（${fav.cos.length}社）・品目（${fav.items.length}件）の新着です。<a onclick="App.gotoFav()" style="color:var(--primary-d);font-weight:700;cursor:pointer">一覧で見る →</a></p>`;
+      html+= favPosts.length ? favPosts.slice(0,5).map(p=>{
+        const co=company(p.companyId)||{};
+        const kcol={want:'#dc2626',offer:'#15803d',bring:'#2563eb',need:'#d97706',consult:'#7c3aed'}[p.kind]||'#1d4ed8';
+        const tag=(KIND_LABEL[p.kind]||'').replace(/（.*$/,'').trim();
+        const meta=isTrade(p.kind)?`${num(remainOf(p)||p.qty)}${esc(p.unit)}`:esc(p.when||'相談');
+        const why=isFavCo(p.companyId)?'⭐フォロー中の卸':'⭐フォロー中の品目';
+        return `<div class="mini" style="--kc:${kcol}" onclick="App.gotoPost('${p.id}')">
+          <span class="mtag" style="background:${kcol}">${tag}</span><span class="mitem">${esc(p.itemName)}</span>
+          <span class="mmeta">${why} ・ ${meta}<br><span class="mph">☎ ${esc(co.phone||'')}</span> ・ ${esc(co.name||'')}</span></div>`;
+      }).join('') : empty('いまはフォロー中の新着はありません');
+      html+=`</div>`;
+    }
     // 今朝の急募
     html+=`<div class="card"><h2 style="margin:0 0 4px">🔥 今朝の急募</h2>
       <p class="hint">急いで探している「求む」と「持ってける？」です。電話して、まとまったら掲示板で記録に残します。</p>`;
@@ -993,6 +1052,7 @@ const App = (()=>{
       <div class="pbody">
         ${p.photo?`<img class="photo" src="${p.photo}" alt="${esc(p.itemName)}の写真" onclick="App.openLightbox(this.src)">`:''}
         <div class="price">${priceLbl}<span class="u"> / ${esc(p.unit)}</span> ・ 計 ${yen((remain||p.qty)*p.unitPrice)}${remain&&remain!==p.qty?`<span class="remain">残り ${num(remain)}${esc(p.unit)}</span>`:''}</div>
+        ${user.role==='company'?`<div class="favitem-row"><span class="favstar sm ${isFavItem(p.itemName)?'on':''}" onclick="event.stopPropagation();App.toggleFavItem('${jsq(p.itemName)}')">${isFavItem(p.itemName)?'★ 品目フォロー中':'☆ この品目をフォロー'}</span></div>`:''}
         <div class="spec-grid" style="margin-top:10px">${specHtml}</div>
         <div class="contact"><span class="co">${esc(co.name)}</span><span class="muted">${esc(co.contact)}</span><span class="ph">☎ ${esc(co.phone)}</span></div>
         ${trustLine(p.companyId)}
@@ -1445,12 +1505,14 @@ const App = (()=>{
     const editable = user.role==='admin' || user.role==='company';
     $('itemFormGrid').style.display = editable?'':'none';
     rebuildItemDatalist();
-    const head=`<tr><th>品目名</th><th>単位</th><th class="num">参考単価</th>${editable?'<th></th>':''}</tr>`;
+    const canFav=!!myCoId();
+    const head=`<tr>${canFav?'<th>フォロー</th>':''}<th>品目名</th><th>単位</th><th class="num">参考単価</th>${editable?'<th></th>':''}</tr>`;
     const rows=state.items.map(i=>{
       const priceCell = editable
         ? `<td class="num"><input type="number" value="${i.price}" min="0" step="10" style="width:110px;text-align:right" onchange="App.setPrice('${i.id}',this.value)"></td>`
         : `<td class="num">${yen(i.price)}</td>`;
-      return `<tr><td><b>${esc(i.name)}</b></td><td>${esc(i.unit)}</td>${priceCell}
+      const favCell = canFav?`<td><span class="favstar sm ${isFavItem(i.name)?'on':''}" title="この品目をフォロー" onclick="App.toggleFavItem('${jsq(i.name)}')">${isFavItem(i.name)?'★':'☆'}</span></td>`:'';
+      return `<tr>${favCell}<td><b>${esc(i.name)}</b></td><td>${esc(i.unit)}</td>${priceCell}
         ${editable?`<td class="num"><button class="btn danger sm" onclick="App.delItem('${i.id}')">削除</button></td>`:''}</tr>`;
     }).join('');
     $('itemTable').innerHTML = state.items.length ? head+rows : `<tr><td>${empty('品目がありません')}</td></tr>`;
@@ -1601,7 +1663,7 @@ const App = (()=>{
   }
 
   return { init,tab:setTab,changeRole,changeCtx,setMonth,setKind,calcPostAmt,addPost,quickPost,
-           onPhoto,clearPhoto,openLightbox,closeLightbox,gotoPost,openProfile,closeProfile,
+           onPhoto,clearPhoto,openLightbox,closeLightbox,gotoPost,openProfile,closeProfile,toggleFavCo,toggleFavItem,gotoFav,
            setBoardFilter,openDemo,closeDemo,setNewsFilter,toggleCard,toggleResp,calcResp,submitResp,toggleRelay,submitRelay,closePost,
            confirmDeal,rejectDeal,cancelProposal,confirmRelay,rejectRelay,cancelRelay,sendThanks,
            gotoClosing,closeMonth,reopenMonth,
