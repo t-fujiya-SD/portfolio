@@ -592,6 +592,10 @@ const App = (()=>{
     // デモ：丸豊がフォロー中の卸＝やまと水産、フォロー中の品目＝本まぐろ・ホタテ
     const _maruho=companies.find(c=>c.name.startsWith('丸豊'));
     _maruho.favCos=[cN('やまと')]; _maruho.favItems=['本まぐろ','ホタテ'];
+    // デモ：フォロワー数に差をつける（丸豊=3社・やまと=2社にフォローされる）
+    companies.find(c=>c.name.startsWith('東都')).favCos=[cN('丸豊'),cN('やまと')];
+    companies.find(c=>c.name.startsWith('築地')).favCos=[cN('丸豊')];
+    companies.find(c=>c.name.startsWith('やまと')).favCos=[cN('丸豊')];
     const items=[
       {id:uid(),name:'トマト',unit:'個',price:200},
       {id:uid(),name:'ホワイトアスパラガス',unit:'本',price:300},
@@ -671,7 +675,8 @@ const App = (()=>{
     const r = c.respMin!=null ? `<span class="tbadge resp">⏱ 応答約${c.respMin}分</span>` : '';
     const star = (user.role==='company' && cid!==myCoId())
       ? `<span class="favstar ${isFavCo(cid)?'on':''}" title="この卸をフォロー" onclick="event.stopPropagation();App.toggleFavCo('${cid}')">${isFavCo(cid)?'★ フォロー中':'☆ フォロー'}</span>` : '';
-    return `<div class="trustline">${v}<span class="tbadge">🤝 取引${myDealCount(cid)}</span><span class="tbadge">🙏 ${thanksReceived(cid)}</span>${r}${star}<span class="more" onclick="event.stopPropagation();App.openProfile('${cid}')">会社情報 ›</span></div>`;
+    const fc=followerCount(cid);
+    return `<div class="trustline">${v}<span class="tbadge">🤝 取引${myDealCount(cid)}</span>${fc?`<span class="tbadge" title="この卸をフォローしている社数">👥 ${fc}社</span>`:''}<span class="tbadge">🙏 ${thanksReceived(cid)}</span>${r}${star}<span class="more" onclick="event.stopPropagation();App.openProfile('${cid}')">会社情報 ›</span></div>`;
   }
   function openProfile(cid){
     const c=company(cid); if(!c) return;
@@ -689,6 +694,7 @@ const App = (()=>{
       <div style="margin-top:13px"><div class="seg-label">主な取扱</div>${(c.cats&&c.cats.length)?c.cats.map(x=>`<span class="cat-chip">${esc(x)}</span>`).join(''):'<span class="muted">未設定</span>'}</div>
       <div class="prof-kpi">
         <div class="pk"><div class="v">${dc}</div><div class="l">成立取引</div></div>
+        <div class="pk"><div class="v">👥 ${followerCount(cid)}</div><div class="l">フォロワー</div></div>
         <div class="pk"><div class="v">🙏 ${th}</div><div class="l">ありがとう</div></div>
         <div class="pk"><div class="v">${hc}</div><div class="l">配送・相談</div></div>
         <div class="pk"><div class="v">Lv.${lv.lv}</div><div class="l">活動レベル</div></div></div>
@@ -709,6 +715,8 @@ const App = (()=>{
   const isFavItem = nm => myFavs().items.includes(nm);
   const postIsFav = p => isFavCo(p.companyId) || isFavItem(p.itemName);
   function favOpenPosts(){ const me=myCoId(); if(!me) return []; return state.posts.filter(p=>p.status==='open' && p.companyId!==me && postIsFav(p)); }
+  // この卸をフォローしている社数（与信シグナル）
+  const followerCount = cid => state.companies.filter(c=>(c.favCos||[]).includes(cid)).length;
   function toggleFavCo(id){
     const c=company(myCoId()); if(!c) return toast('卸業者でログインしてください');
     if(id===c.id) return; c.favCos=c.favCos||[]; const i=c.favCos.indexOf(id);
@@ -925,7 +933,7 @@ const App = (()=>{
     }
     let html=`<div class="home-hero">
       <h2>🌅 ${hi}</h2>
-      <div class="sub">${dstr}（豊洲）・今朝は <b>急募 ${urgent.length}件</b>・出物 ${offerOpen.length}件・運搬余力 ${bringOpen.length}件 です。</div>
+      <div class="sub">${dstr}（豊洲）・今朝は <b>急募 ${urgent.length}件</b>・出物 ${offerOpen.length}件・運搬余力 ${bringOpen.length}件 です。${(me&&followerCount(me))?`<br>👥 あなたは <b>${followerCount(me)}社</b> にフォローされています。`:''}</div>
       ${reminds?`<div class="reminds">${reminds}</div>`:''}</div>`;
     html+=`<div class="grid-kpi">
       ${kpi('🙋 急募（求む＋持ってける？）',urgent.length,'件')}
@@ -1191,12 +1199,13 @@ const App = (()=>{
   function myXP(cid){ return myDealCount(cid)*10 + thanksReceived(cid)*5 + myHelpCount(cid)*6; }
   function levelOf(cid){ const xp=myXP(cid); return {lv:1+Math.floor(xp/50), inLv:xp%50, need:50, xp}; }
   function badgesOf(cid){
-    const d=myDealCount(cid), t=thanksReceived(cid), h=myHelpCount(cid);
+    const d=myDealCount(cid), t=thanksReceived(cid), h=myHelpCount(cid), f=followerCount(cid);
     return [
       {icon:'🌱',label:'はじめての成立',got:d>=1},
       {icon:'🤝',label:'助け合い（3取引）',got:d>=3},
       {icon:'⭐',label:'信頼の証（ありがとう3）',got:t>=3},
       {icon:'🚚',label:'運び屋（相談3）',got:h>=3},
+      {icon:'🌟',label:'人気の卸（フォロワー5）',got:f>=5},
       {icon:'👑',label:'市場の主（10取引）',got:d>=10},
     ];
   }
@@ -1208,7 +1217,7 @@ const App = (()=>{
       <div class="lvrow"><span class="lvbadge">Lv.${lv.lv}</span>
         <div class="lvbar"><div class="lvfill" style="width:${Math.round(lv.inLv/lv.need*100)}%"></div></div>
         <span class="muted" style="white-space:nowrap">あと ${lv.need-lv.inLv}</span></div>
-      <div class="muted" style="margin:8px 0 12px">成立 <b>${myDealCount(me)}</b>件 ・ 相談まとめ <b>${myHelpCount(me)}</b>件 ・ もらった🙏 <b>${thanksReceived(me)}</b>件</div>
+      <div class="muted" style="margin:8px 0 12px">成立 <b>${myDealCount(me)}</b>件 ・ 相談まとめ <b>${myHelpCount(me)}</b>件 ・ もらった🙏 <b>${thanksReceived(me)}</b>件 ・ フォロワー <b>${followerCount(me)}</b>社</div>
       <div class="badges">${badges.map(b=>`<span class="badge-chip ${b.got?'got':''}">${b.icon} ${esc(b.label)}</span>`).join('')}</div>`;
   }
   function sendThanks(dealId){
@@ -1599,11 +1608,11 @@ const App = (()=>{
 
   /* ---------- COMPANIES ---------- */
   function renderCompanies(){
-    const head=`<tr><th>企業名</th><th>担当者</th><th>連絡先</th><th class="num">取引</th><th></th></tr>`;
+    const head=`<tr><th>企業名</th><th>担当者</th><th>連絡先</th><th class="num">取引</th><th class="num">フォロワー</th><th></th></tr>`;
     $('companyTable').innerHTML=state.companies.length? head+state.companies.map(c=>{
       const n=confirmedDeals().filter(d=>d.sellerId===c.id||d.buyerId===c.id).length;
       return `<tr><td><b>${esc(c.name)}</b></td><td>${esc(c.contact||'—')}</td><td>${esc(c.phone||'—')}</td>
-        <td class="num muted">${n}件</td><td class="num"><button class="btn danger sm" onclick="App.delCompany('${c.id}')">削除</button></td></tr>`;
+        <td class="num muted">${n}件</td><td class="num muted">${followerCount(c.id)}社</td><td class="num"><button class="btn danger sm" onclick="App.delCompany('${c.id}')">削除</button></td></tr>`;
     }).join('') : `<tr><td>${empty('卸業者がありません')}</td></tr>`;
   }
   function addCompany(){
