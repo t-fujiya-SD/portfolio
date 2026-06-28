@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-28T07:35:46+09:00",
+  "updated": "2026-06-29T07:35:00+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -24,18 +24,18 @@
       "cat": "business"
     },
     {
+      "title": "【令和8年度】夏休み親子市場せり見学会参加者募集",
+      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE5xemZuXzdnYzVXUnc2WkI4VnRPSEFYbVZ4a1UzcXJOUkZ4VXVRenhLQUQ0Yzdjb3FZbUs0SVNGTnJLRjF5a1ZTMG90emtmckI0aU5MMlY1TzZpYUkxNDZpa1JYNzhoOEV6U0R5c2o5ZmgyZm5sd1pFalBMcHUxZGM?oc=5",
+      "source": "city.niigata.lg.jp",
+      "date": "2026-06-25",
+      "cat": "market"
+    },
+    {
       "title": "決算:長野の青果卸R&CHD、純利益38％減 26年3月期",
       "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9FZ2Qwak5sY1VXM2tzWU1MTDNaS3pfZ2tQZkRpcWEyc3BFM3RiOHc1eU5nNU5CeXJ4R19VV3hWRVM3djZmWnFNQlo4dXo1eG5yWGwwUG5ldlI4QkVsRnkyTk1KV1VhMDk0SmQwMw?oc=5",
       "source": "日本経済新聞",
       "date": "2026-06-22",
       "cat": "business"
-    },
-    {
-      "title": "【令和8年度】夏休み親子市場せり見学会参加者募集",
-      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE5xemZuXzdnYzVXUnc2WkI4VnRPSEFYbVZ4a1UzcXJOUkZ4VXVRenhLQUQ0Yzdjb3FZbUs0SVNGTnJLRjF5a1ZTMG90emtmckI0aU5MMlY1TzZpYUkxNDZpa1JYNzhoOEV6U0R5c2o5ZmgyZm5sd1pFalBMcHUxZGM?oc=5",
-      "source": "city.niigata.lg.jp",
-      "date": "2026-06-16",
-      "cat": "market"
     },
     {
       "title": "中部圏の青果卸12社／共同物流会社を設立、2027年6月以降稼働へ",
