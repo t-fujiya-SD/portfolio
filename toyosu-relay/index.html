@@ -300,6 +300,18 @@
   .favstar.sm{font-size:12px}
   .favitem-row{margin:7px 0 2px}
   .fchip.on.fav{background:#d97706;border-color:#d97706;color:#fff}
+  /* ボトムバー「もっと」シート */
+  .more-sheet-wrap{display:none;position:fixed;inset:0;z-index:60}
+  .more-sheet-wrap.show{display:block}
+  .more-backdrop{position:absolute;inset:0;background:rgba(15,20,30,.45)}
+  .more-panel{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:16px 16px 0 0;padding:10px 16px calc(16px + env(safe-area-inset-bottom));box-shadow:0 -8px 30px rgba(0,0,0,.22);animation:sheetUp .2s ease}
+  @keyframes sheetUp{from{transform:translateY(100%)}to{transform:none}}
+  .more-handle{width:40px;height:4px;background:#d3d8e0;border-radius:999px;margin:4px auto 10px}
+  .more-title{font-size:12px;color:var(--sub);font-weight:700;margin:0 4px 9px}
+  .more-list{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .more-item{display:flex;align-items:center;gap:9px;border:1px solid var(--line);background:#fff;border-radius:12px;padding:14px;font-size:14.5px;font-weight:700;color:var(--ink);cursor:pointer;font-family:inherit;text-align:left}
+  .more-item.active{border-color:var(--accent);background:#eef4ff;color:var(--accent)}
+  .more-item .mbadge{margin-left:auto;background:var(--debit);color:#fff;border-radius:999px;font-size:11px;font-weight:700;min-width:18px;height:18px;line-height:18px;text-align:center;padding:0 5px}
 </style>
 </head>
 <body>
@@ -508,6 +520,14 @@
 
 <datalist id="itemNameList"></datalist>
 <nav class="tabbar-bottom" id="tabsBottom"></nav>
+<div class="more-sheet-wrap" id="moreSheet">
+  <div class="more-backdrop" onclick="App.closeMore()"></div>
+  <div class="more-panel">
+    <div class="more-handle"></div>
+    <div class="more-title">メニュー</div>
+    <div class="more-list" id="moreList"></div>
+  </div>
+</div>
 <div class="lightbox" id="lightbox" onclick="App.closeLightbox()"><img id="lightboxImg" src="" alt="拡大写真"></div>
 <div class="demo-modal" id="demoModal">
   <div class="demo-card">
@@ -763,6 +783,8 @@ const App = (()=>{
     company:[['home','🌅 今朝のうごき'],['board','📋 掲示板'],['post','✏️ 投稿する'],['inbox','📥 やりとり'],['settle','💰 精算・締め'],['news','📰 業界ニュース'],['items','🥬 品目マスタ']],
   };
   const SHORT={home:['🌅','今朝'],board:['📋','掲示板'],news:['📰','ニュース'],post:['✏️','投稿'],inbox:['📥','やりとり'],settle:['💰','精算'],deals:['🧾','記録'],items:['🥬','品目'],companies:['⚙️','業者']};
+  // モバイル下部バーに常時出す主要タブ（残りは「☰ もっと」シートに集約）
+  const BOTTOM_PRIMARY={ company:['home','board','post','inbox'], admin:['home','board','deals','settle'] };
 
   function buildLogin(){
     $('roleSel').innerHTML = Object.entries(ROLES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
@@ -808,16 +830,32 @@ const App = (()=>{
       const badge=(id==='inbox'&&n)?`<span class="dot-n">${n}</span>`:'';
       return `<button class="${id===tab?'active':''}" onclick="App.tab('${id}')">${label}${badge}</button>`;
     }).join('');
-    $('tabsBottom').innerHTML=TABS[user.role].map(([id])=>{
+    const allIds=TABS[user.role].map(t=>t[0]);
+    const primary=(BOTTOM_PRIMARY[user.role]||allIds.slice(0,4)).filter(id=>allIds.includes(id));
+    const overflow=allIds.filter(id=>!primary.includes(id));
+    const tabBtn=id=>{
       const [ic,lbl]=SHORT[id]||['•',id];
       const badge=(id==='inbox'&&n)?`<span class="bn">${n}</span>`:'';
       return `<button class="${id===tab?'active':''}" onclick="App.tab('${id}')"><span class="ic">${ic}</span>${badge}${lbl}</button>`;
+    };
+    let bottom=primary.map(tabBtn).join('');
+    if(overflow.length){
+      const overBadge=overflow.includes('inbox')&&n?`<span class="bn">${n}</span>`:'';
+      bottom+=`<button class="${overflow.includes(tab)?'active':''}" onclick="App.openMore()"><span class="ic">☰</span>${overBadge}もっと</button>`;
+    }
+    $('tabsBottom').innerHTML=bottom;
+    if($('moreList')) $('moreList').innerHTML=overflow.map(id=>{
+      const lbl=(TABS[user.role].find(t=>t[0]===id)||[])[1]||id;
+      const badge=(id==='inbox'&&n)?`<span class="mbadge">${n}</span>`:'';
+      return `<button class="more-item ${id===tab?'active':''}" onclick="App.tab('${id}')">${lbl}${badge}</button>`;
     }).join('');
     document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
     const map={home:'panel-home',board:'panel-board',news:'panel-news',post:'panel-post',inbox:'panel-inbox',settle:'panel-settle',deals:'panel-deals',items:'panel-items',companies:'panel-companies'};
     const p=$(map[tab]); if(p)p.classList.add('active');
   }
-  function setTab(t){ tab=t; renderTabs(); renderAll(); window.scrollTo(0,0); }
+  function setTab(t){ tab=t; closeMore(); renderTabs(); renderAll(); window.scrollTo(0,0); }
+  function openMore(){ const s=$('moreSheet'); if(s){ s.classList.add('show'); document.body.style.overflow='hidden'; } }
+  function closeMore(){ const s=$('moreSheet'); if(s){ s.classList.remove('show'); document.body.style.overflow=''; } }
 
   function buildMonthSelectors(){
     const opts=`<option value="">全期間</option>`+dealMonths().map(m=>`<option value="${m}">${m.replace('-','年')}月</option>`).join('');
@@ -1672,7 +1710,7 @@ const App = (()=>{
   }
 
   return { init,tab:setTab,changeRole,changeCtx,setMonth,setKind,calcPostAmt,addPost,quickPost,
-           onPhoto,clearPhoto,openLightbox,closeLightbox,gotoPost,openProfile,closeProfile,toggleFavCo,toggleFavItem,gotoFav,
+           onPhoto,clearPhoto,openLightbox,closeLightbox,gotoPost,openProfile,closeProfile,toggleFavCo,toggleFavItem,gotoFav,openMore,closeMore,
            setBoardFilter,openDemo,closeDemo,setNewsFilter,toggleCard,toggleResp,calcResp,submitResp,toggleRelay,submitRelay,closePost,
            confirmDeal,rejectDeal,cancelProposal,confirmRelay,rejectRelay,cancelRelay,sendThanks,
            gotoClosing,closeMonth,reopenMonth,
