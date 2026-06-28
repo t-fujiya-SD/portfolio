@@ -271,12 +271,12 @@
   .remind-chip b{font-size:14px}
   .home-row{display:grid;grid-template-columns:1.35fr 1fr;gap:16px;align-items:start}
   @media(max-width:840px){.home-row{grid-template-columns:1fr}}
-  .mini{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:4px solid var(--kc,#1d4ed8);border-radius:10px;margin-bottom:9px;background:#fff;cursor:pointer;transition:.12s}
+  .mini{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:4px solid var(--kc,#1d4ed8);border-radius:10px;margin-bottom:9px;background:#fff;cursor:pointer;transition:.12s;overflow:hidden}
   .mini:hover{box-shadow:var(--shadow);transform:translateY(-1px)}
-  .mini .mtag{font-size:10.5px;font-weight:800;color:#fff;background:var(--kc,#1d4ed8);padding:3px 8px;border-radius:6px;white-space:nowrap}
-  .mini .mitem{font-weight:800;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .mini .mmeta{color:var(--sub);font-size:11.5px;margin-left:auto;text-align:right;white-space:nowrap;line-height:1.5}
-  .mini .mph{color:var(--primary-d);font-weight:800}
+  .mini .mtag{font-size:10.5px;font-weight:800;color:#fff;background:var(--kc,#1d4ed8);padding:3px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0}
+  .mini .mitem{font-weight:800;font-size:14px;min-width:0;flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mini .mmeta{color:var(--sub);font-size:11.5px;margin-left:auto;text-align:right;line-height:1.5;flex-shrink:0;max-width:54%}
+  .mini .mph{color:var(--primary-d);font-weight:800;white-space:nowrap}
   .shortbar{display:flex;align-items:center;gap:10px;margin-bottom:9px;font-size:13px}
   .shortbar .nm{font-weight:700;min-width:92px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .shortbar .track{flex:1;height:14px;background:#eef1f6;border-radius:999px;overflow:hidden}
@@ -312,6 +312,22 @@
   .more-item{display:flex;align-items:center;gap:9px;border:1px solid var(--line);background:#fff;border-radius:12px;padding:14px;font-size:14.5px;font-weight:700;color:var(--ink);cursor:pointer;font-family:inherit;text-align:left}
   .more-item.active{border-color:var(--accent);background:#eef4ff;color:var(--accent)}
   .more-item .mbadge{margin-left:auto;background:var(--debit);color:#fff;border-radius:999px;font-size:11px;font-weight:700;min-width:18px;height:18px;line-height:18px;text-align:center;padding:0 5px}
+  /* 掲示板ヒーローの相談3ボタン */
+  .hero-acts3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:11px}
+  .hero-btn3{display:flex;flex-direction:column;align-items:center;gap:3px;border:none;border-radius:11px;padding:11px 5px;cursor:pointer;font-family:inherit;color:#fff;font-weight:800;background:rgba(255,255,255,.13);transition:.15s}
+  .hero-btn3:hover{background:rgba(255,255,255,.26)}
+  .hero-btn3 .hi3{font-size:20px;line-height:1}
+  .hero-btn3 .ht3{font-size:12px}
+  /* 投稿フローティングボタン（モバイル・どのタブでも表示） */
+  .fab-post{display:none}
+  @media(max-width:640px){
+    .fab-post{display:flex;align-items:center;gap:7px;position:fixed;right:16px;bottom:calc(74px + env(safe-area-inset-bottom));z-index:45;
+      border:none;border-radius:999px;padding:13px 18px;background:var(--accent);color:#fff;font-family:inherit;font-weight:800;font-size:15px;
+      box-shadow:0 6px 18px rgba(29,78,216,.45);cursor:pointer}
+    .fab-post:active{transform:scale(.96)}
+    .fab-post.hidden{display:none}
+    .fab-post .fi{font-size:18px}
+  }
 </style>
 </head>
 <body>
@@ -528,6 +544,7 @@
     <div class="more-list" id="moreList"></div>
   </div>
 </div>
+<button class="fab-post" id="fabPost" onclick="App.tab('post')"><span class="fi">✏️</span>投稿する</button>
 <div class="lightbox" id="lightbox" onclick="App.closeLightbox()"><img id="lightboxImg" src="" alt="拡大写真"></div>
 <div class="demo-modal" id="demoModal">
   <div class="demo-card">
@@ -784,7 +801,7 @@ const App = (()=>{
   };
   const SHORT={home:['🌅','今朝'],board:['📋','掲示板'],news:['📰','ニュース'],post:['✏️','投稿'],inbox:['📥','やりとり'],settle:['💰','精算'],deals:['🧾','記録'],items:['🥬','品目'],companies:['⚙️','業者']};
   // モバイル下部バーに常時出す主要タブ（残りは「☰ もっと」シートに集約）
-  const BOTTOM_PRIMARY={ company:['home','board','post','inbox'], admin:['home','board','deals','settle'] };
+  const BOTTOM_PRIMARY={ company:['home','board','inbox'], admin:['home','board','deals','settle'] };
 
   function buildLogin(){
     $('roleSel').innerHTML = Object.entries(ROLES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
@@ -849,6 +866,7 @@ const App = (()=>{
       const badge=(id==='inbox'&&n)?`<span class="mbadge">${n}</span>`:'';
       return `<button class="more-item ${id===tab?'active':''}" onclick="App.tab('${id}')">${lbl}${badge}</button>`;
     }).join('');
+    const fab=$('fabPost'); if(fab) fab.classList.toggle('hidden', !(user.role==='company') || tab==='post');
     document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
     const map={home:'panel-home',board:'panel-board',news:'panel-news',post:'panel-post',inbox:'panel-inbox',settle:'panel-settle',deals:'panel-deals',items:'panel-items',companies:'panel-companies'};
     const p=$(map[tab]); if(p)p.classList.add('active');
@@ -893,6 +911,11 @@ const App = (()=>{
       <div class="hero-acts">
         <button class="hero-btn want" onclick="App.quickPost('want')"><span class="hi">🙋</span><span class="ht">求む</span><span class="hs">足りない物をさがす</span></button>
         <button class="hero-btn offer" onclick="App.quickPost('offer')"><span class="hi">📦</span><span class="ht">出す</span><span class="hs">余った物をだす</span></button>
+      </div>
+      <div class="hero-acts3">
+        <button class="hero-btn3" onclick="App.quickPost('bring')"><span class="hi3">🚚</span><span class="ht3">持ってくよ</span></button>
+        <button class="hero-btn3" onclick="App.quickPost('need')"><span class="hi3">🆘</span><span class="ht3">持ってける？</span></button>
+        <button class="hero-btn3" onclick="App.quickPost('consult')"><span class="hi3">💬</span><span class="ht3">その他相談</span></button>
       </div>
       <div class="hero-turn">
         <a class="turn-chip ${waiting?'on':''}" onclick="App.tab('inbox')">📥 確認待ち <b>${waiting}</b></a>
@@ -1264,6 +1287,10 @@ const App = (()=>{
     const toCoId = d.sellerId===me ? d.buyerId : d.sellerId;
     state.thanks.push({id:uid(),dealId,fromCoId:me,toCoId,date:TODAY});
     save(); renderAll(); toastGood('🙏 ありがとうを送りました');
+    // 未フォローの相手なら、続けてフォローを提案
+    if(toCoId && toCoId!==me && !isFavCo(toCoId)){
+      setTimeout(()=>{ if(confirm(`${cName(toCoId)} をフォローしますか？\nフォローすると、この卸の新着が「今朝」に届きます。`)) toggleFavCo(toCoId); }, 260);
+    }
   }
 
   /* ---------- INBOX ---------- */
