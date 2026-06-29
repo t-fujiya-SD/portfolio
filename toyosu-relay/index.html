@@ -363,6 +363,28 @@
   .visi-list{display:flex;flex-wrap:wrap;gap:8px}
   .visi-chk{display:flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:9px;padding:7px 11px;font-size:12.5px;font-weight:600;background:#fff;cursor:pointer}
   .visi-chk input{accent-color:var(--accent)}
+  /* 業種・編集・検索・#タグ */
+  .ind-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+  .ind-chip{display:inline-block;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:999px;background:#e7f6ec;color:#15803d}
+  .ind-chip.haccp{background:#eef4ff;color:#1e3a8a}
+  .tagchip{display:inline-block;font-size:12px;font-weight:700;color:var(--primary-d);background:#eef4ff;border-radius:999px;padding:2px 9px;margin:2px 4px 2px 0;cursor:pointer}
+  .tagchip:hover{background:#dbe7ff}
+  .edit-field{margin-bottom:13px}
+  .edit-field>label{display:block;font-size:12.5px;font-weight:700;color:var(--sub);margin-bottom:5px}
+  .edit-field input[type=text],.edit-field textarea{width:100%}
+  .edit-field textarea{min-height:84px}
+  .ind-checks{display:flex;flex-wrap:wrap;gap:8px}
+  .ind-checks label{display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:9px;padding:8px 12px;font-size:13px;font-weight:600;cursor:pointer;background:#fff}
+  .ind-checks input{accent-color:var(--accent)}
+  .listed-row{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:10px;padding:11px 13px;background:#fafbfc}
+  .listed-row input{accent-color:var(--accent);width:18px;height:18px}
+  .search-box{width:100%;font-size:15px;padding:12px 14px}
+  .srch-row{border:1px solid var(--line);border-radius:12px;padding:13px 15px;margin-bottom:11px;background:#fff}
+  .srch-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .srch-name{font-weight:800;font-size:15px}
+  .srch-about{font-size:12.5px;color:var(--ink);line-height:1.7;margin-top:7px}
+  .srch-acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}
+  .srch-meta{font-size:11.5px;color:var(--sub);margin-top:5px}
 </style>
 </head>
 <body>
@@ -389,6 +411,17 @@
   <!-- HOME（朝イチ・ダッシュボード） -->
   <section class="panel" id="panel-home">
     <div id="homeBody"></div>
+  </section>
+
+  <!-- SEARCH（卸さがし） -->
+  <section class="panel" id="panel-search">
+    <div class="card">
+      <h2 style="margin:0 0 4px">🔍 卸をさがす</h2>
+      <p class="hint">卸名・業種・#タグで検索できます（検索に載せている卸が表示されます）。</p>
+      <input class="search-box" id="searchInput" placeholder="例：青果 / 海鮮 / #朝採れ / 会社名" oninput="App.setSearchQ(this.value)">
+      <div class="filterbar" id="searchIndustryBar" style="margin-top:12px"></div>
+      <div id="searchResults" style="margin-top:6px"></div>
+    </div>
   </section>
 
   <!-- BOARD（掲示板） -->
@@ -617,6 +650,12 @@
     <div class="chat-input" id="chatInputBar"><input id="chatText" placeholder="メッセージを入力…" onkeydown="if(event.key==='Enter')App.sendMsg()"><button class="btn primary sm" onclick="App.sendMsg()">送信</button></div>
   </div>
 </div>
+<div class="demo-modal" id="editModal">
+  <div class="demo-card" style="height:auto;max-height:92vh;width:min(540px,96vw)">
+    <div class="demo-bar"><span class="demo-ttl">✏️ プロフィールを編集</span><button class="demo-x" style="margin-left:auto" onclick="App.closeEdit()">✕ 閉じる</button></div>
+    <div id="editBody" style="padding:18px 20px;overflow:auto"></div>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -626,6 +665,7 @@ const App = (()=>{
   const TODAY = '2026-06-23';
   const CUR_MONTH = '2026-06';
   const TRADE=['want','offer'], RELAY=['bring','need','consult'];
+  const INDUSTRIES=['野菜','海鮮','乾物','配送業'];   // 業種（プロフィール・検索用）
   const KIND_LABEL={want:'🙋 求む（足りない）',offer:'📦 出す（余った）',bring:'🚚 持ってくよ',need:'🆘 持ってける？',consult:'💬 その他相談'};
   const KIND_HINT={
     want:'足りない在庫を募集します。他社が「出せます」と申し込み、双方が確認すると取引記録になります。',
@@ -647,6 +687,8 @@ const App = (()=>{
   let boardFilter = 'all';
   let myPageFollowView = 'following';   // マイページのフォロー/フォロワー表示切替
   let chatPostId = '';                  // 開いている案件メッセージのpostId
+  let searchQ = '';                     // 卸さがしの検索語
+  let searchIndustry = '';              // 卸さがしの業種フィルタ
   let respOpen = {};      // postId -> bool（trade応答フォーム）
   let relayOpen = {};     // postId -> bool（相談に乗るフォーム）
   let pendingPhoto = '';  // 投稿フォームで選択中の写真（base64・出すのみ）
@@ -673,10 +715,10 @@ const App = (()=>{
   function seed(){
     const mkCo=(name,contact,phone,prof)=>({id:uid(),name,contact,phone,...prof});
     const companies=[
-      mkCo('丸豊青果（デモ）','岡野','090-1111-0001',{verified:true,zone:'青果棟 7街区',dept:'青果部会',cats:['野菜','果実'],respMin:12}),
-      mkCo('東都青果（デモ）','坂本','090-2222-0002',{verified:true,zone:'青果棟 5街区',dept:'青果部会',cats:['野菜','加工野菜'],respMin:35}),
-      mkCo('やまと水産（デモ）','三浦','090-3333-0003',{verified:true,zone:'水産仲卸棟 3街区',dept:'水産物部会',cats:['鮮魚','貝類'],respMin:20}),
-      mkCo('築地大同物産（デモ）','林','090-4444-0004',{verified:true,zone:'水産卸売場棟',dept:'水産物部会',cats:['冷凍','加工水産'],respMin:50}),
+      mkCo('丸豊青果（デモ）','岡野','090-1111-0001',{verified:true,zone:'青果棟 7街区',dept:'青果部会',cats:['野菜','果実'],respMin:12,industries:['野菜'],about:'青果ひと筋60年。朝採れの葉物と果実が得意です。飲食店向けの小口対応も歓迎。#朝採れ #葉物 #果実 #法人対応',listed:true}),
+      mkCo('東都青果（デモ）','坂本','090-2222-0002',{verified:true,zone:'青果棟 5街区',dept:'青果部会',cats:['野菜','加工野菜'],respMin:35,industries:['野菜','乾物'],about:'業務用・加工向けに強み。乾物や規格外もまとめてご相談ください。#加工野菜 #乾物 #小ロットOK #規格外',listed:true}),
+      mkCo('やまと水産（デモ）','三浦','090-3333-0003',{verified:true,zone:'水産仲卸棟 3街区',dept:'水産物部会',cats:['鮮魚','貝類'],respMin:20,industries:['海鮮'],about:'長崎・九州直送の鮮魚と貝類。活け物・朝市の目利きにお任せ。#活魚 #貝類 #九州直送 #朝市',listed:true}),
+      mkCo('築地大同物産（デモ）','林','090-4444-0004',{verified:true,zone:'水産卸売場棟',dept:'水産物部会',cats:['冷凍','加工水産'],respMin:50,industries:['海鮮','乾物'],about:'冷凍・加工水産と乾物の品揃え。業務用のまとめ買いに対応します。#冷凍 #加工水産 #乾物 #業務用',listed:true}),
     ];
     const cN=n=>companies.find(c=>c.name.startsWith(n)).id;
     // デモ：丸豊がフォロー中の卸＝やまと水産、フォロー中の品目＝本まぐろ・ホタテ
@@ -771,6 +813,9 @@ const App = (()=>{
       if(!Array.isArray(c.cats)) c.cats=[];
       if(!Array.isArray(c.favCos)) c.favCos=[];
       if(!Array.isArray(c.favItems)) c.favItems=[];
+      if(!Array.isArray(c.industries)) c.industries=[];
+      if(c.about==null) c.about='';
+      if(c.listed===undefined) c.listed=true;
     });
   }
   function respTier(min){ if(min==null)return'—'; if(min<=15)return'早い'; if(min<=45)return'ふつう'; return'ゆっくり'; }
@@ -797,7 +842,9 @@ const App = (()=>{
       <span class="k">担当者</span><span class="v">${esc(c.contact||'—')}</span>
       <span class="k">連絡先</span><span class="v"><b style="color:var(--primary-d)">☎ ${esc(c.phone||'—')}</b></span>
       <span class="k">応答の速さ</span><span class="v">${c.respMin!=null?`約${c.respMin}分・${respTier(c.respMin)}`:'—'}</span></div>
+      ${(c.industries&&c.industries.length)?`<div style="margin-top:13px"><div class="seg-label">業種</div>${c.industries.map(i=>`<span class="ind-chip">${esc(i)}</span>`).join(' ')}</div>`:''}
       <div style="margin-top:13px"><div class="seg-label">主な取扱</div>${(c.cats&&c.cats.length)?c.cats.map(x=>`<span class="cat-chip">${esc(x)}</span>`).join(''):'<span class="muted">未設定</span>'}</div>
+      ${c.about?`<div style="margin-top:13px"><div class="seg-label">自社について</div><div class="srch-about">${renderAboutHtml(c.about)}</div></div>`:''}
       <div class="prof-kpi">
         <div class="pk"><div class="v">${dc}</div><div class="l">成立取引</div></div>
         <div class="pk"><div class="v">👥 ${followerCount(cid)}</div><div class="l">フォロワー</div></div>
@@ -908,11 +955,11 @@ const App = (()=>{
   /* ---------- role / context UI ---------- */
   const TABS = {
     admin:[['home','🌅 今朝のうごき'],['board','📋 掲示板'],['news','📰 業界ニュース'],['deals','🧾 取引記録'],['settle','💰 月次精算'],['items','🥬 品目マスタ'],['companies','⚙️ 卸業者管理']],
-    company:[['home','🌅 今朝のうごき'],['board','📋 掲示板'],['post','✏️ 投稿する'],['inbox','👤 マイページ'],['settle','💰 精算・締め'],['news','📰 業界ニュース'],['items','🥬 品目マスタ']],
+    company:[['home','🌅 今朝のうごき'],['board','📋 掲示板'],['search','🔍 卸さがす'],['post','✏️ 投稿する'],['inbox','👤 マイページ'],['settle','💰 精算・締め'],['news','📰 業界ニュース'],['items','🥬 品目マスタ']],
   };
-  const SHORT={home:['🌅','今朝'],board:['📋','掲示板'],news:['📰','ニュース'],post:['✏️','投稿'],inbox:['👤','マイページ'],settle:['💰','精算'],deals:['🧾','記録'],items:['🥬','品目'],companies:['⚙️','業者']};
+  const SHORT={home:['🌅','今朝'],board:['📋','掲示板'],search:['🔍','検索'],news:['📰','ニュース'],post:['✏️','投稿'],inbox:['👤','マイページ'],settle:['💰','精算'],deals:['🧾','記録'],items:['🥬','品目'],companies:['⚙️','業者']};
   // モバイル下部バーに常時出す主要タブ（残りは「☰ もっと」シートに集約）
-  const BOTTOM_PRIMARY={ company:['home','board','inbox'], admin:['home','board','deals','settle'] };
+  const BOTTOM_PRIMARY={ company:['home','board','search','inbox'], admin:['home','board','deals','settle'] };
 
   function buildLogin(){
     $('roleSel').innerHTML = Object.entries(ROLES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
@@ -979,7 +1026,7 @@ const App = (()=>{
     }).join('');
     const fab=$('fabPost'); if(fab) fab.classList.toggle('hidden', !(user.role==='company') || tab==='post');
     document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-    const map={home:'panel-home',board:'panel-board',news:'panel-news',post:'panel-post',inbox:'panel-inbox',settle:'panel-settle',deals:'panel-deals',items:'panel-items',companies:'panel-companies'};
+    const map={home:'panel-home',board:'panel-board',search:'panel-search',news:'panel-news',post:'panel-post',inbox:'panel-inbox',settle:'panel-settle',deals:'panel-deals',items:'panel-items',companies:'panel-companies'};
     const p=$(map[tab]); if(p)p.classList.add('active');
   }
   function setTab(t){ tab=t; closeMore(); renderTabs(); renderAll(); window.scrollTo(0,0); }
@@ -1447,13 +1494,17 @@ const App = (()=>{
     const cm=closingNeeded(me);
     host.innerHTML=`<h2 style="margin:0 0 6px">👤 マイページ</h2>
       <div class="mp-head"><span class="mp-name">${esc(c.name)}</span>${c.verified?'<span class="tbadge ok">✅ 実名確認済み</span>':'<span class="tbadge warn">⚠️ 確認中</span>'}</div>
+      ${(c.industries&&c.industries.length)?`<div class="ind-chips" style="margin-top:8px">${c.industries.map(i=>`<span class="ind-chip">${esc(i)}</span>`).join('')}</div>`:''}
+      ${c.about?`<div class="srch-about" style="margin-top:8px">${renderAboutHtml(c.about)}</div>`:''}
       <div class="trustline" style="margin-top:9px">
         <span class="tbadge">🤝 取引${myDealCount(me)}</span>
         <span class="tbadge">🙏 ${thanksReceived(me)}</span>
         ${c.respMin!=null?`<span class="tbadge resp">⏱ 応答約${c.respMin}分</span>`:''}
         ${cm?'<span class="tbadge warn">⚠️ 未精算あり</span>':'<span class="tbadge ok">✅ 精算クリーン</span>'}</div>
+      <div class="srch-meta" style="margin-top:8px">${c.listed!==false?'🔍 「卸さがす」に掲載中':'🙈 「卸さがす」に非掲載'}</div>
       <div style="margin-top:11px;display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn ghost sm" onclick="App.openProfile('${me}')">🏢 会社情報・実績をくわしく見る</button>
+        <button class="btn primary sm" onclick="App.openEdit()">✏️ プロフィールを編集</button>
+        <button class="btn ghost sm" onclick="App.openProfile('${me}')">🏢 会社情報・実績</button>
         ${cm?`<button class="btn ok sm" onclick="App.gotoClosing('${cm}')">🔒 ${cm.slice(5)}月分を締める</button>`:''}</div>`;
   }
   function renderFollowCard(){
@@ -1500,6 +1551,71 @@ const App = (()=>{
       + mine.map(p=>{ const co=company(p.companyId)||{}; return `<div class="ff-row" style="cursor:pointer" onclick="App.gotoPost('${p.id}')"><div class="ff-info"><b>${esc(p.itemName)}</b><span class="muted">${esc(co.name||'')}</span></div>
         <div class="ff-acts"><button class="btn ghost sm" onclick="event.stopPropagation();App.toggleInterest('${p.id}')">解除</button></div></div>`; }).join('');
   }
+
+  /* ---------- プロフィール編集 ---------- */
+  function openEdit(){
+    const me=myCoId(); const c=company(me); if(!c) return toast('卸業者でログインしてください');
+    const checks = INDUSTRIES.map(ind=>`<label><input type="checkbox" value="${esc(ind)}" ${(c.industries||[]).includes(ind)?'checked':''}> ${esc(ind)}</label>`).join('');
+    $('editBody').innerHTML=`
+      <div class="edit-field"><label>会社名（運営が確認・変更します）</label><input type="text" value="${esc(c.name)}" disabled style="background:#f3f5f8"></div>
+      <div class="edit-field"><label>担当者</label><input type="text" id="e-contact" value="${esc(c.contact||'')}" placeholder="例：岡野"></div>
+      <div class="edit-field"><label>連絡先（電話）</label><input type="text" id="e-phone" value="${esc(c.phone||'')}" placeholder="例：090-0000-0000"></div>
+      <div class="edit-field"><label>業種（複数選べます）</label><div class="ind-checks" id="e-industries">${checks}</div></div>
+      <div class="edit-field"><label>自社について（特徴・強み。#で検索用タグを付けられます）</label>
+        <textarea id="e-about" placeholder="例：朝採れの葉物が得意。#朝採れ #葉物 #法人対応">${esc(c.about||'')}</textarea></div>
+      <div class="edit-field"><label class="listed-row"><input type="checkbox" id="e-listed" ${c.listed!==false?'checked':''}> 「卸さがす」の検索に自社を載せる</label></div>
+      <button class="btn primary" style="width:100%" onclick="App.saveProfile()">保存する</button>`;
+    $('editModal').classList.add('show'); document.body.style.overflow='hidden';
+  }
+  function saveProfile(){
+    const me=myCoId(); const c=company(me); if(!c) return;
+    c.contact=$('e-contact').value.trim();
+    c.phone=$('e-phone').value.trim();
+    c.industries=[...document.querySelectorAll('#e-industries input:checked')].map(i=>i.value);
+    c.about=$('e-about').value.trim();
+    c.listed=$('e-listed').checked;
+    save(); closeEdit(); buildCtx(); renderAll(); toastGood('プロフィールを保存しました');
+  }
+  function closeEdit(){ $('editModal').classList.remove('show'); document.body.style.overflow=''; }
+
+  /* ---------- SEARCH（卸さがし：名前・業種・#タグ） ---------- */
+  function renderAboutHtml(about){ return esc(about).replace(/#[^\s#　]+/g, m=>`<span class="tagchip" onclick="event.stopPropagation();App.searchTag('${jsq(m)}')">${m}</span>`); }
+  function searchResults(){
+    const me=myCoId();
+    const q=(searchQ||'').trim().toLowerCase();
+    return state.companies.filter(c=>{
+      if(c.id===me) return false;            // 自社は除外
+      if(c.listed===false) return false;     // 検索に載せない設定
+      if(searchIndustry && !(c.industries||[]).includes(searchIndustry)) return false;
+      if(!q) return true;
+      const hay=[c.name,(c.industries||[]).join(' '),c.about||''].join(' ').toLowerCase();
+      return hay.includes(q);
+    });
+  }
+  function renderSearchChips(){
+    const bar=$('searchIndustryBar'); if(!bar) return;
+    const items=[['','すべて'],...INDUSTRIES.map(i=>[i,i])];
+    bar.innerHTML=items.map(([k,l])=>`<button class="fchip ${searchIndustry===k?'on':''}" onclick="App.setSearchIndustry('${jsq(k)}')">${esc(l)}</button>`).join('');
+  }
+  function renderSearchResults(){
+    const host=$('searchResults'); if(!host) return;
+    const list=searchResults();
+    host.innerHTML = list.length ? list.map(c=>{
+      const iFollow=isFavCo(c.id);
+      const inds=(c.industries||[]).map(i=>`<span class="ind-chip">${esc(i)}</span>`).join('');
+      return `<div class="srch-row">
+        <div class="srch-head"><span class="srch-name">${esc(c.name)}</span>${c.verified?'<span class="tbadge ok">✅ 実名確認</span>':''}${inds}</div>
+        <div class="srch-meta">🤝 取引${myDealCount(c.id)} ・ 👥 ${followerCount(c.id)}社${c.zone?` ・ ${esc(c.zone)}`:''}</div>
+        ${c.about?`<div class="srch-about">${renderAboutHtml(c.about)}</div>`:''}
+        <div class="srch-acts"><button class="btn ghost sm" onclick="App.openProfile('${c.id}')">会社情報</button>
+          <button class="btn ${iFollow?'ghost':'primary'} sm" onclick="App.toggleFavCo('${c.id}')">${iFollow?'★ フォロー中':'☆ フォロー'}</button></div>
+      </div>`;
+    }).join('') : empty((searchQ||searchIndustry)?'該当する卸が見つかりませんでした':'検索に載せている卸が表示されます');
+  }
+  function renderSearch(){ const inp=$('searchInput'); if(inp && inp.value!==searchQ) inp.value=searchQ; renderSearchChips(); renderSearchResults(); }
+  function setSearchQ(v){ searchQ=v; renderSearchResults(); }
+  function setSearchIndustry(k){ searchIndustry=k; renderSearchChips(); renderSearchResults(); }
+  function searchTag(t){ closeProfile(); closeEdit(); searchQ=t; searchIndustry=''; if(tab!=='search'){ tab='search'; renderTabs(); } renderSearch(); window.scrollTo(0,0); }
 
   /* ---------- INBOX（やりとり：マイページ内） ---------- */
   function renderInbox(){
@@ -1941,6 +2057,7 @@ const App = (()=>{
   function renderAll(){
     if(tab==='home')renderHome();
     if(tab==='board')renderBoard();
+    if(tab==='search')renderSearch();
     if(tab==='post')renderPostForm();
     if(tab==='inbox')renderInbox();
     if(tab==='settle')renderSettle();
@@ -1966,7 +2083,7 @@ const App = (()=>{
   }
 
   return { init,tab:setTab,changeRole,changeCtx,setMonth,setKind,calcPostAmt,addPost,quickPost,
-           onPhoto,clearPhoto,openLightbox,closeLightbox,gotoPost,openProfile,closeProfile,toggleFavCo,toggleFavItem,gotoFav,openMore,closeMore,setFollowView,openChat,closeChat,sendMsg,onVisi,toggleInterest,repost,
+           onPhoto,clearPhoto,openLightbox,closeLightbox,gotoPost,openProfile,closeProfile,toggleFavCo,toggleFavItem,gotoFav,openMore,closeMore,setFollowView,openChat,closeChat,sendMsg,onVisi,toggleInterest,repost,openEdit,closeEdit,saveProfile,setSearchQ,setSearchIndustry,searchTag,
            setBoardFilter,openDemo,closeDemo,setNewsFilter,toggleCard,toggleResp,calcResp,submitResp,toggleRelay,submitRelay,closePost,
            confirmDeal,rejectDeal,cancelProposal,confirmRelay,rejectRelay,cancelRelay,sendThanks,
            gotoClosing,closeMonth,reopenMonth,
