@@ -22,7 +22,7 @@
   }
   *{box-sizing:border-box}
   body{margin:0;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,system-ui,sans-serif;
-    background:var(--bg);color:var(--ink);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+    background:var(--bg);color:var(--ink);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
   header{background:linear-gradient(135deg,#0f2557,#1d4ed8);color:#fff;padding:16px 22px;box-shadow:var(--shadow)}
   header .wrap{max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
   header h1{font-size:18px;margin:0;font-weight:700;letter-spacing:.02em;display:flex;align-items:center;gap:10px}
@@ -271,11 +271,11 @@
   .remind-chip b{font-size:14px}
   .home-row{display:grid;grid-template-columns:1.35fr 1fr;gap:16px;align-items:start}
   @media(max-width:840px){.home-row{grid-template-columns:1fr}}
-  .mini{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:4px solid var(--kc,#1d4ed8);border-radius:10px;margin-bottom:9px;background:#fff;cursor:pointer;transition:.12s;overflow:hidden}
+  .mini{display:flex;flex-wrap:wrap;align-items:center;gap:5px 8px;padding:10px 12px;border:1px solid var(--line);border-left:4px solid var(--kc,#1d4ed8);border-radius:10px;margin-bottom:9px;background:#fff;cursor:pointer;transition:.12s;overflow:hidden}
   .mini:hover{box-shadow:var(--shadow);transform:translateY(-1px)}
   .mini .mtag{font-size:10.5px;font-weight:800;color:#fff;background:var(--kc,#1d4ed8);padding:3px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0}
   .mini .mitem{font-weight:800;font-size:14px;min-width:0;flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .mini .mmeta{color:var(--sub);font-size:11.5px;margin-left:auto;text-align:right;line-height:1.5;flex-shrink:0;max-width:54%}
+  .mini .mmeta{flex-basis:100%;width:100%;color:var(--sub);font-size:11.5px;text-align:left;line-height:1.55;word-break:break-word}
   .mini .mph{color:var(--primary-d);font-weight:800;white-space:nowrap}
   .shortbar{display:flex;align-items:center;gap:10px;margin-bottom:9px;font-size:13px}
   .shortbar .nm{font-weight:700;min-width:92px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -328,6 +328,34 @@
     .fab-post.hidden{display:none}
     .fab-post .fi{font-size:18px}
   }
+  /* マイページ */
+  .mp-head{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .mp-name{font-weight:800;font-size:16px}
+  .ff-tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+  .ff-tile{border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:12px;cursor:pointer;font-family:inherit;text-align:center;transition:.12s}
+  .ff-tile:hover{border-color:#c7cfdb}
+  .ff-tile.on{border-color:var(--accent);background:#eef4ff}
+  .ff-tile .ffv{font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-.01em}
+  .ff-tile.on .ffv{color:var(--accent)}
+  .ff-tile .ffl{font-size:12px;color:var(--sub);font-weight:700;margin-top:2px}
+  .ff-row{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:11px;padding:11px 13px;margin-bottom:9px;flex-wrap:wrap}
+  .ff-info{display:flex;flex-direction:column;min-width:0;flex:1}
+  .ff-info b{font-size:14px}
+  .ff-acts{display:flex;gap:7px;flex-wrap:wrap;margin-left:auto}
+  .section-h{font-size:14px;font-weight:700;margin:20px 4px 11px;color:var(--ink)}
+  /* 案件メッセージ（チャット風モック） */
+  .msgbar{margin-top:9px}
+  .msglink{border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 12px;font-size:12.5px;font-weight:700;color:var(--primary-d);cursor:pointer;font-family:inherit}
+  .msglink:hover{background:#eef4ff;border-color:#c5d8ff}
+  .chat-body{flex:1;overflow:auto;padding:14px;background:#f3f5f8;display:flex;flex-direction:column;gap:9px}
+  .bubble{max-width:80%;padding:9px 12px;border-radius:13px;font-size:13px;line-height:1.5;box-shadow:var(--shadow);word-break:break-word}
+  .bubble .who{font-size:10.5px;font-weight:700;color:var(--sub);margin-bottom:2px}
+  .bubble.me{align-self:flex-end;background:var(--accent);color:#fff;border-bottom-right-radius:4px}
+  .bubble.them{align-self:flex-start;background:#fff;border-bottom-left-radius:4px}
+  .bubble .t{font-size:10px;opacity:.7;margin-top:3px;text-align:right}
+  .chat-note{align-self:center;background:#eef4ff;color:#1e3a8a;font-size:11px;font-weight:600;padding:4px 11px;border-radius:999px;text-align:center;max-width:92%}
+  .chat-input{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--line);background:#fff}
+  .chat-input input{flex:1}
 </style>
 </head>
 <body>
@@ -422,9 +450,12 @@
     </div>
   </section>
 
-  <!-- INBOX（やりとり） -->
+  <!-- MYPAGE（マイページ：プロフィール／フォロー・フォロワー／実績／やりとり） -->
   <section class="panel" id="panel-inbox">
+    <div class="card" id="myProfileCard"></div>
+    <div class="card" id="followCard"></div>
     <div class="card" id="achieveCard"></div>
+    <h2 class="section-h">📨 やりとり</h2>
     <div class="card">
       <h2 style="margin:0 0 4px">✅ あなたの確認待ち</h2>
       <p class="hint">あなたの掲示に届いた「申し込み」「相談」です。取引は金額を確認して成立、相談は日程を確定すると記録に残ります。</p>
@@ -566,6 +597,13 @@
     <div id="profBody" style="padding:18px 20px;overflow:auto"></div>
   </div>
 </div>
+<div class="demo-modal" id="chatModal">
+  <div class="demo-card" style="height:min(640px,88vh);width:min(520px,96vw)">
+    <div class="demo-bar"><span class="demo-ttl" id="chatTitle"></span><button class="demo-x" style="margin-left:auto" onclick="App.closeChat()">✕ 閉じる</button></div>
+    <div class="chat-body" id="chatBody"></div>
+    <div class="chat-input" id="chatInputBar"><input id="chatText" placeholder="メッセージを入力…" onkeydown="if(event.key==='Enter')App.sendMsg()"><button class="btn primary sm" onclick="App.sendMsg()">送信</button></div>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -588,12 +626,14 @@ const App = (()=>{
     {tag:'仕入れ・卸',title:'仕入れ見える化レポート',desc:'仕入データを可視化してコスト・原価を管理。卸／多店舗向け。',url:'../procurement-report/',img:'../assets/shot-procurement.png',color:'#0d9488'},
     {tag:'配送・ドライバー',title:'ルートミー（RoutMe）',desc:'卸・委託本部・ドライバーを束ねる配送管理。注文設定→割当→締め承認→単価・コストまで。',url:'https://partner-a-delivery-app.vercel.app/',img:'../assets/shot-routme.svg',color:'#7c3aed',external:true},
   ];
-  let state = { companies:[], items:[], posts:[], deals:[], closings:{}, thanks:[] };
+  let state = { companies:[], items:[], posts:[], deals:[], closings:{}, thanks:[], messages:[] };
   let user = { role:'company', companyId:null };
   let tab = 'home';
   let selMonth = '';
   let kind = 'want';
   let boardFilter = 'all';
+  let myPageFollowView = 'following';   // マイページのフォロー/フォロワー表示切替
+  let chatPostId = '';                  // 開いている案件メッセージのpostId
   let respOpen = {};      // postId -> bool（trade応答フォーム）
   let relayOpen = {};     // postId -> bool（相談に乗るフォーム）
   let pendingPhoto = '';  // 投稿フォームで選択中の写真（base64・出すのみ）
@@ -673,7 +713,14 @@ const App = (()=>{
       {id:uid(),dealId:'',fromCoId:cN('やまと'),toCoId:cN('丸豊'),date:'2026-06-18'},
       {id:uid(),dealId:'',fromCoId:cN('築地'),toCoId:cN('やまと'),date:'2026-06-15'},
     ];
-    state={companies,items,posts,deals,closings:{},thanks};
+    // デモ：トマト求む（東都）の案件に丸豊⇄東都のメッセージ
+    const tomaPost=posts.find(p=>p.kind==='want'&&p.itemName==='トマト');
+    const messages = tomaPost ? [
+      {id:uid(),postId:tomaPost.id,fromCoId:cN('丸豊'),text:'2Lを40個出せます。本日中にお持ちできますよ。',date:TODAY+' 08:12'},
+      {id:uid(),postId:tomaPost.id,fromCoId:cN('東都'),text:'助かります！単価200円で大丈夫です。これからお電話します📞',date:TODAY+' 08:15'},
+      {id:uid(),postId:tomaPost.id,fromCoId:cN('丸豊'),text:'了解です。10時ごろお持ちします。',date:TODAY+' 08:17'},
+    ] : [];
+    state={companies,items,posts,deals,closings:{},thanks,messages};
     user={role:'company',companyId:cN('丸豊')};
     save();
 
@@ -752,8 +799,9 @@ const App = (()=>{
   const isFavItem = nm => myFavs().items.includes(nm);
   const postIsFav = p => isFavCo(p.companyId) || isFavItem(p.itemName);
   function favOpenPosts(){ const me=myCoId(); if(!me) return []; return state.posts.filter(p=>p.status==='open' && p.companyId!==me && postIsFav(p)); }
-  // この卸をフォローしている社数（与信シグナル）
-  const followerCount = cid => state.companies.filter(c=>(c.favCos||[]).includes(cid)).length;
+  // この卸をフォローしている会社（与信シグナル）
+  const followersOf = cid => state.companies.filter(c=>(c.favCos||[]).includes(cid)).map(c=>c.id);
+  const followerCount = cid => followersOf(cid).length;
   function toggleFavCo(id){
     const c=company(myCoId()); if(!c) return toast('卸業者でログインしてください');
     if(id===c.id) return; c.favCos=c.favCos||[]; const i=c.favCos.indexOf(id);
@@ -775,6 +823,8 @@ const App = (()=>{
   const myCoId = () => user.role==='admin' ? null : user.companyId;
   const deal = id => state.deals.find(d=>d.id===id);
   const post = id => state.posts.find(p=>p.id===id);
+  const messagesOf = pid => state.messages.filter(m=>m.postId===pid).slice().sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+  const msgCount = pid => state.messages.filter(m=>m.postId===pid).length;
   const closingKey = (cid,m) => cid+'|'+m;
   const isClosed = (cid,m) => !!state.closings[closingKey(cid,m)];
   const remainOf = p => Math.max(0,(p.qty||0)-(p.qtyFilled||0));
@@ -797,9 +847,9 @@ const App = (()=>{
   /* ---------- role / context UI ---------- */
   const TABS = {
     admin:[['home','🌅 今朝のうごき'],['board','📋 掲示板'],['news','📰 業界ニュース'],['deals','🧾 取引記録'],['settle','💰 月次精算'],['items','🥬 品目マスタ'],['companies','⚙️ 卸業者管理']],
-    company:[['home','🌅 今朝のうごき'],['board','📋 掲示板'],['post','✏️ 投稿する'],['inbox','📥 やりとり'],['settle','💰 精算・締め'],['news','📰 業界ニュース'],['items','🥬 品目マスタ']],
+    company:[['home','🌅 今朝のうごき'],['board','📋 掲示板'],['post','✏️ 投稿する'],['inbox','👤 マイページ'],['settle','💰 精算・締め'],['news','📰 業界ニュース'],['items','🥬 品目マスタ']],
   };
-  const SHORT={home:['🌅','今朝'],board:['📋','掲示板'],news:['📰','ニュース'],post:['✏️','投稿'],inbox:['📥','やりとり'],settle:['💰','精算'],deals:['🧾','記録'],items:['🥬','品目'],companies:['⚙️','業者']};
+  const SHORT={home:['🌅','今朝'],board:['📋','掲示板'],news:['📰','ニュース'],post:['✏️','投稿'],inbox:['👤','マイページ'],settle:['💰','精算'],deals:['🧾','記録'],items:['🥬','品目'],companies:['⚙️','業者']};
   // モバイル下部バーに常時出す主要タブ（残りは「☰ もっと」シートに集約）
   const BOTTOM_PRIMARY={ company:['home','board','inbox'], admin:['home','board','deals','settle'] };
 
@@ -947,6 +997,38 @@ const App = (()=>{
     $('demoModal').classList.add('show'); document.body.style.overflow='hidden';
   }
   function closeDemo(){ $('demoModal').classList.remove('show'); $('demoFrame').src='about:blank'; document.body.style.overflow=''; }
+
+  /* ---------- 案件メッセージ（チャット風モック） ---------- */
+  function openChat(pid){
+    const p=post(pid); if(!p) return;
+    chatPostId=pid;
+    $('chatTitle').innerHTML=`💬 ${esc(p.itemName)} <span class="muted" style="font-weight:600">/ ${esc(KIND_LABEL[p.kind]||'')}</span>`;
+    renderChat();
+    const bar=$('chatInputBar'); if(bar) bar.style.display = myCoId()? 'flex' : 'none';
+    $('chatModal').classList.add('show'); document.body.style.overflow='hidden';
+    setTimeout(()=>{ const t=$('chatText'); if(t) t.focus(); }, 60);
+  }
+  function renderChat(){
+    const host=$('chatBody'); if(!host) return; const me=myCoId();
+    const p=post(chatPostId); const owner=p?cName(p.companyId):'';
+    const msgs=messagesOf(chatPostId);
+    let html=`<div class="chat-note">電話で詰める前後の確認に。実際のやり取りは電話でもOKです。</div>`;
+    if(p) html+=`<div class="chat-note">案件：${esc(p.itemName)}（掲示主 ${esc(owner)}）</div>`;
+    html+= msgs.length ? msgs.map(m=>{
+      const mine=m.fromCoId===me; const t=(m.date||'').slice(11);
+      return `<div class="bubble ${mine?'me':'them'}">${mine?'':`<div class="who">${esc(cName(m.fromCoId))}</div>`}<div>${esc(m.text)}</div><div class="t">${esc(t)}</div></div>`;
+    }).join('') : `<div class="chat-note">まだメッセージはありません。最初の一言を送ってみましょう。</div>`;
+    host.innerHTML=html; host.scrollTop=host.scrollHeight;
+  }
+  function sendMsg(){
+    const me=myCoId(); if(!me) return toast('卸業者でログインしてください');
+    const t=$('chatText'); const text=(t.value||'').trim(); if(!text) return;
+    const now=new Date(); const hhmm=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+    state.messages.push({id:uid(),postId:chatPostId,fromCoId:me,text,date:TODAY+' '+hhmm});
+    t.value=''; save(); renderChat();
+    if(tab==='board') renderBoard();
+  }
+  function closeChat(){ $('chatModal').classList.remove('show'); if($('chatText'))$('chatText').value=''; document.body.style.overflow=''; }
 
   /* ---------- HOME（朝イチ・ダッシュボード） ---------- */
   function gotoPost(id){
@@ -1125,6 +1207,7 @@ const App = (()=>{
         <div class="spec-grid" style="margin-top:10px">${specHtml}</div>
         <div class="contact"><span class="co">${esc(co.name)}</span><span class="muted">${esc(co.contact)}</span><span class="ph">☎ ${esc(co.phone)}</span></div>
         ${trustLine(p.companyId)}
+        <div class="msgbar"><button class="msglink" onclick="event.stopPropagation();App.openChat('${p.id}')">💬 メッセージ${msgCount(p.id)?`・${msgCount(p.id)}`:''}</button></div>
         <div class="foot">${foot}</div>
       </div>
     </div>`;
@@ -1181,6 +1264,7 @@ const App = (()=>{
         <div class="spec-grid">${specHtml}</div>
         <div class="contact"><span class="co">${esc(co.name)}</span><span class="muted">${esc(co.contact)}</span><span class="ph">☎ ${esc(co.phone)}</span></div>
         ${trustLine(p.companyId)}
+        <div class="msgbar"><button class="msglink" onclick="event.stopPropagation();App.openChat('${p.id}')">💬 メッセージ${msgCount(p.id)?`・${msgCount(p.id)}`:''}</button></div>
         <div class="foot">${foot}</div>
       </div>
     </div>`;
@@ -1293,8 +1377,51 @@ const App = (()=>{
     }
   }
 
-  /* ---------- INBOX ---------- */
+  /* ---------- MYPAGE（プロフィール／フォロー・フォロワー） ---------- */
+  function renderMyProfile(){
+    const host=$('myProfileCard'); if(!host)return; const me=myCoId(); const c=company(me);
+    if(!c){ host.style.display='none'; return; } host.style.display='';
+    const cm=closingNeeded(me);
+    host.innerHTML=`<h2 style="margin:0 0 6px">👤 マイページ</h2>
+      <div class="mp-head"><span class="mp-name">${esc(c.name)}</span>${c.verified?'<span class="tbadge ok">✅ 実名確認済み</span>':'<span class="tbadge warn">⚠️ 確認中</span>'}</div>
+      <div class="trustline" style="margin-top:9px">
+        <span class="tbadge">🤝 取引${myDealCount(me)}</span>
+        <span class="tbadge">🙏 ${thanksReceived(me)}</span>
+        ${c.respMin!=null?`<span class="tbadge resp">⏱ 応答約${c.respMin}分</span>`:''}
+        ${cm?'<span class="tbadge warn">⚠️ 未精算あり</span>':'<span class="tbadge ok">✅ 精算クリーン</span>'}</div>
+      <div style="margin-top:11px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn ghost sm" onclick="App.openProfile('${me}')">🏢 会社情報・実績をくわしく見る</button>
+        ${cm?`<button class="btn ok sm" onclick="App.gotoClosing('${cm}')">🔒 ${cm.slice(5)}月分を締める</button>`:''}</div>`;
+  }
+  function renderFollowCard(){
+    const host=$('followCard'); if(!host)return; const me=myCoId(); if(!me){ host.style.display='none'; return; } host.style.display='';
+    const following=myFavs().cos.slice();
+    const followers=followersOf(me);
+    const view=myPageFollowView;
+    const ids = view==='followers' ? followers : following;
+    const rows = ids.length ? ids.map(id=>{
+      const c=company(id); if(!c) return '';
+      const iFollow=isFavCo(id);
+      const btn = view==='followers'
+        ? `<button class="btn ${iFollow?'ghost':'primary'} sm" onclick="App.toggleFavCo('${id}')">${iFollow?'★ フォロー中':'☆ フォローし返す'}</button>`
+        : `<button class="btn ghost sm" onclick="App.toggleFavCo('${id}')">フォロー解除</button>`;
+      const sub=[(c.cats&&c.cats.length)?esc(c.cats.join('・')):'', followerCount(id)?`👥${followerCount(id)}`:''].filter(Boolean).join(' ・ ');
+      return `<div class="ff-row"><div class="ff-info"><b>${esc(c.name)}</b>${sub?`<span class="muted">${sub}</span>`:''}</div>
+        <div class="ff-acts"><button class="btn ghost sm" onclick="App.openProfile('${id}')">会社情報</button>${btn}</div></div>`;
+    }).join('') : empty(view==='followers'?'まだフォロワーはいません':'まだフォローしている卸はありません（掲示カードの☆でフォロー）');
+    host.innerHTML=`<h2 style="margin:0 0 10px">🔗 フォロー / フォロワー</h2>
+      <div class="ff-tiles">
+        <button class="ff-tile ${view==='following'?'on':''}" onclick="App.setFollowView('following')"><div class="ffv">${following.length}</div><div class="ffl">フォロー中</div></button>
+        <button class="ff-tile ${view==='followers'?'on':''}" onclick="App.setFollowView('followers')"><div class="ffv">${followers.length}</div><div class="ffl">フォロワー</div></button>
+      </div>
+      <div class="ff-list">${rows}</div>`;
+  }
+  function setFollowView(v){ myPageFollowView=v; renderFollowCard(); }
+
+  /* ---------- INBOX（やりとり：マイページ内） ---------- */
   function renderInbox(){
+    renderMyProfile();
+    renderFollowCard();
     renderAchieve();
     const me=myCoId();
     // 確認待ち：自社postへのtrade提案 ＋ 自社relayへの相談
@@ -1706,7 +1833,7 @@ const App = (()=>{
   }
   function exportAll(){ dl('toyosu_relay_data.json',JSON.stringify({state,user},null,2),'application/json'); }
   function reseed(){ if(confirm('サンプルデータで初期化します。よろしいですか？')){ seed(); tab='home'; selMonth=''; respOpen={}; relayOpen={}; pendingPhoto=''; init2(); toast('サンプルデータを読み込みました'); } }
-  function wipe(){ if(confirm('全データを削除します。元に戻せません。')){ state={companies:[],items:[],posts:[],deals:[],closings:{},thanks:[]}; user={role:'admin',companyId:null}; tab='home'; selMonth=''; save(); init2(); toast('全データを削除しました'); } }
+  function wipe(){ if(confirm('全データを削除します。元に戻せません。')){ state={companies:[],items:[],posts:[],deals:[],closings:{},thanks:[],messages:[]}; user={role:'admin',companyId:null}; tab='home'; selMonth=''; save(); init2(); toast('全データを削除しました'); } }
 
   /* ---------- plumbing ---------- */
   function toast(m){ const t=$('toast'); t.className='toast'; t.textContent=m; void t.offsetWidth; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2400); }
@@ -1732,12 +1859,13 @@ const App = (()=>{
     if(!state.deals) state.deals=[];
     if(!state.closings) state.closings={};
     if(!state.thanks) state.thanks=[];
+    if(!state.messages) state.messages=[];
     ensureProfiles();
     init2();
   }
 
   return { init,tab:setTab,changeRole,changeCtx,setMonth,setKind,calcPostAmt,addPost,quickPost,
-           onPhoto,clearPhoto,openLightbox,closeLightbox,gotoPost,openProfile,closeProfile,toggleFavCo,toggleFavItem,gotoFav,openMore,closeMore,
+           onPhoto,clearPhoto,openLightbox,closeLightbox,gotoPost,openProfile,closeProfile,toggleFavCo,toggleFavItem,gotoFav,openMore,closeMore,setFollowView,openChat,closeChat,sendMsg,
            setBoardFilter,openDemo,closeDemo,setNewsFilter,toggleCard,toggleResp,calcResp,submitResp,toggleRelay,submitRelay,closePost,
            confirmDeal,rejectDeal,cancelProposal,confirmRelay,rejectRelay,cancelRelay,sendThanks,
            gotoClosing,closeMonth,reopenMonth,
