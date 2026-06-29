@@ -852,9 +852,12 @@ const App = (()=>{
         <div class="pk"><div class="v">${hc}</div><div class="l">配送・相談</div></div>
         <div class="pk"><div class="v">Lv.${lv.lv}</div><div class="l">活動レベル</div></div></div>
       <div class="trustline" style="font-size:12px">${cm?'<span class="tbadge warn">⚠️ 未精算の月があります</span>':'<span class="tbadge ok">✅ 精算クリーン</span>'}</div>`;
-    if(recent.length){
-      html+=`<h2 style="font-size:14px;margin:16px 0 6px">直近の成立取引</h2><table><tr><th>日付</th><th>品目</th><th>方向</th><th class="num">金額</th></tr>`+
+    const isSelf = cid===myCoId();
+    if(recent.length && isSelf){
+      html+=`<h2 style="font-size:14px;margin:16px 0 6px">直近の成立取引（自社のみ表示）</h2><table><tr><th>日付</th><th>品目</th><th>方向</th><th class="num">金額</th></tr>`+
         recent.map(d=>`<tr><td>${d.date}</td><td><b>${esc(d.itemName)}</b></td><td class="muted">${esc(cName(d.sellerId))}→${esc(cName(d.buyerId))}</td><td class="num">${yen(d.amount)}</td></tr>`).join('')+`</table>`;
+    } else if(!isSelf){
+      html+=`<p class="muted" style="margin-top:14px">🔒 取引の明細はご本人のみ表示されます（取引の件数のみ公開）。</p>`;
     }
     html+=`<p class="muted" style="margin-top:14px">※ 本番では実名・市場区画・部会は運営が確認のうえ表示します（与信の見える化）。</p>`;
     $('profBody').innerHTML=html;
@@ -1560,7 +1563,10 @@ const App = (()=>{
       <div class="edit-field"><label>会社名（運営が確認・変更します）</label><input type="text" value="${esc(c.name)}" disabled style="background:#f3f5f8"></div>
       <div class="edit-field"><label>担当者</label><input type="text" id="e-contact" value="${esc(c.contact||'')}" placeholder="例：岡野"></div>
       <div class="edit-field"><label>連絡先（電話）</label><input type="text" id="e-phone" value="${esc(c.phone||'')}" placeholder="例：090-0000-0000"></div>
+      <div class="edit-field"><label>市場区画</label><input type="text" id="e-zone" value="${esc(c.zone||'')}" placeholder="例：青果棟 7街区"></div>
+      <div class="edit-field"><label>所属部会</label><input type="text" id="e-dept" value="${esc(c.dept||'')}" placeholder="例：青果部会"></div>
       <div class="edit-field"><label>業種（複数選べます）</label><div class="ind-checks" id="e-industries">${checks}</div></div>
+      <div class="edit-field"><label>主な取扱（・ や / 区切りで複数。自由に書けます）</label><input type="text" id="e-cats" value="${esc((c.cats||[]).join('・'))}" placeholder="例：野菜・果実・トマト・葉物"></div>
       <div class="edit-field"><label>自社について（特徴・強み。#で検索用タグを付けられます）</label>
         <textarea id="e-about" placeholder="例：朝採れの葉物が得意。#朝採れ #葉物 #法人対応">${esc(c.about||'')}</textarea></div>
       <div class="edit-field"><label class="listed-row"><input type="checkbox" id="e-listed" ${c.listed!==false?'checked':''}> 「卸さがす」の検索に自社を載せる</label></div>
@@ -1571,6 +1577,9 @@ const App = (()=>{
     const me=myCoId(); const c=company(me); if(!c) return;
     c.contact=$('e-contact').value.trim();
     c.phone=$('e-phone').value.trim();
+    c.zone=$('e-zone').value.trim();
+    c.dept=$('e-dept').value.trim();
+    c.cats=$('e-cats').value.split(/[・,、，/／\s]+/).map(s=>s.trim()).filter(Boolean);
     c.industries=[...document.querySelectorAll('#e-industries input:checked')].map(i=>i.value);
     c.about=$('e-about').value.trim();
     c.listed=$('e-listed').checked;
