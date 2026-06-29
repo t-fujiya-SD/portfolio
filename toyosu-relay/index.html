@@ -356,6 +356,13 @@
   .chat-note{align-self:center;background:#eef4ff;color:#1e3a8a;font-size:11px;font-weight:600;padding:4px 11px;border-radius:999px;text-align:center;max-width:92%}
   .chat-input{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--line);background:#fff}
   .chat-input input{flex:1}
+  /* Tier2: 興味あり・限定公開・期限 */
+  .msgbar{margin-top:9px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .msglink.on{background:#fff7e6;color:#b45309;border-color:#f5d990}
+  .lim-badge{display:inline-block;font-size:11px;font-weight:800;color:#fff;background:#475569;padding:2px 8px;border-radius:6px;white-space:nowrap;margin-left:2px}
+  .visi-list{display:flex;flex-wrap:wrap;gap:8px}
+  .visi-chk{display:flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:9px;padding:7px 11px;font-size:12.5px;font-weight:600;background:#fff;cursor:pointer}
+  .visi-chk input{accent-color:var(--accent)}
 </style>
 </head>
 <body>
@@ -435,6 +442,7 @@
         <div class="field tradeF"><label id="p-deadline-lbl">ほしい時間</label><input id="p-deadline" placeholder="例：本日17時まで"></div>
         <div class="field tradeF"><label>受渡</label><select id="p-delivery">
           <option value="pickup">受け取りに行く</option><option value="deliver">渡しに行く</option></select></div>
+        <div class="field tradeF"><label>掲載期限（過ぎると自動で非表示）</label><input type="date" id="p-expire"></div>
         <div class="field span-all offerF"><label>📷 写真（任意・1枚／自動で縮小されます）</label>
           <input type="file" id="p-photo" accept="image/*" onchange="App.onPhoto(this)">
           <div class="photo-prev" id="p-photo-prev"></div></div>
@@ -445,6 +453,9 @@
         <div class="field relayF span-all"><label id="p-detail-lbl">詳しい内容</label><textarea id="p-detail" placeholder="電話で詰める前の概要でOKです"></textarea></div>
 
         <div class="field span-all"><label>備考</label><input id="p-note" placeholder="例：すぐ使えるものだと助かります"></div>
+        <div class="field span-all"><label>公開範囲</label>
+          <select id="p-visi" onchange="App.onVisi()"><option value="all">全体に公開</option><option value="limited">🔒 限定公開（選んだ卸だけに見せる）</option></select></div>
+        <div class="field span-all" id="p-visi-wrap" style="display:none"><label>見せる相手（複数選べます）</label><div id="p-visi-list" class="visi-list"></div></div>
         <div class="field span-all"><button class="btn primary" id="p-submit" onclick="App.addPost()" style="width:100%">この内容で掲示する</button></div>
       </div>
     </div>
@@ -454,6 +465,8 @@
   <section class="panel" id="panel-inbox">
     <div class="card" id="myProfileCard"></div>
     <div class="card" id="followCard"></div>
+    <div class="card" id="expiredCard"></div>
+    <div class="card" id="interestCard"></div>
     <div class="card" id="achieveCard"></div>
     <h2 class="section-h">📨 やりとり</h2>
     <div class="card">
@@ -626,7 +639,7 @@ const App = (()=>{
     {tag:'仕入れ・卸',title:'仕入れ見える化レポート',desc:'仕入データを可視化してコスト・原価を管理。卸／多店舗向け。',url:'../procurement-report/',img:'../assets/shot-procurement.png',color:'#0d9488'},
     {tag:'配送・ドライバー',title:'ルートミー（RoutMe）',desc:'卸・委託本部・ドライバーを束ねる配送管理。注文設定→割当→締め承認→単価・コストまで。',url:'https://partner-a-delivery-app.vercel.app/',img:'../assets/shot-routme.svg',color:'#7c3aed',external:true},
   ];
-  let state = { companies:[], items:[], posts:[], deals:[], closings:{}, thanks:[], messages:[] };
+  let state = { companies:[], items:[], posts:[], deals:[], closings:{}, thanks:[], messages:[], interests:[] };
   let user = { role:'company', companyId:null };
   let tab = 'home';
   let selMonth = '';
@@ -720,7 +733,16 @@ const App = (()=>{
       {id:uid(),postId:tomaPost.id,fromCoId:cN('東都'),text:'助かります！単価200円で大丈夫です。これからお電話します📞',date:TODAY+' 08:15'},
       {id:uid(),postId:tomaPost.id,fromCoId:cN('丸豊'),text:'了解です。10時ごろお持ちします。',date:TODAY+' 08:17'},
     ] : [];
-    state={companies,items,posts,deals,closings:{},thanks,messages};
+    // Tier2デモ：期限切れ（丸豊の未成約）・限定公開（丸豊→やまと限定）・興味あり
+    const aspara=posts.find(p=>p.itemName==='ホワイトアスパラガス');
+    const expired=mkTrade('want','丸豊','きゅうり','2L',30,'本',120,'','','','2026-06-19まで','pickup','残りわずか'); expired.expireDate='2026-06-19';
+    const limited=mkTrade('offer','丸豊','活け車海老','',5,'kg',8000,'Aランク','','九州','明日まで','deliver','常連さん限定でお出しします'); limited.visibleTo=[cN('やまと')];
+    posts.push(expired,limited);
+    const interests=[
+      {id:uid(),postId:aspara?aspara.id:'',coId:cN('丸豊'),date:TODAY},
+      {id:uid(),postId:lemonPost?lemonPost.id:'',coId:cN('東都'),date:TODAY},
+    ];
+    state={companies,items,posts,deals,closings:{},thanks,messages,interests};
     user={role:'company',companyId:cN('丸豊')};
     save();
 
@@ -798,10 +820,38 @@ const App = (()=>{
   const isFavCo = id => myFavs().cos.includes(id);
   const isFavItem = nm => myFavs().items.includes(nm);
   const postIsFav = p => isFavCo(p.companyId) || isFavItem(p.itemName);
-  function favOpenPosts(){ const me=myCoId(); if(!me) return []; return state.posts.filter(p=>p.status==='open' && p.companyId!==me && postIsFav(p)); }
+  function favOpenPosts(){ const me=myCoId(); if(!me) return []; return state.posts.filter(p=>p.status==='open' && !isExpired(p) && canSee(p) && p.companyId!==me && postIsFav(p)); }
   // この卸をフォローしている会社（与信シグナル）
   const followersOf = cid => state.companies.filter(c=>(c.favCos||[]).includes(cid)).map(c=>c.id);
   const followerCount = cid => followersOf(cid).length;
+
+  /* ---------- Tier2：ワンタップ「興味あり」（FoodMesh型・キープ＆軽い意思表示） ---------- */
+  const interestsOf = pid => state.interests.filter(x=>x.postId===pid).map(x=>x.coId);
+  const isInterested = pid => { const me=myCoId(); return !!me && state.interests.some(x=>x.postId===pid && x.coId===me); };
+  function toggleInterest(pid){
+    const me=myCoId(); if(!me) return toast('卸業者でログインしてください');
+    const i=state.interests.findIndex(x=>x.postId===pid && x.coId===me);
+    if(i<0){ state.interests.push({id:uid(),postId:pid,coId:me,date:TODAY}); toastGood('🙋 興味あり。キープしました（マイページから戻れます）'); }
+    else { state.interests.splice(i,1); toast('興味ありを解除しました'); }
+    save(); renderAll();
+  }
+  function repost(pid){
+    const p=post(pid); if(!p) return;
+    p.expireDate=addDays(TODAY,3); if(p.status!=='open') p.status='open';
+    save(); renderAll(); toastGood('再掲しました（'+p.expireDate+' まで掲載）');
+  }
+  // 掲示カード下部の操作バー（メッセージ／興味あり／興味あり社の表示）
+  function interestBar(p,me){
+    const cnt=interestsOf(p.id).length, isMine=p.companyId===me;
+    let html=`<button class="msglink" onclick="event.stopPropagation();App.openChat('${p.id}')">💬 メッセージ${msgCount(p.id)?`・${msgCount(p.id)}`:''}</button>`;
+    if(user.role==='company' && !isMine && p.status==='open'){
+      html+=`<button class="msglink ${isInterested(p.id)?'on':''}" onclick="event.stopPropagation();App.toggleInterest('${p.id}')">${isInterested(p.id)?'🙋 興味あり中':'🙋 興味あり'}</button>`;
+    }
+    if(isMine && cnt){
+      html+=`<span class="muted" style="align-self:center">🙋 ${cnt}社が興味あり：${esc(interestsOf(p.id).map(cName).join('・'))}</span>`;
+    }
+    return `<div class="msgbar">${html}</div>`;
+  }
   function toggleFavCo(id){
     const c=company(myCoId()); if(!c) return toast('卸業者でログインしてください');
     if(id===c.id) return; c.favCos=c.favCos||[]; const i=c.favCos.indexOf(id);
@@ -825,6 +875,17 @@ const App = (()=>{
   const post = id => state.posts.find(p=>p.id===id);
   const messagesOf = pid => state.messages.filter(m=>m.postId===pid).slice().sort((a,b)=>(a.date||'').localeCompare(b.date||''));
   const msgCount = pid => state.messages.filter(m=>m.postId===pid).length;
+  function addDays(ymd,n){ const [y,m,d]=(ymd||TODAY).split('-').map(Number); const dt=new Date(y,m-1,d+n); return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0'); }
+  // 掲載期限切れ（未成約のまま期限を過ぎた＝自動非表示の対象）
+  const isExpired = p => p.status==='open' && !!p.expireDate && p.expireDate < TODAY;
+  // 限定公開：見せる相手が指定されていれば、掲示主・対象社・運営のみ閲覧可
+  function canSee(p){
+    if(user.role==='admin') return true;
+    const me=myCoId();
+    if(p.companyId===me) return true;
+    if(p.visibleTo && p.visibleTo.length) return !!me && p.visibleTo.includes(me);
+    return true;
+  }
   const closingKey = (cid,m) => cid+'|'+m;
   const isClosed = (cid,m) => !!state.closings[closingKey(cid,m)];
   const remainOf = p => Math.max(0,(p.qty||0)-(p.qtyFilled||0));
@@ -939,12 +1000,12 @@ const App = (()=>{
     const filters=[['all','すべて'],['want','🙋 求む'],['offer','📦 出す'],['relay','🚚 相談']];
     if(me) filters.push(['fav','⭐ フォロー中']);
     $('boardFilter').innerHTML=filters.map(([k,l])=>`<button class="fchip ${boardFilter===k?'on '+k:''}" onclick="App.setBoardFilter('${k}')">${l}</button>`).join('');
-    let list=[...state.posts];
+    let list=state.posts.filter(p=>canSee(p) && !isExpired(p));   // 限定公開の対象外・期限切れは自動非表示
     if(boardFilter==='fav') list=list.filter(p=>postIsFav(p));
     else if(boardFilter==='relay') list=list.filter(p=>RELAY.includes(p.kind));
     else if(boardFilter!=='all') list=list.filter(p=>p.kind===boardFilter);
     list.sort((a,b)=>(a.status!=='open'?1:0)-(b.status!=='open'?1:0) || b.date.localeCompare(a.date));
-    const openCnt=state.posts.filter(p=>p.status==='open').length;
+    const openCnt=state.posts.filter(p=>canSee(p) && p.status==='open' && !isExpired(p)).length;
     $('boardSub').textContent=`募集中 ${openCnt}件 / 全${state.posts.length}件`;
     const emptyMsg = boardFilter==='fav' ? 'フォロー中の卸・品目の掲示がここに出ます（カードの☆や品目マスタの☆でフォロー）' : '掲示はありません';
     $('boardList').innerHTML = list.length ? list.map(p=>isTrade(p.kind)?renderTradeCard(p,me):renderRelayCard(p,me)).join('') : empty(emptyMsg);
@@ -956,7 +1017,7 @@ const App = (()=>{
     const me=myCoId();
     if(!me){ host.innerHTML=''; return; }
     const waiting=incomingConfirm(me).length;
-    const fresh=state.posts.filter(p=>p.status==='open' && p.companyId!==me).length;
+    const fresh=state.posts.filter(p=>p.status==='open' && !isExpired(p) && canSee(p) && p.companyId!==me).length;
     host.innerHTML=`<div class="hero">
       <div class="hero-acts">
         <button class="hero-btn want" onclick="App.quickPost('want')"><span class="hi">🙋</span><span class="ht">求む</span><span class="hs">足りない物をさがす</span></button>
@@ -1052,7 +1113,7 @@ const App = (()=>{
   function renderHome(){
     const host=$('homeBody'); if(!host)return;
     const me=myCoId();
-    const openPosts=state.posts.filter(p=>p.status==='open');
+    const openPosts=state.posts.filter(p=>p.status==='open' && !isExpired(p) && canSee(p));
     const wantOpen=openPosts.filter(p=>p.kind==='want');
     const offerOpen=openPosts.filter(p=>p.kind==='offer');
     const bringOpen=openPosts.filter(p=>p.kind==='bring');
@@ -1195,9 +1256,10 @@ const App = (()=>{
     const tagS=p.kind==='want'?'🙋 求む':'📦 出す';
     const pill = p.status==='closed' ? (filled>0?'<span class="status closed">成立</span>':'<span class="status closed">終了</span>')
       : (filled>0?`<span class="status part">残${num(remain)}${esc(p.unit)}</span>`:'');
+    const lim = (p.visibleTo&&p.visibleTo.length)?'<span class="lim-badge">🔒 限定</span>':'';
     return `<div class="pcard ${p.kind} ${p.status==='closed'?'closed':''} ${open?'open':''}" id="pc-${p.id}">
       <div class="phead" onclick="App.toggleCard('${p.id}')">
-        <div class="l1"><span class="ptag">${tagS}</span><span class="pitem">${esc(p.itemName)}</span>${pill}<span class="chev">▾</span></div>
+        <div class="l1"><span class="ptag">${tagS}</span><span class="pitem">${esc(p.itemName)}</span>${pill}${lim}<span class="chev">▾</span></div>
         <div class="l2"><span class="price-s">${priceLbl} / ${esc(p.unit)}</span><span>${num(remain||p.qty)}${esc(p.unit)}</span><span class="pco">🏢 ${esc(co.name)}</span></div>
       </div>
       <div class="pbody">
@@ -1207,7 +1269,7 @@ const App = (()=>{
         <div class="spec-grid" style="margin-top:10px">${specHtml}</div>
         <div class="contact"><span class="co">${esc(co.name)}</span><span class="muted">${esc(co.contact)}</span><span class="ph">☎ ${esc(co.phone)}</span></div>
         ${trustLine(p.companyId)}
-        <div class="msgbar"><button class="msglink" onclick="event.stopPropagation();App.openChat('${p.id}')">💬 メッセージ${msgCount(p.id)?`・${msgCount(p.id)}`:''}</button></div>
+        ${interestBar(p,me)}
         <div class="foot">${foot}</div>
       </div>
     </div>`;
@@ -1255,16 +1317,17 @@ const App = (()=>{
     const open=!!openCards[p.id];
     const tagMap={bring:'🚚 持ってくよ',need:'🆘 持ってける？',consult:'💬 相談'};
     const pill = p.status==='done'?'<span class="status closed">調整済</span>':(p.status==='scheduling'?'<span class="status dealing">商談中</span>':'');
+    const lim = (p.visibleTo&&p.visibleTo.length)?'<span class="lim-badge">🔒 限定</span>':'';
     return `<div class="pcard ${p.kind} ${p.status==='done'?'closed':''} ${open?'open':''}" id="pc-${p.id}">
       <div class="phead" onclick="App.toggleCard('${p.id}')">
-        <div class="l1"><span class="ptag">${tagMap[p.kind]}</span><span class="pitem">${esc(p.itemName)}</span>${pill}<span class="chev">▾</span></div>
+        <div class="l1"><span class="ptag">${tagMap[p.kind]}</span><span class="pitem">${esc(p.itemName)}</span>${pill}${lim}<span class="chev">▾</span></div>
         <div class="l2"><span>📅 ${esc(p.when||'相談')}</span><span class="pco">🏢 ${esc(co.name)}</span></div>
       </div>
       <div class="pbody">
         <div class="spec-grid">${specHtml}</div>
         <div class="contact"><span class="co">${esc(co.name)}</span><span class="muted">${esc(co.contact)}</span><span class="ph">☎ ${esc(co.phone)}</span></div>
         ${trustLine(p.companyId)}
-        <div class="msgbar"><button class="msglink" onclick="event.stopPropagation();App.openChat('${p.id}')">💬 メッセージ${msgCount(p.id)?`・${msgCount(p.id)}`:''}</button></div>
+        ${interestBar(p,me)}
         <div class="foot">${foot}</div>
       </div>
     </div>`;
@@ -1417,11 +1480,33 @@ const App = (()=>{
       <div class="ff-list">${rows}</div>`;
   }
   function setFollowView(v){ myPageFollowView=v; renderFollowCard(); }
+  // ⏰ 期限切れの掲示（未成約フォロー）
+  function renderExpiredCard(){
+    const host=$('expiredCard'); if(!host)return; const me=myCoId();
+    const mine = me ? state.posts.filter(p=>p.companyId===me && isExpired(p)) : [];
+    if(!mine.length){ host.style.display='none'; return; } host.style.display='';
+    host.innerHTML=`<h2 style="margin:0 0 4px">⏰ 期限切れの掲示（未成約）</h2>
+      <p class="hint">掲載期限が過ぎて自動で非表示になりました。まだ決まっていなければ再掲できます。</p>`
+      + mine.map(p=>`<div class="ff-row"><div class="ff-info"><b>${esc((KIND_LABEL[p.kind]||'').replace(/（.*$/,''))}：${esc(p.itemName)}</b><span class="muted">期限 ${esc(p.expireDate)} を超過</span></div>
+        <div class="ff-acts"><button class="btn primary sm" onclick="App.repost('${p.id}')">再掲する</button><button class="btn danger sm" onclick="App.closePost('${p.id}')">取り下げ</button></div></div>`).join('');
+  }
+  // 🙋 興味あり（キープ中）
+  function renderInterestCard(){
+    const host=$('interestCard'); if(!host)return; const me=myCoId();
+    const mine = me ? state.interests.filter(x=>x.coId===me).map(x=>post(x.postId)).filter(p=>p && p.status==='open' && !isExpired(p)) : [];
+    if(!mine.length){ host.style.display='none'; return; } host.style.display='';
+    host.innerHTML=`<h2 style="margin:0 0 4px">🙋 興味あり（キープ中）</h2>
+      <p class="hint">「興味あり」を付けた掲示です。タップで案件に戻れます。</p>`
+      + mine.map(p=>{ const co=company(p.companyId)||{}; return `<div class="ff-row" style="cursor:pointer" onclick="App.gotoPost('${p.id}')"><div class="ff-info"><b>${esc(p.itemName)}</b><span class="muted">${esc(co.name||'')}</span></div>
+        <div class="ff-acts"><button class="btn ghost sm" onclick="event.stopPropagation();App.toggleInterest('${p.id}')">解除</button></div></div>`; }).join('');
+  }
 
   /* ---------- INBOX（やりとり：マイページ内） ---------- */
   function renderInbox(){
     renderMyProfile();
     renderFollowCard();
+    renderExpiredCard();
+    renderInterestCard();
     renderAchieve();
     const me=myCoId();
     // 確認待ち：自社postへのtrade提案 ＋ 自社relayへの相談
@@ -1617,6 +1702,18 @@ const App = (()=>{
   }
 
   /* ---------- POST form ---------- */
+  function onVisi(){
+    const limited = $('p-visi') && $('p-visi').value==='limited';
+    if($('p-visi-wrap')) $('p-visi-wrap').style.display = limited?'':'none';
+    if(limited && $('p-visi-list')){
+      const me=myCoId();
+      $('p-visi-list').innerHTML=state.companies.filter(c=>c.id!==me).map(c=>`<label class="visi-chk"><input type="checkbox" value="${c.id}"> ${esc(c.name)}</label>`).join('');
+    }
+  }
+  function readVisi(){
+    if(!$('p-visi') || $('p-visi').value!=='limited') return [];
+    return [...document.querySelectorAll('#p-visi-list input:checked')].map(i=>i.value);
+  }
   function setKind(k){
     kind=k;
     document.querySelectorAll('#seg-trade button,#seg-relay button').forEach(b=>{ b.className = b.dataset.k===k ? 'on-'+k : ''; });
@@ -1625,6 +1722,8 @@ const App = (()=>{
     document.querySelectorAll('.relayF').forEach(el=>el.style.display = trade?'none':'');
     document.querySelectorAll('.offerF').forEach(el=>el.style.display = k==='offer'?'':'none');
     if($('p-photo-prev')) renderPhotoPrev();
+    if($('p-expire') && !$('p-expire').value) $('p-expire').value=addDays(TODAY,3);
+    if($('p-visi')){ $('p-visi').value='all'; onVisi(); }
     $('kindHint').textContent=KIND_HINT[k];
     if(trade){
       $('p-item-lbl').innerHTML='品目<span class="req">*</span>';
@@ -1688,15 +1787,16 @@ const App = (()=>{
       state.posts.push({id:uid(),kind,companyId:me,itemName,spec:$('p-spec').value.trim(),
         qty,qtyFilled:0,unit:$('p-unit').value.trim()||'個',unitPrice,grade:$('p-grade').value,brand:$('p-brand').value.trim(),
         origin:$('p-origin').value.trim(),deadline:$('p-deadline').value.trim(),delivery:$('p-delivery').value,
-        note:$('p-note').value.trim(),photo:kind==='offer'?pendingPhoto:'',status:'open',date:TODAY});
+        note:$('p-note').value.trim(),photo:kind==='offer'?pendingPhoto:'',expireDate:($('p-expire').value||''),visibleTo:readVisi(),status:'open',date:TODAY});
       ['p-item','p-spec','p-brand','p-origin','p-deadline','p-note'].forEach(id=>$(id).value=''); $('p-amt').value='';
       pendingPhoto=''; renderPhotoPrev();
     } else {
       if(!itemName){ markErr('p-item'); return toast('赤い欄を確認してください'); }
       state.posts.push({id:uid(),kind,companyId:me,itemName,route:$('p-route').value.trim(),when:$('p-when').value.trim(),
-        detail:$('p-detail').value.trim(),note:$('p-note').value.trim(),status:'open',responderId:'',respMsg:'',respWhen:'',agreedWhen:'',date:TODAY});
+        detail:$('p-detail').value.trim(),note:$('p-note').value.trim(),visibleTo:readVisi(),status:'open',responderId:'',respMsg:'',respWhen:'',agreedWhen:'',date:TODAY});
       ['p-item','p-route','p-when','p-detail','p-note'].forEach(id=>$(id).value='');
     }
+    if($('p-visi')){ $('p-visi').value='all'; onVisi(); }
     save(); buildMonthSelectors(); renderTabs(); renderBand(); tab='board'; renderTabs(); renderAll();
     toastGood('掲示しました。掲示板に表示されています');
   }
@@ -1833,7 +1933,7 @@ const App = (()=>{
   }
   function exportAll(){ dl('toyosu_relay_data.json',JSON.stringify({state,user},null,2),'application/json'); }
   function reseed(){ if(confirm('サンプルデータで初期化します。よろしいですか？')){ seed(); tab='home'; selMonth=''; respOpen={}; relayOpen={}; pendingPhoto=''; init2(); toast('サンプルデータを読み込みました'); } }
-  function wipe(){ if(confirm('全データを削除します。元に戻せません。')){ state={companies:[],items:[],posts:[],deals:[],closings:{},thanks:[],messages:[]}; user={role:'admin',companyId:null}; tab='home'; selMonth=''; save(); init2(); toast('全データを削除しました'); } }
+  function wipe(){ if(confirm('全データを削除します。元に戻せません。')){ state={companies:[],items:[],posts:[],deals:[],closings:{},thanks:[],messages:[],interests:[]}; user={role:'admin',companyId:null}; tab='home'; selMonth=''; save(); init2(); toast('全データを削除しました'); } }
 
   /* ---------- plumbing ---------- */
   function toast(m){ const t=$('toast'); t.className='toast'; t.textContent=m; void t.offsetWidth; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2400); }
@@ -1860,12 +1960,13 @@ const App = (()=>{
     if(!state.closings) state.closings={};
     if(!state.thanks) state.thanks=[];
     if(!state.messages) state.messages=[];
+    if(!state.interests) state.interests=[];
     ensureProfiles();
     init2();
   }
 
   return { init,tab:setTab,changeRole,changeCtx,setMonth,setKind,calcPostAmt,addPost,quickPost,
-           onPhoto,clearPhoto,openLightbox,closeLightbox,gotoPost,openProfile,closeProfile,toggleFavCo,toggleFavItem,gotoFav,openMore,closeMore,setFollowView,openChat,closeChat,sendMsg,
+           onPhoto,clearPhoto,openLightbox,closeLightbox,gotoPost,openProfile,closeProfile,toggleFavCo,toggleFavItem,gotoFav,openMore,closeMore,setFollowView,openChat,closeChat,sendMsg,onVisi,toggleInterest,repost,
            setBoardFilter,openDemo,closeDemo,setNewsFilter,toggleCard,toggleResp,calcResp,submitResp,toggleRelay,submitRelay,closePost,
            confirmDeal,rejectDeal,cancelProposal,confirmRelay,rejectRelay,cancelRelay,sendThanks,
            gotoClosing,closeMonth,reopenMonth,
