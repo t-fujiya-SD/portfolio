@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-29T07:35:00+09:00",
+  "updated": "2026-06-30T07:36:37+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -66,16 +66,9 @@
       "cat": "business"
     },
     {
-      "title": "卸売市場 市民感謝デー（6月）を開催しました！",
-      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE90S1lpeS1vZ0JTVGRwQng5Ui1DaXJ1dV85b1E5YXM4SUdFc3E1eVB4RXJVc0NOQkdHQmdLYnMyeVRoR0pIRjJFYXEwT2hCNUVoNDNSTzJkaTZPek5JeUgtY2U3amc?oc=5",
-      "source": "city.oita.oita.jp",
-      "date": "2026-06-13",
-      "cat": "market"
-    },
-    {
-      "title": "ナガスクジラが仙台市中央卸売市場に初入荷（khb東日本放送）",
-      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTFBTRUZlaXVDRXktVDdFQU80YWtaZ2RkZnVHQnNkTTRpVUlNVDcweDlVZ1BJVHVSME8tZlJYNFdMZFp3Ni1PWFBTUTFDMk9oR2w5dkNta0dGYWRjZ1dBc29XZEpvSGhFeVpCTE1ESUpZVUtGYmVNSEh3UURoZ1FZbE0?oc=5",
-      "source": "Yahoo!ニュース",
+      "title": "ナガスクジラが仙台市中央卸売市場に初入荷",
+      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBldTVPSjVRVVAxRmFuWkZTUlduWHhyR0QwemxxaWhSWDFkbXhFR0g2cnQ4YXUzamhhRm9MclhCcTZhcXA1Q1FkV2lvd3FWdWM?oc=5",
+      "source": "khb東日本放送",
       "date": "2026-06-09",
       "cat": "market"
     },
@@ -108,10 +101,10 @@
       "cat": "business"
     },
     {
-      "title": "カツオの入荷が本格化 数量は安定の見込み 仙台市中央卸売市場",
-      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE50azM4X0J6OWdSSUpzaE42aTFVdGlWMy1QajgtYkpsc011UmMtY08tN0VCUjU0SDcyZm9KWFdkUFJUUzBwWER5UTZ3U0ozdlk?oc=5",
-      "source": "khb東日本放送",
-      "date": "2026-05-15",
+      "title": "卸売市場 市民感謝デー（5月）を開催しました！",
+      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBPYXNocjRhUndROUxFMG53SXU5N3pPd0FFbE1NdkdLR2pLamtFY2tuR2VSRVJLMlNaTEZqTWhDMXBkQzRGZktzb2d4U29nRVBRNFJHSU0xWTNXR3JUemJ1RHI3akE?oc=5",
+      "source": "city.oita.oita.jp",
+      "date": "2026-05-09",
       "cat": "market"
     },
     {
@@ -148,6 +141,13 @@
       "source": "茨城新聞クロスアイ",
       "date": "2026-02-11",
       "cat": "toyosu"
+    },
+    {
+      "title": "初競り、威勢よく景気づけ 宇都宮市中央卸売市場 冷凍メバチマグロなど入荷",
+      "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBFU1NDVmw0OVlSNDV3VFktUWRpNUdkc0JvWnlIbXQ5RERQeVVvU01KQlhNMGR6RlRFdVZSanBsQ19Ybkd1czBkMl9RQ1cxdkM2SzI0ZXZUc2ZMV1E?oc=5",
+      "source": "下野新聞社",
+      "date": "2026-01-05",
+      "cat": "market"
     },
     {
       "title": "東京都中央卸売市場・豊洲市場",
