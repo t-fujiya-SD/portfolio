@@ -607,6 +607,7 @@
   </section>
 
   <div class="footer-note">
+    📖 はじめての方は <a href="guide.html" target="_blank" rel="noopener"><b>使い方ガイド</b></a> をどうぞ。<br>
     これは要件確認用の試作（たたき）です。ログイン認証・サーバー保存・発注サイト連携・SMS/プッシュ通知などは本開発で実装します。<br>
     Spicy Device — 飲食・卸向けWebツール
   </div>
@@ -1527,6 +1528,7 @@ const App = (()=>{
       <div style="margin-top:11px;display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn primary sm" onclick="App.openEdit()">✏️ プロフィールを編集</button>
         <button class="btn ghost sm" onclick="App.openProfile('${me}')">🏢 会社情報・実績</button>
+        <a class="btn ghost sm" href="guide.html" target="_blank" rel="noopener" style="text-decoration:none">📖 使い方ガイド</a>
         ${cm?`<button class="btn ok sm" onclick="App.gotoClosing('${cm}')">🔒 ${cm.slice(5)}月分を締める</button>`:''}</div>`;
   }
   function renderFollowCard(){
