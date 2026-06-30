@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-30T07:36:37+09:00",
+  "updated": "2026-07-01T07:49:55+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -17,10 +17,17 @@
   ],
   "items": [
     {
+      "title": "７月の野菜の入荷量と卸売価格は平年並みの見通し 九州農政局",
+      "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTE1NMU5qcHZ0U1pWWW9LVG52QnZVTmJWYm1kUXpYVElhVnlSTGd2Mzlkc29TZno0OWpDUDdnM1hadDFkcHJOLVhsWF9ZYlQtVHhwc3haWmtvQk45N0xCZ1c2VVZMU2U0c2ZjR09hY1d3?oc=5",
+      "source": "Excite エキサイト",
+      "date": "2026-06-30",
+      "cat": "market"
+    },
+    {
       "title": "中部の青果卸１２社、共同物流で新会社",
       "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE1fMk5qVDdFLWc1SEJOSWxJVW5RMXhXQXpmZ0ZUT1RXeWpMUGxwMHhvNjgtU050RXg0d0NVNFMwek5HOXcyNlNlUWRGNlFfaEZ6emxCamFkTQ?oc=5",
       "source": "日本農業新聞",
-      "date": "2026-06-27",
+      "date": "2026-06-29",
       "cat": "business"
     },
     {
@@ -71,20 +78,6 @@
       "source": "khb東日本放送",
       "date": "2026-06-09",
       "cat": "market"
-    },
-    {
-      "title": "「牛肉を食べているような感じ」仙台港に水揚げ『ナガスクジラ』の生肉 初入荷・仙台市中央卸売市場",
-      "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE9VWkYtU2FTTVFLUXFEMWotMGlUTm4yZGVURkNqdlRpbGVEWFlUWldaejh0MEhieXI0Y1hucDl2Q2p3d29YUElkTmhJSQ?oc=5",
-      "source": "TVer",
-      "date": "2026-06-09",
-      "cat": "market"
-    },
-    {
-      "title": "【中央卸売市場】6月イベント情報",
-      "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE5PcDc2eVQyazR0U182SHJzUmlCUVJxTGxORVNsSmU4Ymhtc2ltLVY5b3BrbnpYTVVxOU1YVVQ5cDZqWjV2QnBrcEpyemhudUpmc3JMUWwxV3VhUVo0OV9aWDFDVEY0dXhi?oc=5",
-      "source": "my.metro.tokyo.lg.jp",
-      "date": "2026-06-08",
-      "cat": "toyosu"
     },
     {
       "title": "２６２０ 資金ショートは２０５６年度に８年前倒し 東京都中央卸売市場会計、２０２６年経営レポート どらったら！！",
@@ -143,6 +136,13 @@
       "cat": "toyosu"
     },
     {
+      "title": "インターネット都政モニターアンケート結果 生鮮食料品等の購買意識 〉 Q16 東京都中央卸売市場の認知|1月",
+      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE4wNEFBMThJRExadlJ6WDQ2d25pVXhNck1ldHBrcG1KVXhndDdkcWNfU2tlSW9lM0EzTGZMN2pSQlRTQjliU2JLVG1ZMlVSa3ljOWpxcTBaNmNzdUlEWFlrTXZTWmNDVzlLYmEtaGxTWWRGM3FQ?oc=5",
+      "source": "metro.tokyo.lg.jp",
+      "date": "2026-01-21",
+      "cat": "toyosu"
+    },
+    {
       "title": "初競り、威勢よく景気づけ 宇都宮市中央卸売市場 冷凍メバチマグロなど入荷",
       "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBFU1NDVmw0OVlSNDV3VFktUWRpNUdkc0JvWnlIbXQ5RERQeVVvU01KQlhNMGR6RlRFdVZSanBsQ19Ybkd1czBkMl9RQ1cxdkM2SzI0ZXZUc2ZMV1E?oc=5",
       "source": "下野新聞社",
@@ -152,14 +152,7 @@
     {
       "title": "東京都中央卸売市場・豊洲市場",
       "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9abnUyLWI2TWtuY0tKa1FoZlMwRUtHeDVsejhNTmwwck1sZi1iZ2ZhWlQ2OHgyU2xsQUdnM05mdzdpY1hNZGhGMzZoZTlFOWxQMHBiRVFwZmM3enM?oc=5",
-      "source": "go tokyo",
-      "date": "2025-12-25",
-      "cat": "toyosu"
-    },
-    {
-      "title": "SANKO、大田市場の青果仲卸と業務提携 販路拡大へ",
-      "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTFBRcDRxc25POTNNM19JcDRlR2ZFSnI0a2pHYmJfOTEyTW5hclM2SWVmbVN0S2lZMTg2S3Axb2ZEeW1jWk5iUTFzMkNJNnNuWkpXVG9EY1BXT3JiVGd1VkgtaW9nVHZBeEVzZ2dkbg?oc=5",
-      "source": "日本経済新聞",
+      "source": "GO TOKYO, The Official Tokyo Travel Guide",
       "date": "2025-12-25",
       "cat": "toyosu"
     },
@@ -183,6 +176,13 @@
       "source": "フーズチャネル",
       "date": "2025-11-21",
       "cat": "business"
+    },
+    {
+      "title": "指定野菜の入荷量及び卸売価格の見通し（令和7年11月、東京都中央卸売市場）：関東農政局",
+      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9HLWR1T2pEU0RMMzlRaE1SUDhxZFMxQXhITGlMNU5DVHkyeGNiU0pUSF9MVFB4S3V3MTJ3VC0wQnFxaEl5elRUMF9HZ2dBLUQtY1dNQ2IxTGJTQ1Zlb21ZRHFJc2Z1OV84YUEw?oc=5",
+      "source": "maff.go.jp",
+      "date": "2025-10-31",
+      "cat": "toyosu"
     }
   ]
 }
