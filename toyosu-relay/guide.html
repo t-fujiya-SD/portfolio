@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOYO LINK かんたんガイド｜豊洲の卸どうしをつなぐ</title>
+<meta name="description" content="TOYO LINK の使い方ガイド。余った在庫はまわし、足りない在庫はまわってくる。電話はそのまま、やり取りを記録して月末ラクに精算。">
+<meta name="robots" content="noindex">
+<meta property="og:title" content="TOYO LINK かんたんガイド">
+<meta property="og:description" content="豊洲の卸どうしをつなぐ在庫マッチング。使い方をやさしく説明します。">
+<style>
+  :root{
+    --bg:#f3f5f8; --card:#fff; --ink:#1f2a37; --sub:#5b6573; --line:#e5e7eb;
+    --primary:#1d4ed8; --navy:#0f2557; --want:#dc2626; --offer:#15803d; --amber:#d97706; --violet:#7c3aed;
+    --shadow:0 1px 3px rgba(16,24,40,.08),0 6px 18px rgba(16,24,40,.06);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,system-ui,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.8;font-size:16px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .wrap{max-width:760px;margin:0 auto;padding:0 18px}
+  a{color:var(--primary)}
+  /* topbar */
+  .topbar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .topbar .in{max-width:760px;margin:0 auto;padding:11px 18px;display:flex;align-items:center;gap:9px}
+  .topbar .logo{font-weight:800;font-size:16px;letter-spacing:.02em}
+  .topbar .badge{font-size:11px;background:#eef4ff;color:var(--navy);font-weight:700;padding:2px 9px;border-radius:999px}
+  .topbar .cta{margin-left:auto;background:var(--primary);color:#fff;text-decoration:none;font-weight:800;font-size:13px;padding:8px 14px;border-radius:999px}
+  /* hero */
+  .hero{background:linear-gradient(135deg,#0f2557,#1d4ed8);color:#fff;padding:40px 0 46px;text-align:center}
+  .hero h1{font-size:28px;margin:0 0 6px;font-weight:800;letter-spacing:.01em}
+  .hero .sub{font-size:15px;opacity:.95;max-width:560px;margin:0 auto;line-height:1.9}
+  .hero .tag{display:inline-block;background:rgba(255,255,255,.16);font-size:12.5px;font-weight:700;padding:4px 13px;border-radius:999px;margin-bottom:16px}
+  .hero .btns{margin-top:22px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .hero .btn{text-decoration:none;font-weight:800;font-size:15px;padding:13px 22px;border-radius:999px}
+  .hero .btn.primary{background:#fff;color:var(--navy)}
+  .hero .btn.ghost{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.4)}
+  /* sections */
+  section{padding:38px 0}
+  section:nth-child(even of .sec){background:#fff}
+  .kicker{color:var(--primary);font-weight:800;font-size:13px;letter-spacing:.08em;margin:0 0 6px}
+  h2{font-size:22px;margin:0 0 6px;font-weight:800;line-height:1.45}
+  .lead{color:var(--sub);font-size:15px;margin:0 0 22px}
+  .cards3{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+  .mini-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 18px;box-shadow:var(--shadow)}
+  .mini-card .ic{font-size:30px;line-height:1}
+  .mini-card h3{font-size:16px;margin:10px 0 4px}
+  .mini-card p{font-size:13.5px;color:var(--sub);margin:0;line-height:1.75}
+  /* step list */
+  .steps{display:flex;flex-direction:column;gap:16px}
+  .step{display:flex;gap:15px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;box-shadow:var(--shadow)}
+  .step .no{flex-shrink:0;width:38px;height:38px;border-radius:50%;background:var(--primary);color:#fff;font-weight:800;font-size:17px;display:flex;align-items:center;justify-content:center}
+  .step h3{font-size:16.5px;margin:2px 0 4px}
+  .step p{font-size:14px;color:var(--sub);margin:0;line-height:1.8}
+  .split{display:grid;grid-template-columns:1fr 250px;gap:26px;align-items:center}
+  @media(max-width:680px){.split{grid-template-columns:1fr}.split .phone{order:-1}}
+  /* phone mockup */
+  .phone{width:248px;margin:0 auto;border:9px solid #0f2557;border-radius:34px;overflow:hidden;background:var(--bg);box-shadow:0 16px 36px rgba(16,24,40,.22)}
+  .phone .pbar{background:linear-gradient(135deg,#0f2557,#1d4ed8);color:#fff;padding:10px 13px;font-size:12px;font-weight:800;display:flex;align-items:center;gap:6px}
+  .phone .scr{padding:11px;display:flex;flex-direction:column;gap:9px;min-height:60px}
+  .phone .tabbar{display:flex;justify-content:space-around;background:#fff;border-top:1px solid var(--line);padding:7px 2px;font-size:9px;color:var(--sub);font-weight:700}
+  .phone .tabbar .on{color:var(--primary)}
+  .mk{background:#fff;border:1px solid var(--line);border-radius:11px;padding:10px 12px;text-align:left;font-size:11.5px;line-height:1.6}
+  .mk.want{border-left:4px solid var(--want);background:#fff8f7}
+  .mk.offer{border-left:4px solid var(--offer)}
+  .mk.amber{border-left:4px solid var(--amber);background:#fffbf2}
+  .mk .tag{display:inline-block;color:#fff;font-weight:800;font-size:10px;padding:2px 7px;border-radius:6px}
+  .mk .tag.w{background:var(--want)} .mk .tag.o{background:var(--offer)} .mk .tag.a{background:var(--amber)}
+  .mk .item{font-weight:800;font-size:13px}
+  .mk .meta{color:var(--sub);font-size:10.5px;margin-top:3px}
+  .mk .ph{color:var(--navy);font-weight:800}
+  .mk .photo{height:46px;border-radius:7px;background:linear-gradient(135deg,#15803d,#3aa564);margin:6px 0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:9px}
+  .mk .btn{display:inline-block;margin-top:6px;font-weight:800;font-size:10.5px;padding:5px 10px;border-radius:7px}
+  .mk .btn.g{background:var(--offer);color:#fff} .mk .btn.b{background:var(--primary);color:#fff}
+  .mk .row{display:flex;justify-content:space-between;align-items:center;gap:6px}
+  .mk .amt{font-weight:800}
+  .mk .ded{color:var(--want);font-size:10px}
+  .pcap{text-align:center;color:var(--sub);font-size:12px;margin-top:10px}
+  /* callout */
+  .note{display:flex;gap:12px;background:#eef4ff;border:1px solid #cdddff;border-radius:14px;padding:15px 17px;color:#1e3a8a;font-size:14px;line-height:1.8;margin-top:20px}
+  .note .i{font-size:20px;line-height:1.4}
+  .note.warm{background:#fff7e6;border-color:#f3d999;color:#92400e}
+  .note.soft{background:#f0fdf4;border-color:#bbe8c9;color:#14532d}
+  /* price */
+  .price{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow);text-align:center}
+  .price .big{font-size:30px;font-weight:800;color:var(--offer)}
+  .price .small{color:var(--sub);font-size:14px;margin-top:6px}
+  .phase{display:flex;flex-direction:column;gap:10px;margin-top:18px;text-align:left}
+  .phase .p{display:flex;gap:12px;align-items:flex-start;font-size:14px}
+  .phase .dot{flex-shrink:0;width:24px;height:24px;border-radius:50%;background:#eef4ff;color:var(--navy);font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;margin-top:2px}
+  /* coming */
+  .chips{display:flex;flex-wrap:wrap;gap:9px}
+  .chip{background:#fff;border:1px dashed #c7cfdb;border-radius:999px;padding:8px 14px;font-size:13.5px;font-weight:700;color:var(--sub)}
+  .chip b{color:var(--ink)}
+  /* faq */
+  details{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:4px 16px;margin-bottom:10px;box-shadow:var(--shadow)}
+  summary{font-weight:700;font-size:15px;padding:13px 0;cursor:pointer;list-style:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"＋";color:var(--primary);font-weight:800;margin-right:9px}
+  details[open] summary::before{content:"−"}
+  details p{margin:0 0 14px;color:var(--sub);font-size:14px;line-height:1.8}
+  /* final cta */
+  .finalcta{background:linear-gradient(135deg,#0f2557,#1d4ed8);color:#fff;border-radius:20px;padding:34px 24px;text-align:center;margin:8px 0}
+  .finalcta h2{color:#fff}
+  .finalcta p{opacity:.95;font-size:15px;margin:6px 0 20px}
+  .finalcta .btn{display:inline-block;background:#fff;color:var(--navy);text-decoration:none;font-weight:800;font-size:16px;padding:14px 28px;border-radius:999px}
+  footer{text-align:center;color:var(--sub);font-size:12.5px;padding:30px 18px 50px;line-height:1.9}
+  .emoji-flow{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px;font-size:14px;font-weight:700;margin:6px 0 4px;color:var(--ink)}
+  .emoji-flow .a{color:var(--sub)}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="in">
+  <span class="logo">🧺 TOYO LINK</span><span class="badge">かんたんガイド</span>
+  <a class="cta" href="https://spicy-device.com/toyosu-relay/">アプリを開く</a>
+</div></div>
+
+<!-- HERO -->
+<div class="hero"><div class="wrap">
+  <span class="tag">豊洲の卸どうしをつなぐ</span>
+  <h1>余った在庫はまわす。<br>足りない在庫は、まわってくる。</h1>
+  <p class="sub">突発で在庫が足りない／キャンセルで余った――そんな時に、仲間以外の卸ともサッとつながる掲示板です。<b>電話はこれまで通り</b>。やり取りを記録に残して、月末はまとめてラクに精算します。</p>
+  <div class="btns">
+    <a class="btn primary" href="https://spicy-device.com/toyosu-relay/">▶ アプリを開く</a>
+    <a class="btn ghost" href="#start">使い方を見る</a>
+  </div>
+</div></div>
+
+<!-- WHY -->
+<section class="sec"><div class="wrap">
+  <p class="kicker">これは何のアプリ？</p>
+  <h2>「電話で融通し合う」を、もっと広く・あとで揉めない形に</h2>
+  <p class="lead">仲の良い卸とは電話で在庫を融通し合えても、つながりの薄い相手とはなかなか。TOYO LINK は、その輪を豊洲の中で少し広げて、口頭の信用取引を“記録”として残します。</p>
+  <div class="cards3">
+    <div class="mini-card"><div class="ic">🔁</div><h3>余り・足りないを共有</h3><p>「求む（足りない）」「出す（余った）」を掲示。仲間以外の卸にも届きます。</p></div>
+    <div class="mini-card"><div class="ic">📞</div><h3>電話はそのまま</h3><p>連絡先はいつも表示。これまで通り電話で詰めてOK。アプリが文化を変えません。</p></div>
+    <div class="mini-card"><div class="ic">🧾</div><h3>記録して月末ラク</h3><p>成立した取引は自動で記録。月末は相手ごとにまとまり、そのまま請求に。</p></div>
+  </div>
+</div></section>
+
+<!-- FLOW -->
+<section class="sec" id="start"><div class="wrap">
+  <p class="kicker">まずはこれだけ</p>
+  <h2>基本の流れは、たった3ステップ</h2>
+  <div class="emoji-flow">📋 掲示する <span class="a">→</span> 📞 電話で詰める <span class="a">→</span> ✅ 確認して成立 <span class="a">→</span> 💰 月末に自動精算</div>
+  <div class="steps" style="margin-top:18px">
+    <div class="step"><div class="no">1</div><div><h3>「求む」か「出す」を掲示する</h3><p>足りない物は <b style="color:var(--want)">求む</b>、余った物は <b style="color:var(--offer)">出す</b>。品目・数量・単価を入れるだけ。写真も付けられます。</p></div></div>
+    <div class="step"><div class="no">2</div><div><h3>良さそうな相手に電話する</h3><p>掲示カードに電話番号がいつも出ています。これまで通り電話で数量や受け渡しを相談。</p></div></div>
+    <div class="step"><div class="no">3</div><div><h3>「応じる」→ 双方で確認＝成立</h3><p>まとまったら数量・単価を入れて「応じる」。相手が金額を確認して成立すると、取引が記録に残ります。一部だけの数量でもOK。</p></div></div>
+    <div class="step"><div class="no">4</div><div><h3>月末に自動でまとまる</h3><p>売り手→買い手の方向ごとに自動集計。確認して「締める」だけ。<b>数字が苦手でも大丈夫</b>。</p></div></div>
+  </div>
+</div></section>
+
+<!-- BOARD MOCK -->
+<section class="sec"><div class="wrap">
+  <p class="kicker">掲示板</p>
+  <h2>掲示はこんな見た目です</h2>
+  <p class="lead">色で一目。<b style="color:var(--want)">赤＝求む（急ぎ）</b>／<b style="color:var(--offer)">緑＝出す</b>。タップで詳細・電話・「応じる」。</p>
+  <div class="split">
+    <div>
+      <div class="note"><span class="i">💡</span><div>カードには <b>品目・規格・数量・単価・受け渡し時間・写真</b> がそろっています。見ないで買う不安を減らすため、出すときは写真があると喜ばれます。</div></div>
+    </div>
+    <div>
+      <div class="phone">
+        <div class="pbar">🧺 TOYO LINK ・ 掲示板</div>
+        <div class="scr">
+          <div class="mk want"><span class="tag w">🙋 求む</span> <span class="item">トマト 2L</span>
+            <div class="meta">10個・本日17時まで</div>
+            <div class="row" style="margin-top:5px"><span class="ph">☎ 090-…</span><span class="amt">¥200/個 以下</span></div></div>
+          <div class="mk offer"><span class="tag o">📦 出す</span> <span class="item">アスパラ 2L</span>
+            <div class="photo">商品写真</div>
+            <div class="row"><span class="ph">☎ 090-…</span><span class="amt">¥300/本</span></div>
+            <span class="btn g">🛒 買います（応じる）</span></div>
+        </div>
+        <div class="tabbar"><span class="on">🌅今朝</span><span>📋掲示板</span><span>🔍検索</span><span>👤マイ</span><span>☰</span></div>
+      </div>
+      <p class="pcap">掲示板の画面イメージ</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- SETTLE MOCK -->
+<section class="sec"><div class="wrap">
+  <p class="kicker">月末の精算</p>
+  <h2>締めは、確認してボタンひとつ</h2>
+  <p class="lead">相手ごとに「いくら請求」「いくら支払い」が自動でまとまります。相殺せず、方向どおりに並ぶのでそのまま請求書に。</p>
+  <div class="split">
+    <div>
+      <div class="note soft"><span class="i">🧮</span><div><b>数字が苦手でも安心。</b>取引のたびに自動で積み上がるので、月末に電卓をたたく必要はありません。今後は、内容を見やすいレポートにする機能も追加していく予定です。</div></div>
+    </div>
+    <div>
+      <div class="phone">
+        <div class="pbar">💰 精算・締め ・ 6月</div>
+        <div class="scr">
+          <div class="mk"><div class="row"><b>📤 売上（請求する分）</b></div>
+            <div class="meta">請求先 → 東都青果</div>
+            <div class="row"><span>トマト 40個</span><span class="amt">¥8,000</span></div>
+            <div class="row"><span>メロン 1個</span><span class="amt">¥4,000</span></div></div>
+          <div class="mk amber"><div class="row"><b>🔒 6月分を締める</b><span class="btn b">確定</span></div></div>
+        </div>
+        <div class="tabbar"><span>🌅今朝</span><span>📋掲示板</span><span>🔍検索</span><span class="on">👤マイ</span><span>☰</span></div>
+      </div>
+      <p class="pcap">精算画面のイメージ</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- RETURN -->
+<section class="sec"><div class="wrap">
+  <p class="kicker">返品・クレーム</p>
+  <h2>使えなかった分は、写真で報告 → 承認 → 自動で差引</h2>
+  <p class="lead">届いた商品が傷んでいて使えなかった――そんな時も記録できます。</p>
+  <div class="steps">
+    <div class="step"><div class="no">①</div><div><h3>買い手が報告</h3><p>「最近成立」から数量・理由・<b>写真</b>を付けて返品を報告します。</p></div></div>
+    <div class="step"><div class="no">②</div><div><h3>売り手が承認 / 却下</h3><p>写真と理由を見て、納得できれば承認。電話で話してからでもOK。</p></div></div>
+    <div class="step"><div class="no">③</div><div><h3>精算から自動で差し引き</h3><p>承認すると、その月の精算に「返品控除」として反映されます。</p></div></div>
+  </div>
+</div></section>
+
+<!-- HANDY -->
+<section class="sec"><div class="wrap">
+  <p class="kicker">毎日が少しラクになる</p>
+  <h2>あると便利な機能</h2>
+  <div class="cards3">
+    <div class="mini-card"><div class="ic">🌅</div><h3>今朝のうごき</h3><p>朝いちで「今朝の急募」「いま不足が多い品目」「市場ニュース」をまとめて確認。<span style="color:var(--sub)">※豊洲の連絡事項もここに載せていく予定です。</span></p></div>
+    <div class="mini-card"><div class="ic">⭐</div><h3>フォロー</h3><p>馴染みの卸や、扱っている品目をフォロー。新着が「今朝」に届きます。</p></div>
+    <div class="mini-card"><div class="ic">🔍</div><h3>卸さがす</h3><p>会社名・業種・#タグで検索。新しい取引相手も見つけられます。</p></div>
+  </div>
+</div></section>
+
+<!-- START -->
+<section class="sec"><div class="wrap">
+  <p class="kicker">はじめかた</p>
+  <h2>3分でスタート</h2>
+  <div class="steps">
+    <div class="step"><div class="no">1</div><div><h3>ログイン</h3><p>運営から共有されたアカウントでログインします（はじめは運営が用意します）。</p></div></div>
+    <div class="step"><div class="no">2</div><div><h3>マイページでプロフィールを入力</h3><p>👤マイページ →「✏️ プロフィールを編集」で、<b>会社名・業種・連絡先・自社について（#タグOK）</b>を入力。これが「卸さがす」にも載ります。</p></div></div>
+    <div class="step"><div class="no">3</div><div><h3>さっそく掲示してみる</h3><p>「求む」か「出す」を1つ投稿。あとは電話がかかってくるのを待つだけ。</p></div></div>
+  </div>
+  <div class="note warm"><span class="i">📱</span><div>同じアカウントを複数人で使う・端末を変えるなど、本格的に共有して使う仕組みは順次ご用意します。まずは気軽に触ってみてください。</div></div>
+</div></section>
+
+<!-- PRICE -->
+<section class="sec"><div class="wrap">
+  <p class="kicker">料金</p>
+  <h2>いまは無料で、じっくりお試し</h2>
+  <div class="price">
+    <div class="big">当面 無料</div>
+    <div class="small">最初にご協力いただく卸さん（およそ20社まで）は無料で使えます。</div>
+    <div class="phase">
+      <div class="p"><span class="dot">1</span><div><b>導入期：無料</b><br>まず使い心地を確かめてください。要望をいただきながら改善します。</div></div>
+      <div class="p"><span class="dot">2</span><div><b>定着期：少額の月額から</b><br>本格的に使われ始めたら、無理のない月額に。早く入っていただいた方ほどお得な設定にします。</div></div>
+    </div>
+  </div>
+  <div class="note"><span class="i">🤝</span><div>手数料（成約ごとの中抜き）は取りません。<b>取引のじゃまをしない</b>のが方針です。</div></div>
+</div></section>
+
+<!-- COMING -->
+<section class="sec"><div class="wrap">
+  <p class="kicker">これから増えていきます</p>
+  <h2>少しずつ、機能を公開していきます</h2>
+  <p class="lead">最初はシンプルに。使われ方を見ながら、順番に開けていきます。</p>
+  <div class="chips">
+    <span class="chip">🚚 <b>配送・ヘルプの相談</b>（持ってくよ／持ってける？）</span>
+    <span class="chip">📰 <b>市場の連絡掲示</b></span>
+    <span class="chip">📊 <b>ルート別の費用対効果レポート</b></span>
+    <span class="chip">🧾 <b>請求書の発行</b></span>
+    <span class="chip">🔔 <b>お知らせ通知</b></span>
+  </div>
+</div></section>
+
+<!-- FAQ -->
+<section class="sec"><div class="wrap">
+  <p class="kicker">よくある質問</p>
+  <h2>気になるところ</h2>
+  <details><summary>電話でやり取りしてもいいの？</summary><p>もちろんです。むしろ電話が前提です。アプリは「相手を見つける」「あとで記録が残る」を助けるだけ。詰めるのは電話でOKです。</p></details>
+  <details><summary>うちの取引内容が他の卸に見られない？</summary><p>取引の明細（誰と・いくら）は、ご本人と運営しか見られません。会社情報には「取引の件数」など信頼の目安だけが出ます。</p></details>
+  <details><summary>特定の相手だけに見せることはできる？</summary><p>できます。投稿時に「限定公開」を選ぶと、選んだ卸だけに表示されます。</p></details>
+  <details><summary>スマホが苦手でも使える？</summary><p>大きなボタンと色分けで、タップ中心の作りです。困ったら運営がサポートします。</p></details>
+  <details><summary>豊洲以外の人も入ってくる？</summary><p>豊洲の中の、顔の見えるクローズドな場です。実名は運営が確認のうえ表示します。</p></details>
+</div></section>
+
+<!-- FINAL -->
+<section class="sec"><div class="wrap">
+  <div class="finalcta">
+    <h2>まずは、ひとつ掲示してみませんか？</h2>
+    <p>余った在庫はまわして、足りない在庫はまわってくる。</p>
+    <a class="btn" href="https://spicy-device.com/toyosu-relay/">▶ TOYO LINK を開く</a>
+  </div>
+</div></section>
+
+<footer>
+  TOYO LINK ｜ 豊洲の卸どうしをつなぐ在庫マッチング<br>
+  ご不明な点は、ご紹介者または運営（株式会社スパイシーデバイス）までお気軽にどうぞ。
+</footer>
+
+</body>
+</html>
