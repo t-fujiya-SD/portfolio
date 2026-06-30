@@ -502,6 +502,7 @@
     <div class="card" id="interestCard"></div>
     <div class="card" id="achieveCard"></div>
     <h2 class="section-h">📨 やりとり</h2>
+    <div class="card" id="claimsCard"></div>
     <div class="card">
       <h2 style="margin:0 0 4px">✅ あなたの確認待ち</h2>
       <p class="hint">あなたの掲示に届いた「申し込み」「相談」です。取引は金額を確認して成立、相談は日程を確定すると記録に残ります。</p>
@@ -656,6 +657,12 @@
     <div id="editBody" style="padding:18px 20px;overflow:auto"></div>
   </div>
 </div>
+<div class="demo-modal" id="claimModal">
+  <div class="demo-card" style="height:auto;max-height:92vh;width:min(540px,96vw)">
+    <div class="demo-bar"><span class="demo-ttl">↩️ 返品・クレーム報告</span><button class="demo-x" style="margin-left:auto" onclick="App.closeClaim()">✕ 閉じる</button></div>
+    <div id="claimBody" style="padding:18px 20px;overflow:auto"></div>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -679,7 +686,7 @@ const App = (()=>{
     {tag:'仕入れ・卸',title:'仕入れ見える化レポート',desc:'仕入データを可視化してコスト・原価を管理。卸／多店舗向け。',url:'../procurement-report/',img:'../assets/shot-procurement.png',color:'#0d9488'},
     {tag:'配送・ドライバー',title:'ルートミー（RoutMe）',desc:'卸・委託本部・ドライバーを束ねる配送管理。注文設定→割当→締め承認→単価・コストまで。',url:'https://partner-a-delivery-app.vercel.app/',img:'../assets/shot-routme.svg',color:'#7c3aed',external:true},
   ];
-  let state = { companies:[], items:[], posts:[], deals:[], closings:{}, thanks:[], messages:[], interests:[] };
+  let state = { companies:[], items:[], posts:[], deals:[], closings:{}, thanks:[], messages:[], interests:[], claims:[] };
   let user = { role:'company', companyId:null };
   let tab = 'home';
   let selMonth = '';
@@ -689,6 +696,8 @@ const App = (()=>{
   let chatPostId = '';                  // 開いている案件メッセージのpostId
   let searchQ = '';                     // 卸さがしの検索語
   let searchIndustry = '';              // 卸さがしの業種フィルタ
+  let claimPhoto = '';                  // 返品報告フォームの写真
+  let claimDealId = '';                 // 返品対象のdealId
   let respOpen = {};      // postId -> bool（trade応答フォーム）
   let relayOpen = {};     // postId -> bool（相談に乗るフォーム）
   let pendingPhoto = '';  // 投稿フォームで選択中の写真（base64・出すのみ）
@@ -719,6 +728,10 @@ const App = (()=>{
       mkCo('東都青果（デモ）','坂本','090-2222-0002',{verified:true,zone:'青果棟 5街区',dept:'青果部会',cats:['野菜','加工野菜'],respMin:35,industries:['野菜','乾物'],about:'業務用・加工向けに強み。乾物や規格外もまとめてご相談ください。#加工野菜 #乾物 #小ロットOK #規格外',listed:true}),
       mkCo('やまと水産（デモ）','三浦','090-3333-0003',{verified:true,zone:'水産仲卸棟 3街区',dept:'水産物部会',cats:['鮮魚','貝類'],respMin:20,industries:['海鮮'],about:'長崎・九州直送の鮮魚と貝類。活け物・朝市の目利きにお任せ。#活魚 #貝類 #九州直送 #朝市',listed:true}),
       mkCo('築地大同物産（デモ）','林','090-4444-0004',{verified:true,zone:'水産卸売場棟',dept:'水産物部会',cats:['冷凍','加工水産'],respMin:50,industries:['海鮮','乾物'],about:'冷凍・加工水産と乾物の品揃え。業務用のまとめ買いに対応します。#冷凍 #加工水産 #乾物 #業務用',listed:true}),
+      // 知り合いの卸を入れて試す用のテストアカウント3つ（実名は各自プロフィール編集で入力）
+      mkCo('テスト卸A（青果）','','',{verified:false,industries:['野菜'],about:'',listed:true}),
+      mkCo('テスト卸B（水産）','','',{verified:false,industries:['海鮮'],about:'',listed:true}),
+      mkCo('テスト卸C（乾物）','','',{verified:false,industries:['乾物'],about:'',listed:true}),
     ];
     const cN=n=>companies.find(c=>c.name.startsWith(n)).id;
     // デモ：丸豊がフォロー中の卸＝やまと水産、フォロー中の品目＝本まぐろ・ホタテ
@@ -748,6 +761,7 @@ const App = (()=>{
       mkDeal('2026-06-18','東都','やまと','レモン','2L','',100,'個',60),
       mkDeal('2026-05-20','丸豊','やまと','大葉','','',30,'束',80),
       mkDeal('2026-05-22','築地','東都','ホタテ','L','Aランク',10,'kg',2500),
+      mkDeal('2026-06-15','やまと','丸豊','ホタテ','L','Aランク',5,'kg',2500),
     ];
     const posts=[
       mkTrade('want','東都','トマト','2L',10,'個',200,'Aランク','','','本日17時まで','pickup','すぐ使えるものを探しています'),
@@ -784,7 +798,12 @@ const App = (()=>{
       {id:uid(),postId:aspara?aspara.id:'',coId:cN('丸豊'),date:TODAY},
       {id:uid(),postId:lemonPost?lemonPost.id:'',coId:cN('東都'),date:TODAY},
     ];
-    state={companies,items,posts,deals,closings:{},thanks,messages,interests};
+    // デモ：やまと水産が「大葉」の一部を返品報告（丸豊=売り手が承認→精算控除を体験できる）
+    const ohba=deals.find(d=>d.itemName==='大葉');
+    const claims = ohba ? [{id:uid(),dealId:ohba.id,byCoId:cN('やまと'),qty:10,unit:'束',amount:800,reason:'葉先が傷んでいて使えませんでした。',
+      photo:"data:image/svg+xml;charset=utf-8,"+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='400' height='260'><rect width='400' height='260' fill='#b91c1c'/><text x='200' y='130' fill='#fff' font-size='20' font-family='sans-serif' text-anchor='middle'>返品写真（サンプル）</text><text x='200' y='162' fill='#ffd9d9' font-size='13' font-family='sans-serif' text-anchor='middle'>大葉 葉先の傷み</text></svg>"),
+      status:'requested',date:TODAY}] : [];
+    state={companies,items,posts,deals,closings:{},thanks,messages,interests,claims};
     user={role:'company',companyId:cN('丸豊')};
     save();
 
@@ -1632,6 +1651,7 @@ const App = (()=>{
     renderFollowCard();
     renderExpiredCard();
     renderInterestCard();
+    renderClaimsInbox();
     renderAchieve();
     const me=myCoId();
     // 確認待ち：自社postへのtrade提案 ＋ 自社relayへの相談
@@ -1652,10 +1672,14 @@ const App = (()=>{
         const d=x.d, side=d.sellerId===me?'売り':'仕入';
         const other=d.sellerId===me?d.buyerId:d.sellerId;
         const thanked=state.thanks.some(t=>t.dealId===d.id && t.fromCoId===me);
+        const isBuyer=d.buyerId===me, myClaim=myClaimOnDeal(d.id);
+        const claimUI = isBuyer ? (myClaim
+          ? `<span class="status ${myClaim.status==='approved'?'closed':(myClaim.status==='rejected'?'part':'dealing')}">↩️ 返品${myClaim.status==='approved'?'承認済':myClaim.status==='rejected'?'却下':'確認待ち'}（−${yen(myClaim.amount)}）</span>`
+          : `<button class="btn ghost sm" onclick="App.openClaim('${d.id}')">↩️ 返品・クレーム</button>`) : '';
         return `<div class="inbox-card"><div class="top"><span class="title">${esc(d.itemName)} ${d.spec?esc(d.spec)+' ':''}${num(d.qty)}${esc(d.unit)}</span>
           <span class="status closed">成立</span><span class="deal-amt" style="margin-left:auto">${yen(d.amount)}</span></div>
           <div class="muted">${d.date}・${side}：${esc(cName(d.sellerId))} → ${esc(cName(d.buyerId))}</div>
-          <div class="act">${thanked?'<span class="muted">🙏 ありがとう送信済み</span>':`<button class="btn ghost sm" onclick="App.sendThanks('${d.id}')">🙏 ${esc(cName(other))} にありがとう</button>`}</div></div>`;
+          <div class="act">${thanked?'<span class="muted">🙏 ありがとう送信済み</span>':`<button class="btn ghost sm" onclick="App.sendThanks('${d.id}')">🙏 ${esc(cName(other))} にありがとう</button>`}${claimUI}</div></div>`;
       })():(()=>{
         const p=x.p; return `<div class="inbox-card"><div class="top"><span class="title">${KIND_LABEL[p.kind]}：${esc(p.itemName)}</span>
           <span class="status closed">調整済み</span></div>
@@ -1736,16 +1760,81 @@ const App = (()=>{
     save(); renderTabs(); renderBand(); renderAll(); toast('相談を取り消しました');
   }
 
+  /* ---------- 返品・クレーム ---------- */
+  const claimsForDeal = id => state.claims.filter(c=>c.dealId===id);
+  const approvedClaimAmount = id => state.claims.filter(c=>c.dealId===id && c.status==='approved').reduce((a,b)=>a+(b.amount||0),0);
+  const dealNet = d => (d.amount||0) - approvedClaimAmount(d.id);   // 承認済み返品を差し引いた実質額
+  const pendingClaimsForSeller = me => state.claims.filter(c=>{ const d=deal(c.dealId); return c.status==='requested' && d && d.sellerId===me; });
+  function myClaimOnDeal(dealId){ const me=myCoId(); return state.claims.find(c=>c.dealId===dealId && c.byCoId===me); }
+  function onClaimPhoto(input){
+    const f=input.files&&input.files[0]; if(!f) return;
+    if(!/^image\//.test(f.type)){ toast('画像ファイルを選んでください'); input.value=''; return; }
+    const rd=new FileReader();
+    rd.onload=()=>{ const img=new Image(); img.onload=()=>{
+      const max=900; let w=img.width,h=img.height;
+      if(w>max||h>max){ const r=Math.min(max/w,max/h); w=Math.round(w*r); h=Math.round(h*r); }
+      const cv=document.createElement('canvas'); cv.width=w; cv.height=h;
+      cv.getContext('2d').drawImage(img,0,0,w,h);
+      claimPhoto=cv.toDataURL('image/jpeg',0.72); renderClaimForm();
+    }; img.onerror=()=>toast('画像を読み込めませんでした'); img.src=rd.result; };
+    rd.onerror=()=>toast('画像を読み込めませんでした');
+    rd.readAsDataURL(f); input.value='';
+  }
+  function openClaim(dealId){ claimDealId=dealId; claimPhoto=''; renderClaimForm(); $('claimModal').classList.add('show'); document.body.style.overflow='hidden'; }
+  function renderClaimForm(){
+    const d=deal(claimDealId); if(!d)return; const host=$('claimBody'); if(!host)return;
+    host.innerHTML=`
+      <p class="hint" style="margin:0 0 12px">届いた商品が使えなかった分を報告します。相手（<b>${esc(cName(d.sellerId))}</b>）が承認すると、月末の精算から差し引かれます。</p>
+      <div class="edit-field"><label>対象の取引</label><input type="text" disabled value="${esc(d.itemName)} ${d.spec?esc(d.spec):''} ／ ${num(d.qty)}${esc(d.unit)} ・ ${yen(d.amount)}" style="background:#f3f5f8"></div>
+      <div class="edit-field"><label>返品する数量（最大 ${num(d.qty)}${esc(d.unit)}）</label>
+        <div class="qty-row"><input type="number" id="cl-qty" value="${d.qty}" min="0" max="${d.qty}" step="1" oninput="App.calcClaim()"><span class="muted unit">${esc(d.unit)}</span></div>
+        <div class="muted" style="margin-top:5px">差引のめやす：<b id="cl-amt" style="color:var(--debit)">−${yen(d.qty*d.unitPrice)}</b></div></div>
+      <div class="edit-field"><label>理由</label><textarea id="cl-reason" placeholder="例：葉先が傷んでいて使えませんでした">${esc($('cl-reason')?$('cl-reason').value:'')}</textarea></div>
+      <div class="edit-field"><label>写真（傷み・状態がわかるもの）</label>
+        <input type="file" id="cl-photo" accept="image/*" onchange="App.onClaimPhoto(this)">
+        <div class="photo-prev" id="cl-photo-prev" style="margin-top:7px">${claimPhoto?`<img src="${claimPhoto}" alt="返品写真">`:'<span class="muted">未選択</span>'}</div></div>
+      <button class="btn primary" style="width:100%" onclick="App.submitClaim()">この内容で返品を報告する</button>`;
+  }
+  function calcClaim(){ const d=deal(claimDealId); if(!d)return; const q=parseFloat($('cl-qty').value)||0; $('cl-amt').textContent='−'+yen(q*d.unitPrice); }
+  function submitClaim(){
+    const d=deal(claimDealId); if(!d)return; const me=myCoId();
+    let q=parseFloat($('cl-qty').value); const reason=$('cl-reason').value.trim();
+    if(!(q>0)) return toast('返品する数量を入力してください');
+    if(q>d.qty) q=d.qty;
+    if(!reason) return toast('理由を入力してください');
+    state.claims.push({id:uid(),dealId:d.id,byCoId:me,qty:q,unit:d.unit,amount:Math.round(q*d.unitPrice),reason,photo:claimPhoto||'',status:'requested',date:TODAY});
+    claimPhoto=''; save(); closeClaim(); renderAll(); toastGood('返品を報告しました。相手の承認を待っています');
+  }
+  function closeClaim(){ $('claimModal').classList.remove('show'); document.body.style.overflow=''; }
+  function approveClaim(id){ const c=state.claims.find(x=>x.id===id); if(!c)return; c.status='approved'; c.decidedDate=TODAY; save(); renderAll(); toastGood('返品を承認しました。精算から差し引かれます'); }
+  function rejectClaim(id){ const c=state.claims.find(x=>x.id===id); if(!c)return; if(!confirm('この返品を却下します。よろしいですか？'))return; c.status='rejected'; c.decidedDate=TODAY; save(); renderAll(); toast('返品を却下しました'); }
+  function renderClaimsInbox(){
+    const host=$('claimsCard'); if(!host)return; const me=myCoId();
+    const pend=me?pendingClaimsForSeller(me):[];
+    if(!pend.length){ host.style.display='none'; return; } host.style.display='';
+    host.innerHTML=`<h2 style="margin:0 0 4px">↩️ 返品の確認</h2><p class="hint">買い手から「使えなかった」と報告が届いています。内容を確認して承認/却下してください。</p>`
+      + pend.map(c=>{ const d=deal(c.dealId)||{}; return `<div class="inbox-card confirm">
+        <div class="top"><span class="title">${esc(d.itemName||'')} ${num(c.qty)}${esc(c.unit||'')} の返品</span><span class="deal-amt" style="margin-left:auto;color:var(--debit)">−${yen(c.amount)}</span></div>
+        <div class="muted">買い手 <b>${esc(cName(c.byCoId))}</b>／理由：「${esc(c.reason)}」</div>
+        ${c.photo?`<img class="photo" style="max-height:170px;margin-top:9px" src="${c.photo}" alt="返品写真" onclick="App.openLightbox(this.src)">`:''}
+        <div class="act"><button class="btn ok sm" onclick="App.approveClaim('${c.id}')">✅ 承認（精算から差し引く）</button>
+          <button class="btn ghost sm" onclick="App.rejectClaim('${c.id}')">却下</button></div></div>`; }).join('');
+  }
+
   /* ---------- SETTLE ---------- */
   function renderSettle(){ if(user.role==='admin') renderSettleAdmin(); else renderSettleCompany(); }
   function pairGroups(recs){
     const map={};
-    recs.forEach(d=>{ const k=d.sellerId+'>'+d.buyerId; (map[k]=map[k]||{sellerId:d.sellerId,buyerId:d.buyerId,items:[],total:0}); map[k].items.push(d); map[k].total+=d.amount; });
+    recs.forEach(d=>{ const k=d.sellerId+'>'+d.buyerId; (map[k]=map[k]||{sellerId:d.sellerId,buyerId:d.buyerId,items:[],total:0}); map[k].items.push(d); map[k].total+=dealNet(d); });
     return Object.values(map).sort((a,b)=>b.total-a.total);
   }
   function lineRow(d){
+    const cl=approvedClaimAmount(d.id);
+    const amtCell = cl>0
+      ? `<span class="muted" style="text-decoration:line-through">${yen(d.amount)}</span> <b>${yen(d.amount-cl)}</b><br><span style="color:var(--debit);font-size:11px">↩️ 返品控除 −${yen(cl)}</span>`
+      : `<b>${yen(d.amount)}</b>`;
     return `<tr><td>${d.date}</td><td><b>${esc(d.itemName)}</b> ${d.spec?`<span class="muted">${esc(d.spec)}</span>`:''}</td>
-      <td class="num">${num(d.qty)}${esc(d.unit)}</td><td class="num">${yen(d.unitPrice)}</td><td class="num"><b>${yen(d.amount)}</b></td></tr>`;
+      <td class="num">${num(d.qty)}${esc(d.unit)}</td><td class="num">${yen(d.unitPrice)}</td><td class="num">${amtCell}</td></tr>`;
   }
   function renderSettleCompany(){
     const me=myCoId();
@@ -1753,7 +1842,7 @@ const App = (()=>{
     const recs=confirmedDeals().filter(d=>d.month===m);
     const sales=recs.filter(d=>d.sellerId===me);
     const purch=recs.filter(d=>d.buyerId===me);
-    const salesTotal=sales.reduce((a,b)=>a+b.amount,0), purchTotal=purch.reduce((a,b)=>a+b.amount,0);
+    const salesTotal=sales.reduce((a,b)=>a+dealNet(b),0), purchTotal=purch.reduce((a,b)=>a+dealNet(b),0);
     const closed=isClosed(me,m);
     let html=`<div class="grid-kpi">
       ${kpi('売上（自社が売り手）',yen(salesTotal))}
@@ -1786,7 +1875,7 @@ const App = (()=>{
   }
   function renderSettleAdmin(){
     const recs=confirmedDeals().filter(d=>!selMonth||d.month===selMonth);
-    const total=recs.reduce((a,b)=>a+b.amount,0);
+    const total=recs.reduce((a,b)=>a+dealNet(b),0);
     const groups=pairGroups(recs);
     let html=`<div class="grid-kpi">
       ${kpi('成立取引',recs.length,'件')}
@@ -2058,7 +2147,7 @@ const App = (()=>{
   }
   function exportAll(){ dl('toyosu_relay_data.json',JSON.stringify({state,user},null,2),'application/json'); }
   function reseed(){ if(confirm('サンプルデータで初期化します。よろしいですか？')){ seed(); tab='home'; selMonth=''; respOpen={}; relayOpen={}; pendingPhoto=''; init2(); toast('サンプルデータを読み込みました'); } }
-  function wipe(){ if(confirm('全データを削除します。元に戻せません。')){ state={companies:[],items:[],posts:[],deals:[],closings:{},thanks:[],messages:[],interests:[]}; user={role:'admin',companyId:null}; tab='home'; selMonth=''; save(); init2(); toast('全データを削除しました'); } }
+  function wipe(){ if(confirm('全データを削除します。元に戻せません。')){ state={companies:[],items:[],posts:[],deals:[],closings:{},thanks:[],messages:[],interests:[],claims:[]}; user={role:'admin',companyId:null}; tab='home'; selMonth=''; save(); init2(); toast('全データを削除しました'); } }
 
   /* ---------- plumbing ---------- */
   function toast(m){ const t=$('toast'); t.className='toast'; t.textContent=m; void t.offsetWidth; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2400); }
@@ -2087,12 +2176,13 @@ const App = (()=>{
     if(!state.thanks) state.thanks=[];
     if(!state.messages) state.messages=[];
     if(!state.interests) state.interests=[];
+    if(!state.claims) state.claims=[];
     ensureProfiles();
     init2();
   }
 
   return { init,tab:setTab,changeRole,changeCtx,setMonth,setKind,calcPostAmt,addPost,quickPost,
-           onPhoto,clearPhoto,openLightbox,closeLightbox,gotoPost,openProfile,closeProfile,toggleFavCo,toggleFavItem,gotoFav,openMore,closeMore,setFollowView,openChat,closeChat,sendMsg,onVisi,toggleInterest,repost,openEdit,closeEdit,saveProfile,setSearchQ,setSearchIndustry,searchTag,
+           onPhoto,clearPhoto,openLightbox,closeLightbox,gotoPost,openProfile,closeProfile,toggleFavCo,toggleFavItem,gotoFav,openMore,closeMore,setFollowView,openChat,closeChat,sendMsg,onVisi,toggleInterest,repost,openEdit,closeEdit,saveProfile,setSearchQ,setSearchIndustry,searchTag,openClaim,closeClaim,submitClaim,calcClaim,onClaimPhoto,approveClaim,rejectClaim,
            setBoardFilter,openDemo,closeDemo,setNewsFilter,toggleCard,toggleResp,calcResp,submitResp,toggleRelay,submitRelay,closePost,
            confirmDeal,rejectDeal,cancelProposal,confirmRelay,rejectRelay,cancelRelay,sendThanks,
            gotoClosing,closeMonth,reopenMonth,
