@@ -1579,7 +1579,7 @@ const App = (()=>{
     const me=myCoId(); const c=company(me); if(!c) return toast('卸業者でログインしてください');
     const checks = INDUSTRIES.map(ind=>`<label><input type="checkbox" value="${esc(ind)}" ${(c.industries||[]).includes(ind)?'checked':''}> ${esc(ind)}</label>`).join('');
     $('editBody').innerHTML=`
-      <div class="edit-field"><label>会社名（運営が確認・変更します）</label><input type="text" value="${esc(c.name)}" disabled style="background:#f3f5f8"></div>
+      <div class="edit-field"><label>会社名</label><input type="text" id="e-name" value="${esc(c.name)}" placeholder="例：◯◯青果"><div class="muted" style="font-size:11px;margin-top:4px">※本番では運営が確認のうえ表示します</div></div>
       <div class="edit-field"><label>担当者</label><input type="text" id="e-contact" value="${esc(c.contact||'')}" placeholder="例：岡野"></div>
       <div class="edit-field"><label>連絡先（電話）</label><input type="text" id="e-phone" value="${esc(c.phone||'')}" placeholder="例：090-0000-0000"></div>
       <div class="edit-field"><label>市場区画</label><input type="text" id="e-zone" value="${esc(c.zone||'')}" placeholder="例：青果棟 7街区"></div>
@@ -1594,6 +1594,7 @@ const App = (()=>{
   }
   function saveProfile(){
     const me=myCoId(); const c=company(me); if(!c) return;
+    const nm=$('e-name').value.trim(); if(nm) c.name=nm;
     c.contact=$('e-contact').value.trim();
     c.phone=$('e-phone').value.trim();
     c.zone=$('e-zone').value.trim();
