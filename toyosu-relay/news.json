@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-01T07:49:55+09:00",
+  "updated": "2026-07-02T07:46:45+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -16,6 +16,13 @@
     }
   ],
   "items": [
+    {
+      "title": "食品卸 メーカー支援の新たな形 営業や物流を代行",
+      "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBaaTZ3djlaT0NET2F5b3J6d2h0RG1aNml0b3hnXzRGRDFHYXZ2Yk1oVE5SWC1vSk9WXzdpXzJ5YkVEc1JSWjNLek4tNWE3YXl5V0w3elpuZDZGV3c?oc=5",
+      "source": "食品新聞 WEB版",
+      "date": "2026-07-01",
+      "cat": "business"
+    },
     {
       "title": "７月の野菜の入荷量と卸売価格は平年並みの見通し 九州農政局",
       "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTE1NMU5qcHZ0U1pWWW9LVG52QnZVTmJWYm1kUXpYVElhVnlSTGd2Mzlkc29TZno0OWpDUDdnM1hadDFkcHJOLVhsWF9ZYlQtVHhwc3haWmtvQk45N0xCZ1c2VVZMU2U0c2ZjR09hY1d3?oc=5",
@@ -80,18 +87,18 @@
       "cat": "market"
     },
     {
+      "title": "【中央卸売市場】6月イベント情報",
+      "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE5PcDc2eVQyazR0U182SHJzUmlCUVJxTGxORVNsSmU4Ymhtc2ltLVY5b3BrbnpYTVVxOU1YVVQ5cDZqWjV2QnBrcEpyemhudUpmc3JMUWwxV3VhUVo0OV9aWDFDVEY0dXhi?oc=5",
+      "source": "my.metro.tokyo.lg.jp",
+      "date": "2026-06-08",
+      "cat": "toyosu"
+    },
+    {
       "title": "２６２０ 資金ショートは２０５６年度に８年前倒し 東京都中央卸売市場会計、２０２６年経営レポート どらったら！！",
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1Xb0xLYTJ6eDV1WkxhbzgzTnFqVWRNcmxMMGc1OUVEMDZoZHJzQU1oaXlFdV9GYjNQbmxER0tmR1BnOGg0MGpEWmlOWVFhR25MS1hxZ084bFJpdUFIaU1xSERBWGVwT0E5dkE?oc=5",
       "source": "どらったら！！",
       "date": "2026-06-07",
       "cat": "toyosu"
-    },
-    {
-      "title": "「物流こそ復興の命綱」… 食品卸大手トップを突き動かした郷土愛 ヤマエグループHD・網田会長が語る熊本地震10年",
-      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9xYWdYcW9UT2pVTTRxY2tJWTBScXlGaDNUWGs3YXpXUUVsZHlERk85aTdWZkdudG1TQnM5VC0zVkg4aTRuM1lYeXFHZFItbjQ?oc=5",
-      "source": "熊本日日新聞社",
-      "date": "2026-05-21",
-      "cat": "business"
     },
     {
       "title": "卸売市場 市民感謝デー（5月）を開催しました！",
@@ -136,20 +143,6 @@
       "cat": "toyosu"
     },
     {
-      "title": "インターネット都政モニターアンケート結果 生鮮食料品等の購買意識 〉 Q16 東京都中央卸売市場の認知|1月",
-      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE4wNEFBMThJRExadlJ6WDQ2d25pVXhNck1ldHBrcG1KVXhndDdkcWNfU2tlSW9lM0EzTGZMN2pSQlRTQjliU2JLVG1ZMlVSa3ljOWpxcTBaNmNzdUlEWFlrTXZTWmNDVzlLYmEtaGxTWWRGM3FQ?oc=5",
-      "source": "metro.tokyo.lg.jp",
-      "date": "2026-01-21",
-      "cat": "toyosu"
-    },
-    {
-      "title": "初競り、威勢よく景気づけ 宇都宮市中央卸売市場 冷凍メバチマグロなど入荷",
-      "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBFU1NDVmw0OVlSNDV3VFktUWRpNUdkc0JvWnlIbXQ5RERQeVVvU01KQlhNMGR6RlRFdVZSanBsQ19Ybkd1czBkMl9RQ1cxdkM2SzI0ZXZUc2ZMV1E?oc=5",
-      "source": "下野新聞社",
-      "date": "2026-01-05",
-      "cat": "market"
-    },
-    {
       "title": "東京都中央卸売市場・豊洲市場",
       "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9abnUyLWI2TWtuY0tKa1FoZlMwRUtHeDVsejhNTmwwck1sZi1iZ2ZhWlQ2OHgyU2xsQUdnM05mdzdpY1hNZGhGMzZoZTlFOWxQMHBiRVFwZmM3enM?oc=5",
       "source": "GO TOKYO, The Official Tokyo Travel Guide",
@@ -183,6 +176,13 @@
       "source": "maff.go.jp",
       "date": "2025-10-31",
       "cat": "toyosu"
+    },
+    {
+      "title": "愛媛の農水産物の市況",
+      "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE1CLVliN3BWZW9KSVlaVVN1TkxGcElISl9xQjkzZkpVYnZUWEFwY2d5WmxwTG5zSmpIb3hWY3lHUXFEVGNhYm42aTFWS0pVeU9IX3hLWDZKanNIV1VUV0VINDBsaTltUzVl?oc=5",
+      "source": "愛媛新聞",
+      "date": "2025-08-26",
+      "cat": "market"
     }
   ]
 }
