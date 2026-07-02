@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-02T07:46:45+09:00",
+  "updated": "2026-07-03T07:36:20+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -24,7 +24,7 @@
       "cat": "business"
     },
     {
-      "title": "７月の野菜の入荷量と卸売価格は平年並みの見通し 九州農政局",
+      "title": "7月の野菜の入荷量と卸売価格は平年並みの見通し 九州農政局",
       "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTE1NMU5qcHZ0U1pWWW9LVG52QnZVTmJWYm1kUXpYVElhVnlSTGd2Mzlkc29TZno0OWpDUDdnM1hadDFkcHJOLVhsWF9ZYlQtVHhwc3haWmtvQk45N0xCZ1c2VVZMU2U0c2ZjR09hY1d3?oc=5",
       "source": "Excite エキサイト",
       "date": "2026-06-30",
@@ -76,8 +76,15 @@
       "title": "三菱食品 伊藤社長インタビュー　新たな経営体制で「食品卸」の価値を最大化する",
       "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBwcUl2UXF5OTA3Sjc2b19LSzVZQTNWeklNcklKeFc0bW9NNUpZeDQ4UkVRZ1Z1Rmt4VUg5SWl3M0l1MXhyWTJ2SVYySVA4b1pXWXQ0eHNrZlpISmdRMXFJQktyd0LSAWpBVV95cUxQdnBuenZXVUhIR3NMaTYzVDJYNnJoeG9IZS1aSHVUU0lNVmtBQko1ZFhlYVBISjkwdGxXdHFuV3RYUmpRQ1hoTEZCVHh0eTVRbURJaENDY3NhdzNSbVZJUldDb2VqVnJoMWVn?oc=5",
       "source": "ダイヤモンド・チェーンストアオンライン",
-      "date": "2026-06-14",
+      "date": "2026-06-15",
       "cat": "business"
+    },
+    {
+      "title": "卸売市場 市民感謝デー（6月）を開催しました！",
+      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE90S1lpeS1vZ0JTVGRwQng5Ui1DaXJ1dV85b1E5YXM4SUdFc3E1eVB4RXJVc0NOQkdHQmdLYnMyeVRoR0pIRjJFYXEwT2hCNUVoNDNSTzJkaTZPek5JeUgtY2U3amc?oc=5",
+      "source": "city.oita.oita.jp",
+      "date": "2026-06-13",
+      "cat": "market"
     },
     {
       "title": "ナガスクジラが仙台市中央卸売市場に初入荷",
@@ -87,25 +94,11 @@
       "cat": "market"
     },
     {
-      "title": "【中央卸売市場】6月イベント情報",
-      "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE5PcDc2eVQyazR0U182SHJzUmlCUVJxTGxORVNsSmU4Ymhtc2ltLVY5b3BrbnpYTVVxOU1YVVQ5cDZqWjV2QnBrcEpyemhudUpmc3JMUWwxV3VhUVo0OV9aWDFDVEY0dXhi?oc=5",
-      "source": "my.metro.tokyo.lg.jp",
-      "date": "2026-06-08",
-      "cat": "toyosu"
-    },
-    {
       "title": "２６２０ 資金ショートは２０５６年度に８年前倒し 東京都中央卸売市場会計、２０２６年経営レポート どらったら！！",
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1Xb0xLYTJ6eDV1WkxhbzgzTnFqVWRNcmxMMGc1OUVEMDZoZHJzQU1oaXlFdV9GYjNQbmxER0tmR1BnOGg0MGpEWmlOWVFhR25MS1hxZ084bFJpdUFIaU1xSERBWGVwT0E5dkE?oc=5",
       "source": "どらったら！！",
       "date": "2026-06-07",
       "cat": "toyosu"
-    },
-    {
-      "title": "卸売市場 市民感謝デー（5月）を開催しました！",
-      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBPYXNocjRhUndROUxFMG53SXU5N3pPd0FFbE1NdkdLR2pLamtFY2tuR2VSRVJLMlNaTEZqTWhDMXBkQzRGZktzb2d4U29nRVBRNFJHSU0xWTNXR3JUemJ1RHI3akE?oc=5",
-      "source": "city.oita.oita.jp",
-      "date": "2026-05-09",
-      "cat": "market"
     },
     {
       "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年5月、東京都中央卸売市場）：関東農政局",
@@ -136,16 +129,23 @@
       "cat": "toyosu"
     },
     {
-      "title": "東京都中央卸売市場取扱高 茨城県青果22年連続1位",
-      "link": "https://news.google.com/rss/articles/CBMic0FVX3lxTE9YLUhRU19OaGk4bFpPUU9DOWVkMFE3SXU4NVdVV2U0V01NdWUxTHl5UDNkN0dPakpqTVRtSG5xNTlOYVZfR1V6YUNpTmstU3FzUkRFWU0wajhRVlFQMi1LVTBRUVV2LVZxWGJOZ2VfczVpOHM?oc=5",
-      "source": "茨城新聞クロスアイ",
-      "date": "2026-02-11",
+      "title": "インターネット都政モニターアンケート結果 生鮮食料品等の購買意識 〉 Q16 東京都中央卸売市場の認知|1月",
+      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE4wNEFBMThJRExadlJ6WDQ2d25pVXhNck1ldHBrcG1KVXhndDdkcWNfU2tlSW9lM0EzTGZMN2pSQlRTQjliU2JLVG1ZMlVSa3ljOWpxcTBaNmNzdUlEWFlrTXZTWmNDVzlLYmEtaGxTWWRGM3FQ?oc=5",
+      "source": "metro.tokyo.lg.jp",
+      "date": "2026-01-21",
       "cat": "toyosu"
     },
     {
       "title": "東京都中央卸売市場・豊洲市場",
       "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9abnUyLWI2TWtuY0tKa1FoZlMwRUtHeDVsejhNTmwwck1sZi1iZ2ZhWlQ2OHgyU2xsQUdnM05mdzdpY1hNZGhGMzZoZTlFOWxQMHBiRVFwZmM3enM?oc=5",
       "source": "GO TOKYO, The Official Tokyo Travel Guide",
+      "date": "2025-12-25",
+      "cat": "toyosu"
+    },
+    {
+      "title": "SANKO、大田市場の青果仲卸と業務提携 販路拡大へ",
+      "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTFBRcDRxc25POTNNM19JcDRlR2ZFSnI0a2pHYmJfOTEyTW5hclM2SWVmbVN0S2lZMTg2S3Axb2ZEeW1jWk5iUTFzMkNJNnNuWkpXVG9EY1BXT3JiVGd1VkgtaW9nVHZBeEVzZ2dkbg?oc=5",
+      "source": "日本経済新聞",
       "date": "2025-12-25",
       "cat": "toyosu"
     },
