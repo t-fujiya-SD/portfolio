@@ -71,6 +71,19 @@
   .memo{border-bottom:1px dotted #aaa;height:26px;}
   .checkcol{width:34px;text-align:center;font-size:15px;color:#999;}
 
+  /* ===== リンクボタン ===== */
+  .linkrow{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 6px;}
+  .linkbtn{
+    flex:1 1 240px;display:block;text-decoration:none;
+    border:1.5px solid var(--navy);border-radius:8px;padding:9px 14px;
+    color:var(--navy);background:#fff;page-break-inside:avoid;
+  }
+  .linkbtn.green{border-color:var(--accent);color:var(--accent);}
+  .linkbtn:hover{background:var(--bg-soft);}
+  .linkbtn .lb{font-weight:700;font-size:13px;display:block;}
+  .linkbtn .u{display:block;font-family:Menlo,monospace;font-size:10px;color:#888;font-weight:400;margin-top:3px;word-break:break-all;}
+  .linknote{font-size:11.5px;color:#777;margin:2px 0 10px;}
+
   .pagebreak{page-break-before:always;}
 
   footer{margin-top:44px;border-top:1px solid var(--line);padding-top:10px;font-size:11px;color:#888;display:flex;justify-content:space-between;}
@@ -127,7 +140,16 @@
     <tr><td>朝イチ画面</td><td>今朝の急募・出物・運搬余力・市場ニュース（毎朝自動更新）をひと目で</td></tr>
     <tr><td>卸さがす検索</td><td>業種（野菜／海鮮／乾物／配送業）やキーワードで相手を探せる</td></tr>
   </table>
-  <p>デモURL（スマホでそのまま触れます）：<span class="url">https://spicy-device.com/toyosu-relay/</span></p>
+  <div class="linkrow">
+    <a class="linkbtn" href="https://spicy-device.com/toyosu-relay/guide.html" target="_blank" rel="noopener">
+      <span class="lb">📖 アプリの使い方（かんたんガイド）</span>
+      <span class="u">https://spicy-device.com/toyosu-relay/guide.html</span>
+    </a>
+    <a class="linkbtn green" href="https://spicy-device.com/toyosu-relay/" target="_blank" rel="noopener">
+      <span class="lb">📱 デモを開く（スマホでそのまま触れます）</span>
+      <span class="u">https://spicy-device.com/toyosu-relay/</span>
+    </a>
+  </div>
   <div class="box warn">
     <div class="ttl">現在は「デモ版」です</div>
     いま公開中のものは説明・体験用で、<b>データは各端末の中だけ</b>（会社をまたいだ共有はまだできません）。
@@ -155,6 +177,22 @@
     <tr><td>安全・法令面</td><td>点呼・アルコールチェック・運転日報・業務記録の<b>作成と保存を支援</b>（記録漏れは一覧で確認可能）<div class="small">※ 記録の作成・保存を支援するもので、法令対応そのものを保証するものではありません</div></td></tr>
     <tr><td>ヘルプ便</td><td>積み残し・欠員時に「この便お願いできる人」を募集 → 引受 → 精算台帳に記録</td></tr>
   </table>
+
+  <div class="linkrow">
+    <a class="linkbtn" href="https://partner-a-delivery-app.vercel.app/wholesale" target="_blank" rel="noopener">
+      <span class="lb">🏢 卸（荷主）の管理サイト</span>
+      <span class="u">partner-a-delivery-app.vercel.app/wholesale</span>
+    </a>
+    <a class="linkbtn" href="https://partner-a-delivery-app.vercel.app/operations" target="_blank" rel="noopener">
+      <span class="lb">🗂 委託業者（本部）の管理サイト</span>
+      <span class="u">partner-a-delivery-app.vercel.app/operations</span>
+    </a>
+    <a class="linkbtn green" href="https://partner-a-delivery-app.vercel.app/today" target="_blank" rel="noopener">
+      <span class="lb">🚚 ドライバーの画面</span>
+      <span class="u">partner-a-delivery-app.vercel.app/today</span>
+    </a>
+  </div>
+  <p class="linknote">※ ルートミーはログインが必要です。立場（卸／委託本部／ドライバー）ごとに画面が切り替わります。デモ用のログイン情報は当日ご案内します。</p>
 
   <h4>ルートミー トライアルの進め方（案）</h4>
   <p>現在、旬彩坊様まわりで「受注 → ピッキング → 配送 → 完了 → 締め」を通しで検証する準備を進めています。eff様では次の小さな一歩から始められます。</p>
@@ -268,9 +306,13 @@
   <h3>参考URL一覧</h3>
   <table>
     <tr><th style="width:230px;">名称</th><th>URL</th></tr>
-    <tr><td>TOYO LINK（デモ）</td><td><span class="url">https://spicy-device.com/toyosu-relay/</span></td></tr>
-    <tr><td>仕入れ見える化レポート（サンプル）</td><td><span class="url">https://t-fujiya-sd.github.io/shunsaibou-report/tool/sample_report.html</span></td></tr>
-    <tr><td>スパイシーデバイス（会社サイト）</td><td><span class="url">https://spicy-device.com</span></td></tr>
+    <tr><td>TOYO LINK｜アプリの使い方</td><td><a class="url" href="https://spicy-device.com/toyosu-relay/guide.html" target="_blank" rel="noopener">https://spicy-device.com/toyosu-relay/guide.html</a></td></tr>
+    <tr><td>TOYO LINK｜デモ</td><td><a class="url" href="https://spicy-device.com/toyosu-relay/" target="_blank" rel="noopener">https://spicy-device.com/toyosu-relay/</a></td></tr>
+    <tr><td>ルートミー｜卸の管理サイト</td><td><a class="url" href="https://partner-a-delivery-app.vercel.app/wholesale" target="_blank" rel="noopener">https://partner-a-delivery-app.vercel.app/wholesale</a></td></tr>
+    <tr><td>ルートミー｜委託業者の管理サイト</td><td><a class="url" href="https://partner-a-delivery-app.vercel.app/operations" target="_blank" rel="noopener">https://partner-a-delivery-app.vercel.app/operations</a></td></tr>
+    <tr><td>ルートミー｜ドライバーの画面</td><td><a class="url" href="https://partner-a-delivery-app.vercel.app/today" target="_blank" rel="noopener">https://partner-a-delivery-app.vercel.app/today</a></td></tr>
+    <tr><td>仕入れ見える化レポート（サンプル）</td><td><a class="url" href="https://t-fujiya-sd.github.io/shunsaibou-report/tool/sample_report.html" target="_blank" rel="noopener">https://t-fujiya-sd.github.io/shunsaibou-report/tool/sample_report.html</a></td></tr>
+    <tr><td>スパイシーデバイス（会社サイト）</td><td><a class="url" href="https://spicy-device.com" target="_blank" rel="noopener">https://spicy-device.com</a></td></tr>
   </table>
   </div>
 
