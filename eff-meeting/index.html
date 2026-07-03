@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>eff様 すり合わせ資料（2026-07-06）</title>
+<style>
+  :root{
+    --navy:#1e3a5f;
+    --accent:#2f7d4f;
+    --line:#d8dee6;
+    --bg-soft:#f4f7fa;
+    --red:#b4442f;
+  }
+  *{box-sizing:border-box;}
+  body{
+    font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    color:#222; margin:0; background:#fff;
+    line-height:1.75; font-size:13.5px;
+  }
+  .page{max-width:860px;margin:0 auto;padding:36px 44px;}
+
+  /* ===== 表紙ヘッダー ===== */
+  .cover{border-bottom:4px solid var(--navy);padding-bottom:20px;margin-bottom:26px;}
+  .cover .date{color:#666;font-size:12px;letter-spacing:.06em;}
+  .cover h1{font-size:26px;color:var(--navy);margin:6px 0 4px;line-height:1.4;}
+  .cover .sub{font-size:14px;color:#444;}
+  .cover .meta{margin-top:14px;font-size:12.5px;color:#555;background:var(--bg-soft);border:1px solid var(--line);border-radius:8px;padding:10px 16px;display:flex;gap:28px;flex-wrap:wrap;}
+  .cover .meta b{color:var(--navy);}
+
+  /* ===== 見出し ===== */
+  h2{
+    font-size:19px;color:#fff;background:var(--navy);
+    padding:9px 16px;border-radius:6px;margin:38px 0 16px;
+    page-break-after:avoid;
+  }
+  h2 .no{display:inline-block;background:#fff;color:var(--navy);border-radius:4px;font-size:13px;padding:0 8px;margin-right:10px;vertical-align:2px;font-weight:700;}
+  h3{
+    font-size:15.5px;color:var(--navy);border-left:5px solid var(--accent);
+    padding-left:10px;margin:26px 0 10px;page-break-after:avoid;
+  }
+  h4{font-size:13.5px;color:#333;margin:18px 0 6px;page-break-after:avoid;}
+
+  p{margin:6px 0 10px;}
+  ul,ol{margin:4px 0 12px;padding-left:22px;}
+  li{margin:3px 0;}
+  b.kw{color:var(--navy);}
+
+  /* ===== 表 ===== */
+  table{width:100%;border-collapse:collapse;margin:10px 0 18px;font-size:12.5px;page-break-inside:auto;}
+  th,td{border:1px solid var(--line);padding:7px 10px;vertical-align:top;text-align:left;}
+  th{background:var(--bg-soft);color:var(--navy);font-weight:600;white-space:nowrap;}
+  tr{page-break-inside:avoid;}
+  td .small{color:#777;font-size:11.5px;}
+
+  /* ===== 部品 ===== */
+  .box{border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:12px 0;background:var(--bg-soft);page-break-inside:avoid;}
+  .box.point{border-left:6px solid var(--accent);background:#f2f8f4;}
+  .box.warn{border-left:6px solid var(--red);background:#fbf3f1;}
+  .box .ttl{font-weight:700;color:var(--navy);margin-bottom:4px;}
+  .url{font-family:Menlo,monospace;font-size:11.5px;background:#eef1f5;border-radius:4px;padding:1px 6px;word-break:break-all;}
+  .tag{display:inline-block;font-size:11px;font-weight:700;border-radius:4px;padding:1px 8px;margin-right:6px;vertical-align:1px;}
+  .tag.demo{background:#e3ecf7;color:#20507e;}
+  .tag.live{background:#e2f2e8;color:#20693f;}
+  .tag.plan{background:#f6ecd9;color:#8a6116;}
+  .step{display:flex;gap:10px;margin:10px 0;page-break-inside:avoid;}
+  .step .n{flex:0 0 26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;text-align:center;line-height:26px;font-size:13px;}
+  .step .t{flex:1;}
+  .step .t b{color:var(--navy);}
+  .memo{border-bottom:1px dotted #aaa;height:26px;}
+  .checkcol{width:34px;text-align:center;font-size:15px;color:#999;}
+
+  .pagebreak{page-break-before:always;}
+
+  footer{margin-top:44px;border-top:1px solid var(--line);padding-top:10px;font-size:11px;color:#888;display:flex;justify-content:space-between;}
+
+  @media print{
+    body{font-size:11.5px;}
+    h3{margin:18px 0 8px;}
+    .step{margin:7px 0;}
+    .page{max-width:none;padding:0;}
+    a{color:inherit;text-decoration:none;}
+    @page{size:A4;margin:16mm 14mm;}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ================= 表紙 ================= -->
+  <div class="cover">
+    <div class="date">2026年7月6日</div>
+    <h1>eff様 すり合わせ資料</h1>
+    <div class="sub">業務効率化ツールのご紹介と、お困りごとのヒヤリング</div>
+    <div class="meta">
+      <span><b>ご出席</b>：eff様（豊洲市場・野菜納品）／旬彩坊様</span>
+      <span><b>説明</b>：スパイシーデバイス 藤谷</span>
+      <span><b>Web</b>：spicy-device.com</span>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="ttl">本日の議題（3つ）</div>
+    <ol style="margin-bottom:0;">
+      <li><b>「TOYO LINK」と「ルートミー」のご説明</b>と、トライアルの進め方</li>
+      <li><b>旬彩坊様でこれまで行ってきた業務効率化のご紹介</b>（進め方の一例として）</li>
+      <li><b>eff様のお困りごと・手間に感じていることのヒヤリング</b>（事務スタッフの方へお伺いしたいこと）</li>
+    </ol>
+  </div>
+
+  <!-- ================= 議題1 ================= -->
+  <h2><span class="no">議題 1</span>TOYO LINK と ルートミー — 説明とトライアルの進め方</h2>
+
+  <h3>1-1. TOYO LINK 🧺 — 豊洲の卸どうしをつなぐ「在庫の過不足マッチング掲示板」</h3>
+  <p>
+    <span class="tag demo">デモ公開中</span>
+    「突発で在庫が足りない」「キャンセルで余った」を、いつもの電話仲間だけでなく<b class="kw">豊洲の仲間内に掲示で共有</b>。
+    電話で詰めた取引を<b class="kw">記録に残して月末にまとめて精算</b>する仕組みです。配送・人手の相談（持ってくよ／持ってける？）も掲示できます。
+  </p>
+  <table>
+    <tr><th style="width:150px;">できること</th><th>内容</th></tr>
+    <tr><td>掲示板</td><td>「求む（赤）」「出す（緑）」「持ってくよ（青）」「持ってける？（黄）」「相談（紫）」の5種類を色分け掲示。連絡先は常時表示＝<b>最後は電話で詰めるいまのやり方のまま</b></td></tr>
+    <tr><td>成立と記録</td><td>数量・単価を入れて双方がワンタップ確認 → 取引として記録。言った言わないを防止</td></tr>
+    <tr><td>月末精算</td><td>相手ごと・売り買い方向別に明細を自動集計。そのまま請求項目に使える（月末締めロック付き）</td></tr>
+    <tr><td>信用が見える</td><td>実名確認バッジ・取引実績・応答速度・フォロワー数で「安心して声をかけられる相手」が分かる</td></tr>
+    <tr><td>朝イチ画面</td><td>今朝の急募・出物・運搬余力・市場ニュース（毎朝自動更新）をひと目で</td></tr>
+    <tr><td>卸さがす検索</td><td>業種（野菜／海鮮／乾物／配送業）やキーワードで相手を探せる</td></tr>
+  </table>
+  <p>デモURL（スマホでそのまま触れます）：<span class="url">https://spicy-device.com/toyosu-relay/</span></p>
+  <div class="box warn">
+    <div class="ttl">現在は「デモ版」です</div>
+    いま公開中のものは説明・体験用で、<b>データは各端末の中だけ</b>（会社をまたいだ共有はまだできません）。
+    実際に複数社で使う「共有版」（各社ログイン式）は設計済みで、ご意見をいただいてから本開発に入ります。
+  </div>
+
+  <h4>TOYO LINK 今後の進め方（案）</h4>
+  <div class="step"><div class="n">1</div><div class="t"><b>フェーズ1｜無料トライアル：</b>まず<b>30社</b>に無料で共有し、実際の融通・精算で使っていただく</div></div>
+  <div class="step"><div class="n">2</div><div class="t"><b>フェーズ2｜調整：</b>30社からのフィードバックをもとに、機能・画面・言葉づかいを調整</div></div>
+  <div class="step"><div class="n">3</div><div class="t"><b>フェーズ3｜野菜業者へ拡大：</b>調整後、豊洲の<b>野菜業者の8割</b>まで一気に広げる</div></div>
+  <div class="step"><div class="n">4</div><div class="t"><b>フェーズ4｜有料化：</b>最初の30社は<b>月額500円</b>、31社目以降は<b>月額1,000円</b>でご利用いただく（先行参加の優遇）</div></div>
+  <div class="step"><div class="n">5</div><div class="t"><b>フェーズ5｜豊洲全体へ波及：</b>他の仲卸・納屋にも展開し、こちらも<b>8割</b>のカバーを目指す</div></div>
+
+  <h3>1-2. ルートミー（RoutMe）🚚 — 配送の「記録・締め・精算」をひとつにするアプリ</h3>
+  <p>
+    <span class="tag live">本番稼働中（ログイン式）</span>
+    配送ドライバー・卸（荷主）・委託本部の三者が同じ画面でつながる配送管理アプリです。
+    旬彩坊様の配送管理から生まれ、<b class="kw">高齢のドライバー・古いスマホでも使える</b>ことを最優先に作っています。
+  </p>
+  <table>
+    <tr><th style="width:150px;">立場</th><th>できること</th></tr>
+    <tr><td>ドライバー</td><td>今日のルート表示・タップで配達完了・地図連携・配達写真の証跡・給油/経費記録・売上（歩合）の見える化</td></tr>
+    <tr><td>卸（荷主）</td><td>店舗ごとの「本日注文あり/なし」を設定 → ドライバーのルートに自動反映。全ドライバーの進捗・完了時刻をリアルタイム確認</td></tr>
+    <tr><td>委託本部</td><td>ルート割当・単価設定・<b>日次の締め申請 → 承認 → 精算</b>・コスト集計（Excel再入力をなくす）</td></tr>
+    <tr><td>安全・法令面</td><td>点呼・アルコールチェック・運転日報・業務記録の<b>作成と保存を支援</b>（記録漏れは一覧で確認可能）<div class="small">※ 記録の作成・保存を支援するもので、法令対応そのものを保証するものではありません</div></td></tr>
+    <tr><td>ヘルプ便</td><td>積み残し・欠員時に「この便お願いできる人」を募集 → 引受 → 精算台帳に記録</td></tr>
+  </table>
+
+  <h4>ルートミー トライアルの進め方（案）</h4>
+  <p>現在、旬彩坊様まわりで「受注 → ピッキング → 配送 → 完了 → 締め」を通しで検証する準備を進めています。eff様では次の小さな一歩から始められます。</p>
+  <div class="step"><div class="n">1</div><div class="t"><b>ルート1本を登録：</b>いまの配送先リスト（Excelでも紙でも）をお預かりし、こちらで一括登録（貼り付け登録機能あり・作業はお任せで大丈夫です）</div></div>
+  <div class="step"><div class="n">2</div><div class="t"><b>1〜2週間の試運転：</b>ドライバーさんは「配達したらタップ」だけ。事務所側は進捗画面を見るだけ</div></div>
+  <div class="step"><div class="n">3</div><div class="t"><b>締めを1回体験：</b>締め申請 → 承認 → 支払明細まで1サイクル回し、「いまのExcel・手書きと比べてラクか」を確認</div></div>
+  <div class="step"><div class="n">4</div><div class="t"><b>判断：</b>効果があれば本利用の範囲・条件をご相談（費用はトライアル結果を見てからで結構です）</div></div>
+
+  <!-- ================= 議題2 ================= -->
+  <h2 class="pagebreak"><span class="no">議題 2</span>旬彩坊様での業務効率化のご紹介（一例として）</h2>
+
+  <p>旬彩坊様（野菜仲卸）では、この数ヶ月で下記の仕組みを実際に作り、日々の業務で使っています。<b class="kw">「毎週・毎日の手作業を、自動で回る仕組みに置き換える」</b>のが共通のやり方です。</p>
+
+  <table>
+    <tr><th style="width:190px;">つくったもの</th><th>ビフォー → アフター</th></tr>
+    <tr>
+      <td><b>① 配送管理アプリ</b><div class="small">スマホ対応Webアプリ</div></td>
+      <td>紙とExcelで管理していた配送先<b>約350件</b>を一元管理。取引ステータス（お得意様/検討中/終了など）をタップで更新、外注ルート・ドライバーの進捗もスマホで確認</td>
+    </tr>
+    <tr>
+      <td><b>② 週次売上の自動集計</b><div class="small">毎週水曜に自動実行</div></td>
+      <td>受発注サイト4系統（インフォマート/タノム/アスピット/販売大臣）のバラバラなCSV・Excelを<b>自動で集計しWebレポート化</b>。手作業の集計をゼロに（累計 約9万行を処理）</td>
+    </tr>
+    <tr>
+      <td><b>③ スキャン書類のAI自動読み取り</b><div class="small">10分ごとに自動処理</div></td>
+      <td>FAX・納品書・請求書を<b>スキャンして入れるだけ</b>でAIが読み取り、一覧表（スプレッドシート）に自動記録。手入力を大幅削減</td>
+    </tr>
+    <tr>
+      <td><b>④ 名刺管理アプリ</b><div class="small">スマホ対応・AI読み取り</div></td>
+      <td>いただいた名刺を<b>スキャンするだけ</b>でAIが読み取りデータベース化。スマホから検索・カテゴリ絞り込み・その場でタップ発信。<b>顧客ごとの接点回数も見える化</b>でき、「誰と・何回会ったか」を営業フォローに活かせる</td>
+    </tr>
+    <tr>
+      <td><b>⑤ 卸先向け「仕入れ見える化」レポート</b><div class="small">サンプル公開中</div></td>
+      <td>卸先の飲食店ごとに「品目別の単価・数量・値上がりアラート・他店との比較」をレポート化。<b>卸先へのサービス（付加価値）として提供</b>し、取引拡大にもつながる</td>
+    </tr>
+    <tr>
+      <td><b>⑥ ルートミー（議題1）</b><div class="small">本番稼働中</div></td>
+      <td>①の配送管理から発展。配送の記録・締め・精算までを一気通貫に</td>
+    </tr>
+  </table>
+
+  <div class="box point">
+    <div class="ttl">eff様へ</div>
+    旬彩坊様での取り組みは、あくまで<b>一例</b>です。<br>
+    <b>eff様のお困りごとや、面倒・手間に感じていることを教えていただき、そこの改善から一緒に進められればと思っています</b>（次の議題3でお伺いします）。<br>
+    最初から大きなシステムは入れません。いまのやり方（電話・FAX・Excel）を壊さず、「置き換えてラクになる所」だけ置き換えます。
+  </div>
+
+  <p>参考（公開サンプル）：仕入れ見える化レポート <span class="url">https://t-fujiya-sd.github.io/shunsaibou-report/tool/sample_report.html</span></p>
+
+  <!-- ================= 議題3 ================= -->
+  <h2 class="pagebreak"><span class="no">議題 3</span>お困りごと・手間に感じていることを教えてください</h2>
+
+  <p>
+    「どこが一番手間か」を教えていただくのが目的です。<b class="kw">★印は特に伺いたい項目</b>で、事前にメール等でご回答いただける場合はこの表をそのままお使いください。
+    当日は実際の帳票（注文メモ・納品書・請求書など）を見せていただけると、より具体的なご提案ができます。
+  </p>
+
+  <h3>A. 受注まわり（注文はどう入ってくるか）</h3>
+  <table>
+    <tr><th class="checkcol">✓</th><th>質問</th><th style="width:38%;">回答メモ</th></tr>
+    <tr><td class="checkcol">☐</td><td>★ 注文はどの手段で入りますか？（電話／FAX／LINE／メール／受発注サイト）それぞれの割合は？</td><td><div class="memo"></div></td></tr>
+    <tr><td class="checkcol">☐</td><td>★ 受注の締め時間と、直前の変更・キャンセルはどれくらいありますか？</td><td><div class="memo"></div></td></tr>
+    <tr><td class="checkcol">☐</td><td>受けた注文はどこに書き写しますか？（手書きメモ／Excel／システム）転記は何回発生しますか？</td><td><div class="memo"></div></td></tr>
+    <tr><td class="checkcol">☐</td><td>聞き間違い・書き間違いによる誤出荷は月に何回くらいありますか？</td><td><div class="memo"></div></td></tr>
+  </table>
+
+  <h3>B. 出荷・配送まわり</h3>
+  <table>
+    <tr><th class="checkcol">✓</th><th>質問</th><th style="width:38%;">回答メモ</th></tr>
+    <tr><td class="checkcol">☐</td><td>★ 配送コース数・車両台数・ドライバーさんの人数（自社／外注の内訳）は？</td><td><div class="memo"></div></td></tr>
+    <tr><td class="checkcol">☐</td><td>ピッキング（積み込み）リストは誰がどう作っていますか？</td><td><div class="memo"></div></td></tr>
+    <tr><td class="checkcol">☐</td><td>配達完了の確認はどうしていますか？（受領印／電話／特になし）誤配・未着のトラブル頻度は？</td><td><div class="memo"></div></td></tr>
+    <tr><td class="checkcol">☐</td><td>ドライバーさんの点呼・日報・アルコールチェックは記録していますか？（紙／なし）</td><td><div class="memo"></div></td></tr>
+    <tr><td class="checkcol">☐</td><td>急な欠員・積み残しのとき、どうやってカバーしていますか？（仲間に電話？）</td><td><div class="memo"></div></td></tr>
+  </table>
+
+  <h3>C. 請求・支払い・事務</h3>
+  <table>
+    <tr><th class="checkcol">✓</th><th>質問</th><th style="width:38%;">回答メモ</th></tr>
+    <tr><td class="checkcol">☐</td><td>★ 納品書・請求書は何で作っていますか？（手書き／Excel／販売大臣などのソフト）</td><td><div class="memo"></div></td></tr>
+    <tr><td class="checkcol">☐</td><td>★ 月末締めの請求業務に、毎月およそ何時間かかっていますか？何名で？</td><td><div class="memo"></div></td></tr>
+    <tr><td class="checkcol">☐</td><td>入金の確認（消込）はどうしていますか？未入金の管理で困ることは？</td><td><div class="memo"></div></td></tr>
+    <tr><td class="checkcol">☐</td><td>仕入れ側の伝票・請求書の処理はどうしていますか？（手入力の量）</td><td><div class="memo"></div></td></tr>
+  </table>
+
+  <h3>D. 在庫・仲間内の融通（TOYO LINKに直結）</h3>
+  <table>
+    <tr><th class="checkcol">✓</th><th>質問</th><th style="width:38%;">回答メモ</th></tr>
+    <tr><td class="checkcol">☐</td><td>★ 「急に足りない／余った」は週に何回くらい起きますか？そのときどうしていますか？</td><td><div class="memo"></div></td></tr>
+    <tr><td class="checkcol">☐</td><td>仲間内で品物を融通したとき、精算はどうしていますか？（その場現金／月末まとめ／うやむや）</td><td><div class="memo"></div></td></tr>
+    <tr><td class="checkcol">☐</td><td>声をかけられる相手は何社くらい？「もっと相手がいれば助かる」と感じることは？</td><td><div class="memo"></div></td></tr>
+  </table>
+
+  <h3>E. いまのデジタル環境と、困りごとトップ3</h3>
+  <table>
+    <tr><th class="checkcol">✓</th><th>質問</th><th style="width:38%;">回答メモ</th></tr>
+    <tr><td class="checkcol">☐</td><td>事務所のPC・スマホ・タブレットの台数と、使っているソフトは？（Excel／会計ソフト／LINE）</td><td><div class="memo"></div></td></tr>
+    <tr><td class="checkcol">☐</td><td>スタッフの皆さんはスマホ・PCの操作はお好きですか？苦手な方が多いですか？</td><td><div class="memo"></div></td></tr>
+    <tr><td class="checkcol">☐</td><td>★ <b>「一番時間を取られている作業」「一番ミスが怖い作業」「できればやめたい作業」</b>をそれぞれ1つ挙げるとしたら？</td><td><div class="memo"></div></td></tr>
+  </table>
+
+  <div class="box point">
+    <div class="ttl">ヒヤリング後の流れ</div>
+    ご回答をもとに、<b>「最初に自動化すると一番ラクになる1つ」</b>をこちらで選んでご提案します（旬彩坊様と同じ進め方）。
+    たたき台（試作）を無償でお見せしてから、導入するかどうかご判断ください。
+  </div>
+
+  <!-- ================= 参考 ================= -->
+  <div style="page-break-inside:avoid;">
+  <h3>参考URL一覧</h3>
+  <table>
+    <tr><th style="width:230px;">名称</th><th>URL</th></tr>
+    <tr><td>TOYO LINK（デモ）</td><td><span class="url">https://spicy-device.com/toyosu-relay/</span></td></tr>
+    <tr><td>仕入れ見える化レポート（サンプル）</td><td><span class="url">https://t-fujiya-sd.github.io/shunsaibou-report/tool/sample_report.html</span></td></tr>
+    <tr><td>スパイシーデバイス（会社サイト）</td><td><span class="url">https://spicy-device.com</span></td></tr>
+  </table>
+  </div>
+
+  <footer>
+    <span>eff様 すり合わせ資料（2026-07-06）</span>
+    <span>スパイシーデバイス 藤谷</span>
+  </footer>
+</div>
+</body>
+</html>
