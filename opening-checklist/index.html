@@ -13,9 +13,11 @@ header{background:linear-gradient(120deg,var(--navy),var(--navy2));color:#fff;pa
 .hd{display:flex;align-items:center;gap:8px}
 .hd h1{font-size:15px;font-weight:800;flex:1}
 .badge{font-size:10px;font-weight:700;background:var(--gold);color:#1c2a3a;padding:2px 8px;border-radius:20px;flex:none}
-.shift-tabs{display:flex;background:#fff;border-bottom:2px solid var(--border)}
-.st{flex:1;padding:11px 4px;font-size:14px;font-weight:700;border:none;background:none;cursor:pointer;color:var(--sub);border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .12s,border-color .12s}
-.st.on{color:var(--navy);border-bottom-color:var(--navy)}
+.shift-tabs{display:flex;gap:8px;background:#fff;padding:8px 16px 12px;border-bottom:1px solid var(--border)}
+.st{flex:1;padding:13px 8px;font-size:14.5px;font-weight:800;border:1.5px solid var(--border);border-radius:12px;background:#f8fafc;cursor:pointer;color:#475569;transition:all .12s;font-family:inherit}
+.st:active{transform:scale(.99)}
+#st-open.on{background:linear-gradient(120deg,#fcd34d,#f59e0b);color:#78350f;border-color:#f59e0b;box-shadow:0 3px 10px rgba(245,158,11,.32)}
+#st-close.on{background:linear-gradient(120deg,#6366f1,#4338ca);color:#fff;border-color:#4338ca;box-shadow:0 3px 10px rgba(67,56,202,.30)}
 .demo-note{background:var(--card);border-left:4px solid var(--gold);border-radius:10px;padding:10px 14px;margin:12px 0 0;font-size:12.5px;color:#3a4658}
 /* carry-over */
 .co-banner{background:#fffbeb;border:1px solid #fde68a;border-left:4px solid var(--amber);border-radius:10px;padding:12px 14px;margin:12px 0 0}
