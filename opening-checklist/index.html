@@ -213,6 +213,7 @@ header{background:linear-gradient(120deg,var(--navy),var(--navy2));color:#fff;pa
 .set-lang.on{background:var(--navy);color:#fff;border-color:var(--navy)}
 .set-more{font-size:11.5px;color:var(--sub);margin-top:9px;background:#f8fafc;border:1px dashed var(--border);border-radius:9px;padding:9px 11px}
 .set-reset{width:100%;background:#fff;color:var(--red);border:1.5px solid #fecaca;border-radius:10px;padding:11px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.set-link{display:block;text-align:center;background:var(--navy);color:#fff;border:none;border-radius:10px;padding:12px;font-size:13.5px;font-weight:800;text-decoration:none}
 /* lang menu */
 .lang-list{display:flex;flex-direction:column;gap:8px;margin:12px 0}
 .lang-opt{text-align:left;padding:12px 14px;font-size:15px;font-weight:700;border:1.5px solid var(--border);border-radius:10px;background:#fff;color:var(--ink);cursor:pointer;font-family:inherit}
@@ -294,6 +295,7 @@ ja:{title:'開店・閉店チェックリスト',shiftO:'🌅 開店チェック
   setEditLbl:'チェック項目の編集',setEditDesc:'各カテゴリ右上の「✏ 編集」から、項目の追加・削除・並べ替え・手順メモの編集ができます。',
   setAbout:'このデモについて',setAboutTxt:'サンプルデータで動作する体験版です。入力内容はこの端末内にのみ保存されます。',
   setResetLbl:'デモをリセット',setResetBtn:'サンプルデータを初期化',
+  setGuideLbl:'使い方ガイド',setGuideBtn:'📖 かんたんガイドを開く',
   units:['g','kg','ml','L','本','個','枚','合','人前','ポーション','皿'],
   cats:{hygiene:'衛生管理',haccp:'HACCP温度記録',reservation:'予約状況',kitchen:'キッチン',drink:'ドリンク',hall:'ホール',facility:'設備・外観',handover:'明日の予約・申し送り'}},
 en:{title:'Opening & Closing Checklist',shiftO:'🌅 Opening',shiftC:'🌙 Closing',
@@ -325,6 +327,7 @@ en:{title:'Opening & Closing Checklist',shiftO:'🌅 Opening',shiftC:'🌙 Closi
   setEditLbl:'Edit checklist items',setEditDesc:'Use “✏ Edit” at the top-right of each category to add, delete, reorder items and edit how-to notes.',
   setAbout:'About this demo',setAboutTxt:'A trial version running on sample data. Your input is saved only on this device.',
   setResetLbl:'Reset demo',setResetBtn:'Reset sample data',
+  setGuideLbl:'How to use',setGuideBtn:'📖 Open the quick guide',
   units:['g','kg','ml','L','pcs','bottles','sheets','portions'],
   cats:{hygiene:'Hygiene',haccp:'HACCP Temp Log',reservation:'Reservations',kitchen:'Kitchen',drink:'Drinks',hall:'Hall',facility:'Facilities',handover:'Tomorrow & Handover'}},
 zh:{title:'营业前后检查清单',shiftO:'🌅 开店检查',shiftC:'🌙 关店检查',
@@ -356,6 +359,7 @@ zh:{title:'营业前后检查清单',shiftO:'🌅 开店检查',shiftC:'🌙 关
   setEditLbl:'编辑检查项目',setEditDesc:'通过各分类右上角的"✏ 编辑"可添加、删除、排序项目并编辑操作说明。',
   setAbout:'关于本演示',setAboutTxt:'基于示例数据运行的体验版。您输入的内容仅保存在本设备中。',
   setResetLbl:'重置演示',setResetBtn:'重置示例数据',
+  setGuideLbl:'使用指南',setGuideBtn:'📖 打开简易指南',
   units:['g','kg','ml','L','个','瓶','张','份'],
   cats:{hygiene:'卫生管理',haccp:'HACCP温度记录',reservation:'预约情况',kitchen:'厨房',drink:'饮料',hall:'大厅',facility:'设施·外观',handover:'明日预约·交接'}}
 };
@@ -917,6 +921,7 @@ function renderSettings(){
       <div class="set-langs">${['ja','en','zh'].map(l=>`<button class="set-lang${l===lang?' on':''}" data-l="${l}">${l==='ja'?'日本語':l==='en'?'English':'中文'}</button>`).join('')}</div>
       <div class="set-more">${u().langMore}</div></div>
     <div class="set-card"><div class="set-lbl">${u().setEditLbl}</div><div class="set-desc">${u().setEditDesc}</div></div>
+    <div class="set-card"><div class="set-lbl">${u().setGuideLbl}</div><a class="set-link" href="guide.html">${u().setGuideBtn}</a></div>
     <div class="set-card"><div class="set-lbl">${u().setAbout}</div><div class="set-desc">${u().setAboutTxt}</div></div>
     <div class="set-card"><div class="set-lbl">${u().setResetLbl}</div><button class="set-reset" id="set-reset">${u().setResetBtn}</button></div>`;
   box.querySelector('#set-staff').oninput=e=>staffName=e.target.value;

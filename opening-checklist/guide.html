@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>開店・閉店チェックリスト かんたんガイド｜多言語で、迷わず確実に</title>
+<meta name="description" content="開店・閉店チェックリストの使い方ガイド。開店前・閉店後の『やること』をスマホでチェック。日本語・英語・中国語に対応し、誰がいつやったか記録に残ります。">
+<meta name="robots" content="noindex">
+<meta property="og:title" content="開店・閉店チェックリスト かんたんガイド">
+<meta property="og:description" content="紙では曖昧、スマホなら明確。多言語対応で外国人スタッフも迷わず、記録も残る開店・閉店チェックリスト。">
+<style>
+  :root{
+    --bg:#f3f6f4; --card:#fff; --ink:#1f2a37; --sub:#5b6573; --line:#e5e7eb;
+    --primary:#1c974d; --navy:#137a3f; --offer:#16a34a; --amber:#d97706; --open:#f59e0b; --close:#4338ca;
+    --shadow:0 1px 3px rgba(16,24,40,.08),0 6px 18px rgba(16,24,40,.06);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,system-ui,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.8;font-size:16px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .wrap{max-width:760px;margin:0 auto;padding:0 18px}
+  a{color:var(--primary)}
+  /* topbar */
+  .topbar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .topbar .in{max-width:760px;margin:0 auto;padding:11px 18px;display:flex;align-items:center;gap:9px}
+  .topbar .logo{font-weight:800;font-size:16px;letter-spacing:.02em}
+  .topbar .badge{font-size:11px;background:#e9f7ef;color:var(--navy);font-weight:700;padding:2px 9px;border-radius:999px}
+  .topbar .cta{margin-left:auto;background:var(--primary);color:#fff;text-decoration:none;font-weight:800;font-size:13px;padding:8px 14px;border-radius:999px}
+  /* hero */
+  .hero{background:linear-gradient(135deg,#137a3f,#1fae5a);color:#fff;padding:40px 0 46px;text-align:center}
+  .hero h1{font-size:28px;margin:0 0 6px;font-weight:800;letter-spacing:.01em}
+  .hero .sub{font-size:15px;opacity:.96;max-width:560px;margin:0 auto;line-height:1.9}
+  .hero .tag{display:inline-block;background:rgba(255,255,255,.18);font-size:12.5px;font-weight:700;padding:4px 13px;border-radius:999px;margin-bottom:16px}
+  .hero .btns{margin-top:22px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .hero .btn{text-decoration:none;font-weight:800;font-size:15px;padding:13px 22px;border-radius:999px}
+  .hero .btn.primary{background:#fff;color:var(--navy)}
+  .hero .btn.ghost{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.45)}
+  /* sections */
+  section{padding:38px 0}
+  section:nth-child(even of .sec){background:#fff}
+  .kicker{color:var(--primary);font-weight:800;font-size:13px;letter-spacing:.08em;margin:0 0 6px}
+  h2{font-size:22px;margin:0 0 6px;font-weight:800;line-height:1.45}
+  .lead{color:var(--sub);font-size:15px;margin:0 0 22px}
+  .cards3{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+  .mini-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 18px;box-shadow:var(--shadow)}
+  .mini-card .ic{font-size:30px;line-height:1}
+  .mini-card h3{font-size:16px;margin:10px 0 4px}
+  .mini-card p{font-size:13.5px;color:var(--sub);margin:0;line-height:1.75}
+  /* step list */
+  .steps{display:flex;flex-direction:column;gap:16px}
+  .step{display:flex;gap:15px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;box-shadow:var(--shadow)}
+  .step .no{flex-shrink:0;width:38px;height:38px;border-radius:50%;background:var(--primary);color:#fff;font-weight:800;font-size:17px;display:flex;align-items:center;justify-content:center}
+  .step h3{font-size:16.5px;margin:2px 0 4px}
+  .step p{font-size:14px;color:var(--sub);margin:0;line-height:1.8}
+  .split{display:grid;grid-template-columns:1fr 250px;gap:26px;align-items:center}
+  @media(max-width:680px){.split{grid-template-columns:1fr}.split .phone{order:-1}}
+  /* phone mockup */
+  .phone{width:250px;margin:0 auto;border:9px solid #137a3f;border-radius:34px;overflow:hidden;background:var(--bg);box-shadow:0 16px 36px rgba(16,24,40,.22)}
+  .phone .pbar{background:linear-gradient(135deg,#137a3f,#1fae5a);color:#fff;padding:10px 13px;font-size:12px;font-weight:800;display:flex;align-items:center;gap:6px}
+  .phone .scr{padding:10px;display:flex;flex-direction:column;gap:7px;min-height:60px}
+  .phone .tabbar{display:flex;justify-content:space-around;background:#fff;border-top:1px solid var(--line);padding:7px 2px;font-size:9px;color:var(--sub);font-weight:700}
+  .phone .tabbar .on{color:var(--primary)}
+  /* mock: language + shift toggles */
+  .seg{display:flex;gap:5px}
+  .seg span{flex:1;text-align:center;font-size:9.5px;font-weight:800;padding:6px 2px;border-radius:8px;border:1.2px solid var(--line);color:var(--sub);background:#f8fafc}
+  .seg span.on{background:var(--primary);color:#fff;border-color:var(--primary)}
+  .seg.shift span.o1.on{background:linear-gradient(120deg,#fcd34d,#f59e0b);color:#78350f;border-color:#f59e0b}
+  .seg.shift span.o2.on{background:linear-gradient(120deg,#6366f1,#4338ca);color:#fff;border-color:#4338ca}
+  .sec-h{font-size:10.5px;font-weight:800;color:var(--primary);margin:5px 2px 1px;text-align:left}
+  /* mock: check rows */
+  .ck{display:flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);border-radius:9px;padding:7px 9px;font-size:11px}
+  .ck .c{width:17px;height:17px;border-radius:50%;border:2px solid #cbd5e1;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;font-weight:800}
+  .ck.done .c{background:var(--offer);border-color:var(--offer);color:#fff}
+  .ck .t{flex:1;text-align:left;color:#334155;line-height:1.35}
+  .ck.done .t{color:#9aa6b2}
+  .ck .st{color:var(--offer);font-weight:800;font-size:8.5px;white-space:nowrap}
+  /* mock: manager rate + calendar */
+  .rate{background:#fff;border:1px solid var(--line);border-radius:11px;padding:10px;text-align:center}
+  .rate .big{font-size:28px;font-weight:800;color:var(--offer);line-height:1}
+  .rate .lbl{font-size:9.5px;color:var(--sub);font-weight:700;margin-top:2px}
+  .rate .by{font-size:9px;color:var(--sub);margin-top:5px;border-top:1px dashed var(--line);padding-top:5px}
+  .appbtn{display:block;text-align:center;background:var(--primary);color:#fff;font-weight:800;font-size:10px;padding:7px;border-radius:8px;margin-top:6px}
+  .cal7{display:flex;gap:3px;margin-top:2px}
+  .cal7 span{flex:1;text-align:center;font-size:8px;font-weight:800;padding:5px 0;border-radius:5px}
+  .cal7 .g{background:#dcfce7;color:#166534}.cal7 .a{background:#fef3c7;color:#92400e}
+  .pcap{text-align:center;color:var(--sub);font-size:12px;margin-top:10px}
+  /* callout */
+  .note{display:flex;gap:12px;background:#e9f7ef;border:1px solid #bfe6cd;border-radius:14px;padding:15px 17px;color:#14532d;font-size:14px;line-height:1.8;margin-top:20px}
+  .note .i{font-size:20px;line-height:1.4}
+  .note.warm{background:#fff7e6;border-color:#f3d999;color:#92400e}
+  .note.soft{background:#f0fdf4;border-color:#bbe8c9;color:#14532d}
+  /* two roles */
+  .roles{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:600px){.roles{grid-template-columns:1fr}}
+  .role{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--shadow)}
+  .role .rh{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+  .role .rc{font-size:26px}
+  .role .rt b{font-size:16px}
+  .role .rt span{display:block;font-size:11.5px;color:var(--sub);font-weight:700}
+  .role ul{margin:6px 0 0;padding-left:18px;font-size:13.5px;color:var(--sub);line-height:1.85}
+  .role.staff{border-top:4px solid var(--primary)}
+  .role.mgr{border-top:4px solid var(--close)}
+  /* price */
+  .price{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow);text-align:center}
+  .price .big{font-size:26px;font-weight:800;color:var(--offer)}
+  .price .small{color:var(--sub);font-size:14px;margin-top:6px}
+  .phase{display:flex;flex-direction:column;gap:10px;margin-top:18px;text-align:left}
+  .phase .p{display:flex;gap:12px;align-items:flex-start;font-size:14px}
+  .phase .dot{flex-shrink:0;width:24px;height:24px;border-radius:50%;background:#e9f7ef;color:var(--navy);font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;margin-top:2px}
+  /* coming */
+  .chips{display:flex;flex-wrap:wrap;gap:9px}
+  .chip{background:#fff;border:1px dashed #c7d5cc;border-radius:999px;padding:8px 14px;font-size:13.5px;font-weight:700;color:var(--sub)}
+  .chip b{color:var(--ink)}
+  /* faq */
+  details{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:4px 16px;margin-bottom:10px;box-shadow:var(--shadow)}
+  summary{font-weight:700;font-size:15px;padding:13px 0;cursor:pointer;list-style:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"＋";color:var(--primary);font-weight:800;margin-right:9px}
+  details[open] summary::before{content:"−"}
+  details p{margin:0 0 14px;color:var(--sub);font-size:14px;line-height:1.8}
+  /* final cta */
+  .finalcta{background:linear-gradient(135deg,#137a3f,#1fae5a);color:#fff;border-radius:20px;padding:34px 24px;text-align:center;margin:8px 0}
+  .finalcta h2{color:#fff}
+  .finalcta p{opacity:.96;font-size:15px;margin:6px 0 20px}
+  .finalcta .btn{display:inline-block;background:#fff;color:var(--navy);text-decoration:none;font-weight:800;font-size:16px;padding:14px 28px;border-radius:999px}
+  footer{text-align:center;color:var(--sub);font-size:12.5px;padding:30px 18px 50px;line-height:1.9}
+  .emoji-flow{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px;font-size:14px;font-weight:700;margin:6px 0 4px;color:var(--ink)}
+  .emoji-flow .a{color:var(--sub)}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="in">
+  <span class="logo">☑ 開店・閉店チェックリスト</span><span class="badge">かんたんガイド</span>
+  <a class="cta" href="https://spicy-device.com/opening-checklist/">デモを開く</a>
+</div></div>
+
+<!-- HERO -->
+<div class="hero"><div class="wrap">
+  <span class="tag">多言語 開店・閉店チェックリスト</span>
+  <h1>紙では曖昧、<br>スマホなら明確。</h1>
+  <p class="sub">開店前・閉店後の「やること」を、スマホでチェック。<b>日本語・英語・中国語に対応</b>し、外国人スタッフも迷わず、<b>誰がいつやったか</b>も記録に残ります。</p>
+  <div class="btns">
+    <a class="btn primary" href="https://spicy-device.com/opening-checklist/">▶ デモを開く</a>
+    <a class="btn ghost" href="#start">使い方を見る</a>
+  </div>
+</div></div>
+
+<!-- WHY -->
+<section class="sec"><div class="wrap">
+  <p class="kicker">これは何のツール？</p>
+  <h2>「紙のメモ・口頭の引き継ぎ」を、スマホのチェックリストに</h2>
+  <p class="lead">メモが見つからない、チェック漏れ、誰がやったか分からない――そんな毎日の"やること"のバラつきを、スマホでゼロにします。</p>
+  <div class="cards3">
+    <div class="mini-card"><div class="ic">🌐</div><h3>多言語対応</h3><p>日本語・英語・中国語に対応。外国人スタッフも新人さんも、初日から迷いません。</p></div>
+    <div class="mini-card"><div class="ic">✅</div><h3>迷わずチェック</h3><p>開店前・閉店後のやることを順番に。押すだけで完了、チェック漏れが起きません。</p></div>
+    <div class="mini-card"><div class="ic">🕐</div><h3>記録が残る</h3><p>誰が・いつ・どの項目をやったか自動で記録。あとから管理者が確認できます。</p></div>
+  </div>
+</div></section>
+
+<!-- FLOW -->
+<section class="sec" id="start"><div class="wrap">
+  <p class="kicker">まずはこれだけ</p>
+  <h2>基本の流れは、たった4ステップ</h2>
+  <div class="emoji-flow">🌐 言語を選ぶ <span class="a">→</span> ✅ チェックする <span class="a">→</span> 📤 送信 <span class="a">→</span> 👔 管理者が確認</div>
+  <div class="steps" style="margin-top:18px">
+    <div class="step"><div class="no">1</div><div><h3>言語と、開店／閉店を選ぶ</h3><p>上のタブで <b>日本語・English・中文</b> を切り替え。朝は <b style="color:var(--open)">🌅 開店</b>、夜は <b style="color:var(--close)">🌙 閉店</b> を選びます。</p></div></div>
+    <div class="step"><div class="no">2</div><div><h3>担当者名を入れてチェック</h3><p>項目を押すと「<b style="color:var(--offer)">完了 07:00 佐藤</b>」のように記録されます。温度・数量・写真も残せます。</p></div></div>
+    <div class="step"><div class="no">3</div><div><h3>送信する</h3><p>その日の記録が保存され、管理者に届きます。「HACCP記録として印刷」で紙にも出せます。</p></div></div>
+    <div class="step"><div class="no">4</div><div><h3>管理者が確認・承認</h3><p>「履歴」で各日の実施率・未チェック項目・担当者をひと目で。確認したら「承認」。</p></div></div>
+  </div>
+</div></section>
+
+<!-- TWO ROLES -->
+<section class="sec"><div class="wrap">
+  <p class="kicker">スタッフと管理者</p>
+  <h2>「記録するスタッフ」と「確認する管理者」の2つの立場</h2>
+  <p class="lead">現場は迷わずチェックするだけ。管理者はあとからまとめて確認・承認。役割がきれいに分かれています。</p>
+  <div class="roles">
+    <div class="role staff">
+      <div class="rh"><span class="rc">👤</span><span class="rt"><b>スタッフ</b><span>ホーム画面</span></span></div>
+      <ul>
+        <li>言語を選んで、担当者名を入れる</li>
+        <li>開店・閉店の項目を押してチェック</li>
+        <li>温度・数量・写真・申し送りを記録</li>
+        <li>終わったら送信</li>
+      </ul>
+    </div>
+    <div class="role mgr">
+      <div class="rh"><span class="rc">👔</span><span class="rt"><b>管理者</b><span>履歴・確認画面</span></span></div>
+      <ul>
+        <li>その日の実施率・未チェックを確認</li>
+        <li>担当者・提出時刻をチェック</li>
+        <li>問題なければ「承認」</li>
+        <li>過去7日間の実施状況を一覧で把握</li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+
+<!-- STAFF MOCK -->
+<section class="sec"><div class="wrap">
+  <p class="kicker">スタッフの画面</p>
+  <h2>チェックはこんな見た目です</h2>
+  <p class="lead">丸いボタンを押すだけ。押すと <b style="color:var(--offer)">「完了 時刻 担当者」</b> が記録されます。言語は上のタブでいつでも切替。</p>
+  <div class="split">
+    <div>
+      <div class="note"><span class="i">💡</span><div>言語（<b>日本語／English／中文</b>）と、<b style="color:var(--open)">🌅開店</b>／<b style="color:var(--close)">🌙閉店</b> は上のタブで切り替え。項目は店に合わせて追加・並べ替えもできます。</div></div>
+    </div>
+    <div>
+      <div class="phone">
+        <div class="pbar">☑ 開店チェックリスト</div>
+        <div class="scr">
+          <div class="seg"><span class="on">日本語</span><span>English</span><span>中文</span></div>
+          <div class="seg shift"><span class="o1 on">🌅 開店</span><span class="o2">🌙 閉店</span></div>
+          <div class="sec-h">衛生管理</div>
+          <div class="ck done"><span class="c">✓</span><span class="t">手洗い・消毒の実施確認</span><span class="st">完了 07:00 佐藤</span></div>
+          <div class="ck done"><span class="c">✓</span><span class="t">スタッフの健康状態チェック</span><span class="st">07:02 Nguyen</span></div>
+          <div class="ck done"><span class="c">✓</span><span class="t">ユニフォーム確認</span><span class="st">07:04 山田</span></div>
+          <div class="ck"><span class="c">✓</span><span class="t">トイレの清掃</span></div>
+        </div>
+        <div class="tabbar"><span class="on">🏠ホーム</span><span>🕐履歴</span><span>🔔お知らせ</span><span>⚙️設定</span></div>
+      </div>
+      <p class="pcap">スタッフのチェック画面</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- MANAGER MOCK -->
+<section class="sec"><div class="wrap">
+  <p class="kicker">管理者の画面</p>
+  <h2>確認は「履歴」で、実施率と承認をひと目で</h2>
+  <p class="lead">各日の <b>実施率</b>・<b>担当者</b>・<b>未チェック</b> がまとまります。問題なければ「承認」。過去7日間もカレンダーで一覧。</p>
+  <div class="split">
+    <div>
+      <div class="note soft"><span class="i">👔</span><div><b>管理者はあとからまとめて確認。</b>誰が・いつ提出したか、どこが未チェックかが分かるので、電話で確認する手間が減ります。エリアマネージャーの承認記録も残ります。</div></div>
+    </div>
+    <div>
+      <div class="phone">
+        <div class="pbar">🕐 履歴・確認 ・ 本日</div>
+        <div class="scr">
+          <div class="rate"><div class="big">100%</div><div class="lbl">🌅 開店チェック 完了</div><div class="by">担当：佐藤　提出 08:12</div>
+            <span class="appbtn">✓ 確認する（管理者）</span></div>
+          <div class="sec-h">過去7日間</div>
+          <div class="cal7"><span class="g">100</span><span class="a">92</span><span class="g">100</span><span class="a">88</span><span class="a">83</span><span class="a">96</span><span class="g">100</span></div>
+        </div>
+        <div class="tabbar"><span>🏠ホーム</span><span class="on">🕐履歴</span><span>🔔お知らせ</span><span>⚙️設定</span></div>
+      </div>
+      <p class="pcap">管理者の確認画面</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- FEATURES -->
+<section class="sec"><div class="wrap">
+  <p class="kicker">毎日が少しラクになる</p>
+  <h2>あると便利な機能</h2>
+  <div class="cards3">
+    <div class="mini-card"><div class="ic">🌡</div><h3>HACCP温度記録</h3><p>冷蔵庫・加熱温度を記録。OK/NG判定つきで、そのまま衛生管理の記録に。</p></div>
+    <div class="mini-card"><div class="ic">📅</div><h3>予約・申し送り</h3><p>当日の予約や、翌日への申し送りを記録。前日の内容が翌朝の担当に自動で届きます。</p></div>
+    <div class="mini-card"><div class="ic">📖</div><h3>やり方を表示</h3><p>「?」で手順やコツを表示。新人さんでも基準どおりにできます。</p></div>
+    <div class="mini-card"><div class="ic">📷</div><h3>写真で報告</h3><p>「ここまで洗う」等を写真で。言葉が通じにくくても基準を共有できます。</p></div>
+    <div class="mini-card"><div class="ic">✏️</div><h3>項目を編集</h3><p>店に合わせて項目を追加・削除・並べ替え。手順メモも自由に書けます。</p></div>
+    <div class="mini-card"><div class="ic">🖨</div><h3>印刷で記録</h3><p>その日のチェックを「HACCP記録」として紙にも出力できます。</p></div>
+  </div>
+</div></section>
+
+<!-- START -->
+<section class="sec"><div class="wrap">
+  <p class="kicker">はじめかた</p>
+  <h2>3分でスタート</h2>
+  <div class="steps">
+    <div class="step"><div class="no">1</div><div><h3>QRコードを読む</h3><p>チラシのQRコード、または下のボタンから開きます。アプリのインストールは不要です。</p></div></div>
+    <div class="step"><div class="no">2</div><div><h3>言語と担当者名を選ぶ</h3><p>上のタブで言語を選び、「担当者」に自分の名前を入れます。</p></div></div>
+    <div class="step"><div class="no">3</div><div><h3>チェックを始める</h3><p>ホーム画面から開店・閉店をチェック。<b>スマホのホーム画面に追加</b>しておくと、毎日ワンタップで開けます。</p></div></div>
+  </div>
+  <div class="note warm"><span class="i">📱</span><div>複数人で同じリストを共有する仕組みや、ホーム画面追加でアプリのように使える機能（オフライン対応）は順次ご用意します。まずは気軽に触ってみてください。</div></div>
+</div></section>
+
+<!-- PRICE -->
+<section class="sec"><div class="wrap">
+  <p class="kicker">料金</p>
+  <h2>配送でお取引中のお店は、初回無料</h2>
+  <div class="price">
+    <div class="big">初回無料でお試し</div>
+    <div class="small">毎月一定量（目安：月15万円以上のお取引 または 週3回以上の配送）でお取引のあるお店は、初回無料でお試しいただけます。</div>
+    <div class="phase">
+      <div class="p"><span class="dot">1</span><div><b>お取引先のお店：月 ¥500〜</b><br>コーヒー1杯ぶんほど。お取引が続く間はうれしい価格で。</div></div>
+      <div class="p"><span class="dot">2</span><div><b>その他のお店：月 ¥1,480〜</b><br>項目の初期設定を代行する場合は別途ご相談ください。</div></div>
+    </div>
+  </div>
+  <div class="note"><span class="i">🤝</span><div>単機能でも、<b>チェック漏れ・引き継ぎミスを月1回防げば</b>十分に元が取れます（食材ロス・やり直し・最悪はガス／施錠の忘れ）。</div></div>
+</div></section>
+
+<!-- COMING -->
+<section class="sec"><div class="wrap">
+  <p class="kicker">これから増えていきます</p>
+  <h2>少しずつ、機能を公開していきます</h2>
+  <p class="lead">最初はシンプルに。使われ方を見ながら、順番に開けていきます。</p>
+  <div class="chips">
+    <span class="chip">📱 <b>ホーム画面に追加</b>（オフライン対応）</span>
+    <span class="chip">🌐 <b>ベトナム語・ネパール語など</b>言語追加</span>
+    <span class="chip">🔗 <b>店長が作ったリストを全員で共有</b></span>
+    <span class="chip">📊 <b>完了ログのCSV出力・店長ビュー</b></span>
+  </div>
+</div></section>
+
+<!-- FAQ -->
+<section class="sec"><div class="wrap">
+  <p class="kicker">よくある質問</p>
+  <h2>気になるところ</h2>
+  <details><summary>外国人スタッフでも使えますか？</summary><p>はい。言語を切り替えれば母語で表示されます。いまは日本語・英語・中国語に対応。ご要望に応じてベトナム語・ネパール語なども追加できます。</p></details>
+  <details><summary>ネットがない時は使えますか？</summary><p>入力した内容はその端末に保存されます。スマホのホーム画面に追加すればアプリのように使えます（本格的なオフライン対応は順次ご用意します）。</p></details>
+  <details><summary>項目を自分の店に合わせて変えられますか？</summary><p>できます。各カテゴリの「✏ 編集」から、項目の追加・削除・並べ替え・手順メモの編集ができます。</p></details>
+  <details><summary>誰がやったか分かりますか？</summary><p>項目ごとに「完了 時刻 担当者」が記録され、管理者が「履歴」画面で確認・承認できます。</p></details>
+  <details><summary>紙の記録も残せますか？</summary><p>はい。「HACCP記録として印刷」で、その日のチェックを紙に出力できます。</p></details>
+</div></section>
+
+<!-- FINAL -->
+<section class="sec"><div class="wrap">
+  <div class="finalcta">
+    <h2>まずは、デモを触ってみてください</h2>
+    <p>紙では曖昧、スマホなら明確。誰でも迷わず、確実に。</p>
+    <a class="btn" href="https://spicy-device.com/opening-checklist/">▶ 開店・閉店チェックリストを開く</a>
+  </div>
+</div></section>
+
+<footer>
+  開店・閉店チェックリスト ｜ 多言語対応（日本語・英語・中国語）<br>
+  ご不明な点は、ご紹介元または運営（株式会社スパイシーデバイス）までお気軽にどうぞ。
+</footer>
+
+</body>
+</html>
