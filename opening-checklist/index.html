@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>開店・閉店チェックリスト｜デモ</title>
 <style>
-:root{--navy:#1c3a5e;--navy2:#27496d;--gold:#c9a84a;--ink:#1f2733;--sub:#5b6675;--bg:#f4f6f8;--card:#fff;--border:#e3e9f0;--green:#16a34a;--amber:#d97706;--red:#dc2626;--blue:#2563eb;--sb:env(safe-area-inset-bottom,0px)}
+:root{--navy:#1c974d;--navy2:#137a3f;--gold:#e0a92e;--ink:#1f2733;--sub:#5b6675;--bg:#f4f7f4;--card:#fff;--border:#e3e9f0;--green:#16a34a;--amber:#d97706;--red:#dc2626;--blue:#2563eb;--sb:env(safe-area-inset-bottom,0px)}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",Meiryo,sans-serif;color:var(--ink);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased;padding-bottom:calc(80px + var(--sb))}
 .wrap{max-width:640px;margin:0 auto;padding:0 16px}
@@ -13,7 +13,7 @@ header{background:linear-gradient(120deg,var(--navy),var(--navy2));color:#fff;pa
 .hd{display:flex;align-items:center;gap:8px}
 .hd h1{font-size:15px;font-weight:800;flex:1}
 .badge{font-size:10px;font-weight:700;background:var(--gold);color:#1c2a3a;padding:2px 8px;border-radius:20px;flex:none}
-.shift-tabs{display:flex;background:#fff;border-bottom:2px solid var(--border);position:sticky;top:49px;z-index:40}
+.shift-tabs{display:flex;background:#fff;border-bottom:2px solid var(--border)}
 .st{flex:1;padding:11px 4px;font-size:14px;font-weight:700;border:none;background:none;cursor:pointer;color:var(--sub);border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .12s,border-color .12s}
 .st.on{color:var(--navy);border-bottom-color:var(--navy)}
 .demo-note{background:var(--card);border-left:4px solid var(--gold);border-radius:10px;padding:10px 14px;margin:12px 0 0;font-size:12.5px;color:#3a4658}
@@ -39,7 +39,7 @@ header{background:linear-gradient(120deg,var(--navy),var(--navy2));color:#fff;pa
 .item{display:flex;align-items:flex-start;border-bottom:1px solid var(--border)}
 .item:last-child{border-bottom:none}
 .item label{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;flex:1;cursor:pointer;min-width:0;-webkit-tap-highlight-color:transparent}
-.cb{width:22px;height:22px;border:2px solid var(--border);border-radius:6px;flex:none;display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s;margin-top:1px}
+.cb{width:24px;height:24px;border:2px solid #cbd5e1;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s;margin-top:0}
 .item.ck .cb{background:var(--green);border-color:var(--green)}
 .item.ck .cb::after{content:"";display:block;width:6px;height:11px;border:2.5px solid #fff;border-top:none;border-left:none;transform:rotate(42deg) translateY(-2px)}
 .item-text{font-size:14px;flex:1;line-height:1.4}
@@ -174,8 +174,50 @@ header{background:linear-gradient(120deg,var(--navy),var(--navy2));color:#fff;pa
 .view-btn,.f-lang button{flex:1;font-size:12.5px;font-weight:700;border:1.5px solid var(--border);border-radius:9px;padding:9px 4px;background:#fff;cursor:pointer;color:var(--sub)}
 .view-btn.on{background:var(--navy);color:#fff;border-color:var(--navy)}
 .f-lang button.on{border-color:var(--navy);color:var(--navy);background:#f0f4ff}
+/* header buttons */
+.hd-btn{background:rgba(255,255,255,.16);border:none;color:#fff;font-size:16px;width:32px;height:32px;border-radius:9px;cursor:pointer;flex:none;display:flex;align-items:center;justify-content:center;line-height:1;padding:0}
+.hd-btn:active{background:rgba(255,255,255,.30)}
+/* language tabs */
+.lang-tabs{display:flex;gap:6px;background:#fff;padding:9px 16px;border-bottom:1px solid var(--border)}
+.lang-tabs .lt{flex:1;padding:8px 4px;font-size:13px;font-weight:700;border:1.5px solid var(--border);border-radius:9px;background:#fff;color:var(--sub);cursor:pointer;font-family:inherit}
+.lang-tabs .lt.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+/* completion meta */
+.item-meta{margin-left:auto;font-size:11px;font-weight:800;color:var(--green);white-space:nowrap;flex:none;padding-top:3px;letter-spacing:.2px}
+/* bottom tab bar */
+.tabbar{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);display:flex;z-index:60;padding-bottom:var(--sb);box-shadow:0 -2px 12px rgba(15,23,42,.05)}
+.tabbar .tb{flex:1;background:none;border:none;cursor:pointer;padding:8px 2px 7px;display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--sub);font-family:inherit}
+.tabbar .tb .ti{font-size:19px;line-height:1;filter:grayscale(1);opacity:.5}
+.tabbar .tb .tl{font-size:10.5px;font-weight:700}
+.tabbar .tb.on{color:var(--navy)}
+.tabbar .tb.on .ti{filter:none;opacity:1}
+/* notice */
+.nt-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:13px 15px;margin:12px 0}
+.nt-card.warn{background:#fffbeb;border-color:#fde68a;border-left:4px solid var(--amber)}
+.nt-h{font-size:13.5px;font-weight:800;color:var(--navy);margin-bottom:8px}
+.nt-card.warn .nt-h{color:#92400e}
+.nt-row{font-size:13px;color:var(--ink);margin:5px 0;display:flex;gap:8px;flex-wrap:wrap;align-items:center;line-height:1.5}
+.nt-k{font-weight:700;color:var(--sub);flex:none}
+.nt-badge{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:20px}
+.nt-badge.gray{background:#f1f5f9;color:#64748b}.nt-badge.blue{background:#eff6ff;color:#1d4ed8}.nt-badge.green{background:#dcfce7;color:#166534}.nt-badge.amber{background:#fef3c7;color:#92400e}
+/* settings */
+.set-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 15px;margin:12px 0}
+.set-lbl{font-size:12px;font-weight:800;color:var(--navy);margin-bottom:8px}
+.set-val{font-size:14px;font-weight:600}
+.set-desc{font-size:12.5px;color:var(--sub);line-height:1.7}
+.set-inp{width:100%;border:1px solid var(--border);border-radius:9px;padding:9px 11px;font-size:14px;font-family:inherit;outline:none}
+.set-inp:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(28,151,77,.14)}
+.set-langs{display:flex;gap:6px}
+.set-lang{flex:1;padding:9px 4px;font-size:13px;font-weight:700;border:1.5px solid var(--border);border-radius:9px;background:#fff;color:var(--sub);cursor:pointer;font-family:inherit}
+.set-lang.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.set-more{font-size:11.5px;color:var(--sub);margin-top:9px;background:#f8fafc;border:1px dashed var(--border);border-radius:9px;padding:9px 11px}
+.set-reset{width:100%;background:#fff;color:var(--red);border:1.5px solid #fecaca;border-radius:10px;padding:11px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit}
+/* lang menu */
+.lang-list{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.lang-opt{text-align:left;padding:12px 14px;font-size:15px;font-weight:700;border:1.5px solid var(--border);border-radius:10px;background:#fff;color:var(--ink);cursor:pointer;font-family:inherit}
+.lang-opt.on{border-color:var(--navy);color:var(--navy);background:#f0fdf4}
+.lang-more{font-size:12px;color:var(--sub);background:#f8fafc;border:1px dashed var(--border);border-radius:10px;padding:11px 13px;margin-bottom:12px;line-height:1.6}
 @media print{
-  header,.shift-tabs,.demo-note,.footer-bar,.submit-area,.item-acts,.reorder,.man-edit-btn,.modal-ov,.how-btn,.cam-btn,.temp-how{display:none!important}
+  header,.lang-tabs,.shift-tabs,.demo-note,.footer-bar,.tabbar,.submit-area,.item-acts,.reorder,.man-edit-btn,.modal-ov,.how-btn,.cam-btn,.temp-how{display:none!important}
   body{padding:0;background:#fff}
   .cat{border:1px solid #ccc;page-break-inside:avoid;border-radius:0}
   #view-manager,.co-banner{display:none!important}
@@ -184,37 +226,40 @@ header{background:linear-gradient(120deg,var(--navy),var(--navy2));color:#fff;pa
 </style>
 </head>
 <body>
-<header><div class="wrap hd"><h1 id="hd-title">開店・閉店チェックリスト</h1><span class="badge">DEMO</span></div></header>
+<header><div class="wrap hd"><button class="hd-btn" onclick="switchView('settings')" aria-label="menu">☰</button><h1 id="hd-title">開店チェックリスト</h1><span class="badge">DEMO</span><button class="hd-btn" onclick="openLangMenu()" aria-label="language">🌐</button></div></header>
+<div class="lang-tabs" id="lang-tabs">
+  <button class="lt on" data-l="ja" onclick="setLang('ja')">日本語</button>
+  <button class="lt" data-l="en" onclick="setLang('en')">English</button>
+  <button class="lt" data-l="zh" onclick="setLang('zh')">中文</button>
+</div>
 <div class="shift-tabs" id="shift-tabs">
   <button class="st on" id="st-open" onclick="setShift('open')"><span id="st-open-lbl">🌅 開店チェック</span></button>
   <button class="st" id="st-close" onclick="setShift('close')"><span id="st-close-lbl">🌙 閉店チェック</span></button>
 </div>
 <div class="wrap">
   <div class="demo-note" id="demo-note"></div>
-  <div id="view-staff">
+  <div id="view-home">
     <div id="co-banner"></div>
     <div id="checklist-body"></div>
     <div class="submit-area" id="submit-area"></div>
   </div>
-  <div id="view-manager" style="display:none">
+  <div id="view-history" style="display:none">
     <div class="mgr-today" id="mgr-today"></div>
     <div class="cal-section"><div class="cal-title" id="cal-title"></div><div class="cal-grid" id="cal-grid"></div></div>
     <div class="det-panel" id="det-panel" style="display:none"></div>
   </div>
+  <div id="view-notice" style="display:none"></div>
+  <div id="view-settings" style="display:none"></div>
 </div>
-<div class="footer-bar">
-  <div class="f-view">
-    <button class="view-btn on" id="fb-staff" onclick="switchView('staff')"><span id="fb-sl">📋 記録</span></button>
-    <button class="view-btn" id="fb-mgr" onclick="switchView('manager')"><span id="fb-ml">👔 確認</span></button>
-  </div>
-  <div class="f-lang">
-    <button class="on" onclick="setLang('ja')">日</button>
-    <button onclick="setLang('en')">EN</button>
-    <button onclick="setLang('zh')">中</button>
-  </div>
-</div>
+<nav class="tabbar">
+  <button class="tb on" data-v="home" onclick="switchView('home')"><span class="ti">🏠</span><span class="tl" id="tb-home">ホーム</span></button>
+  <button class="tb" data-v="history" onclick="switchView('history')"><span class="ti">🕐</span><span class="tl" id="tb-history">履歴</span></button>
+  <button class="tb" data-v="notice" onclick="switchView('notice')"><span class="ti">🔔</span><span class="tl" id="tb-notice">お知らせ</span></button>
+  <button class="tb" data-v="settings" onclick="switchView('settings')"><span class="ti">⚙️</span><span class="tl" id="tb-settings">設定</span></button>
+</nav>
 <div class="modal-ov" id="manual-modal" style="display:none"><div class="modal-box" id="manual-box"></div></div>
 <div class="modal-ov" id="course-modal" style="display:none"><div class="modal-box" id="course-box"></div></div>
+<div class="modal-ov" id="lang-modal" style="display:none"><div class="modal-box" id="lang-box"></div></div>
 <script>
 // ── UI strings ────────────────────────────────────────────────
 const UI={
@@ -237,6 +282,16 @@ ja:{title:'開店・閉店チェックリスト',shiftO:'🌅 開店チェック
   courseMgr:'コース編集',courseMgrTitle:'コース内容の登録',courseAdd:'＋ コースを追加',courseEmpty:'コースが登録されていません。',coursePlace:'例：特選コース 8,000円',
   channels:['電話','食べログ','ぐるなび','一休','ホットペッパー','HP','その他'],
   approveBtn:'✓ 確認する（管理者）',approvedLbl:'確認済み',byLbl:'担当',
+  clTitleO:'開店チェックリスト',clTitleC:'閉店チェックリスト',
+  navHome:'ホーム',navHistory:'履歴',navNotice:'お知らせ',navSettings:'設定',doneLbl:'完了',
+  langMenuTitle:'表示言語',langMore:'＋ ベトナム語・ネパール語・韓国語なども追加できます',
+  noticeCarry:'前日閉店からの申し送り',noticeTodayOpen:'本日の開店チェック',noticeTodayClose:'本日の閉店チェック',
+  noticeSubmitted:'提出済み',noticeNotYet:'未提出',noticeApproved:'管理者 確認済み',noticePending:'管理者の確認待ち',
+  noticeReminderH:'リマインド',noticeReminder:'閉店前に「ガス元栓」「施錠」の確認を忘れずに。',
+  setStoreLbl:'店舗',setStore:'中華ダイニング 鳳来（デモ）',setStaffLbl:'担当者名（初期値）',setStaffPh:'例：佐藤',setLangLbl:'表示言語',
+  setEditLbl:'チェック項目の編集',setEditDesc:'各カテゴリ右上の「✏ 編集」から、項目の追加・削除・並べ替え・手順メモの編集ができます。',
+  setAbout:'このデモについて',setAboutTxt:'サンプルデータで動作する体験版です。入力内容はこの端末内にのみ保存されます。',
+  setResetLbl:'デモをリセット',setResetBtn:'サンプルデータを初期化',
   units:['g','kg','ml','L','本','個','枚','合','人前','ポーション','皿'],
   cats:{hygiene:'衛生管理',haccp:'HACCP温度記録',reservation:'予約状況',kitchen:'キッチン',drink:'ドリンク',hall:'ホール',facility:'設備・外観',handover:'明日の予約・申し送り'}},
 en:{title:'Opening & Closing Checklist',shiftO:'🌅 Opening',shiftC:'🌙 Closing',
@@ -258,6 +313,16 @@ en:{title:'Opening & Closing Checklist',shiftO:'🌅 Opening',shiftC:'🌙 Closi
   courseMgr:'Edit courses',courseMgrTitle:'Course presets',courseAdd:'＋ Add course',courseEmpty:'No courses registered.',coursePlace:'e.g. Premium Course ¥8,000',
   channels:['Phone','Tabelog','Gurunavi','Ikyu','HotPepper','Website','Other'],
   approveBtn:'✓ Approve (Manager)',approvedLbl:'Approved',byLbl:'By',
+  clTitleO:'Opening Checklist',clTitleC:'Closing Checklist',
+  navHome:'Home',navHistory:'History',navNotice:'Alerts',navSettings:'Settings',doneLbl:'Done',
+  langMenuTitle:'Language',langMore:'+ Vietnamese, Nepali, Korean and more can be added',
+  noticeCarry:'Handover from last night',noticeTodayOpen:"Today's opening check",noticeTodayClose:"Today's closing check",
+  noticeSubmitted:'Submitted',noticeNotYet:'Not submitted',noticeApproved:'Approved by manager',noticePending:'Awaiting manager approval',
+  noticeReminderH:'Reminder',noticeReminder:'Before closing, don’t forget the gas main valve and locking up.',
+  setStoreLbl:'Store',setStore:'Chinese Dining Hourai (Demo)',setStaffLbl:'Default staff name',setStaffPh:'e.g. Sato',setLangLbl:'Language',
+  setEditLbl:'Edit checklist items',setEditDesc:'Use “✏ Edit” at the top-right of each category to add, delete, reorder items and edit how-to notes.',
+  setAbout:'About this demo',setAboutTxt:'A trial version running on sample data. Your input is saved only on this device.',
+  setResetLbl:'Reset demo',setResetBtn:'Reset sample data',
   units:['g','kg','ml','L','pcs','bottles','sheets','portions'],
   cats:{hygiene:'Hygiene',haccp:'HACCP Temp Log',reservation:'Reservations',kitchen:'Kitchen',drink:'Drinks',hall:'Hall',facility:'Facilities',handover:'Tomorrow & Handover'}},
 zh:{title:'营业前后检查清单',shiftO:'🌅 开店检查',shiftC:'🌙 关店检查',
@@ -279,6 +344,16 @@ zh:{title:'营业前后检查清单',shiftO:'🌅 开店检查',shiftC:'🌙 关
   courseMgr:'编辑套餐',courseMgrTitle:'套餐内容登记',courseAdd:'＋ 添加套餐',courseEmpty:'未登记套餐。',coursePlace:'例：特选套餐 8,000日元',
   channels:['电话','Tabelog','Gurunavi','一休','HotPepper','官网','其他'],
   approveBtn:'✓ 确认（管理者）',approvedLbl:'已确认',byLbl:'负责',
+  clTitleO:'开店检查清单',clTitleC:'关店检查清单',
+  navHome:'主页',navHistory:'历史',navNotice:'通知',navSettings:'设置',doneLbl:'完成',
+  langMenuTitle:'显示语言',langMore:'＋ 可添加越南语·尼泊尔语·韩语等',
+  noticeCarry:'昨日关店交接',noticeTodayOpen:'今日开店检查',noticeTodayClose:'今日关店检查',
+  noticeSubmitted:'已提交',noticeNotYet:'未提交',noticeApproved:'管理者已确认',noticePending:'等待管理者确认',
+  noticeReminderH:'提醒',noticeReminder:'关店前请勿忘记确认煤气总阀和门窗上锁。',
+  setStoreLbl:'店铺',setStore:'中华餐厅 凤来（演示）',setStaffLbl:'负责人姓名（默认）',setStaffPh:'例：佐藤',setLangLbl:'显示语言',
+  setEditLbl:'编辑检查项目',setEditDesc:'通过各分类右上角的"✏ 编辑"可添加、删除、排序项目并编辑操作说明。',
+  setAbout:'关于本演示',setAboutTxt:'基于示例数据运行的体验版。您输入的内容仅保存在本设备中。',
+  setResetLbl:'重置演示',setResetBtn:'重置示例数据',
   units:['g','kg','ml','L','个','瓶','张','份'],
   cats:{hygiene:'卫生管理',haccp:'HACCP温度记录',reservation:'预约情况',kitchen:'厨房',drink:'饮料',hall:'大厅',facility:'设施·外观',handover:'明日预约·交接'}}
 };
@@ -394,8 +469,8 @@ const DEFAULT_RESV=[{name:'田中様',people:'4',type:'c',course:'特選コー�
 
 // ── State ─────────────────────────────────────────────────────
 let lang=localStorage.getItem('cl-lang')||'ja';
-let shift='open', view='staff';
-let editModes={}, checked={}, tempVals={}, qtyVals={}, photos={};
+let shift='open', view='home';
+let editModes={}, checked={}, checkedMeta={}, tempVals={}, qtyVals={}, photos={};
 let hoVals={res:'',memo:'',concerns:''};
 let staffName='', resList=[];
 let selDate=null, manualCtx=null;
@@ -444,23 +519,34 @@ function getRateData(s,k){
 
 // ── Render ─────────────────────────────────────────────────────
 function renderAll(){
-  document.getElementById('hd-title').textContent=u().title;
+  document.getElementById('hd-title').textContent=
+    view==='home'?(shift==='open'?u().clTitleO:u().clTitleC)
+    :view==='history'?u().navHistory
+    :view==='notice'?u().navNotice:u().navSettings;
   document.getElementById('demo-note').innerHTML=u().demo;
+  document.getElementById('demo-note').style.display=view==='home'?'':'none';
   document.getElementById('st-open-lbl').textContent=u().shiftO;
   document.getElementById('st-close-lbl').textContent=u().shiftC;
-  document.getElementById('fb-sl').textContent=u().vStaff;
-  document.getElementById('fb-ml').textContent=u().vMgr;
+  document.getElementById('tb-home').textContent=u().navHome;
+  document.getElementById('tb-history').textContent=u().navHistory;
+  document.getElementById('tb-notice').textContent=u().navNotice;
+  document.getElementById('tb-settings').textContent=u().navSettings;
   document.getElementById('st-open').classList.toggle('on',shift==='open');
   document.getElementById('st-close').classList.toggle('on',shift==='close');
-  document.getElementById('fb-staff').classList.toggle('on',view==='staff');
-  document.getElementById('fb-mgr').classList.toggle('on',view==='manager');
-  document.querySelector('#view-staff').style.display=view==='staff'?'':'none';
-  document.querySelector('#view-manager').style.display=view==='manager'?'':'none';
-  document.querySelectorAll('.f-lang button').forEach((b,i)=>b.classList.toggle('on',['ja','en','zh'][i]===lang));
-  if(view==='staff') renderStaff();
-  else renderManager();
+  document.getElementById('shift-tabs').style.display=view==='home'?'':'none';
+  document.querySelectorAll('.tabbar .tb').forEach(b=>b.classList.toggle('on',b.dataset.v===view));
+  document.querySelectorAll('.lang-tabs .lt').forEach(b=>b.classList.toggle('on',b.dataset.l===lang));
+  document.getElementById('view-home').style.display=view==='home'?'':'none';
+  document.getElementById('view-history').style.display=view==='history'?'':'none';
+  document.getElementById('view-notice').style.display=view==='notice'?'':'none';
+  document.getElementById('view-settings').style.display=view==='settings'?'':'none';
+  if(view==='home') renderStaff();
+  else if(view==='history') renderManager();
+  else if(view==='notice') renderNotice();
+  else renderSettings();
   if(manualCtx) renderManualModal();
   if(document.getElementById('course-modal').style.display==='flex') renderCourseModal();
+  if(document.getElementById('lang-modal').style.display==='flex') renderLangMenu();
 }
 
 function renderStaff(){
@@ -547,14 +633,16 @@ function renderStaff(){
         row.querySelector('.del-btn').onclick=()=>deleteItem(catKey,item.id);
       } else {
         const phb=photos[item.id]?'<span class="ph-badge">📷</span>':'';
-        row.innerHTML=`<label><span class="cb"></span><span class="item-text">${esc(itxt(item))}${phb}</span></label>
+        const meta=isCheck?`<span class="item-meta">${u().doneLbl} ${checkMetaLabel(item.id)}</span>`:'';
+        row.innerHTML=`<label><span class="cb"></span><span class="item-text">${esc(itxt(item))}${phb}</span>${meta}</label>
           <div class="item-acts">
             <button class="how-btn" title="${u().howBtn}">?</button>
-            <button class="cam-btn" title="${u().photoBtn}">📷</button>
+            ${isCheck?'':`<button class="cam-btn" title="${u().photoBtn}">📷</button>`}
           </div>`;
-        row.querySelector('label').onclick=()=>{checked[item.id]=!checked[item.id];renderStaff();};
+        row.querySelector('label').onclick=()=>toggleCheck(item.id);
         row.querySelector('.how-btn').onclick=e=>{e.stopPropagation();openManual(catKey,item.id);};
-        row.querySelector('.cam-btn').onclick=e=>{e.stopPropagation();takePhoto(item.id);};
+        const camBtn=row.querySelector('.cam-btn');
+        if(camBtn) camBtn.onclick=e=>{e.stopPropagation();takePhoto(item.id);};
       }
       div.appendChild(row);
 
@@ -576,7 +664,7 @@ function renderStaff(){
         pt.innerHTML=`<img src="${photos[item.id]}" alt="report photo">
           <div class="ph-acts"><button class="ph-re">${u().photoRetake}</button><button class="ph-rm">${u().photoRemove}</button></div>`;
         pt.querySelector('.ph-re').onclick=()=>takePhoto(item.id);
-        pt.querySelector('.ph-rm').onclick=()=>{delete photos[item.id];checked[item.id]=false;renderStaff();};
+        pt.querySelector('.ph-rm').onclick=()=>{delete photos[item.id];checked[item.id]=false;delete checkedMeta[item.id];renderStaff();};
         div.appendChild(pt);
       }
     });
@@ -737,7 +825,7 @@ function handlePhoto(id,file){
       const c=document.createElement('canvas'); c.width=w; c.height=h;
       c.getContext('2d').drawImage(img,0,0,w,h);
       photos[id]=c.toDataURL('image/jpeg',0.6);
-      checked[id]=true; renderStaff();
+      checked[id]=true; checkedMeta[id]={at:nowHM(),by:staffName||''}; renderStaff();
     };
     img.src=e.target.result;
   };
@@ -782,6 +870,83 @@ function setQty(id,v,u2){
   if(u2!==null) qtyVals[id].u=u2;
 }
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// ── Check stamp (who / when) ───────────────────────────────────
+function nowHM(){try{return new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});}catch(e){return'';}}
+function checkMetaLabel(id){const m=checkedMeta[id];if(!m)return'';return (m.at||'')+(m.by?' '+m.by:'');}
+function toggleCheck(id){
+  if(checked[id]){checked[id]=false;delete checkedMeta[id];}
+  else{checked[id]=true;checkedMeta[id]={at:nowHM(),by:staffName||''};}
+  renderStaff();
+}
+
+// ── Notice view ────────────────────────────────────────────────
+function renderNotice(){
+  const box=document.getElementById('view-notice'); const cards=[];
+  const yest=dateStr(1), co=localStorage.getItem('cl-co-'+yest);
+  if(co){
+    const d=JSON.parse(co); let rows='';
+    if(d.reservations) rows+=`<div class="nt-row"><span class="nt-k">${u().coRes}</span>${esc(d.reservations)}</div>`;
+    if(d.memo) rows+=`<div class="nt-row"><span class="nt-k">${u().coMemo}</span>${esc(d.memo)}</div>`;
+    if(d.concerns) rows+=`<div class="nt-row"><span class="nt-k">${u().coMiss}</span>${esc(d.concerns)}</div>`;
+    if(rows) cards.push(`<div class="nt-card warn"><div class="nt-h">⚠ ${u().noticeCarry}（${fmtDate(yest)}）</div>${rows}</div>`);
+  }
+  const statusCard=(label,rec)=>{
+    if(!rec) return `<div class="nt-card"><div class="nt-h">${label}</div><div class="nt-row"><span class="nt-badge gray">${u().noticeNotYet}</span></div></div>`;
+    const appr=rec.approved?`<span class="nt-badge green">✓ ${u().noticeApproved}</span>`:`<span class="nt-badge amber">${u().noticePending}</span>`;
+    return `<div class="nt-card"><div class="nt-h">${label}</div>
+      <div class="nt-row"><span class="nt-badge blue">${u().noticeSubmitted} ${fmtTime(rec.submittedAt)}</span>${appr}</div>
+      ${rec.staff?`<div class="nt-row"><span class="nt-k">${u().byLbl}</span>${esc(rec.staff)}</div>`:''}</div>`;
+  };
+  cards.push(statusCard(u().noticeTodayOpen,getRecord('open',todayKey())));
+  cards.push(statusCard(u().noticeTodayClose,getRecord('close',todayKey())));
+  cards.push(`<div class="nt-card"><div class="nt-h">🔔 ${u().noticeReminderH}</div><div class="nt-row">${u().noticeReminder}</div></div>`);
+  box.innerHTML=cards.join('');
+}
+
+// ── Settings view ──────────────────────────────────────────────
+function renderSettings(){
+  const box=document.getElementById('view-settings');
+  box.innerHTML=`
+    <div class="set-card"><div class="set-lbl">${u().setStoreLbl}</div><div class="set-val">${u().setStore}</div></div>
+    <div class="set-card"><div class="set-lbl">${u().setStaffLbl}</div>
+      <input class="set-inp" id="set-staff" value="${esc(staffName)}" placeholder="${u().setStaffPh}"></div>
+    <div class="set-card"><div class="set-lbl">${u().setLangLbl}</div>
+      <div class="set-langs">${['ja','en','zh'].map(l=>`<button class="set-lang${l===lang?' on':''}" data-l="${l}">${l==='ja'?'日本語':l==='en'?'English':'中文'}</button>`).join('')}</div>
+      <div class="set-more">${u().langMore}</div></div>
+    <div class="set-card"><div class="set-lbl">${u().setEditLbl}</div><div class="set-desc">${u().setEditDesc}</div></div>
+    <div class="set-card"><div class="set-lbl">${u().setAbout}</div><div class="set-desc">${u().setAboutTxt}</div></div>
+    <div class="set-card"><div class="set-lbl">${u().setResetLbl}</div><button class="set-reset" id="set-reset">${u().setResetBtn}</button></div>`;
+  box.querySelector('#set-staff').oninput=e=>staffName=e.target.value;
+  box.querySelectorAll('.set-lang').forEach(b=>b.onclick=()=>setLang(b.dataset.l));
+  box.querySelector('#set-reset').onclick=resetDemo;
+}
+function resetDemo(){
+  Object.keys(localStorage).filter(k=>k.indexOf('cl-')===0).forEach(k=>localStorage.removeItem(k));
+  location.reload();
+}
+
+// ── Language menu ──────────────────────────────────────────────
+function openLangMenu(){document.getElementById('lang-modal').style.display='flex';renderLangMenu();}
+function closeLangMenu(){document.getElementById('lang-modal').style.display='none';}
+function renderLangMenu(){
+  const box=document.getElementById('lang-box');
+  const langs=[['ja','日本語'],['en','English'],['zh','中文']];
+  box.innerHTML=`<div class="modal-h"><span class="modal-tag">🌐</span><span class="modal-title">${u().langMenuTitle}</span></div>
+    <div class="lang-list">${langs.map(l=>`<button class="lang-opt${l[0]===lang?' on':''}" data-l="${l[0]}">${l[1]}${l[0]===lang?' ✓':''}</button>`).join('')}</div>
+    <div class="lang-more">${u().langMore}</div>
+    <div class="modal-btns"><button class="mbtn pri" id="lang-close">${u().manClose}</button></div>`;
+  box.querySelectorAll('.lang-opt').forEach(b=>b.onclick=()=>{setLang(b.dataset.l);closeLangMenu();});
+  box.querySelector('#lang-close').onclick=closeLangMenu;
+}
+
+// ── Seed today's home view (matches the flyer look) ────────────
+function seedTodayHome(){
+  if(shift!=='open') return;
+  const names=['佐藤','Nguyen','山田','Kim','王'];
+  const seed=[['oh1','07:00'],['oh2','07:02'],['oh3','07:04'],['ok1','07:06'],['ok4','07:08'],['od1','07:10'],['od3','07:12'],['ol1','07:14']];
+  seed.forEach((s,i)=>{checked[s[0]]=true;checkedMeta[s[0]]={at:s[1],by:names[i%names.length]};});
+}
 
 // ── Submit ─────────────────────────────────────────────────────
 function doSubmit(){
@@ -904,7 +1069,7 @@ function recDetail(s,rec,k){
 
 // ── Switch ─────────────────────────────────────────────────────
 function freshState(){
-  editModes={};checked={};tempVals={};qtyVals={};photos={};
+  editModes={};checked={};checkedMeta={};tempVals={};qtyVals={};photos={};
   hoVals={res:'',memo:'',concerns:''};staffName='';
   resList=shift==='open'?JSON.parse(JSON.stringify(DEFAULT_RESV)):[];
 }
@@ -943,6 +1108,7 @@ function seedDemo(){
 // ── Init ──────────────────────────────────────────────────────
 freshState();
 seedDemo();
+seedTodayHome();
 renderAll();
 </script>
 </body>
