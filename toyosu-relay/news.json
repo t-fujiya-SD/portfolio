@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-07T07:45:42+09:00",
+  "updated": "2026-07-08T07:37:05+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -18,17 +18,10 @@
   "items": [
     {
       "title": "食品卸 メーカー支援の新たな形 営業や物流を代行",
-      "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBaaTZ3djlaT0NET2F5b3J6d2h0RG1aNml0b3hnXzRGRDFHYXZ2Yk1oVE5SWC1vSk9WXzdpXzJ5YkVEc1JSWjNLek4tNWE3YXl5V0w3elpuZDZGV3c?oc=5",
-      "source": "食品新聞 WEB版",
+      "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTE9haFZIU1NQM1JZRjEzbTUxeGdtSmtyelBOSlNwN3JLaVZSY3V1UER4Qk5LLVAta2ZCMWtFckd1ZV9tV3lCUlFrb1V4NG01TjZNamZZcjlFMG92QmpjSWU3dWJJOTNnXzE0cWNuVkpR?oc=5",
+      "source": "Excite エキサイト",
       "date": "2026-07-01",
       "cat": "business"
-    },
-    {
-      "title": "【令和8年度】夏休み親子市場せり見学会参加者募集",
-      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE5xemZuXzdnYzVXUnc2WkI4VnRPSEFYbVZ4a1UzcXJOUkZ4VXVRenhLQUQ0Yzdjb3FZbUs0SVNGTnJLRjF5a1ZTMG90emtmckI0aU5MMlY1TzZpYUkxNDZpa1JYNzhoOEV6U0R5c2o5ZmgyZm5sd1pFalBMcHUxZGM?oc=5",
-      "source": "city.niigata.lg.jp",
-      "date": "2026-06-25",
-      "cat": "market"
     },
     {
       "title": "決算:長野の青果卸R&CHD、純利益38％減 26年3月期",
@@ -94,11 +87,11 @@
       "cat": "business"
     },
     {
-      "title": "「物流こそ復興の命綱」… 食品卸大手トップを突き動かした郷土愛 ヤマエグループHD・網田会長が語る熊本地震10年",
-      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9xYWdYcW9UT2pVTTRxY2tJWTBScXlGaDNUWGs3YXpXUUVsZHlERk85aTdWZkdudG1TQnM5VC0zVkg4aTRuM1lYeXFHZFItbjQ?oc=5",
-      "source": "熊本日日新聞社",
-      "date": "2026-05-21",
-      "cat": "business"
+      "title": "県産ゴボウ、高値反動で相場下押し/八戸市中央卸売市場４月市況概要",
+      "link": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE1wZERDZ09vNDczWFUtRGFhVE5QeUotNGx2VnZLTHhkRldtMHQtY1VlMHpLd3NvV0M0OUJsMUZTcXdTRzZWMkdrNHYzZWs3THNBWllHaFBBMDhGTkVoSVNoS3RnMm1lTTQ?oc=5",
+      "source": "デーリー東北",
+      "date": "2026-05-20",
+      "cat": "market"
     },
     {
       "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年5月、東京都中央卸売市場）：関東農政局",
@@ -136,13 +129,6 @@
       "cat": "toyosu"
     },
     {
-      "title": "インターネット都政モニターアンケート結果 生鮮食料品等の購買意識 〉 Q16 東京都中央卸売市場の認知|1月",
-      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE4wNEFBMThJRExadlJ6WDQ2d25pVXhNck1ldHBrcG1KVXhndDdkcWNfU2tlSW9lM0EzTGZMN2pSQlRTQjliU2JLVG1ZMlVSa3ljOWpxcTBaNmNzdUlEWFlrTXZTWmNDVzlLYmEtaGxTWWRGM3FQ?oc=5",
-      "source": "metro.tokyo.lg.jp",
-      "date": "2026-01-21",
-      "cat": "toyosu"
-    },
-    {
       "title": "高松市中央卸売市場で初せり 年始の野菜や果物の価格は安定",
       "link": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE5xbXYyU1FENDMydGNib2MzazJ4V1gyLWJrRmZqRklqR0ZjZldhdXQ1eTBUVU9rbnk4Y0xqVnlFdWl4SThkYl95dHBScXB5bEhn?oc=5",
       "source": "KSBニュース",
@@ -152,7 +138,7 @@
     {
       "title": "東京都中央卸売市場・豊洲市場／東京の観光公式サイトGO TOKYO",
       "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9abnUyLWI2TWtuY0tKa1FoZlMwRUtHeDVsejhNTmwwck1sZi1iZ2ZhWlQ2OHgyU2xsQUdnM05mdzdpY1hNZGhGMzZoZTlFOWxQMHBiRVFwZmM3enM?oc=5",
-      "source": "GO TOKYO, The Official Tokyo Travel Guide",
+      "source": "go tokyo",
       "date": "2025-12-25",
       "cat": "toyosu"
     },
@@ -183,6 +169,20 @@
       "source": "city.kurume.fukuoka.jp",
       "date": "2025-11-23",
       "cat": "market"
+    },
+    {
+      "title": "中小青果卸のサバイバル戦略～経営体質の改革で、30代社員流出と低収益の壁を破る！",
+      "link": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE80X1h4UERqSkFhYkw3T1BzTDZ6SE0zYVd3X09tN0dYUlJQbWpvLTdseERDbWw5cTI0aG9URjBscFVFMlZCNFF2Zmx6Ry1oMGVPWDhrb0dqZTd3a3V4Z1UxVQ?oc=5",
+      "source": "フーズチャネル",
+      "date": "2025-11-21",
+      "cat": "business"
+    },
+    {
+      "title": "中央卸売市場足立市場「あだち市場の日感謝祭」を開催|10月",
+      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE9YbjNQZkVLaVdGYkhyaGk4aEtJYVRoeUVEX3FkY3I0aDRpNlJ3SzcwVW82QW50a1JJTFFBMklKSVNjbVdQbDlTNDBERlY0cUwyazBkRmtta21EUHd4cE9UZDdJZjZENjBDSG1idld2aVdad3pO?oc=5",
+      "source": "metro.tokyo.lg.jp",
+      "date": "2025-10-31",
+      "cat": "toyosu"
     }
   ]
 }
