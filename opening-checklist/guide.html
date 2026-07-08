@@ -57,7 +57,7 @@
   .phone{width:250px;margin:0 auto;border:9px solid #137a3f;border-radius:34px;overflow:hidden;background:var(--bg);box-shadow:0 16px 36px rgba(16,24,40,.22)}
   .phone .pbar{background:linear-gradient(135deg,#137a3f,#1fae5a);color:#fff;padding:10px 13px;font-size:12px;font-weight:800;display:flex;align-items:center;gap:6px}
   .phone .scr{padding:10px;display:flex;flex-direction:column;gap:7px;min-height:60px}
-  .phone .tabbar{display:flex;justify-content:space-around;background:#fff;border-top:1px solid var(--line);padding:7px 2px;font-size:9px;color:var(--sub);font-weight:700}
+  .phone .tabbar{display:flex;justify-content:space-around;background:#fff;border-top:1px solid var(--line);padding:7px 1px;font-size:8px;color:var(--sub);font-weight:700;white-space:nowrap}
   .phone .tabbar .on{color:var(--primary)}
   /* mock: language + shift toggles */
   .seg{display:flex;gap:5px}
@@ -83,6 +83,20 @@
   .cal7 span{flex:1;text-align:center;font-size:8px;font-weight:800;padding:5px 0;border-radius:5px}
   .cal7 .g{background:#dcfce7;color:#166534}.cal7 .a{background:#fef3c7;color:#92400e}
   .pcap{text-align:center;color:var(--sub);font-size:12px;margin-top:10px}
+  /* mock: staff proposal / approval tray */
+  .phone .pcard{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 9px;text-align:left;display:flex;flex-direction:column;gap:5px}
+  .phone .pc-top{display:flex;align-items:center;gap:6px}
+  .phone .pc-lang{background:var(--primary);color:#fff;font-weight:800;font-size:8px;padding:2px 7px;border-radius:999px}
+  .phone .pc-top b{font-size:10px;color:var(--ink)}
+  .phone .pc-tag{font-size:9px;font-weight:700;color:var(--navy);background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:3px 6px;align-self:flex-start}
+  .phone .pc-o{font-size:9px;color:#64748b;background:#f8fafc;border-radius:6px;padding:5px 7px;line-height:1.5}
+  .phone .pc-t{font-size:9.5px;color:#334155;background:#fffef5;border:1px solid #fde68a;border-radius:6px;padding:5px 7px;line-height:1.55}
+  .phone .pc-b{display:flex;gap:4px;margin-top:1px}
+  .phone .pc-b span{font-size:8.5px;font-weight:800;padding:5px 3px;border-radius:6px;text-align:center}
+  .phone .pc-b .ok{flex:1.2;background:var(--offer);color:#fff}
+  .phone .pc-b .ed{flex:1;background:#fff;border:1px solid #bbf7d0;color:var(--navy)}
+  .phone .pc-b .rj{width:22px;background:#fff;border:1px solid var(--line);color:var(--sub)}
+  .phone .badge-n{background:#dc2626;color:#fff;border-radius:999px;font-size:8px;padding:0 5px;margin-left:2px}
   /* callout */
   .note{display:flex;gap:12px;background:#e9f7ef;border:1px solid #bfe6cd;border-radius:14px;padding:15px 17px;color:#14532d;font-size:14px;line-height:1.8;margin-top:20px}
   .note .i{font-size:20px;line-height:1.4}
@@ -106,6 +120,16 @@
   .phase{display:flex;flex-direction:column;gap:10px;margin-top:18px;text-align:left}
   .phase .p{display:flex;gap:12px;align-items:flex-start;font-size:14px}
   .phase .dot{flex-shrink:0;width:24px;height:24px;border-radius:50%;background:#e9f7ef;color:var(--navy);font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;margin-top:2px}
+  .ptier{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px;text-align:left}
+  @media(max-width:600px){.ptier{grid-template-columns:1fr}}
+  .pt{border:1.5px solid var(--line);border-radius:14px;padding:15px 16px;background:#fbfdfb}
+  .pt.hi{border-color:#bfe6cd;background:#f0fdf4}
+  .pt-h{font-size:13px;font-weight:800;color:var(--navy);margin-bottom:9px}
+  .pt-row{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:8px 0;font-size:14px;color:var(--sub);border-top:1px dashed var(--line)}
+  .pt-row:first-of-type{border-top:none}
+  .pt-row b{color:var(--ink);font-size:19px;font-weight:800;white-space:nowrap}
+  .pt-row b small{font-size:11px;color:var(--sub);font-weight:700;margin-left:1px}
+  .pt-row b.free{color:var(--offer);font-size:20px}
   /* coming */
   .chips{display:flex;flex-wrap:wrap;gap:9px}
   .chip{background:#fff;border:1px dashed #c7d5cc;border-radius:999px;padding:8px 14px;font-size:13.5px;font-weight:700;color:var(--sub)}
@@ -154,6 +178,7 @@
     <div class="mini-card"><div class="ic">🌐</div><h3>多言語対応</h3><p>日本語・英語・中国語に対応。外国人スタッフも新人さんも、初日から迷いません。</p></div>
     <div class="mini-card"><div class="ic">✅</div><h3>迷わずチェック</h3><p>開店前・閉店後のやることを順番に。押すだけで完了、チェック漏れが起きません。</p></div>
     <div class="mini-card"><div class="ic">🕐</div><h3>記録が残る</h3><p>誰が・いつ・どの項目をやったか自動で記録。あとから管理者が確認できます。</p></div>
+    <div class="mini-card"><div class="ic">💡</div><h3>みんなで手順づくり</h3><p>スタッフが母国語で「コツ」を提案。管理者が承認すると、全員の手順になります。</p></div>
   </div>
 </div></section>
 
@@ -218,7 +243,7 @@
           <div class="ck done"><span class="c">✓</span><span class="t">ユニフォーム確認</span><span class="st">07:04 山田</span></div>
           <div class="ck"><span class="c">✓</span><span class="t">トイレの清掃</span></div>
         </div>
-        <div class="tabbar"><span class="on">🏠ホーム</span><span>🕐履歴</span><span>🔔お知らせ</span><span>⚙️設定</span></div>
+        <div class="tabbar"><span class="on">🏠ホーム</span><span>🕐履歴</span><span>💡マニュアル</span><span>🔔お知らせ</span><span>⚙️設定</span></div>
       </div>
       <p class="pcap">スタッフのチェック画面</p>
     </div>
@@ -243,11 +268,52 @@
           <div class="sec-h">過去7日間</div>
           <div class="cal7"><span class="g">100</span><span class="a">92</span><span class="g">100</span><span class="a">88</span><span class="a">83</span><span class="a">96</span><span class="g">100</span></div>
         </div>
-        <div class="tabbar"><span>🏠ホーム</span><span class="on">🕐履歴</span><span>🔔お知らせ</span><span>⚙️設定</span></div>
+        <div class="tabbar"><span>🏠ホーム</span><span class="on">🕐履歴</span><span>💡マニュアル</span><span>🔔お知らせ</span><span>⚙️設定</span></div>
       </div>
       <p class="pcap">管理者の確認画面</p>
     </div>
   </div>
+</div></section>
+
+<!-- STAFF-BUILT MANUAL -->
+<section class="sec"><div class="wrap">
+  <p class="kicker">💡 みんなでつくるマニュアル</p>
+  <h2>母国語で書いた「コツ」を、<br>管理者が承認して全員の手順に</h2>
+  <p class="lead">作文はスタッフ、管理者は「OKを出すだけ」。マニュアルづくりが苦手な現場でも、店のノウハウが自然にたまっていきます。</p>
+  <div class="emoji-flow">✍️ スタッフが母国語で提案 <span class="a">→</span> 🌐 自動で日本語に翻訳 <span class="a">→</span> 👔 管理者が承認 <span class="a">→</span> 💡 全員の手順に</div>
+  <div class="split" style="margin-top:20px">
+    <div>
+      <div class="note"><span class="i">💡</span><div>ベテランの「ここはこうすると失敗しない」を、<b>母国語のまま</b>投稿。日本語に自動翻訳されて管理者に届き、<b>採用／編集して採用／差し戻し</b>の3択で判断できます。採用されたコツは、その項目の「やり方」に<b>読む人の言語で</b>表示されます。</div></div>
+      <div class="roles" style="margin-top:14px">
+        <div class="role staff">
+          <div class="rh"><span class="rc">✍️</span><span class="rt"><b>スタッフ</b><span>母国語で提案するだけ</span></span></div>
+          <ul><li>項目を選んで、いつもの言葉で書く</li><li>日本語が書けなくてもOK</li></ul>
+        </div>
+        <div class="role mgr">
+          <div class="rh"><span class="rc">👔</span><span class="rt"><b>管理者</b><span>3タップで承認</span></span></div>
+          <ul><li>翻訳された内容を読んで判断</li><li>採用／編集して採用／差し戻し</li></ul>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="phone">
+        <div class="pbar">💡 マニュアル<span class="badge-n">2</span></div>
+        <div class="scr">
+          <div class="sec-h">承認待ち（管理者が確認）</div>
+          <div class="pcard">
+            <div class="pc-top"><span class="pc-lang">Tiếng Việt</span><b>Nguyen</b></div>
+            <div class="pc-tag">📋 スープ・だしの仕込み</div>
+            <div class="pc-o">Nồi nước dùng phải hầm ít nhất 3 tiếng…</div>
+            <div class="pc-t">🌐 だしは最低3時間煮込む。沸いたら弱火に。強く沸かすと濁るので注意。</div>
+            <div class="pc-b"><span class="ok">✓ 採用</span><span class="ed">✏️ 編集</span><span class="rj">↩</span></div>
+          </div>
+        </div>
+        <div class="tabbar"><span>🏠ホーム</span><span>🕐履歴</span><span class="on">💡マニュアル</span><span>🔔お知らせ</span><span>⚙️設定</span></div>
+      </div>
+      <p class="pcap">管理者の承認トレイ</p>
+    </div>
+  </div>
+  <div class="note warm"><span class="i">📱</span><div>スタッフのスマホと管理者のスマホをまたいで共有する仕組みと、本格的な自動翻訳は順次ご用意します。まずは1台で「提案→承認→全員の手順に載る」流れを体験できます。</div></div>
 </div></section>
 
 <!-- FEATURES -->
@@ -257,7 +323,7 @@
   <div class="cards3">
     <div class="mini-card"><div class="ic">🌡</div><h3>HACCP温度記録</h3><p>冷蔵庫・加熱温度を記録。OK/NG判定つきで、そのまま衛生管理の記録に。</p></div>
     <div class="mini-card"><div class="ic">📅</div><h3>予約・申し送り</h3><p>当日の予約や、翌日への申し送りを記録。前日の内容が翌朝の担当に自動で届きます。</p></div>
-    <div class="mini-card"><div class="ic">📖</div><h3>やり方を表示</h3><p>「?」で手順やコツを表示。新人さんでも基準どおりにできます。</p></div>
+    <div class="mini-card"><div class="ic">📖</div><h3>やり方を表示</h3><p>「?」で手順やコツを表示。採用された<b>現場のコツ</b>も一緒に、読む人の言語で見られます。</p></div>
     <div class="mini-card"><div class="ic">📷</div><h3>写真で報告</h3><p>「ここまで洗う」等を写真で。言葉が通じにくくても基準を共有できます。</p></div>
     <div class="mini-card"><div class="ic">✏️</div><h3>項目を編集</h3><p>店に合わせて項目を追加・削除・並べ替え。手順メモも自由に書けます。</p></div>
     <div class="mini-card"><div class="ic">🖨</div><h3>印刷で記録</h3><p>その日のチェックを「HACCP記録」として紙にも出力できます。</p></div>
@@ -279,13 +345,20 @@
 <!-- PRICE -->
 <section class="sec"><div class="wrap">
   <p class="kicker">料金</p>
-  <h2>配送でお取引中のお店は、初回無料</h2>
+  <h2>1店舗目は無料。あとは1店舗ずつ。</h2>
+  <p class="lead">まずは1店舗で、毎日そのままお使いください。店舗が増えても、1店舗ずつの分かりやすい料金です。</p>
   <div class="price">
-    <div class="big">初回無料でお試し</div>
-    <div class="small">毎月一定量（目安：月15万円以上のお取引 または 週3回以上の配送）でお取引のあるお店は、初回無料でお試しいただけます。</div>
-    <div class="phase">
-      <div class="p"><span class="dot">1</span><div><b>お取引先のお店：月 ¥500〜</b><br>コーヒー1杯ぶんほど。お取引が続く間はうれしい価格で。</div></div>
-      <div class="p"><span class="dot">2</span><div><b>その他のお店：月 ¥1,480〜</b><br>項目の初期設定を代行する場合は別途ご相談ください。</div></div>
+    <div class="big">1店舗目は 無料</div>
+    <div class="ptier">
+      <div class="pt hi">
+        <div class="pt-h">🚚 配送でお取引中のお店</div>
+        <div class="pt-row"><span>1店舗目</span><b class="free">無料</b></div>
+        <div class="pt-row"><span>2店舗目以降</span><b>¥500<small>/店舗・月</small></b></div>
+      </div>
+      <div class="pt">
+        <div class="pt-h">🏪 お取引のないお店</div>
+        <div class="pt-row"><span>1店舗目から</span><b>¥980<small>/店舗・月</small></b></div>
+      </div>
     </div>
   </div>
   <div class="note"><span class="i">🤝</span><div>単機能でも、<b>チェック漏れ・引き継ぎミスを月1回防げば</b>十分に元が取れます（食材ロス・やり直し・最悪はガス／施錠の忘れ）。</div></div>
@@ -309,6 +382,7 @@
   <p class="kicker">よくある質問</p>
   <h2>気になるところ</h2>
   <details><summary>外国人スタッフでも使えますか？</summary><p>はい。言語を切り替えれば母語で表示されます。いまは日本語・英語・中国語に対応。ご要望に応じてベトナム語・ネパール語なども追加できます。</p></details>
+  <details><summary>スタッフが手順やコツを書き込めますか？</summary><p>できます。スタッフが<b>母国語のまま</b>「やり方・コツ」を提案でき、日本語に自動翻訳されて管理者に届きます。管理者は<b>採用／編集して採用／差し戻し</b>の3択で判断するだけ。採用されたコツは、その項目の「やり方」に読む人の言語で表示されます。作文はスタッフに任せられるので、管理者の負担を増やさずに店のマニュアルが育ちます。</p></details>
   <details><summary>ネットがない時は使えますか？</summary><p>入力した内容はその端末に保存されます。スマホのホーム画面に追加すればアプリのように使えます（本格的なオフライン対応は順次ご用意します）。</p></details>
   <details><summary>項目を自分の店に合わせて変えられますか？</summary><p>できます。各カテゴリの「✏ 編集」から、項目の追加・削除・並べ替え・手順メモの編集ができます。</p></details>
   <details><summary>誰がやったか分かりますか？</summary><p>項目ごとに「完了 時刻 担当者」が記録され、管理者が「履歴」画面で確認・承認できます。</p></details>

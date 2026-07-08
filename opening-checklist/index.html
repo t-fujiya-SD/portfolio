@@ -219,6 +219,57 @@ header{background:linear-gradient(120deg,var(--navy),var(--navy2));color:#fff;pa
 .lang-opt{text-align:left;padding:12px 14px;font-size:15px;font-weight:700;border:1.5px solid var(--border);border-radius:10px;background:#fff;color:var(--ink);cursor:pointer;font-family:inherit}
 .lang-opt.on{border-color:var(--navy);color:var(--navy);background:#f0fdf4}
 .lang-more{font-size:12px;color:var(--sub);background:#f8fafc;border:1px dashed var(--border);border-radius:10px;padding:11px 13px;margin-bottom:12px;line-height:1.6}
+/* ── manual hub: staff tips → manager approval ── */
+.mh-intro{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:15px;margin:12px 0}
+.mh-intro h2{font-size:15px;font-weight:800;color:var(--navy);margin-bottom:6px}
+.mh-intro p{font-size:12.5px;color:var(--sub);line-height:1.7}
+.mh-propose{width:100%;background:var(--navy);color:#fff;border:none;border-radius:12px;padding:13px;font-size:14.5px;font-weight:800;cursor:pointer;margin-top:12px;font-family:inherit}
+.mh-propose:active{transform:scale(.99)}
+.mh-sec-h{font-size:12.5px;font-weight:800;color:var(--sub);margin:20px 2px 8px;display:flex;align-items:center;gap:7px}
+.mh-count{background:var(--red);color:#fff;font-size:11px;font-weight:800;border-radius:20px;padding:1px 8px}
+.mh-empty{background:var(--card);border:1px dashed var(--border);border-radius:12px;padding:18px 14px;font-size:12.5px;color:var(--sub);text-align:center;line-height:1.65}
+.pc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin:10px 0}
+.pc-top{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.pc-lang{font-size:11px;font-weight:800;color:#fff;background:var(--navy);border-radius:20px;padding:3px 10px;flex:none}
+.pc-by{font-size:12.5px;color:var(--ink);font-weight:800}
+.pc-when{font-size:11px;color:#94a3b8;margin-left:auto;flex:none}
+.pc-item{font-size:11.5px;font-weight:700;color:var(--navy2);background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:5px 9px;margin-bottom:10px;display:inline-block}
+.pc-blk{margin:8px 0}
+.pc-lbl{font-size:10.5px;font-weight:800;color:#94a3b8;letter-spacing:.4px;margin-bottom:4px}
+.pc-orig{font-size:13px;color:#475569;line-height:1.65;white-space:pre-wrap;background:#f8fafc;border-radius:8px;padding:9px 11px}
+.pc-tr{font-size:14px;color:var(--ink);line-height:1.7;white-space:pre-wrap;background:#fffef5;border:1px solid #fde68a;border-radius:9px;padding:10px 12px}
+.pc-acts{display:flex;gap:7px;margin-top:12px}
+.pc-acts button{border-radius:9px;padding:11px 4px;font-size:12.5px;font-weight:800;cursor:pointer;border:1.5px solid var(--border);background:#fff;color:var(--sub);font-family:inherit}
+.pc-adopt{flex:1.2;background:var(--green)!important;color:#fff!important;border-color:var(--green)!important}
+.pc-edit{flex:1;color:var(--navy2)!important;border-color:#bbf7d0!important}
+.pc-reject{flex:none;width:46px;color:var(--sub)}
+.pc.done{opacity:.94}
+.pc-final{font-size:14px;color:var(--ink);line-height:1.7;white-space:pre-wrap;background:#f8fafc;border-radius:9px;padding:10px 12px}
+.pc-status{font-size:11.5px;font-weight:700;border-radius:8px;padding:7px 10px;text-align:center;margin-top:9px}
+.pc-status.ok{background:#ecfdf5;color:#047857;border:1px solid #a7f3d0}
+.pc-status.ng{background:#fef2f2;color:#b91c1c;border:1px solid #fecaca}
+.pc-reject-note{font-size:12px;color:#b91c1c;margin-top:7px;line-height:1.55}
+/* adopted tip inside how-to modal */
+.tip-sec{margin:14px 0 2px}
+.tip-h{font-size:12.5px;font-weight:800;color:#b45309;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.tip-card{background:#fffef5;border:1px solid #fde68a;border-left:4px solid var(--gold);border-radius:10px;padding:11px 13px;margin-bottom:8px}
+.tip-card .tc-txt{font-size:13.5px;line-height:1.75;color:#3a4658;white-space:pre-wrap}
+.tip-card .tc-by{font-size:11px;color:#a1701a;margin-top:7px;font-weight:700}
+.tip-badge{font-size:11px;margin-left:2px}
+/* propose modal */
+.pm-fld{margin:12px 0}
+.pm-fld label{font-size:12px;font-weight:800;color:var(--navy);display:block;margin-bottom:6px}
+.pm-sel{width:100%;border:1px solid var(--border);border-radius:9px;padding:10px 11px;font-size:14px;font-family:inherit;background:#fff;outline:none}
+.pm-sel:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(28,151,77,.14)}
+.pm-langs{display:flex;gap:6px;flex-wrap:wrap}
+.pm-lang{padding:7px 12px;font-size:13px;font-weight:700;border:1.5px solid var(--border);border-radius:20px;background:#fff;color:var(--sub);cursor:pointer;font-family:inherit}
+.pm-lang.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.pm-ta{width:100%;min-height:120px;border:1px solid var(--navy);border-radius:10px;padding:12px;font-size:14px;font-family:inherit;line-height:1.7;outline:none;resize:vertical}
+.pm-note{font-size:11.5px;color:var(--sub);background:#f0f7f2;border:1px dashed #bbe6cd;border-radius:9px;padding:10px 12px;margin-top:12px;line-height:1.65}
+.pm-err{color:var(--red);font-size:12.5px;font-weight:700;margin-top:9px;display:none}
+/* tab badge */
+.tabbar .tb{position:relative}
+.tb-badge{position:absolute;top:3px;left:calc(50% + 5px);background:var(--red);color:#fff;font-size:9.5px;font-weight:800;border-radius:20px;min-width:15px;height:15px;line-height:15px;text-align:center;padding:0 4px}
 @media print{
   header,.lang-tabs,.shift-tabs,.demo-note,.footer-bar,.tabbar,.submit-area,.item-acts,.reorder,.man-edit-btn,.modal-ov,.how-btn,.cam-btn,.temp-how{display:none!important}
   body{padding:0;background:#fff}
@@ -251,18 +302,21 @@ header{background:linear-gradient(120deg,var(--navy),var(--navy2));color:#fff;pa
     <div class="cal-section"><div class="cal-title" id="cal-title"></div><div class="cal-grid" id="cal-grid"></div></div>
     <div class="det-panel" id="det-panel" style="display:none"></div>
   </div>
+  <div id="view-manual" style="display:none"></div>
   <div id="view-notice" style="display:none"></div>
   <div id="view-settings" style="display:none"></div>
 </div>
 <nav class="tabbar">
   <button class="tb on" data-v="home" onclick="switchView('home')"><span class="ti">🏠</span><span class="tl" id="tb-home">ホーム</span></button>
   <button class="tb" data-v="history" onclick="switchView('history')"><span class="ti">🕐</span><span class="tl" id="tb-history">履歴</span></button>
+  <button class="tb" data-v="manual" onclick="switchView('manual')"><span class="ti">💡</span><span class="tl" id="tb-manual">マニュアル</span><span class="tb-badge" id="tb-manual-badge" style="display:none">0</span></button>
   <button class="tb" data-v="notice" onclick="switchView('notice')"><span class="ti">🔔</span><span class="tl" id="tb-notice">お知らせ</span></button>
   <button class="tb" data-v="settings" onclick="switchView('settings')"><span class="ti">⚙️</span><span class="tl" id="tb-settings">設定</span></button>
 </nav>
 <div class="modal-ov" id="manual-modal" style="display:none"><div class="modal-box" id="manual-box"></div></div>
 <div class="modal-ov" id="course-modal" style="display:none"><div class="modal-box" id="course-box"></div></div>
 <div class="modal-ov" id="lang-modal" style="display:none"><div class="modal-box" id="lang-box"></div></div>
+<div class="modal-ov" id="propose-modal" style="display:none"><div class="modal-box" id="propose-box"></div></div>
 <script>
 // ── UI strings ────────────────────────────────────────────────
 const UI={
@@ -296,6 +350,23 @@ ja:{title:'開店・閉店チェックリスト',shiftO:'🌅 開店チェック
   setAbout:'このデモについて',setAboutTxt:'サンプルデータで動作する体験版です。入力内容はこの端末内にのみ保存されます。',
   setResetLbl:'デモをリセット',setResetBtn:'サンプルデータを初期化',
   setGuideLbl:'使い方ガイド',setGuideBtn:'📖 かんたんガイドを開く',
+  navManual:'マニュアル',
+  mHubTitle:'みんなでつくるマニュアル',
+  mHubLead:'スタッフが母国語で書いた「やり方・コツ」を、管理者が承認して全員の手順にできます。管理者は「採用／編集して採用／差し戻し」の3択でOK。作文はスタッフに任せて、負担を減らせます。',
+  mPropose:'💡 コツ・やり方を提案する',
+  mPendingH:'承認待ち（管理者が確認）',mAdoptedH:'採用されたコツ',mRejectedH:'差し戻し',
+  mNoPending:'承認待ちの提案はありません。',
+  mNoAdopted:'まだ採用されたコツはありません。「提案する」から最初の1件を追加してみましょう。',
+  mOrig:'原文',mTrans:'自動翻訳',
+  mAdopt:'✓ 採用',mEditAdopt:'✏️ 編集',mReject:'差し戻し',
+  mStatusAdopted:'採用済み',mStatusRejected:'差し戻し',
+  mPropTitle:'コツ・やり方を提案',mPropItem:'どの項目について？',mPropItemPh:'項目を選んでください',
+  mPropLang:'書く言語',mPropText:'内容（母国語でOK）',mPropTextPh:'やり方・コツ・注意点を、いつもの言葉で書いてください',
+  mPropBy:'お名前',mPropSubmit:'提案する',mPropNeedItem:'対象の項目を選んでください',
+  mPropNote:'📱 このデモでは翻訳を簡易表示します。本番ではClaudeが日本語へ自動翻訳し、管理者に届きます。',
+  mEditFinal:'マニュアルに載せる文',mAdoptFinal:'この内容で採用',
+  mRejectReason:'差し戻しの理由',mRejectPh:'例：その手順は来週の研修で説明します。少し直して再提案してください。',mRejectDo:'差し戻す',
+  mFieldTips:'現場のコツ（スタッフ提案）',mProposeHere:'＋ この項目にコツを提案',
   units:['g','kg','ml','L','本','個','枚','合','人前','ポーション','皿'],
   cats:{hygiene:'衛生管理',haccp:'HACCP温度記録',reservation:'予約状況',kitchen:'キッチン',drink:'ドリンク',hall:'ホール',facility:'設備・外観',handover:'明日の予約・申し送り'}},
 en:{title:'Opening & Closing Checklist',shiftO:'🌅 Opening',shiftC:'🌙 Closing',
@@ -328,6 +399,23 @@ en:{title:'Opening & Closing Checklist',shiftO:'🌅 Opening',shiftC:'🌙 Closi
   setAbout:'About this demo',setAboutTxt:'A trial version running on sample data. Your input is saved only on this device.',
   setResetLbl:'Reset demo',setResetBtn:'Reset sample data',
   setGuideLbl:'How to use',setGuideBtn:'📖 Open the quick guide',
+  navManual:'Manual',
+  mHubTitle:'A manual everyone builds',
+  mHubLead:'Staff write tips in their own language; the manager approves them into shared steps. Just Adopt, Edit, or Send back — the writing is done by the staff, so the manager’s load drops.',
+  mPropose:'💡 Suggest a tip / how-to',
+  mPendingH:'Awaiting approval (Manager)',mAdoptedH:'Adopted tips',mRejectedH:'Sent back',
+  mNoPending:'No suggestions awaiting approval.',
+  mNoAdopted:'No adopted tips yet. Add the first one from “Suggest”.',
+  mOrig:'Original',mTrans:'Translation',
+  mAdopt:'✓ Adopt',mEditAdopt:'✏️ Edit',mReject:'Send back',
+  mStatusAdopted:'Adopted',mStatusRejected:'Sent back',
+  mPropTitle:'Suggest a tip / how-to',mPropItem:'Which item?',mPropItemPh:'Choose an item',
+  mPropLang:'Language',mPropText:'Your note (any language)',mPropTextPh:'Write the steps, tips, or cautions in your own words',
+  mPropBy:'Your name',mPropSubmit:'Submit',mPropNeedItem:'Please choose an item',
+  mPropNote:'📱 This demo shows a simple preview. In production, Claude auto-translates to Japanese for the manager.',
+  mEditFinal:'Text to publish in the manual',mAdoptFinal:'Adopt this text',
+  mRejectReason:'Reason for sending back',mRejectPh:'e.g. We’ll cover this in next week’s training. Please tweak and resubmit.',mRejectDo:'Send back',
+  mFieldTips:'Field tips (from staff)',mProposeHere:'＋ Suggest a tip for this item',
   units:['g','kg','ml','L','pcs','bottles','sheets','portions'],
   cats:{hygiene:'Hygiene',haccp:'HACCP Temp Log',reservation:'Reservations',kitchen:'Kitchen',drink:'Drinks',hall:'Hall',facility:'Facilities',handover:'Tomorrow & Handover'}},
 zh:{title:'营业前后检查清单',shiftO:'🌅 开店检查',shiftC:'🌙 关店检查',
@@ -360,6 +448,23 @@ zh:{title:'营业前后检查清单',shiftO:'🌅 开店检查',shiftC:'🌙 关
   setAbout:'关于本演示',setAboutTxt:'基于示例数据运行的体验版。您输入的内容仅保存在本设备中。',
   setResetLbl:'重置演示',setResetBtn:'重置示例数据',
   setGuideLbl:'使用指南',setGuideBtn:'📖 打开简易指南',
+  navManual:'手册',
+  mHubTitle:'大家一起做的手册',
+  mHubLead:'员工用母语写下窍门，管理者审核后成为全员的操作步骤。管理者只需「采用／编辑／退回」三选一。文字由员工来写，减轻管理者负担。',
+  mPropose:'💡 提出窍门 / 操作方法',
+  mPendingH:'待审核（管理者确认）',mAdoptedH:'已采用的窍门',mRejectedH:'退回',
+  mNoPending:'没有待审核的提议。',
+  mNoAdopted:'还没有已采用的窍门。请从「提出」添加第一条。',
+  mOrig:'原文',mTrans:'自动翻译',
+  mAdopt:'✓ 采用',mEditAdopt:'✏️ 编辑',mReject:'退回',
+  mStatusAdopted:'已采用',mStatusRejected:'已退回',
+  mPropTitle:'提出窍门 / 操作方法',mPropItem:'关于哪个项目？',mPropItemPh:'请选择项目',
+  mPropLang:'书写语言',mPropText:'内容（母语即可）',mPropTextPh:'请用平时的语言写下操作、窍门或注意事项',
+  mPropBy:'您的姓名',mPropSubmit:'提交',mPropNeedItem:'请选择对象项目',
+  mPropNote:'📱 演示为简易显示。正式版由Claude自动翻译成日语并送达管理者。',
+  mEditFinal:'写入手册的内容',mAdoptFinal:'采用此内容',
+  mRejectReason:'退回理由',mRejectPh:'例：该步骤将在下周培训中说明。请稍作修改后重新提交。',mRejectDo:'退回',
+  mFieldTips:'现场窍门（员工提议）',mProposeHere:'＋ 为此项目提出窍门',
   units:['g','kg','ml','L','个','瓶','张','份'],
   cats:{hygiene:'卫生管理',haccp:'HACCP温度记录',reservation:'预约情况',kitchen:'厨房',drink:'饮料',hall:'大厅',facility:'设施·外观',handover:'明日预约·交接'}}
 };
@@ -528,6 +633,7 @@ function renderAll(){
   document.getElementById('hd-title').textContent=
     view==='home'?(shift==='open'?u().clTitleO:u().clTitleC)
     :view==='history'?u().navHistory
+    :view==='manual'?u().navManual
     :view==='notice'?u().navNotice:u().navSettings;
   document.getElementById('demo-note').innerHTML=u().demo;
   document.getElementById('demo-note').style.display=view==='home'?'':'none';
@@ -535,8 +641,10 @@ function renderAll(){
   document.getElementById('st-close-lbl').textContent=u().shiftC;
   document.getElementById('tb-home').textContent=u().navHome;
   document.getElementById('tb-history').textContent=u().navHistory;
+  document.getElementById('tb-manual').textContent=u().navManual;
   document.getElementById('tb-notice').textContent=u().navNotice;
   document.getElementById('tb-settings').textContent=u().navSettings;
+  updateManualBadge();
   document.getElementById('st-open').classList.toggle('on',shift==='open');
   document.getElementById('st-close').classList.toggle('on',shift==='close');
   document.getElementById('shift-tabs').style.display=view==='home'?'':'none';
@@ -544,15 +652,18 @@ function renderAll(){
   document.querySelectorAll('.lang-tabs .lt').forEach(b=>b.classList.toggle('on',b.dataset.l===lang));
   document.getElementById('view-home').style.display=view==='home'?'':'none';
   document.getElementById('view-history').style.display=view==='history'?'':'none';
+  document.getElementById('view-manual').style.display=view==='manual'?'':'none';
   document.getElementById('view-notice').style.display=view==='notice'?'':'none';
   document.getElementById('view-settings').style.display=view==='settings'?'':'none';
   if(view==='home') renderStaff();
   else if(view==='history') renderManager();
+  else if(view==='manual') renderManualHub();
   else if(view==='notice') renderNotice();
   else renderSettings();
   if(manualCtx) renderManualModal();
   if(document.getElementById('course-modal').style.display==='flex') renderCourseModal();
   if(document.getElementById('lang-modal').style.display==='flex') renderLangMenu();
+  if(document.getElementById('propose-modal').style.display==='flex' && propDraft && !propDraft._edit && !propDraft._rej) renderPropose();
 }
 
 function renderStaff(){
@@ -639,8 +750,9 @@ function renderStaff(){
         row.querySelector('.del-btn').onclick=()=>deleteItem(catKey,item.id);
       } else {
         const phb=photos[item.id]?'<span class="ph-badge">📷</span>':'';
+        const tipb=adoptedFor(item.id).length?'<span class="tip-badge" title="現場のコツ">💡</span>':'';
         const meta=isCheck?`<span class="item-meta">${u().doneLbl} ${checkMetaLabel(item.id)}</span>`:'';
-        row.innerHTML=`<label><span class="cb"></span><span class="item-text">${esc(itxt(item))}${phb}</span>${meta}</label>
+        row.innerHTML=`<label><span class="cb"></span><span class="item-text">${esc(itxt(item))}${phb}${tipb}</span>${meta}</label>
           <div class="item-acts">
             <button class="how-btn" title="${u().howBtn}">?</button>
             ${isCheck?'':`<button class="cam-btn" title="${u().photoBtn}">📷</button>`}
@@ -783,11 +895,16 @@ function renderManualModal(){
     box.querySelector('#man-save').onclick=()=>{saveManual(box.querySelector('#man-ta').value);};
     setTimeout(()=>box.querySelector('#man-ta').focus(),50);
   } else {
+    const tips=adoptedFor(manualCtx.id);
+    const tipsHtml=tips.length?`<div class="tip-sec"><div class="tip-h">💡 ${u().mFieldTips}</div>${tips.map(t=>`<div class="tip-card"><div class="tc-txt">${esc(adoptedDisplay(t))}</div><div class="tc-by">— ${esc(t.by||'')}${t.origLang?'（'+(LANGNAME[t.origLang]||t.origLang)+'）':''}</div></div>`).join('')}</div>`:'';
     box.innerHTML=`<div class="modal-h"><span class="modal-tag">${u().manTag}</span><span class="modal-title">${esc(name)}</span></div>
       ${text?`<div class="man-text">${esc(text)}</div>`:`<div class="man-empty">${u().manEmpty}</div>`}
+      ${tipsHtml}
+      <button class="mh-propose" style="margin:8px 0 2px;padding:11px;font-size:13px" id="man-propose">${u().mProposeHere}</button>
       <div class="modal-btns"><button class="mbtn" id="man-edit">${u().manEdit}</button><button class="mbtn pri" id="man-close">${u().manClose}</button></div>`;
     box.querySelector('#man-edit').onclick=()=>{manualCtx.editing=true;renderManualModal();};
     box.querySelector('#man-close').onclick=closeManual;
+    box.querySelector('#man-propose').onclick=()=>{const id=manualCtx.id;closeManual();openProposeFor(id);};
   }
 }
 function saveManual(text){
@@ -945,6 +1062,188 @@ function renderLangMenu(){
     <div class="modal-btns"><button class="mbtn pri" id="lang-close">${u().manClose}</button></div>`;
   box.querySelectorAll('.lang-opt').forEach(b=>b.onclick=()=>{setLang(b.dataset.l);closeLangMenu();});
   box.querySelector('#lang-close').onclick=closeLangMenu;
+}
+
+// ── Manual hub: staff tips → manager approval ──────────────────
+const LANGNAME={ja:'日本語',en:'English',zh:'中文',vi:'Tiếng Việt',ne:'नेपाली',ko:'한국어',my:'မြန်မာ',id:'Bahasa'};
+const PROP_LANGS=['ja','en','zh','vi','ne','ko','my','id'];
+let propDraft=null; // {itemId, lang, text, by} while composing a proposal
+
+function getProposals(){const r=localStorage.getItem('cl-proposals');return r?JSON.parse(r):[];}
+function saveProposals(a){localStorage.setItem('cl-proposals',JSON.stringify(a));}
+function pendingCount(){return getProposals().filter(p=>p.status==='pending').length;}
+function adoptedFor(itemId){return getProposals().filter(p=>p.status==='adopted'&&p.itemId===itemId);}
+function updateManualBadge(){const b=document.getElementById('tb-manual-badge');if(!b)return;const n=pendingCount();b.style.display=n?'':'none';b.textContent=n;}
+const REVIEWER=()=>lang==='zh'?'区域经理（演示）':lang==='en'?'Area Manager (Demo)':'エリアマネージャー（デモ）';
+function fmtWhen(iso){if(!iso)return'';return fmtDate(iso.slice(0,10))+' '+fmtTime(iso);}
+function allItemsFlat(){
+  const out=[];
+  ['open','close'].forEach(s=>{
+    const items=getItems(s);
+    (s==='open'?CAT_OPEN:CAT_CLOSE).forEach(c=>{
+      if(c==='handover'||c==='reservation')return;
+      (items[c]||[]).forEach(i=>{if(i.t==='c'||i.t==='q'||i.t==='t')out.push({shift:s,catKey:c,id:i.id,name:itxt(i)});});
+    });
+  });
+  return out;
+}
+function itemNameById(id){const f=allItemsFlat().find(x=>x.id===id);return f?f.name:id;}
+
+function renderManualHub(){
+  const box=document.getElementById('view-manual');
+  const props=getProposals();
+  const pending=props.filter(p=>p.status==='pending');
+  const adopted=props.filter(p=>p.status==='adopted');
+  const rejected=props.filter(p=>p.status==='rejected');
+  let html=`<div class="mh-intro"><h2>💡 ${u().mHubTitle}</h2><p>${u().mHubLead}</p>
+    <button class="mh-propose" onclick="openPropose()">${u().mPropose}</button></div>`;
+  html+=`<div class="mh-sec-h">🕓 ${u().mPendingH}${pending.length?`<span class="mh-count">${pending.length}</span>`:''}</div>`;
+  html+=pending.length?pending.map(pendingCard).join(''):`<div class="mh-empty">${u().mNoPending}</div>`;
+  html+=`<div class="mh-sec-h">✅ ${u().mAdoptedH}</div>`;
+  html+=adopted.length?adopted.map(p=>doneCard(p,'ok')).join(''):`<div class="mh-empty">${u().mNoAdopted}</div>`;
+  if(rejected.length) html+=`<div class="mh-sec-h">↩ ${u().mRejectedH}</div>`+rejected.map(p=>doneCard(p,'ng')).join('');
+  box.innerHTML=html;
+}
+function langChip(code){return `<span class="pc-lang">${LANGNAME[code]||code}</span>`;}
+// adopted tip shown in the viewer's language: ja shows the manager's canonical text; others prefer the translation
+function adoptedDisplay(p){return lang==='ja'?(p.adoptedText||p.tr?.ja||p.origText):(p.tr?.[lang]||p.adoptedText||p.origText);}
+function pendingCard(p){
+  const tr=p.tr?.[lang]||p.tr?.ja||p.origText;
+  const showOrig=p.origLang!==lang;
+  return `<div class="pc">
+    <div class="pc-top">${langChip(p.origLang)}<span class="pc-by">${esc(p.by||'-')}</span><span class="pc-when">${fmtWhen(p.at)}</span></div>
+    <div class="pc-item">📋 ${esc(itemNameById(p.itemId))}</div>
+    ${showOrig?`<div class="pc-blk"><div class="pc-lbl">${u().mOrig}</div><div class="pc-orig">${esc(p.origText)}</div></div>`:''}
+    <div class="pc-blk"><div class="pc-lbl">🌐 ${u().mTrans}</div><div class="pc-tr">${esc(tr)}</div></div>
+    <div class="pc-acts">
+      <button class="pc-adopt" onclick="adoptProposal('${p.id}')">${u().mAdopt}</button>
+      <button class="pc-edit" onclick="openEditAdopt('${p.id}')">${u().mEditAdopt}</button>
+      <button class="pc-reject" onclick="openReject('${p.id}')" title="${u().mReject}">↩</button>
+    </div></div>`;
+}
+function doneCard(p,kind){
+  const finalTxt=p.status==='adopted'?adoptedDisplay(p):(p.tr?.[lang]||p.tr?.ja||p.origText);
+  return `<div class="pc done">
+    <div class="pc-top">${langChip(p.origLang)}<span class="pc-by">${esc(p.by||'-')}</span><span class="pc-when">${fmtWhen(p.at)}</span></div>
+    <div class="pc-item">📋 ${esc(itemNameById(p.itemId))}</div>
+    <div class="pc-final">${esc(finalTxt)}</div>
+    <div class="pc-status ${kind}">${p.status==='adopted'?'✓ '+u().mStatusAdopted:'↩ '+u().mStatusRejected}${p.reviewedBy?'（'+esc(p.reviewedBy)+'）':''}</div>
+    ${p.status==='rejected'&&p.rejectNote?`<div class="pc-reject-note">💬 ${esc(p.rejectNote)}</div>`:''}
+  </div>`;
+}
+
+// ── Propose (staff) ────────────────────────────────────────────
+function openPropose(){openProposeFor('');}
+function openProposeFor(itemId){propDraft={itemId:itemId||'',lang:lang,text:'',by:staffName||''};document.getElementById('propose-modal').style.display='flex';renderPropose();}
+function closePropose(){propDraft=null;document.getElementById('propose-modal').style.display='none';}
+function renderPropose(){
+  if(!propDraft)return;
+  const box=document.getElementById('propose-box');
+  const opts=`<option value="" disabled${propDraft.itemId?'':' selected'}>${u().mPropItemPh}</option>`+
+    allItemsFlat().map(it=>`<option value="${it.id}"${propDraft.itemId===it.id?' selected':''}>${it.shift==='open'?'🌅':'🌙'} ${esc(it.name)}</option>`).join('');
+  box.innerHTML=`<div class="modal-h"><span class="modal-tag">💡</span><span class="modal-title">${u().mPropTitle}</span></div>
+    <div class="pm-fld"><label>${u().mPropItem}</label><select class="pm-sel" id="pm-item">${opts}</select></div>
+    <div class="pm-fld"><label>${u().mPropLang}</label><div class="pm-langs">${PROP_LANGS.map(l=>`<button class="pm-lang${propDraft.lang===l?' on':''}" data-l="${l}">${LANGNAME[l]}</button>`).join('')}</div></div>
+    <div class="pm-fld"><label>${u().mPropText}</label><textarea class="pm-ta" id="pm-text" placeholder="${u().mPropTextPh}">${esc(propDraft.text)}</textarea></div>
+    <div class="pm-fld"><label>${u().mPropBy}</label><input class="set-inp" id="pm-by" value="${esc(propDraft.by)}" placeholder="${u().staffPh}"></div>
+    <div class="pm-note">${u().mPropNote}</div>
+    <div class="pm-err" id="pm-err">${u().mPropNeedItem}</div>
+    <div class="modal-btns" style="margin-top:12px"><button class="mbtn" id="pm-cancel">${u().manCancel}</button><button class="mbtn pri" id="pm-submit">${u().mPropSubmit}</button></div>`;
+  box.querySelector('#pm-item').onchange=e=>{propDraft.itemId=e.target.value;box.querySelector('#pm-err').style.display='none';};
+  box.querySelector('#pm-text').oninput=e=>propDraft.text=e.target.value;
+  box.querySelector('#pm-by').oninput=e=>propDraft.by=e.target.value;
+  box.querySelectorAll('.pm-lang').forEach(b=>b.onclick=()=>{propDraft.lang=b.dataset.l;renderPropose();});
+  box.querySelector('#pm-cancel').onclick=closePropose;
+  box.querySelector('#pm-submit').onclick=submitProposal;
+}
+function submitProposal(){
+  const box=document.getElementById('propose-box');
+  const it=box.querySelector('#pm-item').value;
+  const text=box.querySelector('#pm-text').value.trim();
+  const by=box.querySelector('#pm-by').value.trim();
+  if(!it){box.querySelector('#pm-err').style.display='block';return;}
+  if(!text){box.querySelector('#pm-text').focus();return;}
+  // demo translation: echo original into all slots. In production, Claude fills tr[].
+  const tr={}; ['ja','en','zh'].forEach(l=>tr[l]=text); tr[propDraft.lang]=text;
+  const props=getProposals();
+  props.unshift({id:'p'+Date.now(),itemId:it,origLang:propDraft.lang,origText:text,tr,by,at:new Date().toISOString(),status:'pending'});
+  saveProposals(props);
+  closePropose(); switchView('manual');
+}
+
+// ── Approve / edit / reject (manager) ──────────────────────────
+function adoptProposal(id){
+  const props=getProposals();const p=props.find(x=>x.id===id);if(!p)return;
+  p.status='adopted';p.adoptedText=p.tr?.ja||p.origText;p.reviewedBy=REVIEWER();p.reviewedAt=new Date().toISOString();
+  saveProposals(props);renderAll();
+}
+function openEditAdopt(id){
+  const p=getProposals().find(x=>x.id===id);if(!p)return;
+  propDraft={_edit:true};
+  const box=document.getElementById('propose-box');
+  document.getElementById('propose-modal').style.display='flex';
+  const cur=p.adoptedText||p.tr?.ja||p.origText;
+  box.innerHTML=`<div class="modal-h"><span class="modal-tag">✏️</span><span class="modal-title">${u().mEditAdopt}</span></div>
+    <div class="pc-item" style="margin:10px 0">📋 ${esc(itemNameById(p.itemId))}</div>
+    <div class="pm-fld"><label>${u().mEditFinal}</label><textarea class="pm-ta" id="ea-text">${esc(cur)}</textarea></div>
+    <div class="modal-btns" style="margin-top:12px"><button class="mbtn" id="ea-cancel">${u().manCancel}</button><button class="mbtn pri" id="ea-ok">${u().mAdoptFinal}</button></div>`;
+  box.querySelector('#ea-cancel').onclick=closePropose;
+  box.querySelector('#ea-ok').onclick=()=>commitEditAdopt(id);
+}
+function commitEditAdopt(id){
+  const txt=document.getElementById('ea-text').value.trim();
+  const props=getProposals();const p=props.find(x=>x.id===id);if(!p)return;
+  p.status='adopted';p.adoptedText=txt;p.reviewedBy=REVIEWER();p.reviewedAt=new Date().toISOString();
+  saveProposals(props);closePropose();renderAll();
+}
+function openReject(id){
+  const p=getProposals().find(x=>x.id===id);if(!p)return;
+  propDraft={_rej:true};
+  const box=document.getElementById('propose-box');
+  document.getElementById('propose-modal').style.display='flex';
+  box.innerHTML=`<div class="modal-h"><span class="modal-tag">↩</span><span class="modal-title">${u().mReject}</span></div>
+    <div class="pc-item" style="margin:10px 0">📋 ${esc(itemNameById(p.itemId))}</div>
+    <div class="pm-fld"><label>${u().mRejectReason}</label><textarea class="pm-ta" id="rj-text" placeholder="${u().mRejectPh}"></textarea></div>
+    <div class="modal-btns" style="margin-top:12px"><button class="mbtn" id="rj-cancel">${u().manCancel}</button><button class="mbtn pri" id="rj-ok" style="background:var(--red);border-color:var(--red)">${u().mRejectDo}</button></div>`;
+  box.querySelector('#rj-cancel').onclick=closePropose;
+  box.querySelector('#rj-ok').onclick=()=>commitReject(id);
+}
+function commitReject(id){
+  const txt=document.getElementById('rj-text').value.trim();
+  const props=getProposals();const p=props.find(x=>x.id===id);if(!p)return;
+  p.status='rejected';p.rejectNote=txt;p.reviewedBy=REVIEWER();p.reviewedAt=new Date().toISOString();
+  saveProposals(props);closePropose();renderAll();
+}
+
+// ── Seed proposals (demo) ──────────────────────────────────────
+function seedProposals(){
+  if(localStorage.getItem('cl-proposals'))return;
+  const at=(d,hm)=>dateStr(d)+'T'+hm+':00';
+  const seed=[
+    {id:'ps1',itemId:'ok2',origLang:'vi',
+     origText:'Nồi nước dùng phải hầm ít nhất 3 tiếng. Khi sôi thì hạ nhỏ lửa, sôi mạnh sẽ làm nước bị đục.',
+     tr:{ja:'だしは最低3時間煮込む。沸いたら弱火にする。強く沸かすと濁るので注意。',
+         en:'Simmer the stock at least 3 hours. Once it boils, lower the heat — a hard boil turns it cloudy.',
+         zh:'高汤至少熬煮3小时。煮沸后转小火，大火滚煮会使汤变浑浊。',
+         vi:'Nồi nước dùng phải hầm ít nhất 3 tiếng. Khi sôi thì hạ nhỏ lửa, sôi mạnh sẽ làm nước bị đục.'},
+     by:'Nguyen',at:at(1,'15:20'),status:'pending'},
+    {id:'ps2',itemId:'ol3',origLang:'ja',
+     origText:'土日は釣り銭が不足しがち。金曜の閉店前に千円札20枚・500円玉を1本ぶん用意しておくとスムーズです。',
+     tr:{ja:'土日は釣り銭が不足しがち。金曜の閉店前に千円札20枚・500円玉を1本ぶん用意しておくとスムーズです。',
+         en:'Change runs low on weekends. Prepare 20×¥1,000 notes and a roll of ¥500 coins before Friday closing.',
+         zh:'周末零钱容易不足。周五关店前先备好20张千元钞和一卷500日元硬币会更顺畅。'},
+     by:'山田',at:at(0,'09:40'),status:'pending'},
+    {id:'ps3',itemId:'od1',origLang:'ko',
+     origText:'제빙기는 아침에 첫 얼음 한 바가지를 버리고 쓰세요. 밤새 고인 물이라 위생상 좋지 않습니다.',
+     tr:{ja:'製氷機は朝いちばんの氷をひとすくい捨ててから使う。一晩たまった水で衛生的によくないため。',
+         en:'Each morning, scoop out and discard the first batch of ice before use — it sat overnight and isn’t sanitary.',
+         zh:'每天早上先舀掉制冰机的第一批冰再使用——那是放置一夜的水，不够卫生。',
+         ko:'제빙기는 아침에 첫 얼음 한 바가지를 버리고 쓰세요. 밤새 고인 물이라 위생상 좋지 않습니다.'},
+     by:'Kim',at:at(3,'08:30'),status:'adopted',
+     adoptedText:'製氷機は朝いちばんの氷をひとすくい捨ててから使う。一晩たまった水で衛生的によくないため。',
+     reviewedBy:'エリアマネージャー（デモ）',reviewedAt:at(3,'10:05')},
+  ];
+  localStorage.setItem('cl-proposals',JSON.stringify(seed));
 }
 
 // ── Seed today's home view (matches the flyer look) ────────────
@@ -1115,6 +1414,7 @@ function seedDemo(){
 // ── Init ──────────────────────────────────────────────────────
 freshState();
 seedDemo();
+seedProposals();
 seedTodayHome();
 renderAll();
 </script>
