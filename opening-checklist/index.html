@@ -270,6 +270,12 @@ header{background:linear-gradient(120deg,var(--navy),var(--navy2));color:#fff;pa
 /* tab badge */
 .tabbar .tb{position:relative}
 .tb-badge{position:absolute;top:3px;left:calc(50% + 5px);background:var(--red);color:#fff;font-size:9.5px;font-weight:800;border-radius:20px;min-width:15px;height:15px;line-height:15px;text-align:center;padding:0 4px}
+/* bulk-import preview */
+.imp-sum{background:#f8fafc;border:1px solid var(--border);border-radius:12px;padding:6px 14px;margin:12px 0}
+.imp-sh{font-size:13px;font-weight:800;color:var(--navy);margin:9px 0 3px}
+.imp-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--sub);padding:5px 0;border-top:1px dashed var(--border)}
+.imp-row b{color:var(--ink);font-weight:800}
+.imp-warn{font-size:12.5px;color:#92400e;background:#fffbeb;border:1px solid #fde68a;border-radius:9px;padding:9px 11px;margin:10px 0}
 @media print{
   header,.lang-tabs,.shift-tabs,.demo-note,.footer-bar,.tabbar,.submit-area,.item-acts,.reorder,.man-edit-btn,.modal-ov,.how-btn,.cam-btn,.temp-how{display:none!important}
   body{padding:0;background:#fff}
@@ -317,6 +323,7 @@ header{background:linear-gradient(120deg,var(--navy),var(--navy2));color:#fff;pa
 <div class="modal-ov" id="course-modal" style="display:none"><div class="modal-box" id="course-box"></div></div>
 <div class="modal-ov" id="lang-modal" style="display:none"><div class="modal-box" id="lang-box"></div></div>
 <div class="modal-ov" id="propose-modal" style="display:none"><div class="modal-box" id="propose-box"></div></div>
+<div class="modal-ov" id="import-modal" style="display:none"><div class="modal-box" id="import-box"></div></div>
 <script>
 // ── UI strings ────────────────────────────────────────────────
 const UI={
@@ -367,6 +374,12 @@ ja:{title:'開店・閉店チェックリスト',shiftO:'🌅 開店チェック
   mEditFinal:'マニュアルに載せる文',mAdoptFinal:'この内容で採用',
   mRejectReason:'差し戻しの理由',mRejectPh:'例：その手順は来週の研修で説明します。少し直して再提案してください。',mRejectDo:'差し戻す',
   mFieldTips:'現場のコツ（スタッフ提案）',mProposeHere:'＋ この項目にコツを提案',
+  setImportLbl:'マニュアルを一括登録',setImportDesc:'お店のマニュアル（項目＋手順）を、CSV／Excelでまとめて取り込めます。導入時のセットアップに。',
+  setImportTpl:'📄 テンプレートをダウンロード',setImportBtn:'📥 CSV／Excelを選ぶ',
+  impTitle:'一括登録のプレビュー',impItems:'件',impSkipped:'件は不明なカテゴリのためスキップ',
+  impNote:'📌「置き換える」はそのシフトの該当カテゴリを入れ替え（温度項目は残す）、「追加する」は既存に足します。',
+  impAdd:'追加する',impReplace:'置き換える',impCancel:'キャンセル',
+  impEmpty:'取り込める項目が見つかりませんでした。テンプレートの形式をご確認ください。',impDone:'%n件を登録しました。',
   units:['g','kg','ml','L','本','個','枚','合','人前','ポーション','皿'],
   cats:{hygiene:'衛生管理',haccp:'HACCP温度記録',reservation:'予約状況',kitchen:'キッチン',drink:'ドリンク',hall:'ホール',facility:'設備・外観',handover:'明日の予約・申し送り'}},
 en:{title:'Opening & Closing Checklist',shiftO:'🌅 Opening',shiftC:'🌙 Closing',
@@ -416,6 +429,12 @@ en:{title:'Opening & Closing Checklist',shiftO:'🌅 Opening',shiftC:'🌙 Closi
   mEditFinal:'Text to publish in the manual',mAdoptFinal:'Adopt this text',
   mRejectReason:'Reason for sending back',mRejectPh:'e.g. We’ll cover this in next week’s training. Please tweak and resubmit.',mRejectDo:'Send back',
   mFieldTips:'Field tips (from staff)',mProposeHere:'＋ Suggest a tip for this item',
+  setImportLbl:'Bulk-import manual',setImportDesc:'Import your whole manual (items + steps) from CSV/Excel. Great for initial setup.',
+  setImportTpl:'📄 Download template',setImportBtn:'📥 Choose CSV/Excel',
+  impTitle:'Import preview',impItems:' items',impSkipped:' rows skipped (unknown category)',
+  impNote:'📌 “Replace” swaps that shift’s matching categories (temperature items are kept); “Add” appends to existing items.',
+  impAdd:'Add',impReplace:'Replace',impCancel:'Cancel',
+  impEmpty:'No importable items found. Please check the template format.',impDone:'Imported %n items.',
   units:['g','kg','ml','L','pcs','bottles','sheets','portions'],
   cats:{hygiene:'Hygiene',haccp:'HACCP Temp Log',reservation:'Reservations',kitchen:'Kitchen',drink:'Drinks',hall:'Hall',facility:'Facilities',handover:'Tomorrow & Handover'}},
 zh:{title:'营业前后检查清单',shiftO:'🌅 开店检查',shiftC:'🌙 关店检查',
@@ -465,6 +484,12 @@ zh:{title:'营业前后检查清单',shiftO:'🌅 开店检查',shiftC:'🌙 关
   mEditFinal:'写入手册的内容',mAdoptFinal:'采用此内容',
   mRejectReason:'退回理由',mRejectPh:'例：该步骤将在下周培训中说明。请稍作修改后重新提交。',mRejectDo:'退回',
   mFieldTips:'现场窍门（员工提议）',mProposeHere:'＋ 为此项目提出窍门',
+  setImportLbl:'批量导入手册',setImportDesc:'可用CSV／Excel一次性导入门店手册（项目＋步骤）。适合导入时的初始设置。',
+  setImportTpl:'📄 下载模板',setImportBtn:'📥 选择CSV／Excel',
+  impTitle:'导入预览',impItems:'项',impSkipped:'行因分类不明被跳过',
+  impNote:'📌「替换」将替换该班次的对应分类（保留温度项目），「追加」则添加到现有项目。',
+  impAdd:'追加',impReplace:'替换',impCancel:'取消',
+  impEmpty:'未找到可导入的项目。请检查模板格式。',impDone:'已导入%n项。',
   units:['g','kg','ml','L','个','瓶','张','份'],
   cats:{hygiene:'卫生管理',haccp:'HACCP温度记录',reservation:'预约情况',kitchen:'厨房',drink:'饮料',hall:'大厅',facility:'设施·外观',handover:'明日预约·交接'}}
 };
@@ -588,12 +613,13 @@ let selDate=null, manualCtx=null;
 
 const u=()=>UI[lang];
 function itxt(item){
-  if(item.customText) return item.customText;
+  const c=item.customText;
+  if(c!=null&&c!==''){return typeof c==='object'?(c[lang]||c.ja||Object.values(c).find(Boolean)||''):c;}
   return IT[item.id]?.[lang]||IT[item.id]?.ja||item.id;
 }
 function manText(item){
   if(!item) return '';
-  if(item.manual!==undefined) return item.manual;
+  if(item.manual!==undefined){const m=item.manual;return typeof m==='object'?(m[lang]||m.ja||Object.values(m).find(Boolean)||''):m;}
   return MAN[item.id]?.[lang]||MAN[item.id]?.ja||'';
 }
 function getItems(s){
@@ -910,7 +936,11 @@ function renderManualModal(){
 function saveManual(text){
   const items=getItems(shift);
   const item=items[manualCtx.catKey]?.find(i=>i.id===manualCtx.id);
-  if(item){item.manual=text;saveItems(shift,items);}
+  if(item){
+    if(item.manual&&typeof item.manual==='object') item.manual={...item.manual,[lang]:text};
+    else item.manual=text;
+    saveItems(shift,items);
+  }
   manualCtx.editing=false;renderManualModal();
 }
 
@@ -965,7 +995,11 @@ function moveItem(catKey,id,dir){
 }
 function saveItemText(catKey,itemId,text){
   const items=getItems(shift); const item=items[catKey]?.find(i=>i.id===itemId);
-  if(item){item.customText=text;saveItems(shift,items);}
+  if(item){
+    if(item.customText&&typeof item.customText==='object') item.customText={...item.customText,[lang]:text};
+    else item.customText=text;
+    saveItems(shift,items);
+  }
 }
 function saveItemUnit(catKey,itemId,unit){
   const items=getItems(shift); const item=items[catKey]?.find(i=>i.id===itemId);
@@ -1039,10 +1073,15 @@ function renderSettings(){
       <div class="set-more">${u().langMore}</div></div>
     <div class="set-card"><div class="set-lbl">${u().setEditLbl}</div><div class="set-desc">${u().setEditDesc}</div></div>
     <div class="set-card"><div class="set-lbl">${u().setGuideLbl}</div><a class="set-link" href="guide.html">${u().setGuideBtn}</a></div>
+    <div class="set-card"><div class="set-lbl">${u().setImportLbl}</div><div class="set-desc">${u().setImportDesc}</div>
+      <button class="set-link" id="imp-tpl" style="background:#fff;color:var(--navy);border:1.5px solid var(--border);margin-top:11px">${u().setImportTpl}</button>
+      <button class="set-link" id="imp-file" style="margin-top:8px">${u().setImportBtn}</button></div>
     <div class="set-card"><div class="set-lbl">${u().setAbout}</div><div class="set-desc">${u().setAboutTxt}</div></div>
     <div class="set-card"><div class="set-lbl">${u().setResetLbl}</div><button class="set-reset" id="set-reset">${u().setResetBtn}</button></div>`;
   box.querySelector('#set-staff').oninput=e=>staffName=e.target.value;
   box.querySelectorAll('.set-lang').forEach(b=>b.onclick=()=>setLang(b.dataset.l));
+  box.querySelector('#imp-tpl').onclick=downloadTemplate;
+  box.querySelector('#imp-file').onclick=pickImportFile;
   box.querySelector('#set-reset').onclick=resetDemo;
 }
 function resetDemo(){
@@ -1245,6 +1284,153 @@ function seedProposals(){
   ];
   localStorage.setItem('cl-proposals',JSON.stringify(seed));
 }
+
+// ── Bulk import: manual (items + steps) via CSV / Excel ────────
+const COLMAP={
+  'シフト':'shift','shift':'shift','開店閉店':'shift','時間帯':'shift',
+  'カテゴリ':'cat','category':'cat','分類':'cat','カテゴリー':'cat',
+  '項目名':'ja','項目':'ja','item':'ja','項目名（日本語）':'ja','項目名_ja':'ja','manual_item':'ja',
+  '種類':'type','type':'type','タイプ':'type',
+  '単位':'unit','unit':'unit',
+  '項目名_en':'en','item_en':'en','項目名（英語）':'en','english':'en','英語':'en',
+  '項目名_zh':'zh','item_zh':'zh','項目名（中文）':'zh','中文':'zh','中国語':'zh',
+  '手順':'mja','手順_ja':'mja','手順（日本語）':'mja','やり方':'mja','manual':'mja','steps':'mja',
+  '手順_en':'men','手順（英語）':'men','steps_en':'men',
+  '手順_zh':'mzh','手順（中文）':'mzh','steps_zh':'mzh',
+};
+const IMPORT_CATS=['hygiene','haccp','kitchen','drink','hall','facility'];
+function catKeyFromName(name){
+  name=(name||'').trim(); if(!name) return null;
+  if(IMPORT_CATS.includes(name)) return name;
+  for(const lg of ['ja','en','zh']){const cats=UI[lg].cats;for(const k in cats){if(IMPORT_CATS.includes(k)&&cats[k]===name) return k;}}
+  return null;
+}
+function shiftKey(v){v=(v||'').trim();if(!v)return null;if(/open|開|开|朝|am|morning/i.test(v))return 'open';if(/clos|閉|关|闭|夜|pm|evening|night/i.test(v))return 'close';return null;}
+function typeKey(v){v=(v||'').trim();return /q|数量|qty|数/i.test(v)?'q':'c';}
+function parseCSV(text){
+  text=String(text||'').replace(/^﻿/,'').replace(/\r\n?/g,'\n');
+  const rows=[];let row=[],cell='',q=false;
+  for(let i=0;i<text.length;i++){const ch=text[i];
+    if(q){if(ch==='"'){if(text[i+1]==='"'){cell+='"';i++;}else q=false;}else cell+=ch;}
+    else{if(ch==='"')q=true;else if(ch===','){row.push(cell);cell='';}else if(ch==='\n'){row.push(cell);rows.push(row);row=[];cell='';}else if(ch!=='\r')cell+=ch;}
+  }
+  if(cell!==''||row.length){row.push(cell);rows.push(row);}
+  return rows.filter(r=>r.some(c=>String(c).trim()!==''));
+}
+function aoaToParsed(aoa){
+  const parsed={open:{},close:{}};let count=0,skipped=0;
+  if(!aoa||aoa.length<2) return {parsed,count,skipped,reason:'empty'};
+  const header=aoa[0].map(h=>String(h==null?'':h).trim());
+  const idx={};header.forEach((h,i)=>{const k=COLMAP[h]||COLMAP[h.toLowerCase()];if(k&&idx[k]==null)idx[k]=i;});
+  if(idx.shift==null||idx.cat==null||idx.ja==null) return {parsed,count,skipped,reason:'header'};
+  for(let r=1;r<aoa.length;r++){
+    const row=aoa[r]||[];const g=k=>idx[k]!=null?String(row[idx[k]]==null?'':row[idx[k]]).trim():'';
+    const ja=g('ja'); if(!ja) continue;
+    const s=shiftKey(g('shift')),cat=catKeyFromName(g('cat'));
+    if(!s||!cat){skipped++;continue;}
+    const t=typeKey(g('type'));
+    const ct={ja};const en=g('en'),zh=g('zh');if(en)ct.en=en;if(zh)ct.zh=zh;
+    const item={id:'im-'+Date.now().toString(36)+'-'+count,t,customText:ct};
+    if(t==='q') item.unit=g('unit')||'個';
+    const mja=g('mja'),men=g('men'),mzh=g('mzh');
+    if(mja||men||mzh){const m={};if(mja)m.ja=mja;if(men)m.en=men;if(mzh)m.zh=mzh;item.manual=m;}
+    (parsed[s][cat]=parsed[s][cat]||[]).push(item); count++;
+  }
+  return {parsed,count,skipped,reason:null};
+}
+// CSV bytes → rows, auto-detecting UTF-8 vs Shift_JIS (Excel on JP Windows)
+function decodeCSV(buf){
+  const dec=enc=>{try{return new TextDecoder(enc).decode(buf);}catch(e){return null;}};
+  const mapsOk=a=>{if(!a||!a.length)return false;const idx={};a[0].map(h=>String(h||'').trim()).forEach(h=>{const k=COLMAP[h]||COLMAP[h.toLowerCase()];if(k)idx[k]=1;});return!!(idx.shift&&idx.cat&&idx.ja);};
+  let aoa=parseCSV(dec('utf-8')||'');
+  if(!mapsOk(aoa)){const sj=dec('shift_jis');if(sj){const a2=parseCSV(sj);if(mapsOk(a2))aoa=a2;}}
+  return aoa;
+}
+function csvCell(v){v=String(v==null?'':v);return /[",\r\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
+function downloadTemplate(){
+  const rows=[
+    ['シフト','カテゴリ','項目名','種類','単位','項目名_EN','項目名_ZH','手順_JA','手順_EN','手順_ZH'],
+    ['開店','衛生管理','手洗い・消毒の実施確認','チェック','','Handwashing & sanitizing','洗手消毒确认','石けんで30秒以上洗い、アルコール消毒','Wash 30s+ with soap, then sanitize','用肥皂洗手30秒以上后消毒'],
+    ['開店','キッチン','スープ・だしの仕込み','数量','L','Soup / stock prep','汤底备料','前日残量を確認し、当日客数から逆算','Check leftovers, estimate from bookings','确认前日剩余，按当日客数估算'],
+    ['閉店','設備・外観','ガス元栓の確認','チェック','','Gas main valve off','煤气总阀关闭确认','元栓レバーを配管と直角にする','Turn the main lever perpendicular to the pipe','将总阀拉杆与管道垂直'],
+  ];
+  const csv='﻿'+rows.map(r=>r.map(csvCell).join(',')).join('\r\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  a.download='manual_template.csv';document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1500);
+}
+function loadXLSX(cb){
+  if(window.XLSX) return cb();
+  const s=document.createElement('script');
+  s.src='https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+  s.onload=cb;s.onerror=()=>alert('Excelライブラリの読み込みに失敗しました。CSVをお試しください。');
+  document.head.appendChild(s);
+}
+function pickImportFile(){
+  const inp=document.createElement('input');inp.type='file';inp.accept='.csv,.xlsx,.xls';
+  inp.onchange=e=>{const f=e.target.files&&e.target.files[0];if(f)readImportFile(f);};
+  inp.click();
+}
+function readImportFile(f){
+  const name=(f.name||'').toLowerCase();
+  const fail=()=>alert('ファイルの読み込みに失敗しました。テンプレート形式のCSVまたはExcelをお試しください。');
+  if(name.endsWith('.xlsx')||name.endsWith('.xls')){
+    loadXLSX(()=>{const r=new FileReader();r.onerror=fail;r.onload=e=>{try{
+      const wb=XLSX.read(e.target.result,{type:'array'});const ws=wb.Sheets[wb.SheetNames[0]];
+      openImportPreview(XLSX.utils.sheet_to_json(ws,{header:1,raw:false,defval:''}));
+    }catch(err){fail();}};r.readAsArrayBuffer(f);});
+  } else {
+    const r=new FileReader();r.onerror=fail;r.onload=e=>{try{openImportPreview(decodeCSV(e.target.result));}catch(err){fail();}};r.readAsArrayBuffer(f);
+  }
+}
+function openImportPreview(aoa){
+  const res=aoaToParsed(aoa);window.__import=res;
+  const box=document.getElementById('import-box');
+  document.getElementById('import-modal').style.display='flex';
+  if(!res.count){
+    box.innerHTML=`<div class="modal-h"><span class="modal-tag">📥</span><span class="modal-title">${u().impTitle}</span></div>
+      <div class="man-empty">${u().impEmpty}</div>
+      <div class="modal-btns"><button class="mbtn pri" id="imp-x">${u().manClose}</button></div>`;
+    box.querySelector('#imp-x').onclick=closeImport;return;
+  }
+  const lines=[];
+  ['open','close'].forEach(s=>{
+    const cats=res.parsed[s],n=Object.values(cats).reduce((a,b)=>a+b.length,0);
+    if(!n)return;
+    lines.push(`<div class="imp-sh">${s==='open'?u().shiftO:u().shiftC}：${n}${u().impItems}</div>`);
+    Object.keys(cats).forEach(c=>lines.push(`<div class="imp-row"><span>${CAT_ICON[c]||''} ${u().cats[c]}</span><b>${cats[c].length}</b></div>`));
+  });
+  const warn=res.skipped?`<div class="imp-warn">⚠ ${res.skipped}${u().impSkipped}</div>`:'';
+  box.innerHTML=`<div class="modal-h"><span class="modal-tag">📥</span><span class="modal-title">${u().impTitle}</span></div>
+    <div class="imp-sum">${lines.join('')}</div>${warn}
+    <div class="pm-note">${u().impNote}</div>
+    <div class="modal-btns"><button class="mbtn" id="imp-add">${u().impAdd}</button><button class="mbtn pri" id="imp-rep">${u().impReplace}</button></div>
+    <button class="set-reset" id="imp-cancel" style="margin-top:8px;color:var(--sub);border-color:var(--border)">${u().impCancel}</button>`;
+  box.querySelector('#imp-add').onclick=()=>doImport('add');
+  box.querySelector('#imp-rep').onclick=()=>doImport('replace');
+  box.querySelector('#imp-cancel').onclick=closeImport;
+}
+function applyImport(parsed,mode){
+  ['open','close'].forEach(s=>{
+    const inc=parsed[s];if(!inc||!Object.keys(inc).length)return;
+    const items=getItems(s);
+    Object.keys(inc).forEach(cat=>{
+      if(!items[cat])items[cat]=[];
+      if(mode==='replace'){const temps=items[cat].filter(i=>i.t==='t');items[cat]=[...temps,...inc[cat]];}
+      else items[cat]=[...items[cat],...inc[cat]];
+    });
+    saveItems(s,items);
+  });
+}
+function doImport(mode){
+  const n=window.__import?window.__import.count:0;
+  try{ if(window.__import) applyImport(window.__import.parsed,mode); }
+  catch(e){ closeImport(); alert('保存容量の上限に達した可能性があります。項目数を減らすか、写真を整理してから再度お試しください。'); return; }
+  closeImport();
+  view='home';renderAll();
+  alert(u().impDone.replace('%n',n));
+}
+function closeImport(){document.getElementById('import-modal').style.display='none';window.__import=null;}
 
 // ── Seed today's home view (matches the flyer look) ────────────
 function seedTodayHome(){
