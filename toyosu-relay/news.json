@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-08T07:37:05+09:00",
+  "updated": "2026-07-09T07:32:21+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -17,10 +17,17 @@
   ],
   "items": [
     {
-      "title": "食品卸 メーカー支援の新たな形 営業や物流を代行",
-      "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTE9haFZIU1NQM1JZRjEzbTUxeGdtSmtyelBOSlNwN3JLaVZSY3V1UER4Qk5LLVAta2ZCMWtFckd1ZV9tV3lCUlFrb1V4NG01TjZNamZZcjlFMG92QmpjSWU3dWJJOTNnXzE0cWNuVkpR?oc=5",
-      "source": "Excite エキサイト",
-      "date": "2026-07-01",
+      "title": "食品卸の倒産高止まり、物流費も採算圧迫",
+      "link": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE1vV0lVLTFVMWxQVG1OUTFucG5Ybm9zcXhkUk5xZUQ0VS1ObnR1SUh4UHcxRnhOcEZBNkFDLUJVQV83M2ktS3BvbtIBTkFVX3lxTFBydkJKTlMzODJVQmJrcnB2X0x1SnYtNWxmQkVHaVdEVHFVVzFIOElzcUFpLVNlSm96U1dIbG51dF9haFJaVzRyd0QzdTVXdw?oc=5",
+      "source": "LOGISTICS TODAY",
+      "date": "2026-07-08",
+      "cat": "business"
+    },
+    {
+      "title": "中部の青果卸１２社、共同物流で新会社",
+      "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE1fMk5qVDdFLWc1SEJOSWxJVW5RMXhXQXpmZ0ZUT1RXeWpMUGxwMHhvNjgtU050RXg0d0NVNFMwek5HOXcyNlNlUWRGNlFfaEZ6emxCamFkTQ?oc=5",
+      "source": "日本農業新聞",
+      "date": "2026-06-28",
       "cat": "business"
     },
     {
@@ -78,13 +85,6 @@
       "source": "どらったら！！",
       "date": "2026-06-07",
       "cat": "toyosu"
-    },
-    {
-      "title": "物流アップデート＞中部圏物流共同化へ 青果卸、産地など１９組織 「２４年問題」対策で協議会設立",
-      "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE12bEo1OG1NN2RfSnZvRjltcVhzanE4TTBVRHNhYnlEMTFjMVBWYUJRT1diN0xqY014UE1wZHBiNllJT09ncFdnVDhwU3pXTGN3LVNwU3V1Zw?oc=5",
-      "source": "日本農業新聞",
-      "date": "2026-05-24",
-      "cat": "business"
     },
     {
       "title": "県産ゴボウ、高値反動で相場下押し/八戸市中央卸売市場４月市況概要",
