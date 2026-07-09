@@ -4,14 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>店舗間フードリレー 食材の貸借・精算（デモ）｜株式会社スパイシーデバイス</title>
-<meta name="description" content="店舗間の食材の貸し借りを記録し、月末にまとめて金銭精算する試作デモ。『○○足りない』の申請→他店が承認→実績化まで。株式会社スパイシーデバイスの制作サンプル。">
+<meta name="description" content="店舗間の食材の貸し借りを記録し、月末にまとめて金銭精算する試作デモ。『○○足りない』の申請→他店が承認→実績化まで。日本語・英語・中国語対応。株式会社スパイシーデバイスの制作サンプル。">
 <link rel="canonical" href="https://spicy-device.com/food-relay/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥬</text></svg>">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:title" content="店舗間フードリレー 食材の貸借・精算（デモ）｜株式会社スパイシーデバイス">
-<meta property="og:description" content="店舗間の食材の貸し借りを見える化し、月末にまとめて金銭精算する試作デモ。実際に触れます。">
+<meta property="og:description" content="店舗間の食材の貸し借りを見える化し、月末にまとめて金銭精算する試作デモ。日英中対応・実際に触れます。">
 <meta property="og:url" content="https://spicy-device.com/food-relay/">
 <meta property="og:image" content="https://spicy-device.com/assets/og-image.png">
 <style>
@@ -31,6 +32,11 @@
   header h1{font-size:18px;margin:0;font-weight:700;letter-spacing:.02em;display:flex;align-items:center;gap:10px}
   header .badge{background:rgba(255,255,255,.2);font-size:11px;padding:2px 9px;border-radius:999px;font-weight:600}
   header p{margin:3px 0 0;font-size:12px;opacity:.9}
+  .rightctl{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .langbar{display:flex;gap:4px}
+  .langbar .lt{border:none;background:rgba(255,255,255,.16);color:#fff;font-size:12px;font-weight:700;padding:6px 11px;border-radius:8px;cursor:pointer;font-family:inherit;opacity:.82;transition:.15s}
+  .langbar .lt:hover{opacity:1}
+  .langbar .lt.on{background:#fff;color:#0f766e;opacity:1}
   .login{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.13);padding:7px 11px;border-radius:11px;flex-wrap:wrap}
   .login .who{font-size:11px;opacity:.85;margin-right:2px}
   .login select{border:none;border-radius:7px;padding:6px 8px;font-size:13px;font-weight:600;background:#fff;color:var(--ink)}
@@ -146,22 +152,59 @@
   .legend{display:flex;gap:16px;font-size:11.5px;color:var(--sub);margin-top:10px;flex-wrap:wrap}
   .legend span{display:inline-flex;align-items:center;gap:5px}
   .dot{width:10px;height:10px;border-radius:3px;display:inline-block}
+  /* --- onboarding / hero / footer CTA (polish batch) --- */
+  .hero-cta{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,rgba(13,148,136,.10),rgba(21,128,61,.08));border:1px solid #a7f3d0;border-radius:14px;padding:14px 18px;margin-bottom:18px}
+  .hero-cta .hero-txt{display:flex;flex-direction:column;gap:2px}
+  .hero-cta .hero-txt b{font-size:14px;color:#0f766e}
+  .hero-cta .hero-txt span{font-size:12px;color:var(--sub)}
+  .hero-cta .btn{margin-left:auto;white-space:nowrap;flex:none}
+  .footer-cta{max-width:640px;margin:34px auto 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);text-align:center}
+  .footer-cta .fc-title{font-weight:700;font-size:14px;margin-bottom:10px}
+  .footer-cta .fc-list{list-style:none;padding:0;margin:0 0 14px;display:flex;flex-direction:column;gap:6px;font-size:12.5px;color:var(--sub)}
+  .footer-cta .fc-list li{display:flex;gap:7px;justify-content:center;align-items:flex-start}
+  .footer-cta .fc-list li::before{content:'✓';color:var(--credit);font-weight:800}
+  .footer-cta .fc-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .footer-cta .fc-btns .btn{text-decoration:none;display:inline-flex;align-items:center}
+  .ov{position:fixed;inset:0;background:rgba(15,23,42,.55);display:flex;align-items:center;justify-content:center;z-index:60;padding:20px}
+  .ov-box{background:#fff;border-radius:16px;padding:26px 24px;max-width:430px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);text-align:center;animation:fade .25s ease}
+  .ov-emoji{font-size:34px}
+  .ov-box h3{margin:8px 0 8px;font-size:18px}
+  .ov-box p{margin:0 0 18px;font-size:13.5px;color:var(--sub);line-height:1.7}
+  @media(max-width:640px){
+    header{position:sticky;top:0;z-index:41}
+    .grid-kpi{grid-template-columns:1fr 1fr;gap:10px}
+    .kpi{padding:11px 12px}
+    .kpi .val{font-size:20px}
+    .hero-cta{flex-direction:column;align-items:stretch}
+    .hero-cta .btn{margin-left:0;width:100%}
+    .reqcard .act{flex-direction:column;align-items:stretch}
+    .reqcard .act .btn{width:100%}
+    .reqcard .act input[type=number]{width:100%!important;height:40px}
+    .form-grid .submit-field{grid-column:1/-1}
+  }
 </style>
 </head>
 <body>
 <header>
   <div class="wrap">
     <div>
-      <h1>🥬 店舗間フードリレー 食材の貸借・精算 <span class="badge">試作版 / たたき</span></h1>
-      <p>店舗間の食材の貸し借りを記録し、月末にまとめて金銭精算。「○○足りない」の申請 → 他店が承認 → 実績化まで一気通貫。</p>
+      <h1>🥬 <span data-i18n="appTitle">店舗間フードリレー 食材の貸借・精算</span> <span class="badge" data-i18n="badge">試作版 / たたき</span></h1>
+      <p data-i18n="subtitle">店舗間の食材の貸し借りを記録し、月末にまとめて金銭精算。「○○足りない」の申請 → 他店が承認 → 実績化まで一気通貫。</p>
     </div>
-    <div class="login">
-      <span class="who">ログイン中</span>
-      <select id="roleSel" onchange="App.changeRole(this.value)"></select>
-      <select id="ctxSel" onchange="App.changeCtx(this.value)"></select>
+    <div class="rightctl">
+      <div class="langbar" id="langbar">
+        <button class="lt" data-l="ja" onclick="App.setLang('ja')">日本語</button>
+        <button class="lt" data-l="en" onclick="App.setLang('en')">EN</button>
+        <button class="lt" data-l="zh" onclick="App.setLang('zh')">中文</button>
+      </div>
+      <div class="login">
+        <span class="who" data-i18n="loginWho">ログイン中</span>
+        <select id="roleSel" onchange="App.changeRole(this.value)"></select>
+        <select id="ctxSel" onchange="App.changeCtx(this.value)"></select>
+      </div>
     </div>
   </div>
-  <div class="demo-note">🔐 デモ用にアカウントを切り替えできます（本番はログイン制）。役割で見える情報・操作が変わります。</div>
+  <div class="demo-note" data-i18n="demoNote">🔐 デモ用にアカウントを切り替えできます（本番はログイン制）。役割で見える情報・操作が変わります。</div>
 </header>
 
 <main>
@@ -171,28 +214,29 @@
   <!-- DASHBOARD -->
   <section class="panel" id="panel-dash">
     <div class="toolbar">
-      <span class="muted">対象月</span>
+      <span class="muted" data-i18n="toolbarMonth">対象月</span>
       <select id="dashMonth" onchange="App.setMonth(this.value)" style="min-width:150px"></select>
     </div>
+    <div id="dashHero"></div>
     <div class="grid-kpi" id="kpis"></div>
     <div class="card">
-      <h2 id="balTitle">💰 店舗別 食材バランス</h2>
-      <p class="hint" id="balHint">「他店に貸した食材の額」と「他店から借りた食材の額」の差引です。</p>
+      <h2 id="balTitle"></h2>
+      <p class="hint" id="balHint"></p>
       <div id="balanceChart"></div>
       <div class="legend">
-        <span><i class="dot" style="background:var(--credit)"></i><span id="legCredit">プラス（受け取る側＝多く貸した店）</span></span>
-        <span><i class="dot" style="background:var(--debit)"></i><span id="legDebit">マイナス（支払う側＝多く借りた店）</span></span>
+        <span><i class="dot" style="background:var(--credit)"></i><span id="legCredit"></span></span>
+        <span><i class="dot" style="background:var(--debit)"></i><span id="legDebit"></span></span>
       </div>
     </div>
     <div class="two-col">
       <div class="card" id="matrixCard">
-        <h2>🔁 店舗間 貸借マトリクス</h2>
-        <p class="hint">縦＝食材を貸した店（貸し手） / 横＝借りた店（借り手）。金額ベース。</p>
+        <h2 data-i18n="matrixTitle">🔁 店舗間 貸借マトリクス</h2>
+        <p class="hint" data-i18n="matrixHint">縦＝食材を貸した店（貸し手） / 横＝借りた店（借り手）。金額ベース。</p>
         <div id="matrix" style="overflow-x:auto"></div>
       </div>
       <div class="card">
-        <h2 id="settleTitle">🧾 精算リスト（相殺後）</h2>
-        <p class="hint" id="settleHint">店舗ペアごとに相殺した「誰が誰へいくら払うか」です。</p>
+        <h2 id="settleTitle"></h2>
+        <p class="hint" id="settleHint"></p>
         <div id="settle"></div>
       </div>
     </div>
@@ -201,17 +245,17 @@
   <!-- APPLY (申請する) -->
   <section class="panel" id="panel-apply">
     <div class="card" id="reqFormCard">
-      <h2>📣 食材を申請する（借りたい）</h2>
-      <p class="hint">足りない食材・数量・希望日を入力し、声をかけたい店舗（複数可）を選びます。選ばれた店に申請が届き、貸せる店が承認すると実績になります。</p>
+      <h2 data-i18n="applyTitle">📣 食材を申請する（借りたい）</h2>
+      <p class="hint" data-i18n="applyHint">足りない食材・数量・希望日を入力し、声をかけたい店舗（複数可）を選びます。選ばれた店に申請が届き、貸せる店が承認すると実績になります。</p>
       <div class="form-grid">
-        <div class="field" id="f-borrower-wrap" style="display:none"><label>申請する店（借り手）</label><select id="f-borrower"></select></div>
-        <div class="field"><label>希望受渡日</label><input type="date" id="f-date"></div>
-        <div class="field"><label>品目</label><select id="f-item" onchange="App.onReqItem()"></select></div>
-        <div class="field"><label>数量</label><div class="qty-row"><input type="number" id="f-qty" min="0" step="0.5" value="1"><span class="muted unit" id="f-unit"></span></div></div>
-        <div class="field"><label>仕入先（任意）</label><input id="f-supplier" list="supplierList" placeholder="例：やまと青果"></div>
-        <div class="field" style="grid-column:1/-1"><label>メモ（任意）</label><input id="f-note" placeholder="例：週末の仕込みで不足。夕方までに受け取れると助かります"></div>
-        <div class="field" style="grid-column:1/-1"><label>声をかける店舗（複数選択）</label><div class="chk-group" id="f-targets"></div></div>
-        <div class="field"><button class="btn primary" onclick="App.addRequest()" style="width:100%">この内容で申請を送る</button></div>
+        <div class="field" id="f-borrower-wrap" style="display:none"><label data-i18n="lblBorrower">申請する店（借り手）</label><select id="f-borrower"></select></div>
+        <div class="field"><label data-i18n="lblWishDate">希望受渡日</label><input type="date" id="f-date"></div>
+        <div class="field"><label data-i18n="lblItem">品目</label><select id="f-item" onchange="App.onReqItem()"></select></div>
+        <div class="field"><label data-i18n="lblQty">数量</label><div class="qty-row"><input type="number" id="f-qty" min="0" step="0.5" value="1"><span class="muted unit" id="f-unit"></span></div></div>
+        <div class="field"><label data-i18n="lblSupplier">仕入先（任意）</label><input id="f-supplier" list="supplierList" data-i18n-ph="phSupplierApply" placeholder="例：やまと青果"></div>
+        <div class="field" style="grid-column:1/-1"><label data-i18n="lblNote">メモ（任意）</label><input id="f-note" data-i18n-ph="phNote" placeholder="例：週末の仕込みで不足。夕方までに受け取れると助かります"></div>
+        <div class="field" style="grid-column:1/-1"><label data-i18n="lblTargets">声をかける店舗（複数選択）</label><div class="chk-group" id="f-targets"></div></div>
+        <div class="field submit-field"><button class="btn primary" onclick="App.addRequest()" style="width:100%" data-i18n="btnSendReq">この内容で申請を送る</button></div>
       </div>
     </div>
   </section>
@@ -220,16 +264,16 @@
   <section class="panel" id="panel-board">
     <div class="card" id="incomingCard">
       <div class="toolbar">
-        <h2 style="margin:0">📥 あなたの店に届いた申請</h2>
+        <h2 style="margin:0" data-i18n="incomingTitle">📥 あなたの店に届いた申請</h2>
         <span class="muted" id="incomingSub"></span>
       </div>
-      <p class="hint">他店から「貸してほしい」と声をかけられた申請です。貸せるものは「承認」すると、その場で貸借記録（実績）になります。</p>
+      <p class="hint" data-i18n="incomingHint">他店から「貸してほしい」と声をかけられた申請です。貸せるものは「承認」すると、その場で貸借記録（実績）になります。</p>
       <div id="incomingList"></div>
     </div>
 
     <div class="card">
       <div class="toolbar">
-        <h2 style="margin:0" id="boardTitle">📋 申請一覧（掲示板）</h2>
+        <h2 style="margin:0" id="boardTitle"></h2>
         <span class="muted" id="boardSub"></span>
       </div>
       <div id="reqList"></div>
@@ -239,27 +283,27 @@
   <!-- RECORDS -->
   <section class="panel" id="panel-rec">
     <div class="card" id="manualCard">
-      <h2>＋ 貸借を手入力</h2>
-      <p class="hint">申請フローを通さず、過去の貸し借り実績を直接記録する場合に使います。</p>
+      <h2 data-i18n="manualTitle">＋ 貸借を手入力</h2>
+      <p class="hint" data-i18n="manualHint">申請フローを通さず、過去の貸し借り実績を直接記録する場合に使います。</p>
       <div class="form-grid">
-        <div class="field"><label>日付</label><input type="date" id="r-date"></div>
-        <div class="field"><label>貸した店（貸し手）</label><select id="r-from"></select></div>
-        <div class="field"><label>借りた店（借り手）</label><select id="r-to"></select></div>
-        <div class="field"><label>品目</label><select id="r-item" onchange="App.onRecItem()"></select></div>
-        <div class="field"><label>数量</label><div class="qty-row"><input type="number" id="r-qty" min="0" step="0.5" value="1"><span class="muted unit" id="r-unit"></span></div></div>
-        <div class="field"><label>単価（円）</label><input type="number" id="r-price" min="0" step="10"></div>
-        <div class="field"><label>仕入先（任意）</label><input id="r-supplier" list="supplierList" placeholder="例：丸八ミート"></div>
-        <div class="field"><button class="btn primary" onclick="App.addRecord()" style="width:100%">追加する</button></div>
+        <div class="field"><label data-i18n="lblRecDate">日付</label><input type="date" id="r-date"></div>
+        <div class="field"><label data-i18n="lblFrom">貸した店（貸し手）</label><select id="r-from"></select></div>
+        <div class="field"><label data-i18n="lblTo">借りた店（借り手）</label><select id="r-to"></select></div>
+        <div class="field"><label data-i18n="lblItem">品目</label><select id="r-item" onchange="App.onRecItem()"></select></div>
+        <div class="field"><label data-i18n="lblQty">数量</label><div class="qty-row"><input type="number" id="r-qty" min="0" step="0.5" value="1"><span class="muted unit" id="r-unit"></span></div></div>
+        <div class="field"><label data-i18n="lblUnitPrice">単価（円）</label><input type="number" id="r-price" min="0" step="10"></div>
+        <div class="field"><label data-i18n="lblSupplier">仕入先（任意）</label><input id="r-supplier" list="supplierList" data-i18n-ph="phSupplierRec" placeholder="例：丸八ミート"></div>
+        <div class="field submit-field"><button class="btn primary" onclick="App.addRecord()" style="width:100%" data-i18n="btnAddRec">追加する</button></div>
       </div>
     </div>
     <div class="card">
       <div class="toolbar">
-        <h2 style="margin:0" id="recTitle">🧾 貸借記録</h2>
+        <h2 style="margin:0" id="recTitle"></h2>
         <span class="muted" id="recCount"></span>
         <div class="spacer"></div>
-        <span class="muted">対象月</span>
+        <span class="muted" data-i18n="toolbarMonth">対象月</span>
         <select id="recMonth" onchange="App.setMonth(this.value)" style="min-width:140px"></select>
-        <button class="btn ghost sm" id="csvBtn" onclick="App.exportRecords()">CSV出力</button>
+        <button class="btn ghost sm" id="csvBtn" onclick="App.exportRecords()" data-i18n="btnCsv">CSV出力</button>
       </div>
       <div style="overflow-x:auto"><table id="recTable"></table></div>
     </div>
@@ -269,23 +313,22 @@
   <section class="panel" id="panel-items">
     <div class="banner">
       <span class="ic">💡</span>
-      <div>本番では <b>発注サイト（インフォマート等）の仕入単価を自動で取込</b> し、標準単価が常に最新の原価に同期されます。
-      貸借金額はこの標準単価 × 数量で自動計算（記録時に上書きも可）。<br>手元の品目リストは <b>CSV / Excel で一括取込</b> できます（同じ食材名は単価を更新）。下のボタンで「取込」のイメージも体験できます。</div>
+      <div id="itemsBanner" data-i18n-html="itemsBanner"></div>
     </div>
     <div class="card">
       <div class="toolbar">
-        <h2 style="margin:0">🥬 品目マスタ</h2>
+        <h2 style="margin:0" data-i18n="itemsTitle">🥬 品目マスタ</h2>
         <div class="spacer"></div>
-        <button class="btn ghost sm" id="tmplBtn" onclick="App.downloadItemTemplate()">⬇ CSVテンプレート</button>
-        <button class="btn ghost sm" id="importBtn" onclick="document.getElementById('itemFile').click()">📥 CSV / Excel 取込</button>
+        <button class="btn ghost sm" id="tmplBtn" onclick="App.downloadItemTemplate()" data-i18n="btnTmpl">⬇ CSVテンプレート</button>
+        <button class="btn ghost sm" id="importBtn" onclick="document.getElementById('itemFile').click()" data-i18n="btnImport">📥 CSV / Excel 取込</button>
         <input type="file" id="itemFile" accept=".csv,.xlsx,.xls" style="display:none" onchange="App.importItems(this)">
-        <button class="btn ghost sm" id="syncBtn" onclick="App.syncPrices()">🔄 発注サイトから仕入単価を取込（デモ）</button>
+        <button class="btn ghost sm" id="syncBtn" onclick="App.syncPrices()" data-i18n="btnSync">🔄 発注サイトから仕入単価を取込（デモ）</button>
       </div>
       <div class="form-grid" id="itemFormGrid">
-        <div class="field"><label>食材名</label><input id="m-item-name" placeholder="例：トマト"></div>
-        <div class="field"><label>単位</label><input id="m-item-unit" placeholder="例：kg / 本 / 樽" value="kg"></div>
-        <div class="field"><label>標準単価（円）</label><input type="number" id="m-item-price" min="0" step="10" value="500"></div>
-        <div class="field"><button class="btn primary" onclick="App.addItem()" style="width:100%">品目を追加</button></div>
+        <div class="field"><label data-i18n="lblItemName">食材名</label><input id="m-item-name" data-i18n-ph="phItemName" placeholder="例：トマト"></div>
+        <div class="field"><label data-i18n="lblUnit">単位</label><input id="m-item-unit" data-i18n-ph="phUnit" placeholder="例：kg / 本 / 樽" value="kg"></div>
+        <div class="field"><label data-i18n="lblStdPrice">標準単価（円）</label><input type="number" id="m-item-price" min="0" step="10" value="500"></div>
+        <div class="field submit-field"><button class="btn primary" onclick="App.addItem()" style="width:100%" data-i18n="btnAddItem">品目を追加</button></div>
       </div>
       <div style="overflow-x:auto;margin-top:14px"><table id="itemTable"></table></div>
     </div>
@@ -294,30 +337,49 @@
   <!-- STORES (admin) -->
   <section class="panel" id="panel-stores">
     <div class="card">
-      <h2>🏪 店舗マスタ</h2>
-      <p class="hint">ヘルプリレー（人件費精算）と同じ店舗マスタです。将来は人件費＋食材を合算して月末精算する前提で揃えています。</p>
+      <h2 data-i18n="storeMasterTitle">🏪 店舗マスタ</h2>
+      <p class="hint" data-i18n="storeMasterHint">ヘルプリレー（人件費精算）と同じ店舗マスタです。将来は人件費＋食材を合算して月末精算する前提で揃えています。</p>
       <div class="toolbar">
-        <input id="m-store" placeholder="店舗名（例：渋谷店）" style="flex:1">
-        <button class="btn primary sm" onclick="App.addStore()">店舗を追加</button>
+        <input id="m-store" data-i18n-ph="phStore" placeholder="店舗名（例：渋谷店）" style="flex:1">
+        <button class="btn primary sm" onclick="App.addStore()" data-i18n="btnAddStore">店舗を追加</button>
       </div>
       <table id="storeTable"></table>
     </div>
     <div class="card">
-      <h2>🗂 データ管理</h2>
-      <p class="hint">この試作版はデータをブラウザ内に保存します。サーバー連携・本物のログイン・発注サイト連携は本開発で対応します。</p>
+      <h2 data-i18n="dataMgmtTitle">🗂 データ管理</h2>
+      <p class="hint" data-i18n="dataMgmtHint">この試作版はデータをブラウザ内に保存します。サーバー連携・本物のログイン・発注サイト連携は本開発で対応します。</p>
       <div class="toolbar">
-        <button class="btn ghost sm" onclick="App.exportAll()">全データをJSON書き出し</button>
-        <button class="btn ghost sm" onclick="App.reseed()">サンプルデータで初期化</button>
-        <button class="btn danger sm" onclick="App.wipe()">全データ削除</button>
+        <button class="btn ghost sm" onclick="App.exportAll()" data-i18n="btnExportAll">全データをJSON書き出し</button>
+        <button class="btn ghost sm" onclick="App.reseed()" data-i18n="btnReseed">サンプルデータで初期化</button>
+        <button class="btn danger sm" onclick="App.wipe()" data-i18n="btnWipe">全データ削除</button>
       </div>
     </div>
   </section>
 
-  <div class="footer-note">
-    これは要件確認用の試作（たたき）です。ログイン認証・サーバー保存・発注サイト連携・通知などは本開発で実装します。<br>
-    Spicy Device — 飲食店向けWebツール
+  <div class="footer-cta">
+    <div class="fc-title" data-i18n="fcTitle">このツールを自店で使いたい方へ</div>
+    <ul class="fc-list">
+      <li data-i18n="fcPoint1">実店舗・品目に合わせて構築します</li>
+      <li data-i18n="fcPoint2">発注サイトから仕入単価を自動取込</li>
+      <li data-i18n="fcPoint3">人件費のヘルプ精算と1本化も可能</li>
+    </ul>
+    <div class="fc-btns">
+      <a class="btn primary sm" href="mailto:t-fujiya@spicydevice.com?subject=Food%20Relay%20demo" data-i18n="fcFeedback">このデモの感想・相談を送る</a>
+      <a class="btn ghost sm" href="https://spicy-device.com" target="_blank" rel="noopener">Spicy Device</a>
+    </div>
   </div>
+  <div class="footer-note" id="footerNote" data-i18n-html="footerNote"></div>
 </main>
+
+<div class="ov" id="welcome" style="display:none">
+  <div class="ov-box">
+    <div class="ov-emoji">🥬🤝</div>
+    <h3 data-i18n="wcTitle"></h3>
+    <p data-i18n="wcDesc"></p>
+    <button class="btn primary" style="width:100%" onclick="App.demoTry()" data-i18n="wcTry"></button>
+    <button class="btn ghost" style="width:100%;margin-top:8px" onclick="App.skipWelcome()" data-i18n="wcSkip"></button>
+  </div>
+</div>
 
 <datalist id="supplierList"></datalist>
 <nav class="tabbar-bottom" id="tabsBottom"></nav>
@@ -326,7 +388,306 @@
 <script>
 const App = (()=>{
   const KEY = 'food_relay_v1';
-  const ROLES = {admin:'本部 / オーナー', manager:'店長', staff:'店舗スタッフ'};
+  const LANG_KEY = 'food_relay_lang';
+  let lang = localStorage.getItem(LANG_KEY) || 'ja';
+
+  /* ---------- i18n: UI strings ---------- */
+  const T = {
+    ja:{
+      docTitle:'店舗間フードリレー 食材の貸借・精算（デモ）｜株式会社スパイシーデバイス',
+      appTitle:'店舗間フードリレー 食材の貸借・精算', badge:'サンプルで試せます',
+      subtitle:'店舗どうしの食材の貸し借り、精算し忘れて損していませんか？ 融通した分を仕入原価で自動換算し、月末にまとめて精算。取りっぱぐれ・どんぶり勘定をなくします。',
+      wcTitle:'ようこそ 🥬 このデモの主役はこれ',
+      wcDesc:'店舗どうしの「◯◯足りない！」を、申請 → 他店が承認 → 自動で精算まで。まずは“届いた申請をワンタップで承認”する体験からどうぞ。',
+      wcTry:'申請の承認を体験する（おすすめ）', wcSkip:'本部の全店ビューから見る',
+      heroTitle:'🔑 このデモの主役：足りない食材を〈申請 → 他店が承認 → 自動精算〉', heroDesc:'いま見ているのは本部の全店ビュー。看板機能はワンタップで試せます。', heroTryBtn:'申請→承認を1タップ体験',
+      fcTitle:'このツールを自店で使いたい方へ', fcPoint1:'実店舗・品目に合わせて構築します', fcPoint2:'発注サイトから仕入単価を自動取込', fcPoint3:'人件費のヘルプ精算と1本化も可能', fcFeedback:'このデモの感想・相談を送る',
+      loginWho:'ログイン中',
+      demoNote:'🔐 デモ用にアカウントを切り替えできます（本番はログイン制）。役割で見える情報・操作が変わります。',
+      role_admin:'本部 / オーナー', role_manager:'店長', role_staff:'店舗スタッフ',
+      sfxManager:'店長', sfxStaff:'スタッフ',
+      toolbarMonth:'対象月', monthAll:'全期間', unitCases:'件', listSep:'、', deleted:'(削除済)',
+      matrixTitle:'🔁 店舗間 貸借マトリクス', matrixHint:'縦＝食材を貸した店（貸し手） / 横＝借りた店（借り手）。金額ベース。',
+      matrixCorner:'貸し手 ＼ 借り手',
+      applyTitle:'📣 食材を申請する（借りたい）',
+      applyHint:'足りない食材・数量・希望日を入力し、声をかけたい店舗（複数可）を選びます。選ばれた店に申請が届き、貸せる店が承認すると実績になります。',
+      lblBorrower:'申請する店（借り手）', lblWishDate:'希望受渡日', lblItem:'品目', lblQty:'数量',
+      lblSupplier:'仕入先（任意）', lblNote:'メモ（任意）', lblTargets:'声をかける店舗（複数選択）',
+      phSupplierApply:'例：やまと青果', phNote:'例：週末の仕込みで不足。夕方までに受け取れると助かります', btnSendReq:'この内容で申請を送る',
+      incomingTitle:'📥 あなたの店に届いた申請',
+      incomingHint:'他店から「貸してほしい」と声をかけられた申請です。貸せるものは「承認」すると、その場で貸借記録（実績）になります。',
+      manualTitle:'＋ 貸借を手入力', manualHint:'申請フローを通さず、過去の貸し借り実績を直接記録する場合に使います。',
+      lblRecDate:'日付', lblFrom:'貸した店（貸し手）', lblTo:'借りた店（借り手）', lblUnitPrice:'単価（円）',
+      phSupplierRec:'例：丸八ミート', btnAddRec:'追加する', btnCsv:'CSV出力',
+      itemsBanner:'本番では <b>発注サイト（インフォマート等）の仕入単価を自動で取込</b> し、標準単価が常に最新の原価に同期されます。貸借金額はこの標準単価 × 数量で自動計算（記録時に上書きも可）。<br>手元の品目リストは <b>CSV / Excel で一括取込</b> できます（同じ食材名は単価を更新）。下のボタンで「取込」のイメージも体験できます。',
+      itemsTitle:'🥬 品目マスタ', btnTmpl:'⬇ CSVテンプレート', btnImport:'📥 CSV / Excel 取込', btnSync:'🔄 発注サイトから仕入単価を取込（デモ）',
+      lblItemName:'食材名', lblUnit:'単位', lblStdPrice:'標準単価（円）', phItemName:'例：トマト', phUnit:'例：kg / 本 / 樽', btnAddItem:'品目を追加',
+      storeMasterTitle:'🏪 店舗マスタ',
+      storeMasterHint:'ヘルプリレー（人件費精算）と同じ店舗マスタです。将来は人件費＋食材を合算して月末精算する前提で揃えています。',
+      phStore:'店舗名（例：渋谷店）', btnAddStore:'店舗を追加',
+      dataMgmtTitle:'🗂 データ管理', dataMgmtHint:'この試作版はデータをブラウザ内に保存します。サーバー連携・本物のログイン・発注サイト連携は本開発で対応します。',
+      btnExportAll:'全データをJSON書き出し', btnReseed:'サンプルデータで初期化', btnWipe:'全データ削除',
+      footerNote:'これは要件確認用の試作（たたき）です。ログイン認証・サーバー保存・発注サイト連携・通知などは本開発で実装します。<br>Spicy Device — 飲食店向けWebツール',
+      tab_dash:'📊 ダッシュボード', tab_rec:'🧾 貸借記録', tab_items:'🥬 品目マスタ', tab_stores:'⚙️ 店舗管理',
+      tab_apply:'📣 申請する', tab_board:'📥 申請を受ける・掲示板', tab_recMgr:'🧾 自店の記録', tab_recStaff:'📅 自店の記録',
+      short_dash:'集計', short_apply:'申請', short_board:'受付', short_rec:'記録', short_items:'品目', short_stores:'店舗',
+      whoAdmin:'本部 / オーナー',
+      bandAdminDesc:'全店舗の閲覧・品目マスタと標準単価の管理・精算管理ができます（申請のやり取りは各店舗が行います）。',
+      bandManagerDesc:'自店の食材申請を出し、他店からの申請を承認。記録・精算・品目も確認できます。',
+      bandStaffDesc:'自店の食材申請を出し、貸借の状況を確認できます。',
+      notif:n=>`📥 申請が ${n}件 届いています`,
+      kpiRecCount:'貸借記録 件数', kpiTotalMoved:'食材移動 総額', kpiSettleMoney:'精算で動くお金', kpiOpenReq:'申請中',
+      kpiMyRec:'自店の貸借記録', kpiLent:'貸した額（自店→他店）', kpiBorrowed:'借りた額（他店→自店）', kpiNetReceive:'差引（受け取り）', kpiNetPay:'差引（支払い）',
+      balTitleAll:'💰 店舗別 食材バランス', balHintAll:'「他店に貸した食材の額」と「他店から借りた食材の額」の差引です。',
+      legCreditAll:'プラス（受け取る側＝多く貸した店）', legDebitAll:'マイナス（支払う側＝多く借りた店）',
+      settleTitleAll:'🧾 精算リスト（相殺後）', settleHintAll:'店舗ペアごとに相殺した「誰が誰へいくら払うか」です。',
+      balTitleStore:'💰 自店の貸し借り（相手店別）', balHintStore:'自店から見た相手店ごとの差引です。プラス＝自店が受け取る側／マイナス＝自店が支払う側。',
+      legCreditStore:'プラス（自店が受け取る）', legDebitStore:'マイナス（自店が支払う）',
+      settleTitleStore:'🧾 自店の精算（相殺後）', settleHintStore:'自店が関わる「自店→相手」「相手→自店」だけを表示しています。',
+      emptyNoRecPeriod:'この期間の記録がありません', emptyNoSettle:'精算の必要はありません', emptyNoMyRec:'この期間、自店の記録がありません',
+      emptyNoIncoming:'あなたの店に届いた申請はありません', emptyNoBoard:'自店に関係する申請はありません',
+      emptyNoItems:'品目がありません', emptyNoStores:'店舗がありません',
+      incSub:n=>`${n}件（あなたの店が声をかけられています）`,
+      lendQty:'貸せる数量', maxUnit:(u,n)=>`${u}（最大 ${n}）`, btnApprove:'この数量を貸す・承認', btnDecline:'ごめんなさい🙏',
+      incWant:(b,i,q,u)=>`${b} が「${i} ${q}${u}」を希望`,
+      stOpen:'募集中', stRemain:(n,u)=>`残り ${n}${u}`,
+      metaWishDate:'📅 希望受渡：', metaRemainEst:'💴 残り目安：', stdPrice:y=>`（標準単価 ${y}）`, metaTargets:'📨 声がけ先：',
+      metaAlready:(n,u)=>`✅ 既に ${n}${u} 成立`, metaSupplier:'🏭 仕入先：', metaNote:'📝 ',
+      boardTitleMine:'📋 申請一覧（掲示板・自店関連）', boardSub:(o,a)=>`募集中 ${o}件 / 自店関連 ${a}件`,
+      reqProgress:(f,q,u,r)=>` ・ ${f}/${q}${u} 成立（残り ${r}${u}）`,
+      openMine:(tg,pr)=>`募集中（声がけ先：${tg}）${pr}`, btnCancelReq:'申請を取消',
+      openOther:(n,pr)=>`声がけ先 ${n}店${pr}`,
+      stFulfilled:'成立', fulfilledLine:(who,b)=>`貸し手：<b>${who}</b> → ${b}（借り手）／実績に反映済み`, fillWho:(s,q,u)=>`${s}（${q}${u}）`,
+      stCancelled:'取消済み', reqCardTitle:(b,i,q,u)=>`${b}：${i} ${q}${u}`, metaEst:'💴 目安：',
+      recTitleAdmin:'🧾 貸借記録', recTitleStaff:'📅 自店の貸借記録', recTitleMgr:'🧾 自店の記録',
+      thDate:'日付', thFrom:'貸し手', thTo:'借り手', thItem:'品目', thQty:'数量', thUnitPrice:'単価', thAmount:'金額', thSupplier:'仕入先', thSource:'登録元',
+      srcRequest:'申請成立', srcManual:'手入力', btnDel:'削除', countCases:n=>`${n}件`,
+      thItemName:'食材名', thUnit:'単位', thStdPrice:'標準単価', thUsedIn:'貸借に登場',
+      thStoreName:'店舗名', thLent:'貸し', thBorrowed:'借り',
+      toastReqSent:'申請を送りました',
+      toastApproveFull:(q,u)=>`承認しました（${q}${u} 成立・実績に反映）`, toastApprovePartial:(q,u,l)=>`${q}${u} 承認しました（残り ${l}${u}は募集継続）`,
+      toastDeclined:'お見送りにしました🙏', toastCancelled:'取り消しました', toastRecAdded:'記録を追加しました',
+      toastItemAdded:'品目を追加しました', toastPriceUpdated:'標準単価を更新しました', toastSynced:'発注サイトから最新の仕入単価を取得しました（デモ）',
+      toastStoreAdded:'店舗を追加しました',
+      toastImportDone:(a,u,s)=>`取込完了：${a}件追加 / ${u}件更新${s?` / ${s}件スキップ`:''}`,
+      toastXlsxPrep:'Excel読み込みの準備中…', toastXlsxFail:'Excel読み込みライブラリの取得に失敗しました（CSVをお試しください）',
+      toastCsvFail:'ファイルの読み込みに失敗しました', toastXlsxReadFail:'Excelの読み込みに失敗しました', toastNoImportData:'取り込めるデータがありません',
+      toastSampleLoaded:'サンプルデータを読み込みました', toastWiped:'全データを削除しました',
+      valReqStore:'申請する店舗が不明です', valWishDate:'希望受渡日を入力してください', valItem:'品目を選択してください', valQty:'数量を入力してください',
+      valTargets:'声をかける店舗を1つ以上選んでください', valLendStore:'貸す店が不明です', valItemNotFound:'品目が見つかりません', valLendQty:'貸せる数量を入力してください',
+      valRecDate:'日付を入力してください', valSameStore:'貸し手と借り手が同じです', valUnitPrice:'単価を入力してください',
+      valItemName:'食材名を入力してください', valStdPrice:'標準単価を入力してください', valStoreName:'店舗名を入力してください',
+      valItemUsedRec:'記録で使われている品目は削除できません', valItemUsedReq:'申請中で使われている品目は削除できません',
+      valStoreUsedRec:'記録で使われている店舗は削除できません', valStoreUsedReq:'申請で使われている店舗は削除できません',
+      confirmCancelReq:'この申請を取り消します。よろしいですか？', confirmSync:'発注サイトから最新の仕入単価を取り込みます（デモ：単価が変動します）。よろしいですか？',
+      confirmReseed:'サンプルデータで初期化します。よろしいですか？', confirmWipe:'全データを削除します。元に戻せません。',
+      csvHeadRec:'日付,貸し手,借り手,品目,単位,数量,単価,金額,仕入先,登録元', csvFileName:'フードリレー貸借記録',
+      csvHeadTmpl:'食材名,単位,標準単価', tmplFileName:'品目マスタ_テンプレート',
+    },
+    en:{
+      docTitle:'Store-to-Store Food Relay — Lending & Settlement (Demo) | Spicy Device Inc.',
+      appTitle:'Store-to-Store Food Relay — Lending & Settlement', badge:'Live sample',
+      subtitle:'Lending ingredients between stores — losing money by forgetting to settle up? Auto-convert what you shared at cost and settle it all at month-end. No more missed reimbursements or guesswork.',
+      wcTitle:'Welcome 🥬 Here’s the star of this demo',
+      wcDesc:'Turn “we’re short on ◯◯!” between stores into a request → another store approves → auto-settlement. Start by approving an incoming request in one tap.',
+      wcTry:'Try approving a request (recommended)', wcSkip:'Start from the HQ all-store view',
+      heroTitle:'🔑 The star: short on an ingredient → request → a store approves → auto-settle', heroDesc:'You’re viewing the HQ all-store view. Try the marquee feature in one tap.', heroTryBtn:'Try request→approve in 1 tap',
+      fcTitle:'Want to use this at your own stores?', fcPoint1:'Built to fit your real stores & items', fcPoint2:'Auto-imports purchase prices from your ordering platform', fcPoint3:'Can be unified with labor-cost (Help Relay) settlement', fcFeedback:'Send feedback / ask about this demo',
+      loginWho:'Logged in',
+      demoNote:'🔐 This is a demo — you can switch accounts (production is login-based). What you see and can do changes by role.',
+      role_admin:'HQ / Owner', role_manager:'Manager', role_staff:'Staff',
+      sfxManager:'Manager', sfxStaff:'Staff',
+      toolbarMonth:'Month', monthAll:'All periods', unitCases:'', listSep:', ', deleted:'(deleted)',
+      matrixTitle:'🔁 Store-to-Store Lending Matrix', matrixHint:'Rows = store that lent (lender) / Columns = store that borrowed (borrower). By amount.',
+      matrixCorner:'Lender ＼ Borrower',
+      applyTitle:'📣 Request an ingredient (to borrow)',
+      applyHint:'Enter the ingredient, quantity and preferred date, then pick the stores to ask (multiple OK). The request reaches those stores, and once one approves it becomes a record.',
+      lblBorrower:'Requesting store (borrower)', lblWishDate:'Preferred date', lblItem:'Item', lblQty:'Qty',
+      lblSupplier:'Supplier (optional)', lblNote:'Note (optional)', lblTargets:'Stores to ask (select multiple)',
+      phSupplierApply:'e.g. Yamato Produce', phNote:'e.g. Short for weekend prep. Would love to receive it by evening.', btnSendReq:'Send this request',
+      incomingTitle:'📥 Requests received by your store',
+      incomingHint:'Requests where another store asked you to lend. Approve what you can lend and it instantly becomes a lending record.',
+      manualTitle:'＋ Add a record manually', manualHint:'Use this to log a past lending record directly, without going through the request flow.',
+      lblRecDate:'Date', lblFrom:'Lender store', lblTo:'Borrower store', lblUnitPrice:'Unit price (¥)',
+      phSupplierRec:'e.g. Maruhachi Meat', btnAddRec:'Add', btnCsv:'Export CSV',
+      itemsBanner:'In production, <b>purchase prices are auto-imported from your ordering platform (Infomart, etc.)</b>, so standard prices always stay in sync with the latest cost. Lending amounts are auto-calculated as standard price × qty (overridable at entry).<br>You can also <b>bulk-import your item list via CSV / Excel</b> (same name updates the price). Try the “import” feel with the buttons below.',
+      itemsTitle:'🥬 Item Master', btnTmpl:'⬇ CSV template', btnImport:'📥 Import CSV / Excel', btnSync:'🔄 Import prices from ordering platform (demo)',
+      lblItemName:'Item name', lblUnit:'Unit', lblStdPrice:'Standard price (¥)', phItemName:'e.g. Tomato', phUnit:'e.g. kg / btl / keg', btnAddItem:'Add item',
+      storeMasterTitle:'🏪 Store Master',
+      storeMasterHint:'The same store master as Help Relay (labor-cost settlement). Kept aligned so labor + ingredients can be settled together at month-end in the future.',
+      phStore:'Store name (e.g. Shibuya)', btnAddStore:'Add store',
+      dataMgmtTitle:'🗂 Data management', dataMgmtHint:'This prototype stores data in your browser. Server sync, real login and ordering-platform integration come in full development.',
+      btnExportAll:'Export all data as JSON', btnReseed:'Reset with sample data', btnWipe:'Delete all data',
+      footerNote:'This is a prototype (draft) for requirements review. Login auth, server storage, ordering-platform integration and notifications are built in full development.<br>Spicy Device — Web tools for restaurants',
+      tab_dash:'📊 Dashboard', tab_rec:'🧾 Records', tab_items:'🥬 Item Master', tab_stores:'⚙️ Stores',
+      tab_apply:'📣 Request', tab_board:'📥 Receive / Board', tab_recMgr:'🧾 My store records', tab_recStaff:'📅 My store records',
+      short_dash:'Stats', short_apply:'Request', short_board:'Inbox', short_rec:'Records', short_items:'Items', short_stores:'Stores',
+      whoAdmin:'HQ / Owner',
+      bandAdminDesc:'You can view all stores, manage the item master and standard prices, and manage settlement (requests are handled by each store).',
+      bandManagerDesc:'Send your store’s requests and approve requests from other stores. You can also view records, settlement and items.',
+      bandStaffDesc:'Send your store’s requests and check the lending status.',
+      notif:n=>`📥 ${n} request(s) received`,
+      kpiRecCount:'Lending records', kpiTotalMoved:'Total ingredients moved', kpiSettleMoney:'Money to settle', kpiOpenReq:'Open requests',
+      kpiMyRec:'My store records', kpiLent:'Lent (mine → others)', kpiBorrowed:'Borrowed (others → mine)', kpiNetReceive:'Net (to receive)', kpiNetPay:'Net (to pay)',
+      balTitleAll:'💰 Ingredient balance by store', balHintAll:'The net of “amount of ingredients lent to others” minus “amount borrowed from others.”',
+      legCreditAll:'Positive (receiving side = lent more)', legDebitAll:'Negative (paying side = borrowed more)',
+      settleTitleAll:'🧾 Settlement list (after offset)', settleHintAll:'“Who pays whom, how much,” offset per store pair.',
+      balTitleStore:'💰 My lending & borrowing (by partner)', balHintStore:'Net per partner store from your store’s view. Positive = your store receives / Negative = your store pays.',
+      legCreditStore:'Positive (your store receives)', legDebitStore:'Negative (your store pays)',
+      settleTitleStore:'🧾 My settlement (after offset)', settleHintStore:'Shows only “mine → partner” and “partner → mine” that involve your store.',
+      emptyNoRecPeriod:'No records for this period', emptyNoSettle:'No settlement needed', emptyNoMyRec:'No records for your store in this period',
+      emptyNoIncoming:'No requests received by your store', emptyNoBoard:'No requests related to your store',
+      emptyNoItems:'No items', emptyNoStores:'No stores',
+      incSub:n=>`${n} (your store is being asked)`,
+      lendQty:'Qty to lend', maxUnit:(u,n)=>`${u} (max ${n})`, btnApprove:'Lend this qty · Approve', btnDecline:'Sorry, not this time 🙏',
+      incWant:(b,i,q,u)=>`${b} wants “${i} ${q}${u}”`,
+      stOpen:'Open', stRemain:(n,u)=>`${n}${u} left`,
+      metaWishDate:'📅 Preferred: ', metaRemainEst:'💴 Est. remaining: ', stdPrice:y=>`(std price ${y})`, metaTargets:'📨 Asked: ',
+      metaAlready:(n,u)=>`✅ Already ${n}${u} filled`, metaSupplier:'🏭 Supplier: ', metaNote:'📝 ',
+      boardTitleMine:'📋 Request list (board · related to your store)', boardSub:(o,a)=>`${o} open / ${a} related to your store`,
+      reqProgress:(f,q,u,r)=>` · ${f}/${q}${u} filled (${r}${u} left)`,
+      openMine:(tg,pr)=>`Open (asked: ${tg})${pr}`, btnCancelReq:'Cancel request',
+      openOther:(n,pr)=>`${n} store(s) asked${pr}`,
+      stFulfilled:'Filled', fulfilledLine:(who,b)=>`Lender: <b>${who}</b> → ${b} (borrower) / reflected in records`, fillWho:(s,q,u)=>`${s} (${q}${u})`,
+      stCancelled:'Cancelled', reqCardTitle:(b,i,q,u)=>`${b}: ${i} ${q}${u}`, metaEst:'💴 Est.: ',
+      recTitleAdmin:'🧾 Lending records', recTitleStaff:'📅 My store records', recTitleMgr:'🧾 My store records',
+      thDate:'Date', thFrom:'Lender', thTo:'Borrower', thItem:'Item', thQty:'Qty', thUnitPrice:'Unit price', thAmount:'Amount', thSupplier:'Supplier', thSource:'Source',
+      srcRequest:'From request', srcManual:'Manual', btnDel:'Delete', countCases:n=>`${n}`,
+      thItemName:'Item name', thUnit:'Unit', thStdPrice:'Std price', thUsedIn:'Used in records',
+      thStoreName:'Store', thLent:'Lent', thBorrowed:'Borrowed',
+      toastReqSent:'Request sent',
+      toastApproveFull:(q,u)=>`Approved (${q}${u} filled · added to records)`, toastApprovePartial:(q,u,l)=>`${q}${u} approved (${l}${u} left · still open)`,
+      toastDeclined:'Declined 🙏', toastCancelled:'Cancelled', toastRecAdded:'Record added',
+      toastItemAdded:'Item added', toastPriceUpdated:'Standard price updated', toastSynced:'Latest purchase prices imported from ordering platform (demo)',
+      toastStoreAdded:'Store added',
+      toastImportDone:(a,u,s)=>`Import done: ${a} added / ${u} updated${s?` / ${s} skipped`:''}`,
+      toastXlsxPrep:'Preparing Excel reader…', toastXlsxFail:'Failed to load the Excel library (please try CSV)',
+      toastCsvFail:'Failed to read the file', toastXlsxReadFail:'Failed to read the Excel file', toastNoImportData:'No importable data',
+      toastSampleLoaded:'Sample data loaded', toastWiped:'All data deleted',
+      valReqStore:'Requesting store is unknown', valWishDate:'Please enter a preferred date', valItem:'Please select an item', valQty:'Please enter a quantity',
+      valTargets:'Please pick at least one store to ask', valLendStore:'Lending store is unknown', valItemNotFound:'Item not found', valLendQty:'Please enter a quantity to lend',
+      valRecDate:'Please enter a date', valSameStore:'Lender and borrower are the same', valUnitPrice:'Please enter a unit price',
+      valItemName:'Please enter an item name', valStdPrice:'Please enter a standard price', valStoreName:'Please enter a store name',
+      valItemUsedRec:'This item is used in records and cannot be deleted', valItemUsedReq:'This item is used in an open request and cannot be deleted',
+      valStoreUsedRec:'This store is used in records and cannot be deleted', valStoreUsedReq:'This store is used in requests and cannot be deleted',
+      confirmCancelReq:'Cancel this request. Are you sure?', confirmSync:'Import the latest purchase prices from the ordering platform (demo: prices will change). Proceed?',
+      confirmReseed:'Reset with sample data. Are you sure?', confirmWipe:'Delete all data. This cannot be undone.',
+      csvHeadRec:'Date,Lender,Borrower,Item,Unit,Qty,UnitPrice,Amount,Supplier,Source', csvFileName:'food_relay_records',
+      csvHeadTmpl:'Item name,Unit,Standard price', tmplFileName:'item_master_template',
+    },
+    zh:{
+      docTitle:'门店间食材接力 借用与结算（演示）｜Spicy Device 株式会社',
+      appTitle:'门店间食材接力 借用与结算', badge:'示例可试用',
+      subtitle:'门店之间借来借去的食材，是不是常忘了结算而吃亏？把融通的部分按采购成本自动换算，月末统一结算。杜绝漏结与糊涂账。',
+      wcTitle:'欢迎 🥬 这就是本演示的主角',
+      wcDesc:'把门店之间的“◯◯不够了！”变成 申请 → 他店承认 → 自动结算。先从“一键承认收到的申请”开始体验吧。',
+      wcTry:'体验承认申请（推荐）', wcSkip:'从总部全店视图开始看',
+      heroTitle:'🔑 本演示主角：缺食材 →〈申请 → 他店承认 → 自动结算〉', heroDesc:'当前是总部全店视图。看板功能一键即可体验。', heroTryBtn:'一键体验 申请→承认',
+      fcTitle:'想在自己门店使用这个工具？', fcPoint1:'按实际门店与品项定制搭建', fcPoint2:'从订货平台自动导入采购单价', fcPoint3:'可与人工费（帮工接力）结算合并为一体', fcFeedback:'发送对本演示的感想 / 咨询',
+      loginWho:'当前登录',
+      demoNote:'🔐 这是演示，可切换账号（正式版为登录制）。不同角色可见的信息与操作会变化。',
+      role_admin:'总部 / 老板', role_manager:'店长', role_staff:'门店员工',
+      sfxManager:'店长', sfxStaff:'员工',
+      toolbarMonth:'月份', monthAll:'全部期间', unitCases:'条', listSep:'、', deleted:'(已删除)',
+      matrixTitle:'🔁 门店间借用矩阵', matrixHint:'纵＝借出食材的店（出借方） / 横＝借入的店（借入方）。按金额。',
+      matrixCorner:'出借方 ＼ 借入方',
+      applyTitle:'📣 申请食材（想借）',
+      applyHint:'填写缺少的食材、数量与希望日期，并选择想询问的门店（可多选）。申请会送达这些门店，某店承认后即形成记录。',
+      lblBorrower:'申请门店（借入方）', lblWishDate:'希望交付日', lblItem:'品项', lblQty:'数量',
+      lblSupplier:'供应商（可选）', lblNote:'备注（可选）', lblTargets:'询问的门店（多选）',
+      phSupplierApply:'例：大和青果', phNote:'例：周末备料不足，傍晚前能收到就太好了。', btnSendReq:'发送此申请',
+      incomingTitle:'📥 送达你门店的申请',
+      incomingHint:'其他门店向你请求“借出”的申请。可借出的点“承认”后，立即形成借用记录。',
+      manualTitle:'＋ 手动录入借用', manualHint:'不经过申请流程，直接记录过去借用实绩时使用。',
+      lblRecDate:'日期', lblFrom:'借出门店（出借方）', lblTo:'借入门店（借入方）', lblUnitPrice:'单价（円）',
+      phSupplierRec:'例：丸八肉铺', btnAddRec:'添加', btnCsv:'导出CSV',
+      itemsBanner:'正式版中，<b>自动从订货平台（Infomart 等）导入采购单价</b>，标准单价始终与最新成本同步。借用金额按标准单价 × 数量自动计算（录入时可覆盖）。<br>手头的品项清单也可<b>通过 CSV / Excel 批量导入</b>（同名食材更新单价）。可用下方按钮体验“导入”的感觉。',
+      itemsTitle:'🥬 品项主数据', btnTmpl:'⬇ CSV模板', btnImport:'📥 导入 CSV / Excel', btnSync:'🔄 从订货平台导入采购单价（演示）',
+      lblItemName:'食材名', lblUnit:'单位', lblStdPrice:'标准单价（円）', phItemName:'例：番茄', phUnit:'例：公斤 / 瓶 / 桶', btnAddItem:'添加品项',
+      storeMasterTitle:'🏪 门店主数据',
+      storeMasterHint:'与「帮工接力（人工费结算）」相同的门店主数据。为将来把人工费＋食材合并月末结算而保持一致。',
+      phStore:'门店名（例：涩谷店）', btnAddStore:'添加门店',
+      dataMgmtTitle:'🗂 数据管理', dataMgmtHint:'此试作版将数据保存在浏览器内。服务器同步、真正的登录、订货平台对接将在正式开发中实现。',
+      btnExportAll:'导出全部数据为JSON', btnReseed:'用示例数据初始化', btnWipe:'删除全部数据',
+      footerNote:'这是用于需求确认的试作（草案）。登录认证、服务器保存、订货平台对接、通知等将在正式开发中实现。<br>Spicy Device — 面向餐饮店的Web工具',
+      tab_dash:'📊 仪表盘', tab_rec:'🧾 借用记录', tab_items:'🥬 品项主数据', tab_stores:'⚙️ 门店管理',
+      tab_apply:'📣 申请', tab_board:'📥 接收 / 公告板', tab_recMgr:'🧾 本店记录', tab_recStaff:'📅 本店记录',
+      short_dash:'汇总', short_apply:'申请', short_board:'接收', short_rec:'记录', short_items:'品项', short_stores:'门店',
+      whoAdmin:'总部 / 老板',
+      bandAdminDesc:'可查看全部门店、管理品项主数据与标准单价、进行结算管理（申请往来由各门店进行）。',
+      bandManagerDesc:'提交本店食材申请并承认他店申请。也可查看记录、结算与品项。',
+      bandStaffDesc:'提交本店食材申请，查看借用情况。',
+      notif:n=>`📥 收到 ${n} 条申请`,
+      kpiRecCount:'借用记录 条数', kpiTotalMoved:'食材流动 总额', kpiSettleMoney:'结算流动金额', kpiOpenReq:'申请中',
+      kpiMyRec:'本店借用记录', kpiLent:'借出额（本店→他店）', kpiBorrowed:'借入额（他店→本店）', kpiNetReceive:'差额（应收）', kpiNetPay:'差额（应付）',
+      balTitleAll:'💰 各门店 食材平衡', balHintAll:'“借给他店的食材金额”与“从他店借入的食材金额”的差额。',
+      legCreditAll:'正（应收方＝借出较多的店）', legDebitAll:'负（应付方＝借入较多的店）',
+      settleTitleAll:'🧾 结算清单（抵消后）', settleHintAll:'按门店两两抵消后的“谁向谁付多少”。',
+      balTitleStore:'💰 本店的借贷（按对方门店）', balHintStore:'从本店视角看各对方门店的差额。正＝本店应收／负＝本店应付。',
+      legCreditStore:'正（本店应收）', legDebitStore:'负（本店应付）',
+      settleTitleStore:'🧾 本店结算（抵消后）', settleHintStore:'仅显示涉及本店的“本店→对方”“对方→本店”。',
+      emptyNoRecPeriod:'该期间没有记录', emptyNoSettle:'无需结算', emptyNoMyRec:'该期间本店没有记录',
+      emptyNoIncoming:'没有送达你门店的申请', emptyNoBoard:'没有与本店相关的申请',
+      emptyNoItems:'没有品项', emptyNoStores:'没有门店',
+      incSub:n=>`${n} 条（你的门店正被询问）`,
+      lendQty:'可借出数量', maxUnit:(u,n)=>`${u}（最多 ${n}）`, btnApprove:'借出此数量 · 承认', btnDecline:'不好意思🙏',
+      incWant:(b,i,q,u)=>`${b} 希望「${i} ${q}${u}」`,
+      stOpen:'招募中', stRemain:(n,u)=>`剩余 ${n}${u}`,
+      metaWishDate:'📅 希望交付：', metaRemainEst:'💴 剩余估算：', stdPrice:y=>`（标准单价 ${y}）`, metaTargets:'📨 询问对象：',
+      metaAlready:(n,u)=>`✅ 已成立 ${n}${u}`, metaSupplier:'🏭 供应商：', metaNote:'📝 ',
+      boardTitleMine:'📋 申请一览（公告板 · 本店相关）', boardSub:(o,a)=>`招募中 ${o}条 / 本店相关 ${a}条`,
+      reqProgress:(f,q,u,r)=>` · ${f}/${q}${u} 成立（剩余 ${r}${u}）`,
+      openMine:(tg,pr)=>`招募中（询问对象：${tg}）${pr}`, btnCancelReq:'取消申请',
+      openOther:(n,pr)=>`询问 ${n} 家店${pr}`,
+      stFulfilled:'成立', fulfilledLine:(who,b)=>`出借方：<b>${who}</b> → ${b}（借入方）／已反映到记录`, fillWho:(s,q,u)=>`${s}（${q}${u}）`,
+      stCancelled:'已取消', reqCardTitle:(b,i,q,u)=>`${b}：${i} ${q}${u}`, metaEst:'💴 估算：',
+      recTitleAdmin:'🧾 借用记录', recTitleStaff:'📅 本店借用记录', recTitleMgr:'🧾 本店记录',
+      thDate:'日期', thFrom:'出借方', thTo:'借入方', thItem:'品项', thQty:'数量', thUnitPrice:'单价', thAmount:'金额', thSupplier:'供应商', thSource:'来源',
+      srcRequest:'申请成立', srcManual:'手动录入', btnDel:'删除', countCases:n=>`${n}条`,
+      thItemName:'食材名', thUnit:'单位', thStdPrice:'标准单价', thUsedIn:'借用中出现',
+      thStoreName:'门店名', thLent:'借出', thBorrowed:'借入',
+      toastReqSent:'申请已发送',
+      toastApproveFull:(q,u)=>`已承认（${q}${u} 成立 · 反映到记录）`, toastApprovePartial:(q,u,l)=>`已承认 ${q}${u}（剩余 ${l}${u} 继续招募）`,
+      toastDeclined:'已婉拒🙏', toastCancelled:'已取消', toastRecAdded:'记录已添加',
+      toastItemAdded:'品项已添加', toastPriceUpdated:'标准单价已更新', toastSynced:'已从订货平台获取最新采购单价（演示）',
+      toastStoreAdded:'门店已添加',
+      toastImportDone:(a,u,s)=>`导入完成：新增 ${a} / 更新 ${u}${s?` / 跳过 ${s}`:''}`,
+      toastXlsxPrep:'正在准备Excel读取…', toastXlsxFail:'Excel读取库获取失败（请尝试CSV）',
+      toastCsvFail:'文件读取失败', toastXlsxReadFail:'Excel读取失败', toastNoImportData:'没有可导入的数据',
+      toastSampleLoaded:'已加载示例数据', toastWiped:'已删除全部数据',
+      valReqStore:'申请门店不明', valWishDate:'请输入希望交付日', valItem:'请选择品项', valQty:'请输入数量',
+      valTargets:'请至少选择一家询问门店', valLendStore:'借出门店不明', valItemNotFound:'找不到品项', valLendQty:'请输入可借出数量',
+      valRecDate:'请输入日期', valSameStore:'出借方与借入方相同', valUnitPrice:'请输入单价',
+      valItemName:'请输入食材名', valStdPrice:'请输入标准单价', valStoreName:'请输入门店名',
+      valItemUsedRec:'记录中使用的品项无法删除', valItemUsedReq:'招募中的申请使用的品项无法删除',
+      valStoreUsedRec:'记录中使用的门店无法删除', valStoreUsedReq:'申请中使用的门店无法删除',
+      confirmCancelReq:'将取消此申请。确定吗？', confirmSync:'将从订货平台导入最新采购单价（演示：单价会变动）。确定吗？',
+      confirmReseed:'将用示例数据初始化。确定吗？', confirmWipe:'将删除全部数据，无法恢复。',
+      csvHeadRec:'日期,出借方,借入方,品项,单位,数量,单价,金额,供应商,来源', csvFileName:'食材接力_借用记录',
+      csvHeadTmpl:'食材名,单位,标准单价', tmplFileName:'品项主数据_模板',
+    },
+  };
+  const t = k => { const d=T[lang]||T.ja; return (k in d)?d[k]:(k in T.ja?T.ja[k]:k); };
+
+  /* ---------- i18n: sample data strings (user-added strings pass through) ---------- */
+  const DTR = {
+    '銀座本店':{en:'Ginza Main',zh:'银座总店'}, '新宿店':{en:'Shinjuku',zh:'新宿店'},
+    '渋谷店':{en:'Shibuya',zh:'涩谷店'}, '横浜店':{en:'Yokohama',zh:'横滨店'},
+    'トマト':{en:'Tomato',zh:'番茄'}, '牛肉（国産）':{en:'Beef (domestic)',zh:'牛肉（国产）'},
+    '鶏もも':{en:'Chicken thigh',zh:'鸡腿肉'}, '醤油':{en:'Soy sauce',zh:'酱油'},
+    '生ビール':{en:'Draft beer',zh:'生啤酒'}, '米':{en:'Rice',zh:'大米'},
+    'レモン':{en:'Lemon',zh:'柠檬'}, '白ワイン':{en:'White wine',zh:'白葡萄酒'},
+    'kg':{en:'kg',zh:'公斤'}, '本':{en:'btl',zh:'瓶'}, '樽':{en:'keg',zh:'桶'}, '個':{en:'pc',zh:'个'},
+    '丸八ミート':{en:'Maruhachi Meat',zh:'丸八肉铺'}, 'アサヒ流通':{en:'Asahi Distribution',zh:'朝日流通'},
+    'やまと青果':{en:'Yamato Produce',zh:'大和青果'}, 'こめ問屋 田中':{en:'Tanaka Rice',zh:'田中米行'},
+    'ヴィノス・ジャパン':{en:'Vinos Japan',zh:'Vinos Japan'},
+    '週末の仕込みで大量に不足':{en:'Way short for weekend prep',zh:'周末备料严重不足'},
+    'イベントでビール不足見込み':{en:'Expecting beer shortage for an event',zh:'活动预计啤酒不足'},
+    '急な団体予約で不足':{en:'Short due to a sudden group booking',zh:'临时团体预订导致不足'},
+    '自店で確保できたため取消':{en:'Cancelled — sourced in-house',zh:'已自行采购故取消'},
+  };
+  const dtr = s => (s!=null && DTR[s] && DTR[s][lang]) ? DTR[s][lang] : s;
+
   let state = { stores:[], items:[], records:[], requests:[] };
   let user = { role:'admin', storeId:null };
   let tab = 'dash';
@@ -394,15 +755,16 @@ const App = (()=>{
   /* ---------- helpers ---------- */
   const store = id => state.stores.find(s=>s.id===id);
   const itemById = id => state.items.find(i=>i.id===id);
-  const sName = id => (store(id)||{name:'(削除済)'}).name;
-  const iName = id => (itemById(id)||{name:'(削除済)'}).name;
-  const iUnit = id => (itemById(id)||{unit:''}).unit;
+  const sName = id => { const s=store(id); return s?dtr(s.name):t('deleted'); };
+  const iName = id => { const i=itemById(id); return i?dtr(i.name):t('deleted'); };
+  const iUnit = id => { const i=itemById(id); return i?dtr(i.unit):''; };
   const canEditMaster = () => user.role!=='staff';
   const canApprove = () => user.role==='manager' || user.role==='staff';   // 受けた店の店長・スタッフ両方が承認可
   const myStoreId = () => user.role==='admin' ? null : user.storeId;
   const amount = r => r.qty*r.unitPrice;
   const reqRemaining = r => Math.max(0,(r.qty||0)-(r.qtyFilled||0));
   function months(){ const set=[...new Set(state.records.map(r=>r.date.slice(0,7)))].sort().reverse(); return set; }
+  function fmtMonth(m){ const p=m.split('-'),y=p[0],mm=p[1]; if(lang==='en'){const EN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return EN[(+mm)-1]+' '+y;} return y+'年'+mm+'月'; }
   function recordsView(){ return selMonth ? state.records.filter(r=>r.date.slice(0,7)===selMonth) : state.records; }
 
   /* ---------- compute (records → balances) ---------- */
@@ -426,52 +788,54 @@ const App = (()=>{
   }
 
   /* ---------- role / context UI ---------- */
-  const TABS = {
-    admin:[['dash','📊 ダッシュボード'],['rec','🧾 貸借記録'],['items','🥬 品目マスタ'],['stores','⚙️ 店舗管理']],
-    manager:[['dash','📊 ダッシュボード'],['apply','📣 申請する'],['board','📥 申請を受ける・掲示板'],['rec','🧾 自店の記録'],['items','🥬 品目マスタ']],
-    staff:[['dash','📊 ダッシュボード'],['apply','📣 申請する'],['board','📥 申請を受ける・掲示板'],['rec','📅 自店の記録']],
+  const TAB_LABELS = {
+    admin:[['dash','tab_dash'],['rec','tab_rec'],['items','tab_items'],['stores','tab_stores']],
+    manager:[['dash','tab_dash'],['apply','tab_apply'],['board','tab_board'],['rec','tab_recMgr'],['items','tab_items']],
+    staff:[['dash','tab_dash'],['apply','tab_apply'],['board','tab_board'],['rec','tab_recStaff']],
   };
-  const SHORT={dash:['📊','集計'],apply:['📣','申請'],board:['📥','受付'],rec:['🧾','記録'],items:['🥬','品目'],stores:['⚙️','店舗']};
+  const SHORT_ICON={dash:'📊',apply:'📣',board:'📥',rec:'🧾',items:'🥬',stores:'⚙️'};
+  const SHORT_KEY={dash:'short_dash',apply:'short_apply',board:'short_board',rec:'short_rec',items:'short_items',stores:'short_stores'};
   function incomingFor(sid){ return sid ? state.requests.filter(r=>r.status==='open' && r.targets.includes(sid) && r.borrowerId!==sid) : state.requests.filter(r=>r.status==='open'); }
   function buildLogin(){
-    $('roleSel').innerHTML = Object.entries(ROLES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
+    $('roleSel').innerHTML = ['admin','manager','staff'].map(k=>`<option value="${k}">${t('role_'+k)}</option>`).join('');
     $('roleSel').value=user.role;
     buildCtx();
   }
   function buildCtx(){
     const c=$('ctxSel');
     if(user.role==='manager'||user.role==='staff'){
-      c.style.display=''; const lbl=user.role==='manager'?'店長':'スタッフ';
-      c.innerHTML=state.stores.map(s=>`<option value="store:${s.id}">${esc(s.name)} ${lbl}</option>`).join('');
+      c.style.display=''; const lbl=user.role==='manager'?t('sfxManager'):t('sfxStaff');
+      c.innerHTML=state.stores.map(s=>`<option value="store:${s.id}">${esc(dtr(s.name))} ${lbl}</option>`).join('');
       if(!user.storeId) user.storeId=state.stores[0]&&state.stores[0].id;
       c.value='store:'+user.storeId;
     } else { c.style.display='none'; c.innerHTML=''; }
   }
-  function changeRole(r){ user.role=r; user.storeId=null; buildCtx(); afterRoleChange(); }
+  function changeRole(r){ const keep=(r!=='admin'&&user.storeId&&store(user.storeId))?user.storeId:null; user.role=r; user.storeId=keep; buildCtx(); afterRoleChange(); }
   function changeCtx(v){ const [k,id]=v.split(':'); if(k==='store')user.storeId=id; afterRoleChange(); }
   function afterRoleChange(){
-    const allowed=TABS[user.role].map(t=>t[0]); if(!allowed.includes(tab)) tab=allowed[0];
+    const allowed=TAB_LABELS[user.role].map(x=>x[0]); if(!allowed.includes(tab)) tab=allowed[0];
+    if(user.role!=='admin' && tab==='dash' && incomingFor(myStoreId()).length>0) tab='board';
     $('roleSel').value=user.role;
     if(user.role!=='admin') $('ctxSel').value='store:'+user.storeId;
     save(); renderTabs(); renderBand(); renderAll();
   }
   function renderBand(){
-    const cls=user.role; let who=ROLES[user.role], desc='';
-    if(user.role==='admin'){ who='本部 / オーナー'; desc='全店舗の閲覧・品目マスタと標準単価の管理・精算管理ができます（申請のやり取りは各店舗が行います）。'; }
-    else if(user.role==='manager'){ who=sName(user.storeId)+' 店長'; desc='自店の食材申請を出し、他店からの申請を承認。記録・精算・品目も確認できます。'; }
-    else { who=sName(user.storeId)+' スタッフ'; desc='自店の食材申請を出し、貸借の状況を確認できます。'; }
+    const cls=user.role; let who='', desc='';
+    if(user.role==='admin'){ who=t('whoAdmin'); desc=t('bandAdminDesc'); }
+    else if(user.role==='manager'){ who=sName(user.storeId)+' '+t('sfxManager'); desc=t('bandManagerDesc'); }
+    else { who=sName(user.storeId)+' '+t('sfxStaff'); desc=t('bandStaffDesc'); }
     const inc = incomingFor(myStoreId()).length;
-    const notif = (user.role!=='admin' && inc) ? `<span class="notif">📥 申請が ${inc}件 届いています</span>` : '';
+    const notif = (user.role!=='admin' && inc) ? `<span class="notif">${t('notif')(inc)}</span>` : '';
     $('roleband').innerHTML=`<span class="chip ${cls}">${esc(who)}</span><span class="desc">${desc}</span>${notif}`;
   }
   function renderTabs(){
     const inc = incomingFor(myStoreId()).length;
-    $('tabs').innerHTML=TABS[user.role].map(([id,label])=>{
+    $('tabs').innerHTML=TAB_LABELS[user.role].map(([id,key])=>{
       const badge = (id==='board' && inc) ? `<span class="dot-n">${inc}</span>` : '';
-      return `<button class="${id===tab?'active':''}" onclick="App.tab('${id}')">${label}${badge}</button>`;
+      return `<button class="${id===tab?'active':''}" onclick="App.tab('${id}')">${t(key)}${badge}</button>`;
     }).join('');
-    $('tabsBottom').innerHTML=TABS[user.role].map(([id])=>{
-      const [ic,lbl]=SHORT[id]||['•',id];
+    $('tabsBottom').innerHTML=TAB_LABELS[user.role].map(([id])=>{
+      const ic=SHORT_ICON[id]||'•', lbl=t(SHORT_KEY[id]||'');
       const badge = (id==='board' && inc) ? `<span class="bn">${inc}</span>` : '';
       return `<button class="${id===tab?'active':''}" onclick="App.tab('${id}')"><span class="ic">${ic}</span>${badge}${lbl}</button>`;
     }).join('');
@@ -479,45 +843,49 @@ const App = (()=>{
     const map={dash:'panel-dash',apply:'panel-apply',board:'panel-board',rec:'panel-rec',items:'panel-items',stores:'panel-stores'};
     const p=$(map[tab]); if(p)p.classList.add('active');
   }
-  function setTab(t){ tab=t; renderTabs(); renderAll(); window.scrollTo(0,0); }
+  function setTab(t2){ tab=t2; renderTabs(); renderAll(); window.scrollTo(0,0); }
 
   /* ---------- month selectors ---------- */
   function buildMonthSelectors(){
-    const opts=`<option value="">全期間</option>`+months().map(m=>`<option value="${m}">${m.replace('-','年')}月</option>`).join('');
+    const opts=`<option value="">${t('monthAll')}</option>`+months().map(m=>`<option value="${m}">${fmtMonth(m)}</option>`).join('');
     ['dashMonth','recMonth'].forEach(id=>{ const el=$(id); if(el){ el.innerHTML=opts; el.value=selMonth; } });
   }
   function setMonth(m){ selMonth=m; buildMonthSelectors(); renderAll(); }
 
   /* ---------- render: dashboard ---------- */
-  function renderDash(){ if(user.role==='admin') renderDashAll(); else renderDashStore(); }
+  function renderDash(){
+    const hero=$('dashHero');
+    if(user.role==='admin'){ hero.innerHTML=`<div class="hero-cta"><div class="hero-txt"><b>${t('heroTitle')}</b><span>${t('heroDesc')}</span></div><button class="btn primary" onclick="App.demoTry()">${t('heroTryBtn')}</button></div>`; renderDashAll(); }
+    else { hero.innerHTML=''; renderDashStore(); }
+  }
   function renderDashAll(){
     const recs=recordsView();
     const c=compute(recs);
     const settleTotal=c.settle.reduce((a,b)=>a+b.amt,0);
-    $('balTitle').textContent='💰 店舗別 食材バランス';
-    $('balHint').textContent='「他店に貸した食材の額」と「他店から借りた食材の額」の差引です。';
-    $('legCredit').textContent='プラス（受け取る側＝多く貸した店）';
-    $('legDebit').textContent='マイナス（支払う側＝多く借りた店）';
+    $('balTitle').textContent=t('balTitleAll');
+    $('balHint').textContent=t('balHintAll');
+    $('legCredit').textContent=t('legCreditAll');
+    $('legDebit').textContent=t('legDebitAll');
     $('matrixCard').style.display='';
-    $('settleTitle').textContent='🧾 精算リスト（相殺後）';
-    $('settleHint').textContent='店舗ペアごとに相殺した「誰が誰へいくら払うか」です。';
+    $('settleTitle').textContent=t('settleTitleAll');
+    $('settleHint').textContent=t('settleHintAll');
     $('kpis').innerHTML=`
-      ${kpi('貸借記録 件数',recs.length,'件')}
-      ${kpi('食材移動 総額',yen(c.total))}
-      ${kpi('精算で動くお金',yen(settleTotal))}
-      ${kpi('申請中',state.requests.filter(r=>r.status==='open').length,'件')}`;
+      ${kpi(t('kpiRecCount'),recs.length,t('unitCases'))}
+      ${kpi(t('kpiTotalMoved'),yen(c.total))}
+      ${kpi(t('kpiSettleMoney'),yen(settleTotal))}
+      ${kpi(t('kpiOpenReq'),state.requests.filter(r=>r.status==='open'&&(!selMonth||r.date.slice(0,7)===selMonth)).length,t('unitCases'))}`;
     const maxAbs=Math.max(1,...state.stores.map(s=>Math.abs(c.bal[s.id].net)));
     $('balanceChart').innerHTML = recs.length ? [...state.stores].sort((a,b)=>c.bal[b.id].net-c.bal[a.id].net).map(s=>{
       const n=c.bal[s.id].net,w=Math.abs(n)/maxAbs*50,cls=n>=0?'credit':'debit';
-      return `<div class="bar-row"><div class="name">${esc(s.name)}</div>
+      return `<div class="bar-row"><div class="name">${esc(dtr(s.name))}</div>
         <div class="bar-track"><div class="bar-center"></div><div class="bar-fill ${cls}" style="width:${w}%"></div></div>
         <div class="amt ${cls}">${n>=0?'+':'−'}${yen(Math.abs(n))}</div></div>`;
-    }).join('') : empty('この期間の記録がありません');
+    }).join('') : empty(t('emptyNoRecPeriod'));
     $('matrix').innerHTML=renderMatrix(c,recs);
     $('settle').innerHTML=c.settle.length?c.settle.map(s=>`
       <div class="settle-item"><span class="pill debit">${esc(sName(s.from))}</span>
       <span class="arrow">→</span><span class="pill credit">${esc(sName(s.to))}</span>
-      <span class="pay">${yen(s.amt)}</span></div>`).join('') : empty('精算の必要はありません');
+      <span class="pay">${yen(s.amt)}</span></div>`).join('') : empty(t('emptyNoSettle'));
   }
   function renderDashStore(){
     const me=myStoreId();
@@ -528,52 +896,52 @@ const App = (()=>{
     const net=lentTotal-borTotal;
     const myRecCount=recs.filter(r=>r.fromStoreId===me||r.toStoreId===me).length;
     // titles → 自店視点
-    $('balTitle').textContent='💰 自店の貸し借り（相手店別）';
-    $('balHint').textContent='自店から見た相手店ごとの差引です。プラス＝自店が受け取る側／マイナス＝自店が支払う側。';
-    $('legCredit').textContent='プラス（自店が受け取る）';
-    $('legDebit').textContent='マイナス（自店が支払う）';
+    $('balTitle').textContent=t('balTitleStore');
+    $('balHint').textContent=t('balHintStore');
+    $('legCredit').textContent=t('legCreditStore');
+    $('legDebit').textContent=t('legDebitStore');
     $('matrixCard').style.display='none';            // 他店同士が見える全店マトリクスは非表示
-    $('settleTitle').textContent='🧾 自店の精算（相殺後）';
-    $('settleHint').textContent='自店が関わる「自店→相手」「相手→自店」だけを表示しています。';
+    $('settleTitle').textContent=t('settleTitleStore');
+    $('settleHint').textContent=t('settleHintStore');
     $('kpis').innerHTML=`
-      ${kpi('自店の貸借記録',myRecCount,'件')}
-      ${kpi('貸した額（自店→他店）',yen(lentTotal))}
-      ${kpi('借りた額（他店→自店）',yen(borTotal))}
-      ${kpi(net>=0?'差引（受け取り）':'差引（支払い）',(net>=0?'+':'−')+yen(Math.abs(net)))}`;
+      ${kpi(t('kpiMyRec'),myRecCount,t('unitCases'))}
+      ${kpi(t('kpiLent'),yen(lentTotal))}
+      ${kpi(t('kpiBorrowed'),yen(borTotal))}
+      ${kpi(net>=0?t('kpiNetReceive'):t('kpiNetPay'),(net>=0?'+':'−')+yen(Math.abs(net)))}`;
     const partnerNets=partners.map(o=>({o, net:(c.mat[me][o.id]||0)-(c.mat[o.id][me]||0)}));
     const maxAbs=Math.max(1,...partnerNets.map(p=>Math.abs(p.net)));
     $('balanceChart').innerHTML = myRecCount ? partnerNets.sort((a,b)=>b.net-a.net).map(p=>{
       const n=p.net,w=Math.abs(n)/maxAbs*50,cls=n>=0?'credit':'debit';
-      return `<div class="bar-row"><div class="name">${esc(p.o.name)}</div>
+      return `<div class="bar-row"><div class="name">${esc(dtr(p.o.name))}</div>
         <div class="bar-track"><div class="bar-center"></div><div class="bar-fill ${cls}" style="width:${w}%"></div></div>
         <div class="amt ${cls}">${n>=0?'+':'−'}${yen(Math.abs(n))}</div></div>`;
-    }).join('') : empty('この期間、自店の記録がありません');
+    }).join('') : empty(t('emptyNoMyRec'));
     const mine=c.settle.filter(s=>s.from===me||s.to===me);
     $('settle').innerHTML = mine.length ? mine.map(s=>{
-      const fromLbl = s.from===me?'自店':sName(s.from), toLbl = s.to===me?'自店':sName(s.to);
+      const fromLbl = s.from===me?(lang==='en'?'My store':(lang==='zh'?'本店':'自店')):sName(s.from), toLbl = s.to===me?(lang==='en'?'My store':(lang==='zh'?'本店':'自店')):sName(s.to);
       return `<div class="settle-item"><span class="pill debit">${esc(fromLbl)}</span>
         <span class="arrow">→</span><span class="pill credit">${esc(toLbl)}</span>
         <span class="pay">${yen(s.amt)}</span></div>`;
-    }).join('') : empty('精算の必要はありません');
+    }).join('') : empty(t('emptyNoSettle'));
   }
   const kpi=(l,v,u='')=>`<div class="kpi"><div class="lbl">${l}</div><div class="val">${typeof v==='number'?v.toLocaleString('ja-JP'):v}${u?`<small>${u}</small>`:''}</div></div>`;
   function renderMatrix(c,recs){
-    if(!recs.length) return empty('この期間の記録がありません');
-    const heads=state.stores.map(s=>`<th>${esc(s.name)}</th>`).join('');
+    if(!recs.length) return empty(t('emptyNoRecPeriod'));
+    const heads=state.stores.map(s=>`<th>${esc(dtr(s.name))}</th>`).join('');
     const max=Math.max(1,...c.ids.flatMap(a=>c.ids.map(b=>c.mat[a][b]||0)));
-    const body=state.stores.map(from=>`<tr><td class="rowlbl">${esc(from.name)}</td>${state.stores.map(to=>{
+    const body=state.stores.map(from=>`<tr><td class="rowlbl">${esc(dtr(from.name))}</td>${state.stores.map(to=>{
       if(from.id===to.id)return `<td class="diag">—</td>`;
       const v=c.mat[from.id][to.id]||0; if(!v)return `<td class="cell" style="color:#cbd2dc">0</td>`;
       return `<td class="cell" style="background:rgba(13,148,136,${(0.10+0.55*v/max).toFixed(2)})">${yen(v)}</td>`;
     }).join('')}</tr>`).join('');
-    return `<table class="matrix"><tr><th class="corner">貸し手 ＼ 借り手</th>${heads}</tr>${body}</table>`;
+    return `<table class="matrix"><tr><th class="corner">${t('matrixCorner')}</th>${heads}</tr>${body}</table>`;
   }
 
   /* ---------- render: apply (申請する) ---------- */
   function renderApply(){
     buildSupplierList();
     $('f-borrower-wrap').style.display='none';   // 借り手＝自店に固定
-    $('f-item').innerHTML=state.items.map(i=>`<option value="${i.id}">${esc(i.name)}</option>`).join('');
+    $('f-item').innerHTML=state.items.map(i=>`<option value="${i.id}">${esc(dtr(i.name))}</option>`).join('');
     onReqItem();
     renderTargets();
   }
@@ -582,77 +950,79 @@ const App = (()=>{
     const me = myStoreId();
     // incoming (actionable)
     const inc=incomingFor(me);
-    $('incomingSub').textContent = `${inc.length}件（あなたの店が声をかけられています）`;
-    $('incomingList').innerHTML = inc.length ? inc.map(renderIncoming).join('') : empty('あなたの店に届いた申請はありません');
+    $('incomingSub').textContent = t('incSub')(inc.length);
+    $('incomingList').innerHTML = inc.length ? inc.map(renderIncoming).join('') : empty(t('emptyNoIncoming'));
 
     // 掲示板：自店に関係する申請のみ
     let list=[...state.requests].filter(r=>r.borrowerId===me || r.targets.includes(me) || r.lenderId===me);
     list.sort((a,b)=>(a.status==='open'?0:1)-(b.status==='open'?0:1) || b.date.localeCompare(a.date));
     const openCnt=list.filter(r=>r.status==='open').length;
-    $('boardTitle').textContent = '📋 申請一覧（掲示板・自店関連）';
-    $('boardSub').textContent = `募集中 ${openCnt}件 / 自店関連 ${list.length}件`;
-    $('reqList').innerHTML = list.length ? list.map(renderReqCard).join('') : empty('自店に関係する申請はありません');
+    $('boardTitle').textContent = t('boardTitleMine');
+    $('boardSub').textContent = t('boardSub')(openCnt,list.length);
+    $('reqList').innerHTML = list.length ? list.map(renderReqCard).join('') : empty(t('emptyNoBoard'));
   }
   function renderTargets(){
     const me=myStoreId();
     const cands=state.stores.filter(s=>s.id!==me);
-    $('f-targets').innerHTML = cands.map(s=>`<label class="chk" id="chk-${s.id}"><input type="checkbox" value="${s.id}" onchange="App.toggleChk('${s.id}')">${esc(s.name)}</label>`).join('');
+    $('f-targets').innerHTML = cands.map(s=>`<label class="chk" id="chk-${s.id}"><input type="checkbox" value="${s.id}" onchange="App.toggleChk('${s.id}')">${esc(dtr(s.name))}</label>`).join('');
   }
   function toggleChk(id){ const el=$('chk-'+id); const cb=el.querySelector('input'); el.classList.toggle('on',cb.checked); }
   function renderIncoming(r){
-    const it=itemById(r.itemId)||{name:'(削除済)',unit:'',price:0};
+    const it=itemById(r.itemId);
+    const iname=it?dtr(it.name):t('deleted'), iunit=it?dtr(it.unit):'', iprice=it?it.price:0;
     const remaining=reqRemaining(r);
-    const amt = remaining*(it.price||0);
+    const amt = remaining*(iprice||0);
     const partial=(r.qtyFilled||0)>0;
-    const act=`<span class="muted">貸せる数量</span>
+    const act=`<span class="muted">${t('lendQty')}</span>
         <input type="number" id="qa-${r.id}" value="${remaining}" min="0" step="0.5" max="${remaining}" style="width:84px">
-        <span class="muted">${esc(it.unit)}（最大 ${num(remaining)}）</span>
-        <button class="btn ok sm" onclick="App.approve('${r.id}','${myStoreId()}')">この数量を貸す・承認</button>
-        <button class="btn ghost sm" onclick="App.decline('${r.id}')">ごめんなさい🙏</button>`;
+        <span class="muted">${t('maxUnit')(esc(iunit),num(remaining))}</span>
+        <button class="btn ok sm" onclick="App.approve('${r.id}','${myStoreId()}')">${t('btnApprove')}</button>
+        <button class="btn ghost sm" onclick="App.decline('${r.id}')">${t('btnDecline')}</button>`;
     return `<div class="reqcard open">
       <div class="top">
-        <span class="title">${esc(sName(r.borrowerId))} が「${esc(it.name)} ${num(r.qty)}${esc(it.unit)}」を希望</span>
-        <span class="status open">募集中</span>
-        ${partial?`<span class="status" style="background:var(--warn-bg);color:var(--warn)">残り ${num(remaining)}${esc(it.unit)}</span>`:''}
+        <span class="title">${t('incWant')(esc(sName(r.borrowerId)),esc(iname),num(r.qty),esc(iunit))}</span>
+        <span class="status open">${t('stOpen')}</span>
+        ${partial?`<span class="status" style="background:var(--warn-bg);color:var(--warn)">${t('stRemain')(num(remaining),esc(iunit))}</span>`:''}
       </div>
       <div class="meta">
-        <span>📅 希望受渡：<b>${r.date}</b></span>
-        <span>💴 残り目安：<b>${yen(amt)}</b>（標準単価 ${yen(it.price||0)}）</span>
-        <span>📨 声がけ先：${r.targets.map(t=>`<span class="tag-store">${esc(sName(t))}</span>`).join(' ')}</span>
-        ${partial?`<span>✅ 既に ${num(r.qtyFilled)}${esc(it.unit)} 成立${r.fills&&r.fills.length?`（${r.fills.map(f=>esc(sName(f.storeId))+' '+num(f.qty)+it.unit).join('、')}）`:''}</span>`:''}
-        ${r.supplier?`<span>🏭 仕入先：<b>${esc(r.supplier)}</b></span>`:''}
-        ${r.note?`<span>📝 ${esc(r.note)}</span>`:''}
+        <span>${t('metaWishDate')}<b>${r.date}</b></span>
+        <span>${t('metaRemainEst')}<b>${yen(amt)}</b>${t('stdPrice')(yen(iprice||0))}</span>
+        <span>${t('metaTargets')}${r.targets.map(tg=>`<span class="tag-store">${esc(sName(tg))}</span>`).join(' ')}</span>
+        ${partial?`<span>${t('metaAlready')(num(r.qtyFilled),esc(iunit))}${r.fills&&r.fills.length?`（${r.fills.map(f=>esc(sName(f.storeId))+' '+num(f.qty)+esc(iunit)).join(t('listSep'))}）`:''}</span>`:''}
+        ${r.supplier?`<span>${t('metaSupplier')}<b>${esc(dtr(r.supplier))}</b></span>`:''}
+        ${r.note?`<span>${t('metaNote')}${esc(dtr(r.note))}</span>`:''}
       </div>
       <div class="act">${act}</div>
     </div>`;
   }
   function renderReqCard(r){
-    const it=itemById(r.itemId)||{name:'(削除済)',unit:'',price:0};
+    const it=itemById(r.itemId);
+    const iname=it?dtr(it.name):t('deleted'), iunit=it?dtr(it.unit):'', iprice=it?it.price:0;
     let act='';
     const partial=(r.qtyFilled||0)>0;
-    const prog = partial?` ・ ${num(r.qtyFilled)}/${num(r.qty)}${it.unit} 成立（残り ${num(reqRemaining(r))}${it.unit}）`:'';
+    const prog = partial?t('reqProgress')(num(r.qtyFilled),num(r.qty),esc(iunit),num(reqRemaining(r))):'';
     if(r.status==='open'){
       const isMine = r.borrowerId===myStoreId();
-      if(isMine) act=`<span class="muted">募集中（声がけ先：${r.targets.map(sName).join('、')}）${prog}</span>
-        <button class="btn danger sm" onclick="App.cancelReq('${r.id}')">申請を取消</button>`;
-      else act=`<span class="muted">声がけ先 ${r.targets.length}店${prog}</span>`;
+      if(isMine) act=`<span class="muted">${t('openMine')(r.targets.map(sName).join(t('listSep')),prog)}</span>
+        <button class="btn danger sm" onclick="App.cancelReq('${r.id}')">${t('btnCancelReq')}</button>`;
+      else act=`<span class="muted">${t('openOther')(r.targets.length,prog)}</span>`;
     } else if(r.status==='fulfilled'){
-      const who = r.fills&&r.fills.length ? r.fills.map(f=>`${esc(sName(f.storeId))}（${num(f.qty)}${it.unit}）`).join('、') : esc(sName(r.lenderId));
-      act=`<span class="status confirmed">成立</span>
-        <span>貸し手：<b>${who}</b> → ${esc(sName(r.borrowerId))}（借り手）／実績に反映済み</span>`;
+      const who = r.fills&&r.fills.length ? r.fills.map(f=>t('fillWho')(esc(sName(f.storeId)),num(f.qty),esc(iunit))).join(t('listSep')) : esc(sName(r.lenderId));
+      act=`<span class="status confirmed">${t('stFulfilled')}</span>
+        <span>${t('fulfilledLine')(who,esc(sName(r.borrowerId)))}</span>`;
     } else {
-      act=`<span class="status cancelled">取消済み</span>`;
+      act=`<span class="status cancelled">${t('stCancelled')}</span>`;
     }
     return `<div class="reqcard ${r.status}">
       <div class="top">
-        <span class="title">${esc(sName(r.borrowerId))}：${esc(it.name)} ${num(r.qty)}${esc(it.unit)}</span>
-        ${r.status==='open'?'<span class="status open">募集中</span>':''}
+        <span class="title">${t('reqCardTitle')(esc(sName(r.borrowerId)),esc(iname),num(r.qty),esc(iunit))}</span>
+        ${r.status==='open'?`<span class="status open">${t('stOpen')}</span>`:''}
       </div>
       <div class="meta">
         <span>📅 <b>${r.date}</b></span>
-        <span>💴 目安：<b>${yen(r.qty*(it.price||0))}</b></span>
-        ${r.supplier?`<span>🏭 ${esc(r.supplier)}</span>`:''}
-        ${r.note?`<span>📝 ${esc(r.note)}</span>`:''}
+        <span>${t('metaEst')}<b>${yen(r.qty*(iprice||0))}</b></span>
+        ${r.supplier?`<span>🏭 ${esc(dtr(r.supplier))}</span>`:''}
+        ${r.note?`<span>📝 ${esc(dtr(r.note))}</span>`:''}
       </div>
       <div class="act">${act}</div>
     </div>`;
@@ -662,21 +1032,21 @@ const App = (()=>{
   function renderRec(){
     const staffView = user.role==='staff';
     $('manualCard').style.display = staffView ? 'none':'';
-    $('recTitle').textContent = user.role==='admin' ? '🧾 貸借記録' : (staffView?'📅 自店の貸借記録':'🧾 自店の記録');
+    $('recTitle').textContent = user.role==='admin' ? t('recTitleAdmin') : (staffView?t('recTitleStaff'):t('recTitleMgr'));
     if(!staffView){
-      const opts=state.stores.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');
+      const opts=state.stores.map(s=>`<option value="${s.id}">${esc(dtr(s.name))}</option>`).join('');
       $('r-from').innerHTML=opts; $('r-to').innerHTML=opts;
-      $('r-item').innerHTML=state.items.map(i=>`<option value="${i.id}">${esc(i.name)}</option>`).join('');
+      $('r-item').innerHTML=state.items.map(i=>`<option value="${i.id}">${esc(dtr(i.name))}</option>`).join('');
       if(user.role==='manager'){ $('r-from').value=myStoreId(); }
       onRecItem();
       buildSupplierList();
     }
     let recs=recordsView().slice().sort((a,b)=>b.date.localeCompare(a.date));
     if(user.role!=='admin'){ const sid=myStoreId(); recs=recs.filter(r=>r.fromStoreId===sid || r.toStoreId===sid); }
-    $('recCount').textContent=`${recs.length}件`;
-    if(!recs.length){ $('recTable').innerHTML=`<tr><td>${empty('この期間の記録がありません')}</td></tr>`; return; }
+    $('recCount').textContent=t('countCases')(recs.length);
+    if(!recs.length){ $('recTable').innerHTML=`<tr><td>${empty(t('emptyNoRecPeriod'))}</td></tr>`; return; }
     const canDel = user.role!=='staff';
-    const head=`<tr><th>日付</th><th>貸し手</th><th>借り手</th><th>品目</th><th class="num">数量</th><th class="num">単価</th><th class="num">金額</th><th>仕入先</th><th>登録元</th>${canDel?'<th></th>':''}</tr>`;
+    const head=`<tr><th>${t('thDate')}</th><th>${t('thFrom')}</th><th>${t('thTo')}</th><th>${t('thItem')}</th><th class="num">${t('thQty')}</th><th class="num">${t('thUnitPrice')}</th><th class="num">${t('thAmount')}</th><th>${t('thSupplier')}</th><th>${t('thSource')}</th>${canDel?'<th></th>':''}</tr>`;
     $('recTable').innerHTML=head+recs.map(r=>{
       return `<tr><td>${r.date}</td>
         <td><span class="tag-store">${esc(sName(r.fromStoreId))}</span></td>
@@ -685,14 +1055,14 @@ const App = (()=>{
         <td class="num">${num(r.qty)}${esc(iUnit(r.itemId))}</td>
         <td class="num">${yen(r.unitPrice)}</td>
         <td class="num"><b>${yen(amount(r))}</b></td>
-        <td class="muted">${r.supplier?esc(r.supplier):'—'}</td>
-        <td>${r.source==='request'?'<span class="status confirmed">申請成立</span>':'<span class="status cancelled">手入力</span>'}</td>
-        ${canDel?`<td class="num"><button class="btn danger sm" onclick="App.delRecord('${r.id}')">削除</button></td>`:''}</tr>`;
+        <td class="muted">${r.supplier?esc(dtr(r.supplier)):'—'}</td>
+        <td>${r.source==='request'?`<span class="status confirmed">${t('srcRequest')}</span>`:`<span class="status cancelled">${t('srcManual')}</span>`}</td>
+        ${canDel?`<td class="num"><button class="btn danger sm" onclick="App.delRecord('${r.id}')">${t('btnDel')}</button></td>`:''}</tr>`;
     }).join('');
   }
   function buildSupplierList(){
     const set=[...new Set([...state.records.map(r=>r.supplier),...state.requests.map(r=>r.supplier)].filter(Boolean))].sort();
-    const dl=$('supplierList'); if(dl) dl.innerHTML=set.map(s=>`<option value="${esc(s)}">`).join('');
+    const dl=$('supplierList'); if(dl) dl.innerHTML=set.map(s=>`<option value="${esc(dtr(s))}">`).join('');
   }
 
   /* ---------- render: items ---------- */
@@ -700,54 +1070,54 @@ const App = (()=>{
     const editable=canEditMaster();
     $('itemFormGrid').style.display = editable?'':'none';
     ['syncBtn','tmplBtn','importBtn'].forEach(id=>{ const el=$(id); if(el) el.style.display = editable?'':'none'; });
-    const head=`<tr><th>食材名</th><th>単位</th><th class="num">標準単価</th><th class="num">貸借に登場</th>${editable?'<th></th>':''}</tr>`;
+    const head=`<tr><th>${t('thItemName')}</th><th>${t('thUnit')}</th><th class="num">${t('thStdPrice')}</th><th class="num">${t('thUsedIn')}</th>${editable?'<th></th>':''}</tr>`;
     const rows=state.items.map(i=>{
       const used=state.records.filter(r=>r.itemId===i.id).length;
       const priceCell = editable
         ? `<td class="num"><input type="number" value="${i.price}" min="0" step="10" style="width:110px;text-align:right" onchange="App.setPrice('${i.id}',this.value)"></td>`
         : `<td class="num">${yen(i.price)}</td>`;
-      return `<tr><td><b>${esc(i.name)}</b></td><td>${esc(i.unit)}</td>${priceCell}
-        <td class="num muted">${used}件</td>
-        ${editable?`<td class="num"><button class="btn danger sm" onclick="App.delItem('${i.id}')">削除</button></td>`:''}</tr>`;
+      return `<tr><td><b>${esc(dtr(i.name))}</b></td><td>${esc(dtr(i.unit))}</td>${priceCell}
+        <td class="num muted">${t('countCases')(used)}</td>
+        ${editable?`<td class="num"><button class="btn danger sm" onclick="App.delItem('${i.id}')">${t('btnDel')}</button></td>`:''}</tr>`;
     }).join('');
-    $('itemTable').innerHTML = state.items.length ? head+rows : `<tr><td>${empty('品目がありません')}</td></tr>`;
+    $('itemTable').innerHTML = state.items.length ? head+rows : `<tr><td>${empty(t('emptyNoItems'))}</td></tr>`;
   }
 
   /* ---------- render: stores ---------- */
   function renderStores(){
-    $('storeTable').innerHTML=state.stores.length?`<tr><th>店舗名</th><th class="num">貸し</th><th class="num">借り</th><th></th></tr>`+state.stores.map(s=>{
+    $('storeTable').innerHTML=state.stores.length?`<tr><th>${t('thStoreName')}</th><th class="num">${t('thLent')}</th><th class="num">${t('thBorrowed')}</th><th></th></tr>`+state.stores.map(s=>{
       const lent=state.records.filter(r=>r.fromStoreId===s.id).length;
       const bor=state.records.filter(r=>r.toStoreId===s.id).length;
-      return `<tr><td><b>${esc(s.name)}</b></td><td class="num muted">${lent}件</td><td class="num muted">${bor}件</td>
-      <td class="num"><button class="btn danger sm" onclick="App.delStore('${s.id}')">削除</button></td></tr>`;
-    }).join('') : `<tr><td>${empty('店舗がありません')}</td></tr>`;
+      return `<tr><td><b>${esc(dtr(s.name))}</b></td><td class="num muted">${t('countCases')(lent)}</td><td class="num muted">${t('countCases')(bor)}</td>
+      <td class="num"><button class="btn danger sm" onclick="App.delStore('${s.id}')">${t('btnDel')}</button></td></tr>`;
+    }).join('') : `<tr><td>${empty(t('emptyNoStores'))}</td></tr>`;
   }
 
   /* ---------- form helpers ---------- */
-  function onReqItem(){ const i=itemById($('f-item').value); $('f-unit').textContent = i?i.unit:''; }
-  function onRecItem(){ const i=itemById($('r-item').value); if(i){ $('r-unit').textContent=i.unit; $('r-price').value=i.price; } }
+  function onReqItem(){ const i=itemById($('f-item').value); $('f-unit').textContent = i?dtr(i.unit):''; }
+  function onRecItem(){ const i=itemById($('r-item').value); if(i){ $('r-unit').textContent=dtr(i.unit); $('r-price').value=i.price; } }
 
   /* ---------- actions: requests ---------- */
   function addRequest(){
     const borrowerId = (user.role==='admin' && $('f-borrower-wrap').style.display!=='none') ? $('f-borrower').value : myStoreId();
     const date=$('f-date').value, itemId=$('f-item').value, qty=parseFloat($('f-qty').value), note=$('f-note').value.trim(), supplier=$('f-supplier').value.trim();
-    const targets=[...document.querySelectorAll('#f-targets input:checked')].map(c=>c.value).filter(t=>t!==borrowerId);
-    if(!borrowerId) return toast('申請する店舗が不明です');
-    if(!date) return toast('希望受渡日を入力してください');
-    if(!itemId) return toast('品目を選択してください');
-    if(!(qty>0)) return toast('数量を入力してください');
-    if(!targets.length) return toast('声をかける店舗を1つ以上選んでください');
+    const targets=[...document.querySelectorAll('#f-targets input:checked')].map(c=>c.value).filter(t2=>t2!==borrowerId);
+    if(!borrowerId) return toast(t('valReqStore'));
+    if(!date) return toast(t('valWishDate'));
+    if(!itemId) return toast(t('valItem'));
+    if(!(qty>0)) return toast(t('valQty'));
+    if(!targets.length) return toast(t('valTargets'));
     state.requests.push({id:uid(),date,borrowerId,itemId,qty,note,supplier,targets,status:'open',qtyFilled:0,fills:[],lenderId:''});
     $('f-note').value=''; $('f-supplier').value=''; document.querySelectorAll('#f-targets .chk').forEach(c=>c.classList.remove('on'));
-    save(); renderTabs(); renderBand(); renderAll(); toast('申請を送りました');
+    save(); renderTabs(); renderBand(); renderAll(); toast(t('toastReqSent'));
   }
   function approve(id,lenderId){
     const r=state.requests.find(x=>x.id===id); if(!r||r.status!=='open')return;
-    const lid = lenderId || myStoreId(); if(!lid) return toast('貸す店が不明です');
-    const it=itemById(r.itemId); if(!it) return toast('品目が見つかりません');
+    const lid = lenderId || myStoreId(); if(!lid) return toast(t('valLendStore'));
+    const it=itemById(r.itemId); if(!it) return toast(t('valItemNotFound'));
     const remaining=reqRemaining(r);
     const inp=$('qa-'+id); let q = inp ? parseFloat(inp.value) : remaining;
-    if(!(q>0)) return toast('貸せる数量を入力してください');
+    if(!(q>0)) return toast(t('valLendQty'));
     if(q>remaining) q=remaining;
     const recId=uid();
     state.records.push({id:recId,date:r.date,fromStoreId:lid,toStoreId:r.borrowerId,itemId:r.itemId,qty:q,unitPrice:it.price,supplier:r.supplier||'',source:'request',reqId:r.id});
@@ -757,35 +1127,35 @@ const App = (()=>{
     const left=reqRemaining(r);
     if(left<=0){ r.status='fulfilled'; r.lenderId=lid; }
     save(); buildMonthSelectors(); renderTabs(); renderBand(); renderAll();
-    toast(left<=0 ? `承認しました（${num(q)}${it.unit} 成立・実績に反映）` : `${num(q)}${it.unit} 承認しました（残り ${num(left)}${it.unit}は募集継続）`);
+    toast(left<=0 ? t('toastApproveFull')(num(q),dtr(it.unit)) : t('toastApprovePartial')(num(q),dtr(it.unit),num(left)));
   }
   function decline(id){
     const r=state.requests.find(x=>x.id===id); if(!r)return;
     const me=myStoreId();
-    r.targets=r.targets.filter(t=>t!==me);
+    r.targets=r.targets.filter(tg=>tg!==me);
     if(!r.targets.length) r.status='cancelled';
-    save(); renderTabs(); renderBand(); renderAll(); toast('お見送りにしました🙏');
+    save(); renderTabs(); renderBand(); renderAll(); toast(t('toastDeclined'));
   }
   function cancelReq(id){
     const r=state.requests.find(x=>x.id===id); if(!r)return;
-    if(!confirm('この申請を取り消します。よろしいですか？'))return;
+    if(!confirm(t('confirmCancelReq')))return;
     if(r.status==='fulfilled'){ state.records=state.records.filter(x=>x.reqId!==id); }
     r.status='cancelled';
-    save(); renderTabs(); renderBand(); renderAll(); toast('取り消しました');
+    save(); renderTabs(); renderBand(); renderAll(); toast(t('toastCancelled'));
   }
 
   /* ---------- actions: records ---------- */
   function addRecord(){
     const date=$('r-date').value, fromStoreId=$('r-from').value, toStoreId=$('r-to').value, itemId=$('r-item').value;
     const qty=parseFloat($('r-qty').value), unitPrice=parseFloat($('r-price').value), supplier=$('r-supplier').value.trim();
-    if(!date) return toast('日付を入力してください');
-    if(fromStoreId===toStoreId) return toast('貸し手と借り手が同じです');
-    if(!itemId) return toast('品目を選択してください');
-    if(!(qty>0)) return toast('数量を入力してください');
-    if(!(unitPrice>0)) return toast('単価を入力してください');
+    if(!date) return toast(t('valRecDate'));
+    if(fromStoreId===toStoreId) return toast(t('valSameStore'));
+    if(!itemId) return toast(t('valItem'));
+    if(!(qty>0)) return toast(t('valQty'));
+    if(!(unitPrice>0)) return toast(t('valUnitPrice'));
     state.records.push({id:uid(),date,fromStoreId,toStoreId,itemId,qty,unitPrice,supplier,source:'manual'});
     $('r-supplier').value='';
-    save(); buildMonthSelectors(); renderAll(); toast('記録を追加しました');
+    save(); buildMonthSelectors(); renderAll(); toast(t('toastRecAdded'));
   }
   function delRecord(id){
     const rec=state.records.find(x=>x.id===id);
@@ -803,22 +1173,24 @@ const App = (()=>{
   /* ---------- actions: items ---------- */
   function addItem(){
     const name=$('m-item-name').value.trim(), unit=$('m-item-unit').value.trim()||'個', price=parseFloat($('m-item-price').value);
-    if(!name)return toast('食材名を入力してください'); if(!(price>0))return toast('標準単価を入力してください');
-    state.items.push({id:uid(),name,unit,price}); $('m-item-name').value=''; save(); renderAll(); toast('品目を追加しました');
+    if(!name)return toast(t('valItemName')); if(!(price>0))return toast(t('valStdPrice'));
+    state.items.push({id:uid(),name,unit,price}); $('m-item-name').value=''; save(); renderAll(); toast(t('toastItemAdded'));
   }
-  function delItem(id){ if(state.records.some(r=>r.itemId===id))return toast('記録で使われている品目は削除できません'); if(state.requests.some(r=>r.itemId===id&&r.status==='open'))return toast('申請中で使われている品目は削除できません'); state.items=state.items.filter(i=>i.id!==id); save(); renderAll(); }
-  function setPrice(id,v){ const i=itemById(id); if(!i)return; i.price=parseFloat(v)||0; save(); toast('標準単価を更新しました'); }
+  function delItem(id){ if(state.records.some(r=>r.itemId===id))return toast(t('valItemUsedRec')); if(state.requests.some(r=>r.itemId===id&&r.status==='open'))return toast(t('valItemUsedReq')); state.items=state.items.filter(i=>i.id!==id); save(); renderAll(); }
+  function setPrice(id,v){ const i=itemById(id); if(!i)return; i.price=parseFloat(v)||0; save(); toast(t('toastPriceUpdated')); }
   function syncPrices(){
-    if(!confirm('発注サイトから最新の仕入単価を取り込みます（デモ：単価が変動します）。よろしいですか？'))return;
+    if(!confirm(t('confirmSync')))return;
     state.items.forEach(i=>{ const f=0.95+Math.random()*0.13; i.price=Math.max(10,Math.round(i.price*f/10)*10); });
-    save(); renderItems(); toast('発注サイトから最新の仕入単価を取得しました（デモ）');
+    save(); renderItems(); toast(t('toastSynced'));
   }
   /* ---------- items: CSV / Excel 取込 ---------- */
   function downloadItemTemplate(){
-    const head='食材名,単位,標準単価\n';
-    const body = state.items.length ? state.items.map(i=>[i.name,i.unit,i.price].join(',')).join('\n')
-      : 'トマト,kg,600\n牛肉（国産）,kg,2800\n醤油,本,900\n生ビール,樽,11000';
-    dl('品目マスタ_テンプレート.csv','﻿'+head+body,'text/csv');
+    const head=t('csvHeadTmpl')+'\n';
+    const body = state.items.length ? state.items.map(i=>[dtr(i.name),dtr(i.unit),i.price].join(',')).join('\n')
+      : (lang==='ja'?'トマト,kg,600\n牛肉（国産）,kg,2800\n醤油,本,900\n生ビール,樽,11000'
+        : lang==='zh'?'番茄,公斤,600\n牛肉（国产）,公斤,2800\n酱油,瓶,900\n生啤酒,桶,11000'
+        : 'Tomato,kg,600\nBeef (domestic),kg,2800\nSoy sauce,btl,900\nDraft beer,keg,11000');
+    dl(t('tmplFileName')+'.csv','﻿'+head+body,'text/csv');
   }
   function importItems(input){
     const file=input.files&&input.files[0]; if(!file)return;
@@ -826,7 +1198,7 @@ const App = (()=>{
     if(ext==='csv'){
       const rd=new FileReader();
       rd.onload=()=>{ applyItemRows(parseCSV(rd.result)); input.value=''; };
-      rd.onerror=()=>{ toast('ファイルの読み込みに失敗しました'); input.value=''; };
+      rd.onerror=()=>{ toast(t('toastCsvFail')); input.value=''; };
       rd.readAsText(file);
     } else {
       loadXLSX(()=>{
@@ -835,8 +1207,8 @@ const App = (()=>{
           const wb=XLSX.read(new Uint8Array(rd.result),{type:'array'});
           const ws=wb.Sheets[wb.SheetNames[0]];
           applyItemRows(XLSX.utils.sheet_to_json(ws,{header:1,blankrows:false}));
-        }catch(e){ toast('Excelの読み込みに失敗しました'); } input.value=''; };
-        rd.onerror=()=>{ toast('ファイルの読み込みに失敗しました'); input.value=''; };
+        }catch(e){ toast(t('toastXlsxReadFail')); } input.value=''; };
+        rd.onerror=()=>{ toast(t('toastCsvFail')); input.value=''; };
         rd.readAsArrayBuffer(file);
       });
     }
@@ -855,11 +1227,11 @@ const App = (()=>{
     return rows;
   }
   function applyItemRows(rows){
-    if(!rows||!rows.length) return toast('取り込めるデータがありません');
+    if(!rows||!rows.length) return toast(t('toastNoImportData'));
     const first=rows[0].map(x=>String(x==null?'':x).trim());
-    const isHdr=first.some(h=>/食材|品目|名前|name/i.test(h)) || first.some(h=>/単価|価格|原価|price/i.test(h));
+    const isHdr=first.some(h=>/食材|品目|名前|品项|name/i.test(h)) || first.some(h=>/単価|価格|原価|单价|price/i.test(h));
     let nameI=0,unitI=1,priceI=2;
-    if(isHdr){ first.forEach((h,i)=>{ if(/食材|品目|名前|name/i.test(h))nameI=i; if(/単位|unit/i.test(h))unitI=i; if(/単価|価格|原価|price/i.test(h))priceI=i; }); }
+    if(isHdr){ first.forEach((h,i)=>{ if(/食材|品目|名前|品项|name/i.test(h))nameI=i; if(/単位|单位|unit/i.test(h))unitI=i; if(/単価|価格|原価|单价|price/i.test(h))priceI=i; }); }
     let added=0,updated=0,skipped=0;
     for(let r=isHdr?1:0;r<rows.length;r++){
       const cols=rows[r]||[];
@@ -871,38 +1243,56 @@ const App = (()=>{
       if(ex){ if(unit)ex.unit=unit; if(price>0)ex.price=price; updated++; }
       else { state.items.push({id:uid(),name,unit,price:price>0?price:0}); added++; }
     }
-    save(); renderItems(); toast(`取込完了：${added}件追加 / ${updated}件更新${skipped?` / ${skipped}件スキップ`:''}`);
+    save(); renderItems(); toast(t('toastImportDone')(added,updated,skipped));
   }
   function loadXLSX(cb){
     if(window.XLSX) return cb();
-    toast('Excel読み込みの準備中…');
+    toast(t('toastXlsxPrep'));
     const s=document.createElement('script');
     s.src='https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
     s.onload=()=>cb();
-    s.onerror=()=>toast('Excel読み込みライブラリの取得に失敗しました（CSVをお試しください）');
+    s.onerror=()=>toast(t('toastXlsxFail'));
     document.head.appendChild(s);
   }
 
   /* ---------- actions: stores ---------- */
-  function addStore(){ const n=$('m-store').value.trim(); if(!n)return toast('店舗名を入力してください'); state.stores.push({id:uid(),name:n}); $('m-store').value=''; save(); renderAll(); buildCtx(); toast('店舗を追加しました'); }
-  function delStore(id){ if(state.records.some(r=>r.fromStoreId===id||r.toStoreId===id))return toast('記録で使われている店舗は削除できません'); if(state.requests.some(r=>r.borrowerId===id||r.targets.includes(id)))return toast('申請で使われている店舗は削除できません'); state.stores=state.stores.filter(s=>s.id!==id); save(); renderAll(); buildCtx(); }
+  function addStore(){ const n=$('m-store').value.trim(); if(!n)return toast(t('valStoreName')); state.stores.push({id:uid(),name:n}); $('m-store').value=''; save(); renderAll(); buildCtx(); toast(t('toastStoreAdded')); }
+  function delStore(id){ if(state.records.some(r=>r.fromStoreId===id||r.toStoreId===id))return toast(t('valStoreUsedRec')); if(state.requests.some(r=>r.borrowerId===id||r.targets.includes(id)))return toast(t('valStoreUsedReq')); state.stores=state.stores.filter(s=>s.id!==id); save(); renderAll(); buildCtx(); }
 
   /* ---------- export ---------- */
   function dl(name,content,type){ const b=new Blob([content],{type}),u=URL.createObjectURL(b),a=document.createElement('a'); a.href=u;a.download=name;a.click();URL.revokeObjectURL(u); }
   function exportRecords(){
     let recs=recordsView().slice().sort((a,b)=>a.date.localeCompare(b.date));
     const q=v=>{ const s=String(v==null?'':v); return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; };
-    const head='日付,貸し手,借り手,品目,単位,数量,単価,金額,仕入先,登録元\n';
-    const body=recs.map(r=>[r.date,sName(r.fromStoreId),sName(r.toStoreId),iName(r.itemId),iUnit(r.itemId),r.qty,r.unitPrice,amount(r),r.supplier||'',r.source==='request'?'申請成立':'手入力'].map(q).join(',')).join('\n');
+    const head=t('csvHeadRec')+'\n';
+    const body=recs.map(r=>[r.date,sName(r.fromStoreId),sName(r.toStoreId),iName(r.itemId),iUnit(r.itemId),r.qty,r.unitPrice,amount(r),r.supplier?dtr(r.supplier):'',r.source==='request'?t('srcRequest'):t('srcManual')].map(q).join(',')).join('\n');
     const suffix=selMonth?('_'+selMonth):'';
-    dl('フードリレー貸借記録'+suffix+'.csv','﻿'+head+body,'text/csv');
+    dl(t('csvFileName')+suffix+'.csv','﻿'+head+body,'text/csv');
   }
   function exportAll(){ dl('food_relay_data.json',JSON.stringify({state,user},null,2),'application/json'); }
-  function reseed(){ if(confirm('サンプルデータで初期化します。よろしいですか？')){ seed(); tab='dash'; selMonth=''; init2(); toast('サンプルデータを読み込みました'); } }
-  function wipe(){ if(confirm('全データを削除します。元に戻せません。')){ state={stores:[],items:[],records:[],requests:[]}; user={role:'admin',storeId:null}; tab='dash'; selMonth=''; save(); init2(); toast('全データを削除しました'); } }
+  function reseed(){ if(confirm(t('confirmReseed'))){ seed(); tab='dash'; selMonth=''; init2(); toast(t('toastSampleLoaded')); } }
+  function wipe(){ if(confirm(t('confirmWipe'))){ state={stores:[],items:[],records:[],requests:[]}; user={role:'admin',storeId:null}; tab='dash'; selMonth=''; save(); init2(); toast(t('toastWiped')); } }
 
   /* ---------- plumbing ---------- */
-  function toast(m){ const t=$('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2200); }
+  function toast(m){ const el=$('toast'); el.textContent=m; el.classList.add('show'); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('show'),2200); }
+  function applyStatic(){
+    document.title = t('docTitle');
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(el=>{ el.textContent = t(el.dataset.i18n); });
+    document.querySelectorAll('[data-i18n-html]').forEach(el=>{ el.innerHTML = t(el.dataset.i18nHtml); });
+    document.querySelectorAll('[data-i18n-ph]').forEach(el=>{ el.setAttribute('placeholder', t(el.dataset.i18nPh)); });
+    document.querySelectorAll('#langbar .lt').forEach(b=>b.classList.toggle('on',b.dataset.l===lang));
+  }
+  function hideWelcome(){ const w=$('welcome'); if(w) w.style.display='none'; }
+  function skipWelcome(){ localStorage.setItem('food_relay_onboarded','1'); hideWelcome(); }
+  function maybeWelcome(){ if(!localStorage.getItem('food_relay_onboarded')){ const w=$('welcome'); if(w) w.style.display='flex'; } }
+  function demoTry(){
+    const target = state.stores.find(s=>incomingFor(s.id).length>0) || state.stores[0];
+    user.role='manager'; user.storeId=target?target.id:null; tab='board';
+    localStorage.setItem('food_relay_onboarded','1'); hideWelcome();
+    save(); buildLogin(); renderBand(); renderTabs(); renderAll(); window.scrollTo(0,0);
+  }
+  function setLang(l){ if(!T[l]||l===lang)return; lang=l; localStorage.setItem(LANG_KEY,l); init2(); window.scrollTo(0,0); }
   function renderAll(){
     if(tab==='dash')renderDash();
     if(tab==='apply')renderApply();
@@ -911,17 +1301,18 @@ const App = (()=>{
     if(tab==='items')renderItems();
     if(tab==='stores')renderStores();
   }
-  function init2(){ buildLogin(); buildMonthSelectors(); renderBand(); renderTabs(); renderAll(); }
+  function init2(){ applyStatic(); buildLogin(); buildMonthSelectors(); renderBand(); renderTabs(); renderAll(); }
   function init(){
     if(!load()) seed();
     if(!state.items) state.items=[];
     if(!state.requests) state.requests=[];
-    $('f-date').value=new Date().toISOString().slice(0,10);
-    $('r-date').value=new Date().toISOString().slice(0,10);
+    $('f-date').value='2026-06-25';
+    $('r-date').value='2026-06-25';
     init2();
+    maybeWelcome();
   }
 
-  return { init,tab:setTab,changeRole,changeCtx,setMonth,toggleChk,onReqItem,onRecItem,
+  return { init,setLang,demoTry,skipWelcome,tab:setTab,changeRole,changeCtx,setMonth,toggleChk,onReqItem,onRecItem,
            addRequest,approve,decline,cancelReq,addRecord,delRecord,
            addItem,delItem,setPrice,syncPrices,downloadItemTemplate,importItems,addStore,delStore,
            exportRecords,exportAll,reseed,wipe };
