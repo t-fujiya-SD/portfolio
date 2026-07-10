@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-10T07:50:06+09:00",
+  "updated": "2026-07-11T07:31:59+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -18,8 +18,8 @@
   "items": [
     {
       "title": "『食品卸・学校給食業界のための物流DXガイド』資料を無料公開",
-      "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTE5Kby1RUTNfWWJ2ZkVhZlJDVzVMTDlhSjlLajNoM0xic2xCNGVvRUo0OHM4TVNJeTZhRjRpSi05cUFwamR1d2h1QUFfQjZjMEliY2g0SXp3TExxdDg1N2hRSkNVQ2hXM1paTkZsaTdkbWx4UmVXZ1F2bU5jbw?oc=5",
-      "source": "ニコニコニュース",
+      "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE50Rk55R1hQSDVmMHdYN1JRTWw0eURKUGVMczJXZkhVeC1BS2pMeUxyT0Y1aEYzUERSRThSLWlLMHJkRXJJVGI1ak4xSVV4TGV5T0dZOEhGNHViQnA4R2hsWVV0bFRtekhZT1E?oc=5",
+      "source": "PR TIMES",
       "date": "2026-07-09",
       "cat": "business"
     },
@@ -55,13 +55,6 @@
       "title": "中部圏の青果卸12社／共同物流会社を設立、2027年6月以降稼働へ",
       "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFBsVjNZdlNydVJjdUpPWXIwbW92M2ZCX21FNkYtNHVPOFNvTWtneUJmeElOMU5zT0NraDdZNTBmV09DSmdIUF9JWFBqSU5xRnVtZl95QQ?oc=5",
       "source": "物流ニュースのLNEWS",
-      "date": "2026-06-16",
-      "cat": "business"
-    },
-    {
-      "title": "【新会社設立のお知らせ】中部圏の青果卸売会社12社が結束し、「チームフレッシュロジ中部株式会社（TFL中部）」を設立",
-      "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTFA2UDZNNXY1S0tKTm9nYzNhYzJFM1EwVFVVS0s1RzQ2cGdYRzNCRHF3VmdLTUdEUzcwYWdxaVVyNVFYR2x0ZHNnN3dtR0F4TWZtMGYxNHVFd2tJbnRFVHlzOFVsb3EzX2dkV1E?oc=5",
-      "source": "PR TIMES",
       "date": "2026-06-16",
       "cat": "business"
     },
@@ -136,6 +129,13 @@
       "cat": "toyosu"
     },
     {
+      "title": "インターネット都政モニターアンケート結果 生鮮食料品等の購買意識 〉 Q16 東京都中央卸売市場の認知|1月",
+      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE4wNEFBMThJRExadlJ6WDQ2d25pVXhNck1ldHBrcG1KVXhndDdkcWNfU2tlSW9lM0EzTGZMN2pSQlRTQjliU2JLVG1ZMlVSa3ljOWpxcTBaNmNzdUlEWFlrTXZTWmNDVzlLYmEtaGxTWWRGM3FQ?oc=5",
+      "source": "metro.tokyo.lg.jp",
+      "date": "2026-01-21",
+      "cat": "toyosu"
+    },
+    {
       "title": "高松市中央卸売市場で初せり 年始の野菜や果物の価格は安定",
       "link": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE5xbXYyU1FENDMydGNib2MzazJ4V1gyLWJrRmZqRklqR0ZjZldhdXQ1eTBUVU9rbnk4Y0xqVnlFdWl4SThkYl95dHBScXB5bEhn?oc=5",
       "source": "KSBニュース",
@@ -143,7 +143,7 @@
       "cat": "market"
     },
     {
-      "title": "東京都中央卸売市場・豊洲市場／東京の観光公式サイトGO TOKYO",
+      "title": "東京都中央卸売市場・豊洲市場",
       "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9abnUyLWI2TWtuY0tKa1FoZlMwRUtHeDVsejhNTmwwck1sZi1iZ2ZhWlQ2OHgyU2xsQUdnM05mdzdpY1hNZGhGMzZoZTlFOWxQMHBiRVFwZmM3enM?oc=5",
       "source": "go tokyo",
       "date": "2025-12-25",
@@ -178,11 +178,11 @@
       "cat": "market"
     },
     {
-      "title": "中央卸売市場足立市場「あだち市場の日感謝祭」を開催|10月",
-      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE9YbjNQZkVLaVdGYkhyaGk4aEtJYVRoeUVEX3FkY3I0aDRpNlJ3SzcwVW82QW50a1JJTFFBMklKSVNjbVdQbDlTNDBERlY0cUwyazBkRmtta21EUHd4cE9UZDdJZjZENjBDSG1idld2aVdad3pO?oc=5",
-      "source": "metro.tokyo.lg.jp",
-      "date": "2025-10-31",
-      "cat": "toyosu"
+      "title": "中小青果卸のサバイバル戦略～経営体質の改革で、30代社員流出と低収益の壁を破る！",
+      "link": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE80X1h4UERqSkFhYkw3T1BzTDZ6SE0zYVd3X09tN0dYUlJQbWpvLTdseERDbWw5cTI0aG9URjBscFVFMlZCNFF2Zmx6Ry1oMGVPWDhrb0dqZTd3a3V4Z1UxVQ?oc=5",
+      "source": "フーズチャネル",
+      "date": "2025-11-21",
+      "cat": "business"
     }
   ]
 }
