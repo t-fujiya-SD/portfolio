@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-11T07:31:59+09:00",
+  "updated": "2026-07-12T07:22:40+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -18,8 +18,8 @@
   "items": [
     {
       "title": "『食品卸・学校給食業界のための物流DXガイド』資料を無料公開",
-      "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE50Rk55R1hQSDVmMHdYN1JRTWw0eURKUGVMczJXZkhVeC1BS2pMeUxyT0Y1aEYzUERSRThSLWlLMHJkRXJJVGI1ak4xSVV4TGV5T0dZOEhGNHViQnA4R2hsWVV0bFRtekhZT1E?oc=5",
-      "source": "PR TIMES",
+      "link": "https://news.google.com/rss/articles/CBMiekFVX3lxTFBmZHRhQTY3aFQxQ2s3RWlBeGhKN3Vrdkx2TkNwdS1EVm1KTFdySVdCUUpXRUNJOXU1RXRVTUI5d0g2TTZ1M3BlYUVvSDJJVkR1WGcyWUJGTzlERlktdlVTelcwZDdzd1dmQ0FXQXJ1OXc5dVNDMWJsUXpR?oc=5",
+      "source": "イザ！",
       "date": "2026-07-09",
       "cat": "business"
     },
@@ -59,6 +59,13 @@
       "cat": "business"
     },
     {
+      "title": "【新会社設立のお知らせ】中部圏の青果卸売会社12社が結束し、「チームフレッシュロジ中部株式会社（TFL中部）」を設立",
+      "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTFA2UDZNNXY1S0tKTm9nYzNhYzJFM1EwVFVVS0s1RzQ2cGdYRzNCRHF3VmdLTUdEUzcwYWdxaVVyNVFYR2x0ZHNnN3dtR0F4TWZtMGYxNHVFd2tJbnRFVHlzOFVsb3EzX2dkV1E?oc=5",
+      "source": "PR TIMES",
+      "date": "2026-06-16",
+      "cat": "business"
+    },
+    {
       "title": "三菱食品 伊藤社長インタビュー　新たな経営体制で「食品卸」の価値を最大化する",
       "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBwcUl2UXF5OTA3Sjc2b19LSzVZQTNWeklNcklKeFc0bW9NNUpZeDQ4UkVRZ1Z1Rmt4VUg5SWl3M0l1MXhyWTJ2SVYySVA4b1pXWXQ0eHNrZlpISmdRMXFJQktyd0LSAWpBVV95cUxQdnBuenZXVUhIR3NMaTYzVDJYNnJoeG9IZS1aSHVUU0lNVmtBQko1ZFhlYVBISjkwdGxXdHFuV3RYUmpRQ1hoTEZCVHh0eTVRbURJaENDY3NhdzNSbVZJUldDb2VqVnJoMWVn?oc=5",
       "source": "ダイヤモンド・チェーンストアオンライン",
@@ -85,13 +92,6 @@
       "source": "どらったら！！",
       "date": "2026-06-07",
       "cat": "toyosu"
-    },
-    {
-      "title": "県産ゴボウ、高値反動で相場下押し/八戸市中央卸売市場４月市況概要",
-      "link": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE1wZERDZ09vNDczWFUtRGFhVE5QeUotNGx2VnZLTHhkRldtMHQtY1VlMHpLd3NvV0M0OUJsMUZTcXdTRzZWMkdrNHYzZWs3THNBWllHaFBBMDhGTkVoSVNoS3RnMm1lTTQ?oc=5",
-      "source": "デーリー東北",
-      "date": "2026-05-20",
-      "cat": "market"
     },
     {
       "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年5月、東京都中央卸売市場）：関東農政局",
@@ -136,6 +136,13 @@
       "cat": "toyosu"
     },
     {
+      "title": "初競り、威勢よく景気づけ 宇都宮市中央卸売市場 冷凍メバチマグロなど入荷",
+      "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBFU1NDVmw0OVlSNDV3VFktUWRpNUdkc0JvWnlIbXQ5RERQeVVvU01KQlhNMGR6RlRFdVZSanBsQ19Ybkd1czBkMl9RQ1cxdkM2SzI0ZXZUc2ZMV1E?oc=5",
+      "source": "下野新聞社",
+      "date": "2026-01-05",
+      "cat": "market"
+    },
+    {
       "title": "高松市中央卸売市場で初せり 年始の野菜や果物の価格は安定",
       "link": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE5xbXYyU1FENDMydGNib2MzazJ4V1gyLWJrRmZqRklqR0ZjZldhdXQ1eTBUVU9rbnk4Y0xqVnlFdWl4SThkYl95dHBScXB5bEhn?oc=5",
       "source": "KSBニュース",
@@ -176,13 +183,6 @@
       "source": "city.kurume.fukuoka.jp",
       "date": "2025-11-23",
       "cat": "market"
-    },
-    {
-      "title": "中小青果卸のサバイバル戦略～経営体質の改革で、30代社員流出と低収益の壁を破る！",
-      "link": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE80X1h4UERqSkFhYkw3T1BzTDZ6SE0zYVd3X09tN0dYUlJQbWpvLTdseERDbWw5cTI0aG9URjBscFVFMlZCNFF2Zmx6Ry1oMGVPWDhrb0dqZTd3a3V4Z1UxVQ?oc=5",
-      "source": "フーズチャネル",
-      "date": "2025-11-21",
-      "cat": "business"
     }
   ]
 }
