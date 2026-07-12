@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-12T07:22:40+09:00",
+  "updated": "2026-07-13T07:22:56+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -18,8 +18,8 @@
   "items": [
     {
       "title": "『食品卸・学校給食業界のための物流DXガイド』資料を無料公開",
-      "link": "https://news.google.com/rss/articles/CBMiekFVX3lxTFBmZHRhQTY3aFQxQ2s3RWlBeGhKN3Vrdkx2TkNwdS1EVm1KTFdySVdCUUpXRUNJOXU1RXRVTUI5d0g2TTZ1M3BlYUVvSDJJVkR1WGcyWUJGTzlERlktdlVTelcwZDdzd1dmQ0FXQXJ1OXc5dVNDMWJsUXpR?oc=5",
-      "source": "イザ！",
+      "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9MWXBEOV9ReGJDQU9POGJsNHJLLVNhV0dRb3Q0cjhSVnc0cTJFRHZOX1NVaHQ4ZXdBMW83QW03RTdqdjlEa3JOVXFqdF9HZFZNM2tNd056UkxtOG8?oc=5",
+      "source": "朝日新聞",
       "date": "2026-07-09",
       "cat": "business"
     },
@@ -92,6 +92,13 @@
       "source": "どらったら！！",
       "date": "2026-06-07",
       "cat": "toyosu"
+    },
+    {
+      "title": "【中央卸売市場】5月イベント情報",
+      "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE5JT0ktcHJFSHZxYy00cl9TZ2hmZ1g1UjNWTHdpdlZLQ2xwV2JGWWNhV2pkTmk2MkJvaUp4YXBwVzdsQzk2Z2ZtUjZ4MTN0ektiZjlnNEVKU3Z5ck5NbXV5dE1GbG42N19n?oc=5",
+      "source": "my.metro.tokyo.lg.jp",
+      "date": "2026-05-07",
+      "cat": "market"
     },
     {
       "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年5月、東京都中央卸売市場）：関東農政局",
@@ -167,13 +174,6 @@
       "title": "令和8年 中央卸売市場本場「新年初市」が開催されます",
       "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTE45dy1HMlZhSHNqRWx4eWFmRFdvZk1pWmxTc1lrX2xPWjBaNzJ3VXVOQWYzMXFzNkk3M2Q1QkNPdmN5VTEwMkNOTzRvUGNFcy1waHpYZjBXQWNpMUFJUi1GVFN4TzRhb3huSUJlVU9wTQ?oc=5",
       "source": "city.nagoya.jp",
-      "date": "2025-12-23",
-      "cat": "market"
-    },
-    {
-      "title": "「YAOYASAN」の「市況分析」で収益を高める！ 青果物を高く売る出荷戦略",
-      "link": "https://news.google.com/rss/articles/CBMiUEFVX3lxTFA5b215aHNmaGZiay00b256WU1YVTdrUUEyLU5fblhrWTZIRXNHOE5rbzEzeE1TWDBMS1FPaExaNC1tZ1p5TUNEWTVmdXhGRllM?oc=5",
-      "source": "アグリジャーナル",
       "date": "2025-12-23",
       "cat": "market"
     },
