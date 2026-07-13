@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-13T07:22:56+09:00",
+  "updated": "2026-07-14T07:26:48+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -101,13 +101,6 @@
       "cat": "market"
     },
     {
-      "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年5月、東京都中央卸売市場）：関東農政局",
-      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9nczFHbFoyclptZmt4YmZocHR2MFpLcERHY2ZMYkJETmtOa2JoLWktY1AyNTlHVWpZWmZHM0RzUHFJLVhVb20zM3dkVS1xQzJ1b0xac2VMZEE2U042SlROQWFKekR5U2dwYjBn?oc=5",
-      "source": "maff.go.jp",
-      "date": "2026-04-30",
-      "cat": "market"
-    },
-    {
       "title": "「大田市場に届いた果物・野菜を、一つも無駄にしない」 | 株式会社野富のプレスリリース",
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTFB4NV9fTk55VjY2X0c1YzVfWWxWU2V6UDJ5SmxMRnE2X2NSZWtFQ1RWQTY1ZjcydVE3YW9mX3FKak1oSkNsX1B2dkJycnB3blB3clluai1XS2RxV19HTnpVN0NFaExjM25UWUE?oc=5",
       "source": "PR TIMES",
@@ -182,6 +175,13 @@
       "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxQWm5Ra2R0eG41aG04S2FrZFhrM2hNY3E4a2dkZGpxTTJMSUtQNEg1TXBib2h0ZGdJanBzN1FQXzE2VDROMzl1Nm5zZGZqbzg1N1NoM01JZm1aZ0o2bTMxb1poX1ZvZ2NvOHUtckZZYmlkMW1rdDFjMGZqODNKS1FZZnZkMnFPVXhYenZwTXRpWFFhZmhjS3lzSg?oc=5",
       "source": "city.kurume.fukuoka.jp",
       "date": "2025-11-23",
+      "cat": "market"
+    },
+    {
+      "title": "指定野菜の入荷量及び卸売価格の見通し（令和7年11月、東京都中央卸売市場）：関東農政局",
+      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9HLWR1T2pEU0RMMzlRaE1SUDhxZFMxQXhITGlMNU5DVHkyeGNiU0pUSF9MVFB4S3V3MTJ3VC0wQnFxaEl5elRUMF9HZ2dBLUQtY1dNQ2IxTGJTQ1Zlb21ZRHFJc2Z1OV84YUEw?oc=5",
+      "source": "maff.go.jp",
+      "date": "2025-10-31",
       "cat": "market"
     }
   ]
