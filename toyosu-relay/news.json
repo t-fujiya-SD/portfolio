@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-14T07:26:48+09:00",
+  "updated": "2026-07-15T07:30:12+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -136,13 +136,6 @@
       "cat": "toyosu"
     },
     {
-      "title": "初競り、威勢よく景気づけ 宇都宮市中央卸売市場 冷凍メバチマグロなど入荷",
-      "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBFU1NDVmw0OVlSNDV3VFktUWRpNUdkc0JvWnlIbXQ5RERQeVVvU01KQlhNMGR6RlRFdVZSanBsQ19Ybkd1czBkMl9RQ1cxdkM2SzI0ZXZUc2ZMV1E?oc=5",
-      "source": "下野新聞社",
-      "date": "2026-01-05",
-      "cat": "market"
-    },
-    {
       "title": "高松市中央卸売市場で初せり 年始の野菜や果物の価格は安定",
       "link": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE5xbXYyU1FENDMydGNib2MzazJ4V1gyLWJrRmZqRklqR0ZjZldhdXQ1eTBUVU9rbnk4Y0xqVnlFdWl4SThkYl95dHBScXB5bEhn?oc=5",
       "source": "KSBニュース",
@@ -167,6 +160,13 @@
       "title": "令和8年 中央卸売市場本場「新年初市」が開催されます",
       "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTE45dy1HMlZhSHNqRWx4eWFmRFdvZk1pWmxTc1lrX2xPWjBaNzJ3VXVOQWYzMXFzNkk3M2Q1QkNPdmN5VTEwMkNOTzRvUGNFcy1waHpYZjBXQWNpMUFJUi1GVFN4TzRhb3huSUJlVU9wTQ?oc=5",
       "source": "city.nagoya.jp",
+      "date": "2025-12-23",
+      "cat": "market"
+    },
+    {
+      "title": "「YAOYASAN」の「市況分析」で収益を高める！ 青果物を高く売る出荷戦略",
+      "link": "https://news.google.com/rss/articles/CBMiUEFVX3lxTFA5b215aHNmaGZiay00b256WU1YVTdrUUEyLU5fblhrWTZIRXNHOE5rbzEzeE1TWDBMS1FPaExaNC1tZ1p5TUNEWTVmdXhGRllM?oc=5",
+      "source": "アグリジャーナル",
       "date": "2025-12-23",
       "cat": "market"
     },
