@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-17T07:28:49+09:00",
+  "updated": "2026-07-18T07:21:39+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -17,6 +17,20 @@
   ],
   "items": [
     {
+      "title": "青果、数量・金額共に増 八戸市中央卸売市場６月市況概要",
+      "link": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE9JaWVDaFA4dC02LVFYYUhXYnNxTmNnVVZSaVpDU2pMUFd5VFlSeFpSU0xXTW5aN3RfaHlSZXRVcUFPUDJHbUFPOERhQzdNdnVlYl9jRDBhWnRMRzFRenRWT0JCMmVnUEU?oc=5",
+      "source": "デーリー東北",
+      "date": "2026-07-17",
+      "cat": "market"
+    },
+    {
+      "title": "卸売市場 市民感謝デー（7月）を開催しました！",
+      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE5jeG1YcGNEbnc3eDlLQllsMzE4UVZTQTE2Y3RmY0V0cHBuY2k2WGI5eTRiUktzbFMxQ3RSQzFEWGNtNGtFVDNFeEFtak9QOXMybWc2ZzVza2ExM0RRa3NTWHFId0M?oc=5",
+      "source": "city.oita.oita.jp",
+      "date": "2026-07-11",
+      "cat": "market"
+    },
+    {
       "title": "『食品卸・学校給食業界のための物流DXガイド』資料を無料公開",
       "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9MWXBEOV9ReGJDQU9POGJsNHJLLVNhV0dRb3Q0cjhSVnc0cTJFRHZOX1NVaHQ4ZXdBMW83QW03RTdqdjlEa3JOVXFqdF9HZFZNM2tNd056UkxtOG8?oc=5",
       "source": "朝日新聞",
@@ -28,13 +42,6 @@
       "link": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE1vV0lVLTFVMWxQVG1OUTFucG5Ybm9zcXhkUk5xZUQ0VS1ObnR1SUh4UHcxRnhOcEZBNkFDLUJVQV83M2ktS3BvbtIBTkFVX3lxTFBydkJKTlMzODJVQmJrcnB2X0x1SnYtNWxmQkVHaVdEVHFVVzFIOElzcUFpLVNlSm96U1dIbG51dF9haFJaVzRyd0QzdTVXdw?oc=5",
       "source": "LOGISTICS TODAY",
       "date": "2026-07-08",
-      "cat": "business"
-    },
-    {
-      "title": "中部の青果卸１２社、共同物流で新会社",
-      "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE1fMk5qVDdFLWc1SEJOSWxJVW5RMXhXQXpmZ0ZUT1RXeWpMUGxwMHhvNjgtU050RXg0d0NVNFMwek5HOXcyNlNlUWRGNlFfaEZ6emxCamFkTQ?oc=5",
-      "source": "日本農業新聞",
-      "date": "2026-06-28",
       "cat": "business"
     },
     {
@@ -73,13 +80,6 @@
       "cat": "business"
     },
     {
-      "title": "卸売市場 市民感謝デー（6月）を開催しました！",
-      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE90S1lpeS1vZ0JTVGRwQng5Ui1DaXJ1dV85b1E5YXM4SUdFc3E1eVB4RXJVc0NOQkdHQmdLYnMyeVRoR0pIRjJFYXEwT2hCNUVoNDNSTzJkaTZPek5JeUgtY2U3amc?oc=5",
-      "source": "city.oita.oita.jp",
-      "date": "2026-06-13",
-      "cat": "market"
-    },
-    {
       "title": "ナガスクジラが仙台市中央卸売市場に初入荷",
       "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBldTVPSjVRVVAxRmFuWkZTUlduWHhyR0QwemxxaWhSWDFkbXhFR0g2cnQ4YXUzamhhRm9MclhCcTZhcXA1Q1FkV2lvd3FWdWM?oc=5",
       "source": "khb東日本放送",
@@ -94,18 +94,18 @@
       "cat": "toyosu"
     },
     {
-      "title": "【中央卸売市場】5月イベント情報",
-      "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE5JT0ktcHJFSHZxYy00cl9TZ2hmZ1g1UjNWTHdpdlZLQ2xwV2JGWWNhV2pkTmk2MkJvaUp4YXBwVzdsQzk2Z2ZtUjZ4MTN0ektiZjlnNEVKU3Z5ck5NbXV5dE1GbG42N19n?oc=5",
-      "source": "my.metro.tokyo.lg.jp",
-      "date": "2026-05-07",
-      "cat": "market"
-    },
-    {
       "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年5月、東京都中央卸売市場）：関東農政局",
       "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9nczFHbFoyclptZmt4YmZocHR2MFpLcERHY2ZMYkJETmtOa2JoLWktY1AyNTlHVWpZWmZHM0RzUHFJLVhVb20zM3dkVS1xQzJ1b0xac2VMZEE2U042SlROQWFKekR5U2dwYjBn?oc=5",
       "source": "maff.go.jp",
       "date": "2026-04-30",
       "cat": "market"
+    },
+    {
+      "title": "物流2026年問題（改正物流効率化法）で生じる3つの義務と食品卸の生存戦略",
+      "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE5Xbmx4M01mQW5Bd3VPX0h3eFllQzR2U1g2Y254UWc0bnNJR1NiQjk1NS1DakZJc1U0eDEycjhxbzBNa1h3MjZjc3p6d3ZuM0tzNXBXN2FNMTZGQm9D?oc=5",
+      "source": "フーズチャネル",
+      "date": "2026-04-21",
+      "cat": "business"
     },
     {
       "title": "「大田市場に届いた果物・野菜を、一つも無駄にしない」 | 株式会社野富のプレスリリース",
