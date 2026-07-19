@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-19T07:22:19+09:00",
+  "updated": "2026-07-20T07:26:02+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -29,13 +29,6 @@
       "source": "city.oita.oita.jp",
       "date": "2026-07-11",
       "cat": "market"
-    },
-    {
-      "title": "『食品卸・学校給食業界のための物流DXガイド』資料を無料公開",
-      "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9MWXBEOV9ReGJDQU9POGJsNHJLLVNhV0dRb3Q0cjhSVnc0cTJFRHZOX1NVaHQ4ZXdBMW83QW03RTdqdjlEa3JOVXFqdF9HZFZNM2tNd056UkxtOG8?oc=5",
-      "source": "朝日新聞",
-      "date": "2026-07-09",
-      "cat": "business"
     },
     {
       "title": "食品卸の倒産高止まり、物流費も採算圧迫",
@@ -94,18 +87,25 @@
       "cat": "toyosu"
     },
     {
+      "title": "物流アップデート＞中部圏物流共同化へ 青果卸、産地など１９組織 「２４年問題」対策で協議会設立",
+      "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE12bEo1OG1NN2RfSnZvRjltcVhzanE4TTBVRHNhYnlEMTFjMVBWYUJRT1diN0xqY014UE1wZHBiNllJT09ncFdnVDhwU3pXTGN3LVNwU3V1Zw?oc=5",
+      "source": "日本農業新聞",
+      "date": "2026-05-24",
+      "cat": "business"
+    },
+    {
+      "title": "【中央卸売市場】5月イベント情報",
+      "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE5JT0ktcHJFSHZxYy00cl9TZ2hmZ1g1UjNWTHdpdlZLQ2xwV2JGWWNhV2pkTmk2MkJvaUp4YXBwVzdsQzk2Z2ZtUjZ4MTN0ektiZjlnNEVKU3Z5ck5NbXV5dE1GbG42N19n?oc=5",
+      "source": "my.metro.tokyo.lg.jp",
+      "date": "2026-05-07",
+      "cat": "market"
+    },
+    {
       "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年5月、東京都中央卸売市場）：関東農政局",
       "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9nczFHbFoyclptZmt4YmZocHR2MFpLcERHY2ZMYkJETmtOa2JoLWktY1AyNTlHVWpZWmZHM0RzUHFJLVhVb20zM3dkVS1xQzJ1b0xac2VMZEE2U042SlROQWFKekR5U2dwYjBn?oc=5",
       "source": "maff.go.jp",
       "date": "2026-04-30",
       "cat": "market"
-    },
-    {
-      "title": "物流2026年問題（改正物流効率化法）で生じる3つの義務と食品卸の生存戦略",
-      "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE5Xbmx4M01mQW5Bd3VPX0h3eFllQzR2U1g2Y254UWc0bnNJR1NiQjk1NS1DakZJc1U0eDEycjhxbzBNa1h3MjZjc3p6d3ZuM0tzNXBXN2FNMTZGQm9D?oc=5",
-      "source": "フーズチャネル",
-      "date": "2026-04-21",
-      "cat": "business"
     },
     {
       "title": "「大田市場に届いた果物・野菜を、一つも無駄にしない」 | 株式会社野富のプレスリリース",
@@ -136,18 +136,11 @@
       "cat": "toyosu"
     },
     {
-      "title": "インターネット都政モニターアンケート結果 生鮮食料品等の購買意識 〉 Q18 信頼できる東京都中央卸売市場になるために|1月",
-      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE1Ia05iRnR5YTVxMXlEcVMxVGhDbTdQb2UtR1V3djkwNWFpdlhqWHBQX1I4VHB2a0lFUDZWM3JTTXVkZ3YzbFFVOFlaN1JGYVhrWE90YlgzSDdVajRxYnlaa0paYjhQNzU5Q1BMTXRkMm00REh0?oc=5",
+      "title": "インターネット都政モニターアンケート結果 生鮮食料品等の購買意識 〉 Q16 東京都中央卸売市場の認知|1月",
+      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE4wNEFBMThJRExadlJ6WDQ2d25pVXhNck1ldHBrcG1KVXhndDdkcWNfU2tlSW9lM0EzTGZMN2pSQlRTQjliU2JLVG1ZMlVSa3ljOWpxcTBaNmNzdUlEWFlrTXZTWmNDVzlLYmEtaGxTWWRGM3FQ?oc=5",
       "source": "metro.tokyo.lg.jp",
       "date": "2026-01-21",
       "cat": "toyosu"
-    },
-    {
-      "title": "高松市中央卸売市場で初せり 年始の野菜や果物の価格は安定",
-      "link": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE5xbXYyU1FENDMydGNib2MzazJ4V1gyLWJrRmZqRklqR0ZjZldhdXQ1eTBUVU9rbnk4Y0xqVnlFdWl4SThkYl95dHBScXB5bEhn?oc=5",
-      "source": "KSBニュース",
-      "date": "2026-01-05",
-      "cat": "market"
     },
     {
       "title": "東京都中央卸売市場・豊洲市場",
@@ -183,6 +176,13 @@
       "source": "city.kurume.fukuoka.jp",
       "date": "2025-11-23",
       "cat": "market"
+    },
+    {
+      "title": "中小青果卸のサバイバル戦略～経営体質の改革で、30代社員流出と低収益の壁を破る！",
+      "link": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE80X1h4UERqSkFhYkw3T1BzTDZ6SE0zYVd3X09tN0dYUlJQbWpvLTdseERDbWw5cTI0aG9URjBscFVFMlZCNFF2Zmx6Ry1oMGVPWDhrb0dqZTd3a3V4Z1UxVQ?oc=5",
+      "source": "フーズチャネル",
+      "date": "2025-11-21",
+      "cat": "business"
     }
   ]
 }
