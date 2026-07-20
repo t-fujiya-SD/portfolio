@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-20T07:26:02+09:00",
+  "updated": "2026-07-21T07:30:21+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -35,6 +35,13 @@
       "link": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE1vV0lVLTFVMWxQVG1OUTFucG5Ybm9zcXhkUk5xZUQ0VS1ObnR1SUh4UHcxRnhOcEZBNkFDLUJVQV83M2ktS3BvbtIBTkFVX3lxTFBydkJKTlMzODJVQmJrcnB2X0x1SnYtNWxmQkVHaVdEVHFVVzFIOElzcUFpLVNlSm96U1dIbG51dF9haFJaVzRyd0QzdTVXdw?oc=5",
       "source": "LOGISTICS TODAY",
       "date": "2026-07-08",
+      "cat": "business"
+    },
+    {
+      "title": "中部の青果卸１２社、共同物流で新会社",
+      "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE1fMk5qVDdFLWc1SEJOSWxJVW5RMXhXQXpmZ0ZUT1RXeWpMUGxwMHhvNjgtU050RXg0d0NVNFMwek5HOXcyNlNlUWRGNlFfaEZ6emxCamFkTQ?oc=5",
+      "source": "日本農業新聞",
+      "date": "2026-06-28",
       "cat": "business"
     },
     {
@@ -85,13 +92,6 @@
       "source": "どらったら！！",
       "date": "2026-06-07",
       "cat": "toyosu"
-    },
-    {
-      "title": "物流アップデート＞中部圏物流共同化へ 青果卸、産地など１９組織 「２４年問題」対策で協議会設立",
-      "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE12bEo1OG1NN2RfSnZvRjltcVhzanE4TTBVRHNhYnlEMTFjMVBWYUJRT1diN0xqY014UE1wZHBiNllJT09ncFdnVDhwU3pXTGN3LVNwU3V1Zw?oc=5",
-      "source": "日本農業新聞",
-      "date": "2026-05-24",
-      "cat": "business"
     },
     {
       "title": "【中央卸売市場】5月イベント情報",
