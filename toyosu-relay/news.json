@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-21T07:30:21+09:00",
+  "updated": "2026-07-22T07:27:28+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -17,6 +17,13 @@
   ],
   "items": [
     {
+      "title": "食品卸初の「Skypod」導入／三菱食品",
+      "link": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE5oSld6Rm9vek9xVHhVY0hIcHhybF8tQ0M1VmM0ZklQYnFhRHJac2pTWmI5eXU4Qnhib2xGd1FiejFMOURzS3hzX29UVEtQazVyUlcw?oc=5",
+      "source": "フードウイークリーWEB",
+      "date": "2026-07-21",
+      "cat": "business"
+    },
+    {
       "title": "青果、数量・金額共に増 八戸市中央卸売市場６月市況概要",
       "link": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE9JaWVDaFA4dC02LVFYYUhXYnNxTmNnVVZSaVpDU2pMUFd5VFlSeFpSU0xXTW5aN3RfaHlSZXRVcUFPUDJHbUFPOERhQzdNdnVlYl9jRDBhWnRMRzFRenRWT0JCMmVnUEU?oc=5",
       "source": "デーリー東北",
@@ -31,10 +38,10 @@
       "cat": "market"
     },
     {
-      "title": "食品卸の倒産高止まり、物流費も採算圧迫",
-      "link": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE1vV0lVLTFVMWxQVG1OUTFucG5Ybm9zcXhkUk5xZUQ0VS1ObnR1SUh4UHcxRnhOcEZBNkFDLUJVQV83M2ktS3BvbtIBTkFVX3lxTFBydkJKTlMzODJVQmJrcnB2X0x1SnYtNWxmQkVHaVdEVHFVVzFIOElzcUFpLVNlSm96U1dIbG51dF9haFJaVzRyd0QzdTVXdw?oc=5",
-      "source": "LOGISTICS TODAY",
-      "date": "2026-07-08",
+      "title": "『食品卸・学校給食業界のための物流DXガイド』資料を無料公開",
+      "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9MWXBEOV9ReGJDQU9POGJsNHJLLVNhV0dRb3Q0cjhSVnc0cTJFRHZOX1NVaHQ4ZXdBMW83QW03RTdqdjlEa3JOVXFqdF9HZFZNM2tNd056UkxtOG8?oc=5",
+      "source": "朝日新聞",
+      "date": "2026-07-09",
       "cat": "business"
     },
     {
@@ -176,13 +183,6 @@
       "source": "city.kurume.fukuoka.jp",
       "date": "2025-11-23",
       "cat": "market"
-    },
-    {
-      "title": "中小青果卸のサバイバル戦略～経営体質の改革で、30代社員流出と低収益の壁を破る！",
-      "link": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE80X1h4UERqSkFhYkw3T1BzTDZ6SE0zYVd3X09tN0dYUlJQbWpvLTdseERDbWw5cTI0aG9URjBscFVFMlZCNFF2Zmx6Ry1oMGVPWDhrb0dqZTd3a3V4Z1UxVQ?oc=5",
-      "source": "フーズチャネル",
-      "date": "2025-11-21",
-      "cat": "business"
     }
   ]
 }
