@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-25T07:34:11+09:00",
+  "updated": "2026-07-26T07:26:45+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -16,6 +16,13 @@
     }
   ],
   "items": [
+    {
+      "title": "普段は入れない花の市場へ 札幌花き市場まつり4年ぶり開催、せり体験も＜ＭＹタウン白石区＞",
+      "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1ET0xvNmg1VHJpMWtTS2xrNExYVV9pdk02NWt6SU9fNFNuSUIyZ3VmVEhkUkxvWjV1Z19hOWZJUTlQVG5CUnhwMlBDenlTNnM0UEJNT1FqN1VqZw?oc=5",
+      "source": "北海道新聞デジタル",
+      "date": "2026-07-21",
+      "cat": "market"
+    },
     {
       "title": "食品卸初の「Skypod」導入／三菱食品",
       "link": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE5oSld6Rm9vek9xVHhVY0hIcHhybF8tQ0M1VmM0ZklQYnFhRHJac2pTWmI5eXU4Qnhib2xGd1FiejFMOURzS3hzX29UVEtQazVyUlcw?oc=5",
@@ -38,10 +45,10 @@
       "cat": "market"
     },
     {
-      "title": "『食品卸・学校給食業界のための物流DXガイド』資料を無料公開",
-      "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9MWXBEOV9ReGJDQU9POGJsNHJLLVNhV0dRb3Q0cjhSVnc0cTJFRHZOX1NVaHQ4ZXdBMW83QW03RTdqdjlEa3JOVXFqdF9HZFZNM2tNd056UkxtOG8?oc=5",
-      "source": "朝日新聞",
-      "date": "2026-07-09",
+      "title": "食品卸 メーカー支援の新たな形 営業や物流を代行",
+      "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBaaTZ3djlaT0NET2F5b3J6d2h0RG1aNml0b3hnXzRGRDFHYXZ2Yk1oVE5SWC1vSk9WXzdpXzJ5YkVEc1JSWjNLek4tNWE3YXl5V0w3elpuZDZGV3c?oc=5",
+      "source": "食品新聞 WEB版",
+      "date": "2026-07-01",
       "cat": "business"
     },
     {
@@ -87,13 +94,6 @@
       "cat": "business"
     },
     {
-      "title": "ナガスクジラが仙台市中央卸売市場に初入荷",
-      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBldTVPSjVRVVAxRmFuWkZTUlduWHhyR0QwemxxaWhSWDFkbXhFR0g2cnQ4YXUzamhhRm9MclhCcTZhcXA1Q1FkV2lvd3FWdWM?oc=5",
-      "source": "khb東日本放送",
-      "date": "2026-06-09",
-      "cat": "market"
-    },
-    {
       "title": "２６２０ 資金ショートは２０５６年度に８年前倒し 東京都中央卸売市場会計、２０２６年経営レポート どらったら！！",
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1Xb0xLYTJ6eDV1WkxhbzgzTnFqVWRNcmxMMGc1OUVEMDZoZHJzQU1oaXlFdV9GYjNQbmxER0tmR1BnOGg0MGpEWmlOWVFhR25MS1hxZ084bFJpdUFIaU1xSERBWGVwT0E5dkE?oc=5",
       "source": "どらったら！！",
@@ -112,6 +112,13 @@
       "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9nczFHbFoyclptZmt4YmZocHR2MFpLcERHY2ZMYkJETmtOa2JoLWktY1AyNTlHVWpZWmZHM0RzUHFJLVhVb20zM3dkVS1xQzJ1b0xac2VMZEE2U042SlROQWFKekR5U2dwYjBn?oc=5",
       "source": "maff.go.jp",
       "date": "2026-04-30",
+      "cat": "market"
+    },
+    {
+      "title": "養殖ギンザケの入荷が本格化 仙台市中央卸売市場",
+      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5tX0ZoR3I0TXczcFFmYVBDSXU1dndzV2NuWGFlYkpleDExWnVEUUUtQUJLNVY0NkUzNklfUmhlOEl5RjVBdXFqVFRnV0JFUG8?oc=5",
+      "source": "khb東日本放送",
+      "date": "2026-04-28",
       "cat": "market"
     },
     {
@@ -167,13 +174,6 @@
       "title": "令和8年 中央卸売市場本場「新年初市」が開催されます",
       "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTE45dy1HMlZhSHNqRWx4eWFmRFdvZk1pWmxTc1lrX2xPWjBaNzJ3VXVOQWYzMXFzNkk3M2Q1QkNPdmN5VTEwMkNOTzRvUGNFcy1waHpYZjBXQWNpMUFJUi1GVFN4TzRhb3huSUJlVU9wTQ?oc=5",
       "source": "city.nagoya.jp",
-      "date": "2025-12-23",
-      "cat": "market"
-    },
-    {
-      "title": "「YAOYASAN」の「市況分析」で収益を高める！ 青果物を高く売る出荷戦略",
-      "link": "https://news.google.com/rss/articles/CBMiUEFVX3lxTFA5b215aHNmaGZiay00b256WU1YVTdrUUEyLU5fblhrWTZIRXNHOE5rbzEzeE1TWDBMS1FPaExaNC1tZ1p5TUNEWTVmdXhGRllM?oc=5",
-      "source": "アグリジャーナル",
       "date": "2025-12-23",
       "cat": "market"
     },
