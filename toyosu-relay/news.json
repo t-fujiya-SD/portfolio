@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-26T07:26:45+09:00",
+  "updated": "2026-07-27T07:31:58+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -43,6 +43,13 @@
       "source": "city.oita.oita.jp",
       "date": "2026-07-11",
       "cat": "market"
+    },
+    {
+      "title": "【中央卸売市場】7月イベント情報",
+      "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9Xbk9hNTJONmZFQ2hXQ2NNQ0E5a1RjN0xKcmZrTGZqVnkwVUF1T1Zud1hTT1d1WTFBM0VLTzV4Y1RoRi03R0V5QVFFSjZHcUwzSmdrRVYzUTJZa1huY3VwYXBUZGlLNERM?oc=5",
+      "source": "my.metro.tokyo.lg.jp",
+      "date": "2026-07-02",
+      "cat": "toyosu"
     },
     {
       "title": "食品卸 メーカー支援の新たな形 営業や物流を代行",
@@ -94,6 +101,13 @@
       "cat": "business"
     },
     {
+      "title": "ナガスクジラが仙台市中央卸売市場に初入荷",
+      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBldTVPSjVRVVAxRmFuWkZTUlduWHhyR0QwemxxaWhSWDFkbXhFR0g2cnQ4YXUzamhhRm9MclhCcTZhcXA1Q1FkV2lvd3FWdWM?oc=5",
+      "source": "khb東日本放送",
+      "date": "2026-06-09",
+      "cat": "market"
+    },
+    {
       "title": "２６２０ 資金ショートは２０５６年度に８年前倒し 東京都中央卸売市場会計、２０２６年経営レポート どらったら！！",
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1Xb0xLYTJ6eDV1WkxhbzgzTnFqVWRNcmxMMGc1OUVEMDZoZHJzQU1oaXlFdV9GYjNQbmxER0tmR1BnOGg0MGpEWmlOWVFhR25MS1hxZ084bFJpdUFIaU1xSERBWGVwT0E5dkE?oc=5",
       "source": "どらったら！！",
@@ -112,13 +126,6 @@
       "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9nczFHbFoyclptZmt4YmZocHR2MFpLcERHY2ZMYkJETmtOa2JoLWktY1AyNTlHVWpZWmZHM0RzUHFJLVhVb20zM3dkVS1xQzJ1b0xac2VMZEE2U042SlROQWFKekR5U2dwYjBn?oc=5",
       "source": "maff.go.jp",
       "date": "2026-04-30",
-      "cat": "market"
-    },
-    {
-      "title": "養殖ギンザケの入荷が本格化 仙台市中央卸売市場",
-      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5tX0ZoR3I0TXczcFFmYVBDSXU1dndzV2NuWGFlYkpleDExWnVEUUUtQUJLNVY0NkUzNklfUmhlOEl5RjVBdXFqVFRnV0JFUG8?oc=5",
-      "source": "khb東日本放送",
-      "date": "2026-04-28",
       "cat": "market"
     },
     {
@@ -147,13 +154,6 @@
       "link": "https://news.google.com/rss/articles/CBMic0FVX3lxTE9YLUhRU19OaGk4bFpPUU9DOWVkMFE3SXU4NVdVV2U0V01NdWUxTHl5UDNkN0dPakpqTVRtSG5xNTlOYVZfR1V6YUNpTmstU3FzUkRFWU0wajhRVlFQMi1LVTBRUVV2LVZxWGJOZ2VfczVpOHM?oc=5",
       "source": "茨城新聞クロスアイ",
       "date": "2026-02-11",
-      "cat": "toyosu"
-    },
-    {
-      "title": "インターネット都政モニターアンケート結果 生鮮食料品等の購買意識 〉 Q16 東京都中央卸売市場の認知|1月",
-      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE4wNEFBMThJRExadlJ6WDQ2d25pVXhNck1ldHBrcG1KVXhndDdkcWNfU2tlSW9lM0EzTGZMN2pSQlRTQjliU2JLVG1ZMlVSa3ljOWpxcTBaNmNzdUlEWFlrTXZTWmNDVzlLYmEtaGxTWWRGM3FQ?oc=5",
-      "source": "metro.tokyo.lg.jp",
-      "date": "2026-01-21",
       "cat": "toyosu"
     },
     {
