@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-27T07:31:58+09:00",
+  "updated": "2026-07-28T07:33:43+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -16,6 +16,13 @@
     }
   ],
   "items": [
+    {
+      "title": "青果卸に“AI経営参謀”が常駐する時代へ",
+      "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTE5uRk90RmluQm9WT0FVSmVaSDYwakZCT2UyekdSQS13bEpYSGJ4NzRuY2VCYktlUXRFUVphdUNCV0FlZlRMcDhRckRzNGtzSDNxSWZRTko0bkJlb0RlQzNwYmFkR0NLQnBKcU1oNExGX2V5bFdPZXl0NW1aNA?oc=5",
+      "source": "ニコニコニュース",
+      "date": "2026-07-27",
+      "cat": "business"
+    },
     {
       "title": "普段は入れない花の市場へ 札幌花き市場まつり4年ぶり開催、せり体験も＜ＭＹタウン白石区＞",
       "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1ET0xvNmg1VHJpMWtTS2xrNExYVV9pdk02NWt6SU9fNFNuSUIyZ3VmVEhkUkxvWjV1Z19hOWZJUTlQVG5CUnhwMlBDenlTNnM0UEJNT1FqN1VqZw?oc=5",
@@ -91,13 +98,6 @@
       "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFBsVjNZdlNydVJjdUpPWXIwbW92M2ZCX21FNkYtNHVPOFNvTWtneUJmeElOMU5zT0NraDdZNTBmV09DSmdIUF9JWFBqSU5xRnVtZl95QQ?oc=5",
       "source": "物流ニュースのLNEWS",
       "date": "2026-06-16",
-      "cat": "business"
-    },
-    {
-      "title": "三菱食品 伊藤社長インタビュー　新たな経営体制で「食品卸」の価値を最大化する",
-      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBwcUl2UXF5OTA3Sjc2b19LSzVZQTNWeklNcklKeFc0bW9NNUpZeDQ4UkVRZ1Z1Rmt4VUg5SWl3M0l1MXhyWTJ2SVYySVA4b1pXWXQ0eHNrZlpISmdRMXFJQktyd0LSAWpBVV95cUxQdnBuenZXVUhIR3NMaTYzVDJYNnJoeG9IZS1aSHVUU0lNVmtBQko1ZFhlYVBISjkwdGxXdHFuV3RYUmpRQ1hoTEZCVHh0eTVRbURJaENDY3NhdzNSbVZJUldDb2VqVnJoMWVn?oc=5",
-      "source": "ダイヤモンド・チェーンストアオンライン",
-      "date": "2026-06-15",
       "cat": "business"
     },
     {
