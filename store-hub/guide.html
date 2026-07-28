@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>店舗ハブ かんたんガイド｜店の連絡と情報を、ここだけに</title>
+<meta name="description" content="店舗ハブの使い方ガイド。連絡も情報も1か所に集めて、開けば今日ぶんにキャッチアップ。相談の答えは「共有」に残るので、新しく入った人も同じ答えにたどり着けます。">
+<meta name="robots" content="noindex">
+<meta property="og:title" content="店舗ハブ かんたんガイド">
+<meta property="og:description" content="連絡も情報も1か所に。相談の答えは「共有」に残る。5言語対応・写真つき。">
+<style>
+  :root{
+    --bg:#f4f7f4; --card:#fff; --ink:#1f2733; --sub:#5b6675; --line:#e3e9e5;
+    --green:#16a34a; --green-d:#166534; --green-dk:#0b3d1f; --green-soft:#f0fdf4;
+    --gold:#b0842f; --gold-soft:#faf6ec; --red:#dc2626;
+    --shadow:0 1px 3px rgba(16,24,40,.08),0 6px 18px rgba(16,24,40,.06);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,system-ui,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.85;font-size:16px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .wrap{max-width:760px;margin:0 auto;padding:0 18px}
+  a{color:var(--green-d)}
+  img{max-width:100%}
+
+  /* topbar */
+  .topbar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.93);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .topbar .in{max-width:760px;margin:0 auto;padding:11px 18px;display:flex;align-items:center;gap:9px}
+  .topbar .logo{font-weight:800;font-size:16px;letter-spacing:.02em;display:flex;align-items:center;gap:7px}
+  .topbar .mk{width:26px;height:26px;border-radius:7px;background:var(--green-d);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px}
+  .topbar .badge{font-size:11px;background:var(--green-soft);color:var(--green-d);font-weight:800;padding:2px 9px;border-radius:999px}
+  .topbar .cta{margin-left:auto;background:var(--green-d);color:#fff;text-decoration:none;font-weight:800;font-size:13px;padding:8px 14px;border-radius:999px;white-space:nowrap}
+
+  /* hero */
+  .hero{background:linear-gradient(140deg,var(--green-d),var(--green-dk));color:#fff;padding:44px 0 48px;text-align:center;position:relative;overflow:hidden}
+  .hero::before{content:"";position:absolute;width:150%;height:40%;background:rgba(255,255,255,.05);transform:rotate(-16deg);top:-8%;left:-25%}
+  .hero .in{position:relative}
+  .hero .tag{display:inline-block;background:rgba(255,255,255,.16);font-size:12.5px;font-weight:700;padding:4px 14px;border-radius:999px;margin-bottom:16px}
+  .hero h1{font-size:29px;margin:0 0 10px;font-weight:800;letter-spacing:.01em;line-height:1.5}
+  .hero .sub{font-size:15px;opacity:.96;max-width:580px;margin:0 auto;line-height:1.9}
+  .hero .btns{margin-top:24px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .hero .btn{text-decoration:none;font-weight:800;font-size:15px;padding:13px 24px;border-radius:999px;display:inline-block}
+  .hero .btn.primary{background:#fff;color:var(--green-d)}
+  .hero .btn.ghost{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.42)}
+  .hero .note{font-size:12px;opacity:.8;margin-top:14px}
+
+  /* sections */
+  section{padding:40px 0}
+  section.alt{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .kicker{color:var(--green);font-weight:800;font-size:13px;letter-spacing:.08em;margin:0 0 6px}
+  h2{font-size:23px;margin:0 0 8px;font-weight:800;line-height:1.5}
+  .lead{color:var(--sub);font-size:15px;margin:0 0 24px}
+
+  /* problem */
+  .prob{display:grid;gap:11px}
+  .p{background:var(--card);border-left:5px solid #cbd5e1;border-radius:11px;padding:14px 16px;font-size:14.5px;font-weight:700;color:#374151;box-shadow:var(--shadow)}
+  .p b{color:var(--red)}
+  .answer{margin-top:20px;background:var(--green-dk);color:#eafff0;border-radius:13px;padding:18px 20px;font-size:15.5px;font-weight:700;line-height:1.85}
+  .answer b{color:#fff}
+
+  /* steps */
+  .steps{display:flex;flex-direction:column;gap:16px}
+  .step{display:flex;gap:16px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow)}
+  .step .no{flex-shrink:0;width:38px;height:38px;border-radius:50%;background:var(--green-d);color:#fff;font-weight:800;font-size:17px;display:flex;align-items:center;justify-content:center}
+  .step h3{font-size:17px;margin:2px 0 5px;font-weight:800}
+  .step p{font-size:14.5px;color:var(--sub);margin:0;line-height:1.85}
+  .step .hl{color:var(--green-d);font-weight:800}
+
+  /* mock */
+  .mock{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 16px;box-shadow:var(--shadow);margin-top:14px}
+  .mock .mt{font-size:11.5px;font-weight:800;color:var(--sub);margin-bottom:9px;letter-spacing:.03em}
+  .mhead{background:linear-gradient(135deg,var(--green-d),var(--green-dk));color:#fff;border-radius:11px;padding:13px 15px;margin-bottom:10px}
+  .mhead .s{font-size:11.5px;opacity:.85}
+  .mhead .b{font-size:17px;font-weight:800;margin-top:2px}
+  .mnums{display:flex;gap:7px;margin-top:11px}
+  .mnums div{flex:1;background:rgba(255,255,255,.14);border-radius:9px;padding:8px 4px;text-align:center}
+  .mnums .v{font-size:19px;font-weight:800;line-height:1.2}
+  .mnums .l{font-size:9.5px;opacity:.88}
+  .mstreak{display:inline-block;margin-top:11px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:5px 13px;font-size:12.5px;font-weight:800}
+  .mrow{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;background:#fff}
+  .mrow .t{font-size:14px;font-weight:800}
+  .mrow .m{font-size:11.5px;color:var(--sub);margin-top:2px}
+  .chip{display:inline-block;font-size:10.5px;font-weight:800;border-radius:7px;padding:1px 8px;margin-right:5px;vertical-align:middle}
+  .chip.q{background:#eff6ff;color:#2563eb} .chip.s{background:var(--green-soft);color:var(--green-d)}
+  .chip.n{background:#f97316;color:#fff} .chip.t{background:#eef2ff;color:#4f46e5}
+  .chip.b{background:var(--green);color:#fff}
+  .arrow{text-align:center;font-size:22px;color:var(--green);font-weight:900;margin:6px 0}
+
+  /* feature cards */
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px}
+  .fc{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:19px 19px;box-shadow:var(--shadow)}
+  .fc .ic{font-size:29px;line-height:1}
+  .fc h3{font-size:16.5px;margin:11px 0 5px;font-weight:800}
+  .fc p{font-size:13.5px;color:var(--sub);margin:0;line-height:1.8}
+
+  /* langs */
+  .langs{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .langs span{background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:14px;font-weight:700;box-shadow:var(--shadow)}
+
+  /* faq */
+  .faq{display:grid;gap:11px;margin-top:6px}
+  .qa{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:15px 17px;box-shadow:var(--shadow)}
+  .qa .q{font-size:15px;font-weight:800;color:var(--ink)}
+  .qa .q b{color:var(--green-d);margin-right:6px}
+  .qa .a{font-size:14px;color:var(--sub);margin-top:6px;line-height:1.85}
+
+  /* cta */
+  .cta-box{background:linear-gradient(140deg,var(--green-d),var(--green-dk));color:#fff;border-radius:18px;padding:30px 24px;text-align:center;position:relative;overflow:hidden}
+  .cta-box::before{content:"";position:absolute;width:150%;height:44%;background:rgba(255,255,255,.05);transform:rotate(-14deg);top:-10%;left:-24%}
+  .cta-box .in{position:relative}
+  .cta-box h2{color:#fff;font-size:22px;margin:0 0 8px}
+  .cta-box p{color:#d1fae5;font-size:14.5px;margin:0 0 20px;line-height:1.85}
+  .cta-box .btn{display:inline-block;background:#fff;color:var(--green-d);text-decoration:none;font-weight:800;font-size:16px;padding:14px 30px;border-radius:999px}
+
+  footer{padding:26px 0 40px;text-align:center;color:var(--sub);font-size:12.5px;line-height:1.9}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="in">
+  <span class="logo"><span class="mk">🏬</span>店舗ハブ</span>
+  <span class="badge">かんたんガイド</span>
+  <a class="cta" href="./">デモを開く →</a>
+</div></div>
+
+<div class="hero"><div class="in wrap">
+  <span class="tag">多店舗の飲食店向け</span>
+  <h1>連絡も、情報も、ここだけ。</h1>
+  <p class="sub">LINE・メール・Slack に散らばった連絡と、Excel・ドライブに散らばった情報を1か所に。<br>開けば、今日ぶんに追いつけます。</p>
+  <div class="btns">
+    <a class="btn primary" href="./">▶ 触れるデモを開く</a>
+    <a class="btn ghost" href="#start">はじめ方を見る</a>
+  </div>
+  <p class="note">デモのデータはすべてサンプルです。実在の店舗・お客様の情報は入っていません。</p>
+</div></div>
+
+<!-- 課題 -->
+<section><div class="wrap">
+  <p class="kicker">WHY</p>
+  <h2>こんなこと、起きていませんか。</h2>
+  <p class="lead">多店舗になった瞬間、「伝える」と「探す」が急に重たくなります。</p>
+  <div class="prob">
+    <div class="p">本部からの連絡が <b>LINE・メール・Slack</b> に分かれていて、どこに来たか分からない</div>
+    <div class="p">読んだかどうかが分からず、<b>同じ連絡を何度も</b> 送っている</div>
+    <div class="p">ハウスルールや様式が <b>Excel とドライブに散らばって</b>、「どこだっけ？」から始まる</div>
+    <div class="p">現場の相談は流れて消えるので、<b>新しく入るたびに同じ質問</b> がゼロから発生する</div>
+    <div class="p">日本語が母語でないスタッフには、そもそも <b>読んでもらえていない</b></div>
+  </div>
+  <div class="answer">
+    店舗ハブは、この5つをまとめて引き受けます。<br>
+    <b>連絡は届いたか分かる／情報は1か所に貯まる／相談の答えは資産として残る／5言語で読める。</b>
+  </div>
+</div></section>
+
+<!-- 使い方 -->
+<section class="alt"><div class="wrap">
+  <p class="kicker">HOW IT WORKS</p>
+  <h2>やることは、たった3つです。</h2>
+  <p class="lead">むずかしい設定はありません。現場の人は「見る・押す」だけで終わります。</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="no">1</div>
+      <div>
+        <h3>開いて、今日ぶんに追いつく</h3>
+        <p>ホームに「未読の連絡・要対応のやること・返す相談」が集まっています。<span class="hl">ここを片付ければ、今日ぶんは終わり</span>。全部片付くとお祝いが出て、連続日数が伸びていきます。</p>
+        <div class="mock">
+          <div class="mt">ホーム（キャッチアップ）</div>
+          <div class="mhead">
+            <div class="s">本店・07/28</div>
+            <div class="b">今日のキャッチアップ、あと3件</div>
+            <div class="mnums">
+              <div><div class="v">1</div><div class="l">未読の連絡</div></div>
+              <div><div class="v">1</div><div class="l">要対応のやること</div></div>
+              <div><div class="v">1</div><div class="l">返す相談</div></div>
+            </div>
+            <div class="mstreak">あと3件で 12日連続 🔥</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="no">2</div>
+      <div>
+        <h3>困ったら聞く。答えは「共有」に残す</h3>
+        <p>相談ボードで他店に聞けます。解決したら <span class="hl">どの返信が答えだったかを1つ選んで、「共有」へ昇格</span>。相談は流れて消えますが、共有に残した答えは消えません。<span class="hl">次に入った人も、同じ答えにたどり着けます。</span></p>
+        <div class="mock">
+          <div class="mt">相談 → 共有 への昇格</div>
+          <div class="mrow">
+            <div class="t"><span class="chip q">相談</span>週末ピークのドリンクが遅れる。どう回してる？</div>
+            <div class="m">港店・07-18 ／ 返信2件</div>
+            <div class="m" style="margin-top:7px;background:var(--green-soft);border-radius:8px;padding:7px 9px;color:#14532d;">
+              <span class="chip b">⭐ ベストアンサー</span>金土だけドリンク専任を1人固定に。開店前にグラス60個を氷ごと仕込むと提供が半分に。
+            </div>
+          </div>
+          <div class="arrow">↓ 📚 共有に昇格</div>
+          <div class="mrow">
+            <div class="t"><span class="chip s">マニュアル</span>週末ピークのドリンクが遅れる。どう回してる？ <span class="chip t">相談から</span></div>
+            <div class="m">金土だけドリンク専任を1人固定に。開店前にグラス60個を氷ごと仕込むと提供が半分に。</div>
+            <div class="m">駅前店・07-19 ／ 🔗 出典の相談を見る</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="no">3</div>
+      <div>
+        <h3>読んだ・やった を残す</h3>
+        <p>連絡は「既読」と「対応済み」を分けて記録します。<span class="hl">本部からは、どの店がまだ手をつけていないかが分かります。</span>催促の電話が減ります。</p>
+        <div class="mock">
+          <div class="mt">連絡（既読・対応済み）</div>
+          <div class="mrow">
+            <div class="t">月末棚卸は7/31。前日までに発注調整を</div>
+            <div class="m">本部 → 全店 ・07-22・期限 07-30</div>
+            <div class="m" style="margin-top:6px;">
+              <span class="chip s">✓ 本店 対応済み</span><span class="chip s">✓ 港店 対応済み</span><span class="chip n">モール店 未読</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 現場のための工夫 -->
+<section><div class="wrap">
+  <p class="kicker">FOR THE FLOOR</p>
+  <h2>「書くのが苦手」でも、続きます。</h2>
+  <p class="lead">現場で使われなくなる理由は、だいたい決まっています。そこを先につぶしました。</p>
+  <div class="cards">
+    <div class="fc">
+      <div class="ic">🌐</div>
+      <h3>5言語で読める</h3>
+      <p>書いた人はいつもの言葉で書くだけ。読む人には、その人の言語で表示されます。探すときも母語のままで大丈夫です。</p>
+      <div class="langs"><span>日本語</span><span>English</span><span>中文</span><span>Tiếng Việt</span><span>नेपाली</span></div>
+    </div>
+    <div class="fc">
+      <div class="ic">📷</div>
+      <h3>写真で聞ける</h3>
+      <p>「この盛り付けで合ってる？」は、文章では伝わりません。その場で撮って送れます。写真つきの答えは、写真ごと共有に残ります。</p>
+    </div>
+    <div class="fc">
+      <div class="ic">💬</div>
+      <h3>ワンタップで返せる</h3>
+      <p>「了解です」「確認します」はボタン1つ。しかも押した瞬間に5言語に翻訳されるので、どの店の人も自分の言葉で読めます。</p>
+    </div>
+    <div class="fc">
+      <div class="ic">🔍</div>
+      <h3>あとから探せる</h3>
+      <p>タグと検索でしぼり込み。件数が増えても、目的の1件にたどり着けます。並び順も「未解決」「新着」「反応が多い順」で切り替えられます。</p>
+    </div>
+    <div class="fc">
+      <div class="ic">🔑</div>
+      <h3>入るのがかんたん</h3>
+      <p>LINEでそのまま入れます。LINEを使っていない方は、招待リンク＋ご自身の携帯番号の下4桁で。IDとパスワードは作りません。</p>
+    </div>
+    <div class="fc">
+      <div class="ic">👀</div>
+      <h3>見せる範囲を選べる</h3>
+      <p>「全員」「店長以上」「オーナーのみ」を項目ごとに設定。アカウントの管理台帳のような情報も、安全に置いておけます。</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- はじめ方 -->
+<section class="alt" id="start"><div class="wrap">
+  <p class="kicker">START</p>
+  <h2>はじめ方</h2>
+  <p class="lead">お店側の準備はほとんどありません。最初の1週間は「連絡」だけ使うのがおすすめです。</p>
+  <div class="steps">
+    <div class="step">
+      <div class="no">1</div>
+      <div><h3>スタッフを招待する</h3><p>店長がリンクを配るだけ。LINEでそのまま参加できます。アプリのインストールも、IDとパスワードの発行も要りません。</p></div>
+    </div>
+    <div class="step">
+      <div class="no">2</div>
+      <div><h3>まず「連絡」だけ使う</h3><p>いきなり全部は使いません。<span class="hl">本部からの連絡を1週間だけここに集める</span>ところから。既読と対応済みが見えるだけで、催促がなくなります。</p></div>
+    </div>
+    <div class="step">
+      <div class="no">3</div>
+      <div><h3>慣れてきたら「共有」と「相談」へ</h3><p>ハウスルールや様式を置き、現場の相談を始めます。解決した相談を共有に上げていくと、<span class="hl">3か月後には「うちのマニュアル」が勝手にできています。</span></p></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- FAQ -->
+<section><div class="wrap">
+  <p class="kicker">FAQ</p>
+  <h2>よくあるご質問</h2>
+  <div class="faq">
+    <div class="qa"><div class="q"><b>Q.</b>LINEがあるのに、もう1つ増やす意味はありますか？</div>
+      <div class="a">LINEは「流れる」ようにできています。得意なのは今この瞬間の連絡で、苦手なのは後から探すことです。店舗ハブは逆で、<b>連絡が届いたかを記録し、答えを残して探せるようにする</b>ためのものです。雑談や急ぎの一言はLINEのままで構いません。</div></div>
+    <div class="qa"><div class="q"><b>Q.</b>スタッフがスマホの操作に慣れていません。</div>
+      <div class="a">現場の人がすることは「開いて、見て、押す」だけです。書くのが苦手な方のために、ワンタップの定型返信と、写真での質問を用意しています。入るときもLINEか電話番号の下4桁だけで、パスワードは作りません。</div></div>
+    <div class="qa"><div class="q"><b>Q.</b>既読が分かるのは、監視されているようで嫌がられませんか？</div>
+      <div class="a">見えるのは「連絡を確認したか」だけで、行動を追うものではありません。むしろ<b>読んだ人が同じ連絡を何度も受け取らずに済む</b>ようになります。既読を出す範囲は運用に合わせて調整できます。</div></div>
+    <div class="qa"><div class="q"><b>Q.</b>いま使っているExcelやドライブは捨てないといけませんか？</div>
+      <div class="a">いいえ。共有にはリンクも置けるので、<b>ドライブのファイルはそのままで、入口だけ1か所にまとめる</b>使い方ができます。移行の作業はほとんど発生しません。</div></div>
+    <div class="qa"><div class="q"><b>Q.</b>店舗が2〜3店でも意味がありますか？</div>
+      <div class="a">あります。効き始めるのは「店長が全員の顔と状況を把握しきれなくなった時」で、多くの場合それは2店舗目からです。ただし本領を発揮するのは、<b>人の入れ替わりがある</b>お店です。</div></div>
+  </div>
+</div></section>
+
+<!-- CTA -->
+<section class="alt"><div class="wrap">
+  <div class="cta-box"><div class="in">
+    <h2>まずは触ってみてください</h2>
+    <p>登録もインストールも要りません。サンプルのお店8店舗が入った状態で、<br>そのまま操作できます。右上の「あなた」を切り替えると、店長・本部それぞれの見え方が試せます。</p>
+    <a class="btn" href="./">▶ 触れるデモを開く</a>
+  </div></div>
+</div></section>
+
+<footer>
+  <div class="wrap">
+    掲載のデータはすべてサンプルです。実在の店舗・お客様の情報は含まれていません。<br>
+    © 株式会社スパイシーデバイス
+  </div>
+</footer>
+
+</body>
+</html>
