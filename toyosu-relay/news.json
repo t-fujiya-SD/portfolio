@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-28T07:33:43+09:00",
+  "updated": "2026-07-29T07:33:43+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -18,23 +18,9 @@
   "items": [
     {
       "title": "青果卸に“AI経営参謀”が常駐する時代へ",
-      "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTE5uRk90RmluQm9WT0FVSmVaSDYwakZCT2UyekdSQS13bEpYSGJ4NzRuY2VCYktlUXRFUVphdUNCV0FlZlRMcDhRckRzNGtzSDNxSWZRTko0bkJlb0RlQzNwYmFkR0NLQnBKcU1oNExGX2V5bFdPZXl0NW1aNA?oc=5",
-      "source": "ニコニコニュース",
+      "link": "https://news.google.com/rss/articles/CBMiekFVX3lxTE0wYURuNURuUzVzS0tFVjNzbXI1UVI2MXB5cXFOd3NJNHBPQ192MjR2WVRJVVMtY2o5d3R5MVMyb09NYVpyVi1vTGNZNmhGazZmZ2g3WnlIZ2dpNXRwdHFqa09ISjJPMkVOcWFEQm8tZlNtNkQ1MVN6QWh3?oc=5",
+      "source": "イザ！",
       "date": "2026-07-27",
-      "cat": "business"
-    },
-    {
-      "title": "普段は入れない花の市場へ 札幌花き市場まつり4年ぶり開催、せり体験も＜ＭＹタウン白石区＞",
-      "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1ET0xvNmg1VHJpMWtTS2xrNExYVV9pdk02NWt6SU9fNFNuSUIyZ3VmVEhkUkxvWjV1Z19hOWZJUTlQVG5CUnhwMlBDenlTNnM0UEJNT1FqN1VqZw?oc=5",
-      "source": "北海道新聞デジタル",
-      "date": "2026-07-21",
-      "cat": "market"
-    },
-    {
-      "title": "食品卸初の「Skypod」導入／三菱食品",
-      "link": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE5oSld6Rm9vek9xVHhVY0hIcHhybF8tQ0M1VmM0ZklQYnFhRHJac2pTWmI5eXU4Qnhib2xGd1FiejFMOURzS3hzX29UVEtQazVyUlcw?oc=5",
-      "source": "フードウイークリーWEB",
-      "date": "2026-07-21",
       "cat": "business"
     },
     {
@@ -49,6 +35,20 @@
       "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE5jeG1YcGNEbnc3eDlLQllsMzE4UVZTQTE2Y3RmY0V0cHBuY2k2WGI5eTRiUktzbFMxQ3RSQzFEWGNtNGtFVDNFeEFtak9QOXMybWc2ZzVza2ExM0RRa3NTWHFId0M?oc=5",
       "source": "city.oita.oita.jp",
       "date": "2026-07-11",
+      "cat": "market"
+    },
+    {
+      "title": "『食品卸・学校給食業界のための物流DXガイド』資料を無料公開",
+      "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE50Rk55R1hQSDVmMHdYN1JRTWw0eURKUGVMczJXZkhVeC1BS2pMeUxyT0Y1aEYzUERSRThSLWlLMHJkRXJJVGI1ak4xSVV4TGV5T0dZOEhGNHViQnA4R2hsWVV0bFRtekhZT1E?oc=5",
+      "source": "PR TIMES",
+      "date": "2026-07-09",
+      "cat": "business"
+    },
+    {
+      "title": "模擬せり体験を開催します!!（1）青果編・（2）花き編・（3）水産物編",
+      "link": "https://news.google.com/rss/articles/CBMifkFVX3lxTE1yanF4LWxodWQxWnJOaExMWVhHNFVYLV8yRlFYUHJ1REh2eUMwanV5eS1Pb21UeVAzeVlTTi1PY3pqUlRHSFVLbEdmNDRRdkc2YUJ4cHBlNFFJQlFMU1NvZ3U4RU1ZekNDZmV3UjJQZHZjLVJwSGJEOUZMcFhhQQ?oc=5",
+      "source": "city.niigata.lg.jp",
+      "date": "2026-07-07",
       "cat": "market"
     },
     {
@@ -87,17 +87,17 @@
       "cat": "business"
     },
     {
-      "title": "【新会社設立のお知らせ】中部圏の青果卸売会社12社が結束し、「チームフレッシュロジ中部株式会社（TFL中部）」を設立",
-      "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTFA2UDZNNXY1S0tKTm9nYzNhYzJFM1EwVFVVS0s1RzQ2cGdYRzNCRHF3VmdLTUdEUzcwYWdxaVVyNVFYR2x0ZHNnN3dtR0F4TWZtMGYxNHVFd2tJbnRFVHlzOFVsb3EzX2dkV1E?oc=5",
-      "source": "PR TIMES",
-      "date": "2026-06-16",
-      "cat": "business"
-    },
-    {
       "title": "中部圏の青果卸12社／共同物流会社を設立、2027年6月以降稼働へ",
       "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFBsVjNZdlNydVJjdUpPWXIwbW92M2ZCX21FNkYtNHVPOFNvTWtneUJmeElOMU5zT0NraDdZNTBmV09DSmdIUF9JWFBqSU5xRnVtZl95QQ?oc=5",
       "source": "物流ニュースのLNEWS",
       "date": "2026-06-16",
+      "cat": "business"
+    },
+    {
+      "title": "三菱食品 伊藤社長インタビュー　新たな経営体制で「食品卸」の価値を最大化する",
+      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBwcUl2UXF5OTA3Sjc2b19LSzVZQTNWeklNcklKeFc0bW9NNUpZeDQ4UkVRZ1Z1Rmt4VUg5SWl3M0l1MXhyWTJ2SVYySVA4b1pXWXQ0eHNrZlpISmdRMXFJQktyd0LSAWpBVV95cUxQdnBuenZXVUhIR3NMaTYzVDJYNnJoeG9IZS1aSHVUU0lNVmtBQko1ZFhlYVBISjkwdGxXdHFuV3RYUmpRQ1hoTEZCVHh0eTVRbURJaENDY3NhdzNSbVZJUldDb2VqVnJoMWVn?oc=5",
+      "source": "ダイヤモンド・チェーンストアオンライン",
+      "date": "2026-06-15",
       "cat": "business"
     },
     {
