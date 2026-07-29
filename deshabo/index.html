@@ -1,0 +1,2664 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>デシャップボード（デシャボ）｜店の連絡・共有ハブ デモ</title>
+<meta name="description" content="多店舗の連絡と情報を1か所に。開けば今日の連絡とやることが一度に分かる、店の連絡・共有ハブのデモです。データはすべてサンプルです。">
+<meta name="robots" content="noindex">
+<meta property="og:title" content="デシャップボード（デシャボ）｜店の連絡・共有ハブ デモ">
+<meta property="og:description" content="連絡も情報も1か所に。相談の答えは「共有」に残る。5言語対応・写真つき。すべてサンプルデータで動きます。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800;900&family=Noto+Sans:wght@400;500;700;800;900&family=Noto+Sans+Devanagari:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green:#16a34a; --green-d:#166534; --green-dk:#0b3d1f; --green-soft:#f0fdf4;
+    --orange:#f97316; --orange-soft:#fff7ed; --blue:#2563eb; --blue-soft:#eff6ff;
+    --red:#dc2626; --red-soft:#fef2f2; --amber:#d97706; --purple:#7c3aed; --purple-soft:#f5f3ff;
+    --ink:#111827; --muted:#6b7280; --line:#e5e7eb; --line2:#d1d5db; --paper:#fff; --bg:#f3f4f6;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{background:var(--bg); color:var(--ink); line-height:1.6; -webkit-text-size-adjust:100%;
+    font-family:'Noto Sans JP','Noto Sans','Noto Sans Devanagari',-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;}
+  .wrap{width:min(1080px,100%); margin:0 auto; padding:0 12px 96px;}
+
+  header{background:var(--green-dk); color:#fff; position:sticky; top:0; z-index:20; box-shadow:0 2px 8px rgba(0,0,0,.15);}
+  .head-in{width:min(1080px,100%); margin:0 auto; padding:10px 12px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;}
+  .brand{font-weight:900; font-size:18px; display:flex; align-items:center; gap:8px;}
+  .brand .mk{width:26px;height:26px;border-radius:7px;background:#fff;color:var(--green-d);display:flex;align-items:center;justify-content:center;font-size:15px;}
+  .brand small{font-weight:600; font-size:11px; opacity:.85; display:block; letter-spacing:0;}
+  .head-right{margin-left:auto; display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
+  .actor-pick{display:flex; align-items:center; gap:6px; background:rgba(255,255,255,.14); padding:5px 8px; border-radius:10px;}
+  .actor-pick label{font-size:11px; opacity:.9;}
+  select.actor{font-size:14px; font-weight:800; border:none; border-radius:7px; padding:6px 8px; background:#fff; color:var(--green-d); max-width:150px;}
+  .btn-reset{background:rgba(255,255,255,.16); color:#fff; border:1px solid rgba(255,255,255,.3); padding:6px 10px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer;}
+  .lang-pick{display:flex; align-items:center; gap:5px; background:rgba(255,255,255,.14); padding:5px 8px; border-radius:10px;}
+  .lang-pick .gl{font-size:14px;}
+  select.lang{font-size:13px; font-weight:800; border:none; border-radius:7px; padding:6px 7px; background:#fff; color:var(--green-d); max-width:150px;}
+  .btn-orig{background:#fff; color:var(--green-d); border:none; padding:6px 10px; border-radius:8px; font-size:12px; font-weight:800; cursor:pointer;}
+  .tr-tag{display:inline-block; font-size:10px; font-weight:800; background:var(--blue-soft); color:var(--blue); border-radius:999px; padding:1px 7px; margin-left:5px; vertical-align:middle;}
+  .tr-tag.raw{background:#f3f4f6; color:var(--muted);}
+  .tr-bar{background:var(--blue-soft); border:1px solid #bfdbfe; color:#1e40af; border-radius:10px; padding:8px 12px; font-size:12.5px; margin:0 2px 12px; line-height:1.6;}
+  .tr-bar b{font-weight:900;}
+
+  nav.tabs{display:flex; gap:4px; overflow-x:auto; padding:8px 4px 2px; scrollbar-width:none;}
+  nav.tabs::-webkit-scrollbar{display:none;}
+  .tab{flex:0 0 auto; background:rgba(255,255,255,.12); color:#eafff0; border:none; padding:8px 13px; border-radius:11px 11px 0 0; font-size:14px; font-weight:800; cursor:pointer; white-space:nowrap; position:relative;}
+  .tab.active{background:var(--bg); color:var(--green-d);}
+  .tab .em{margin-right:4px;}
+  .tab .ext{font-size:9px; background:#111827; color:#fff; border-radius:999px; padding:1px 5px; margin-left:4px; vertical-align:middle; font-weight:800;}
+  .tab.active .ext{background:var(--muted);}
+  .tab .bn{position:absolute; top:3px; right:4px; background:var(--red); color:#fff; border-radius:999px; font-size:9px; font-weight:800; min-width:15px; height:15px; line-height:15px; text-align:center; padding:0 3px;}
+
+  h2.page{font-size:22px; font-weight:900; margin:16px 2px 4px;}
+  .lede{color:var(--muted); font-size:13px; margin:0 2px 14px; line-height:1.55;}
+  .lede b{color:var(--green-d);}
+  .card{background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:14px 15px; margin-bottom:12px; box-shadow:0 1px 2px rgba(0,0,0,.03);}
+  .card h3{margin:0 0 8px; font-size:16px; font-weight:900; display:flex; align-items:center; gap:7px;}
+  .row{display:flex; gap:10px; flex-wrap:wrap;}
+  .grid{display:grid; gap:12px;}
+  @media(min-width:620px){ .grid.g2{grid-template-columns:1fr 1fr;} }
+  .muted{color:var(--muted);}
+  .pill{display:inline-block; font-size:12px; font-weight:700; background:#f3f4f6; border-radius:8px; padding:3px 9px; margin:2px 4px 2px 0;}
+  .badge{display:inline-block; font-size:11px; font-weight:800; padding:2px 8px; border-radius:999px; vertical-align:middle;}
+  .b-high{background:var(--red-soft); color:var(--red);}
+  .b-all{background:var(--blue-soft); color:var(--blue);}
+  .b-me{background:var(--green-soft); color:var(--green-d);}
+  .b-hq{background:var(--purple-soft); color:var(--purple);}
+  .b-open{background:var(--blue-soft); color:var(--blue);}
+  .b-match{background:var(--orange-soft); color:var(--orange);}
+  .b-book{background:var(--green-soft); color:var(--green-d);}
+  .b-cancel{background:#f3f4f6; color:var(--muted);}
+  .cat{display:inline-block; font-size:11px; font-weight:800; padding:2px 9px; border-radius:8px;}
+  .cat-rule{background:var(--blue-soft); color:var(--blue);}
+  .cat-manual{background:var(--green-soft); color:var(--green-d);}
+  .cat-form{background:var(--orange-soft); color:var(--orange);}
+  .cat-link{background:#eef2ff; color:#4f46e5;}
+  .cat-decision{background:var(--purple-soft); color:var(--purple);}
+  .cat-media{background:#fdf2f8; color:#be185d;}
+  .cat-vendor{background:#f0f9ff; color:#0369a1;}
+  .cat-promo{background:#fefce8; color:#a16207;}
+  .tpl{display:inline-block;font-size:10px;font-weight:800;background:#111827;color:#fff;border-radius:999px;padding:1px 7px;margin-left:4px;vertical-align:middle;}
+  .sc{display:inline-block;font-size:10px;font-weight:800;border-radius:7px;padding:1px 7px;margin-left:4px;vertical-align:middle;}
+  .sc-mgr{background:var(--orange-soft);color:var(--orange);} .sc-owner{background:var(--red-soft);color:var(--red);} .sc-all{background:#f3f4f6;color:var(--muted);}
+  .pw{display:inline-block;font-family:ui-monospace,monospace;background:#f3f4f6;color:var(--muted);border-radius:7px;padding:3px 10px;font-size:12.5px;letter-spacing:1px;}
+  .bt{display:inline-block; font-size:11px; font-weight:800; padding:2px 9px; border-radius:8px; vertical-align:middle;}
+  .bt-soudan{background:var(--purple-soft); color:var(--purple);}
+  .bt-q{background:var(--blue-soft); color:var(--blue);}
+  .bt-share{background:var(--green-soft); color:var(--green-d);}
+  .bt-req{background:var(--orange-soft); color:var(--orange);}
+  .reply{background:#fafafa; border:1px solid var(--line); border-radius:9px; padding:8px 10px; margin-top:6px;}
+  .reply .who{font-size:11.5px; font-weight:800; color:var(--muted);}
+  .reply .bd{font-size:13px; margin-top:2px;}
+  .reply.tome{background:#fffdf5; border-color:#f0d9a0;}
+  .reply.best{background:var(--green-soft); border-color:var(--green);}
+  /* 入れ子返信（1段だけ。深くすると現場では追えなくなる） */
+  .reply.sub{margin-left:22px; border-left:3px solid #c7d2fe; background:#fbfbff;}
+  .reply .sub-to{display:inline-block; font-size:10.5px; font-weight:800; background:#eef2ff; color:#4f46e5; border-radius:6px; padding:1px 7px; margin-left:5px;}
+  .re-bar{display:flex; align-items:center; gap:8px; background:#eef2ff; border:1px solid #c7d2fe; color:#4f46e5;
+    border-radius:8px; padding:6px 10px; font-size:12px; font-weight:800; margin-bottom:6px;}
+  .re-bar button{margin-left:auto;}
+  /* A5 検索・タグ／B1 未読／B3 並び替え／C2 定型文 */
+  .bq-row{display:flex; gap:7px; align-items:center; flex-wrap:wrap; margin-bottom:8px;}
+  .bq-row input{flex:1 1 240px; min-width:0; margin:0;}
+  .bq-row select{width:auto; margin:0; font-size:13px; padding:8px 10px;}
+  .tgchip{border:1px solid var(--line2); background:#fff; color:#4f46e5; border-radius:999px;
+    padding:4px 11px; font-size:12.5px; font-weight:800; cursor:pointer; font-family:inherit;}
+  .tgchip.on{background:#4f46e5; border-color:#4f46e5; color:#fff;}
+  .tgchip.sm{font-size:11px; padding:2px 9px; margin:0 4px 3px 0;}
+  .bn.soft{background:#9aa2ab;}
+  .new-tag{display:inline-block; font-size:10.5px; font-weight:900; background:var(--orange); color:#fff;
+    border-radius:6px; padding:1px 7px; margin-right:5px; vertical-align:middle;}
+  .qr-row{display:flex; flex-wrap:wrap; gap:5px; margin-bottom:7px;}
+  .qrbtn{border:1px solid var(--green); background:var(--green-soft); color:var(--green-d); border-radius:999px;
+    padding:5px 12px; font-size:12.5px; font-weight:800; cursor:pointer; font-family:inherit;}
+  .qrbtn:hover{background:var(--green); color:#fff;}
+  .best-tag{display:inline-block; font-size:10.5px; font-weight:900; background:var(--green); color:#fff; border-radius:999px; padding:1px 8px; margin-left:5px; vertical-align:middle;}
+  .hint{background:#eff6ff; border:1px dashed #93c5fd; color:#1d4ed8; border-radius:9px; padding:7px 10px; font-size:12.5px; font-weight:700; margin-top:9px;}
+  .prom{background:#f5f3ff; border:1px solid #ddd6fe; border-radius:10px; padding:10px; margin-top:9px;}
+  .prom h4{margin:0 0 4px; font-size:13.5px; font-weight:900; color:var(--purple);}
+  .prom .nt{font-size:11.5px; color:var(--muted); line-height:1.6; margin:0 0 8px;}
+  .promoted{background:var(--purple-soft); color:var(--purple); border-radius:9px; padding:7px 10px; font-size:12.5px; font-weight:800; margin-top:9px;}
+  .promoted a{color:var(--purple); text-decoration:underline; cursor:pointer;}
+  .from-bd{display:inline-block;font-size:10px;font-weight:800;background:var(--purple-soft);color:var(--purple);border-radius:999px;padding:1px 7px;margin-left:4px;vertical-align:middle;}
+  .card.hilite{box-shadow:0 0 0 3px var(--amber); }
+  /* 写真添付 */
+  .pgrid{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;}
+  .pth{position:relative; width:104px; height:78px; border-radius:9px; overflow:hidden; border:1px solid var(--line2); background:#f3f4f6; cursor:zoom-in;}
+  .pth img{width:100%; height:100%; object-fit:cover; display:block;}
+  .pth .rm{position:absolute; top:2px; right:2px; width:22px; height:22px; border-radius:50%; border:none; background:rgba(15,23,42,.72); color:#fff; font-size:13px; font-weight:900; cursor:pointer; line-height:1; font-family:inherit;}
+  .pcount{display:inline-block; font-size:10.5px; font-weight:800; background:#eef2ff; color:#4f46e5; border-radius:999px; padding:1px 7px; margin-left:5px; vertical-align:middle;}
+  .lb{position:fixed; inset:0; background:rgba(15,23,42,.86); z-index:80; display:flex; align-items:center; justify-content:center; padding:22px; cursor:zoom-out;}
+  .lb img{max-width:100%; max-height:100%; border-radius:10px; box-shadow:0 18px 50px rgba(0,0,0,.5);}
+  .phint{font-size:11.5px; color:var(--muted); line-height:1.6; margin:4px 0 0;}
+  /* 連続達成（ストリーク）＋紙吹雪 */
+  .cft{position:fixed; inset:0; pointer-events:none; z-index:90;}
+  .streak{display:inline-flex; align-items:center; gap:8px; margin-top:11px; background:rgba(255,255,255,.16);
+    border:1px solid rgba(255,255,255,.3); border-radius:999px; padding:7px 15px; font-size:14px; font-weight:900; color:#fff;}
+  .streak .bst{font-size:11.5px; font-weight:800; color:#bbf7d0;}
+  .streak.pop{animation:stpop .5s cubic-bezier(.2,1.4,.4,1);}
+  @keyframes stpop{0%{transform:scale(.7); opacity:0;} 100%{transform:scale(1); opacity:1;}}
+  .done-line{background:var(--green-soft); border:1px solid #bbf7d0; color:var(--green-d); border-radius:8px; padding:6px 10px; font-size:12.5px; font-weight:800; margin-bottom:8px;}
+  .item.jump{cursor:pointer; border-radius:8px; transition:none;}
+  .item.jump:hover{background:#f6f7f4;}
+  .item.jump .t::after{content:" ›"; color:var(--muted); font-weight:900;}
+  .mchip{display:inline-block; font-size:11.5px; font-weight:800; background:#eef2ff; color:#4f46e5; border-radius:7px; padding:2px 8px; margin:0 4px 2px 0;}
+  .mchip.me{background:#fef3c7; color:#92400e;}
+  .mrow{display:flex; flex-wrap:wrap; gap:5px;}
+  .mpick{border:1px solid var(--line2); background:#fff; color:var(--muted); border-radius:999px; padding:5px 11px; font-size:12.5px; font-weight:800; cursor:pointer; font-family:inherit;}
+  .mpick.on{background:#4f46e5; border-color:#4f46e5; color:#fff;}
+  .rrow{display:flex; flex-wrap:wrap; gap:5px; margin-top:9px;}
+  .rbtn{border:1px solid var(--line2); background:#fff; border-radius:999px; padding:4px 11px; font-size:14px; cursor:pointer; font-family:inherit; line-height:1.4;}
+  .rbtn b{font-size:12px; font-weight:800; color:var(--muted); margin-left:2px;}
+  .rbtn.on{background:var(--green-soft); border-color:var(--green);}
+  .rbtn.on b{color:var(--green-d);}
+  .card.tome{border-left:5px solid var(--amber); background:#fffdf7;}
+  .tome-tag{display:inline-block; font-size:11px; font-weight:900; background:#fef3c7; color:#92400e; border-radius:7px; padding:2px 9px; margin-bottom:6px;}
+
+  /* ログイン画面デモ（オーバーレイ） */
+  .ov{position:fixed; inset:0; background:rgba(15,23,42,.62); z-index:60; display:flex; align-items:flex-start; justify-content:center; padding:18px 12px; overflow:auto;}
+  .ov-in{background:#fff; border-radius:18px; width:min(400px,100%); padding:22px 20px 18px; box-shadow:0 18px 50px rgba(0,0,0,.3);}
+  .ov-in h3{margin:0 0 3px; font-size:21px; font-weight:900; text-align:center;}
+  .ov-in .sb{text-align:center; color:var(--muted); font-size:12.5px; margin-bottom:16px;}
+  .line-btn{display:flex; align-items:center; justify-content:center; gap:9px; width:100%; background:#06C755; color:#fff; border:none; border-radius:12px; padding:15px; font-size:17px; font-weight:800; cursor:pointer; font-family:inherit; min-height:56px;}
+  .line-btn .lg{width:25px;height:25px;border-radius:6px;background:#fff;color:#06C755;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;}
+  .or{display:flex; align-items:center; gap:9px; margin:18px 0 14px;}
+  .or span{flex:1; height:1px; background:var(--line);} .or b{font-size:12px; color:#9ca3af; font-weight:800;}
+  .tel-btn{width:100%; background:#fff; color:var(--green-d); border:2px solid var(--green); border-radius:12px; padding:13px; font-size:16px; font-weight:800; cursor:pointer; font-family:inherit; min-height:52px;}
+  .ov-note{font-size:11.5px; color:var(--muted); line-height:1.65; margin-top:14px;}
+  .ov-close{width:100%; background:#f3f4f6; border:none; border-radius:10px; padding:11px; font-weight:800; cursor:pointer; margin-top:12px; font-family:inherit; font-size:14px;}
+  .otp{display:flex; gap:6px; justify-content:center; margin:12px 0;}
+  .otp input{width:46px; text-align:center; font-size:22px; font-weight:900; padding:10px 0;}
+  .lg-inv{background:var(--green-soft); border:1px solid #bbf7d0; border-radius:11px; padding:10px 12px; font-size:13.5px; color:var(--green-d); text-align:center; margin-bottom:14px; line-height:1.6;}
+  .lg-inv span{font-size:11.5px; color:var(--muted);}
+  .lg-hint{background:#f8fafc; border:1px solid var(--line); border-radius:10px; padding:9px 11px; font-size:12.5px; color:#374151; line-height:1.6;}
+  .lg-swap{text-align:center; margin-top:12px;}
+  .lg-swap button{background:none; border:none; color:var(--blue); font-size:12px; font-weight:800; cursor:pointer; font-family:inherit; text-decoration:underline;}
+
+  /* メンバー */
+  .ava{width:38px;height:38px;border-radius:50%;background:var(--green-d);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex:0 0 auto;}
+  .rl{display:inline-block;font-size:11px;font-weight:800;background:#f3f4f6;color:var(--muted);border-radius:7px;padding:1px 8px;margin-left:4px;}
+  .au{display:inline-block;font-size:11px;font-weight:800;border-radius:7px;padding:1px 8px;margin-right:3px;}
+  .a-line{background:#e7f8ee;color:#06803c;} .a-l4{background:var(--blue-soft);color:var(--blue);} .a-inv{background:#f3f4f6;color:var(--muted);}
+  /* 検索 */
+  .sres-i{border:1px solid var(--line); border-radius:10px; padding:9px 11px; margin-bottom:7px; cursor:pointer; background:#fff;}
+  .sres-i:hover{background:var(--green-soft); border-color:var(--green);}
+  .sres-i .t{font-weight:800; font-size:14px;} .sres-i .m{color:var(--muted); font-size:11.5px; margin-top:2px;}
+
+  button.act{border:none; border-radius:9px; padding:9px 14px; font-size:14px; font-weight:800; cursor:pointer;}
+  button.primary{background:var(--green); color:#fff;}
+  button.warn{background:var(--orange); color:#fff;}
+  button.blue{background:var(--blue); color:#fff;}
+  button.ghost{background:#fff; color:var(--ink); border:1px solid var(--line2);}
+  button.act:active{transform:translateY(1px);}
+  button.act:disabled{opacity:.45; cursor:default;}
+  .mini{padding:6px 11px; font-size:12.5px;}
+
+  input,select,textarea{font-family:inherit; font-size:15px; padding:9px 10px; border:1px solid var(--line2); border-radius:9px; width:100%; background:#fff; color:var(--ink);}
+  label.field{display:block; font-size:12px; font-weight:800; color:var(--muted); margin:8px 0 3px;}
+  .form-grid{display:grid; grid-template-columns:1fr 1fr; gap:8px 10px;}
+  .form-grid .full{grid-column:1 / -1;}
+
+  .catchup{background:linear-gradient(135deg,var(--green-d),var(--green-dk)); color:#fff; border-radius:16px; padding:16px 17px; margin:14px 0 12px;}
+  .catchup .hi{font-size:13px; opacity:.9;}
+  .catchup .big{font-size:20px; font-weight:900; margin:3px 0 10px;}
+  .catchup .nums{display:grid; grid-template-columns:repeat(3,1fr); gap:9px;}
+  .catchup .n{background:rgba(255,255,255,.13); border:1px solid rgba(255,255,255,.2); border-radius:11px; padding:9px; text-align:center;}
+  .catchup .n .v{font-size:24px; font-weight:900;}
+  .catchup .n .l{font-size:11px; opacity:.9;}
+  .catchup .done{background:rgba(255,255,255,.13); border:1px dashed rgba(255,255,255,.4); border-radius:11px; padding:12px; text-align:center; font-weight:800;}
+
+  .pain{background:var(--green-soft); border:1px dashed var(--green); border-radius:10px; padding:9px 12px; font-size:12.5px; color:var(--green-d); margin-bottom:12px;}
+  .pain b{font-weight:900;}
+  .note-ext{background:#0b3d1f; color:#eafff0; border-radius:10px; padding:9px 12px; font-size:12.5px; margin-bottom:12px; line-height:1.55;}
+  .note-ext b{color:#fff;}
+
+  .item{padding:10px 0; border-bottom:1px solid var(--line);}
+  .item:last-child{border-bottom:none;}
+  .item .t{font-weight:800; font-size:14.5px;}
+  .item .m{color:var(--muted); font-size:12px; margin-top:2px;}
+  .stamp{display:inline-flex; align-items:center; gap:4px; font-size:12px; font-weight:800; padding:3px 8px; border-radius:8px; margin:2px 4px 2px 0;}
+  .stamp.read{background:var(--blue-soft); color:var(--blue);}
+  .stamp.handled{background:var(--green-soft); color:var(--green-d);}
+  .stamp.unread{background:#f3f4f6; color:var(--muted);}
+  .empty{color:var(--muted); font-size:13px; text-align:center; padding:16px 0;}
+
+  .seg{display:flex; gap:6px; margin-bottom:12px;}
+  .seg button{flex:1; border:1px solid var(--line2); background:#fff; border-radius:10px; padding:9px; font-weight:800; font-size:14px; cursor:pointer;}
+  .seg button.on{background:var(--green); color:#fff; border-color:var(--green);}
+
+  .kpis{display:grid; grid-template-columns:repeat(2,1fr); gap:10px;}
+  @media(min-width:620px){ .kpis{grid-template-columns:repeat(3,1fr);} .kpis.m4{grid-template-columns:repeat(4,1fr);} }
+  .k{background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:12px;}
+  .k .l{font-size:11.5px; color:var(--muted); font-weight:800;}
+  .k .v{font-size:22px; font-weight:900; margin-top:2px; letter-spacing:-.01em;}
+  .k .v small{font-size:12px; color:var(--muted); font-weight:700;}
+  .k .sub{font-size:11px; color:var(--muted); margin-top:1px;}
+  .srcs{display:grid; grid-template-columns:1fr; gap:8px;}
+  @media(min-width:620px){ .srcs{grid-template-columns:1fr 1fr;} }
+  .src{border:1px solid var(--line); border-radius:11px; padding:10px 12px; background:#fafafa; display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .src .st{font-size:11px; font-weight:800; padding:2px 9px; border-radius:999px;}
+  .st.ok{background:var(--green-soft); color:var(--green-d);} .st.part{background:var(--orange-soft); color:var(--orange);} .st.no{background:#f3f4f6; color:var(--muted);}
+  .upzone{border:2px dashed var(--green); background:var(--green-soft); border-radius:12px; padding:14px; text-align:center;}
+
+  table.pl{width:100%; border-collapse:collapse; font-size:13px;}
+  table.pl th,table.pl td{padding:8px 6px; text-align:right; border-bottom:1px solid var(--line); white-space:nowrap;}
+  table.pl th{color:var(--muted); font-weight:800; font-size:11px; background:#fafafa;}
+  table.pl td.n,table.pl th.n{text-align:left; font-weight:800;}
+  .up{color:var(--red); font-weight:800;} .down{color:var(--green); font-weight:800;} .arrow{color:var(--muted); font-size:11px;}
+  .give{color:var(--green-d); font-weight:800;} .recv{color:var(--amber); font-weight:800;}
+  .foot{color:var(--muted); font-size:11.5px; text-align:center; padding:22px 8px; line-height:1.7;}
+</style>
+</head>
+<body>
+<header>
+  <div class="head-in">
+    <div class="brand"><span class="mk">🏬</span><span><span id="brandName">デシャップボード</span><small id="brandSub">店の連絡・共有ハブ（デモ）</small></span></div>
+    <div class="head-right">
+      <div class="lang-pick"><span class="gl">🌐</span><select class="lang" id="langSel"></select></div>
+      <button class="btn-orig" id="origBtn" style="display:none;"></button>
+      <div class="actor-pick"><label id="actorLbl">あなた</label><select class="actor" id="actorSel"></select></div>
+      <button class="btn-reset" id="searchBtn">🔍 <span id="searchLbl">さがす</span></button>
+      <button class="btn-reset" id="loginBtn">🔑 <span id="loginLbl">ログイン画面</span></button>
+      <button class="btn-reset" id="resetBtn">↺ <span id="resetLbl">初期化</span></button>
+      <a class="btn-reset" href="./guide.html" style="text-decoration:none;">📖 かんたんガイド</a>
+    </div>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+<div class="wrap" id="app"></div>
+
+<script>
+/* =======================================================================
+   デシャップボード（通称デシャボ／多店舗オペレーター版）デモ
+   主役 = 店の「連絡・共有ハブ」。散らばった連絡/情報を1か所に集約し、
+   店で働く人が“開けば今日ぶんに追いつける”を最大化する。
+   融通（シフトリレー=ヒト／フードリレー=モノ）とPL化は、そこに繋がる拡張。
+   ======================================================================= */
+const LS_KEY='msr_demo_v15';
+const LS_LANG='msr_lang', LS_ORIG='msr_orig';
+
+/* =======================================================================
+   多言語（5言語）
+   2層に分ける：
+     ①UI層  … ラベル・ボタン・見出し（I18N辞書）
+     ②本文層… 投稿の中身（データ側に i18n を持たせ、tx() で出し分け）
+   書いた人は自分の言語のまま。読む人は自分の言語で読める、が売り。
+   ======================================================================= */
+const LANGS=[
+  {id:'ja',label:'日本語',      html:'ja'},
+  {id:'en',label:'English',     html:'en'},
+  {id:'zh',label:'中文（简体）', html:'zh-Hans'},
+  {id:'vi',label:'Tiếng Việt',  html:'vi'},
+  {id:'ne',label:'नेपाली',       html:'ne'},
+];
+let LANG = localStorage.getItem(LS_LANG) || 'ja';
+if(!LANGS.some(l=>l.id===LANG)) LANG='ja';
+let SHOW_ORIG = localStorage.getItem(LS_ORIG)==='1';
+
+const I18N={
+ja:{
+ /* 連携ソース等 */
+ src_pos:'レジ（POS）', srck_pos:'売上・客数・客単価', src_gourmet:'グルメ媒体（食べログ/ぐるなび/HP）', srck_gourmet:'予約・閲覧・評価', src_sns:'SNS（Instagram/Google）', srck_sns:'リーチ・フォロワー・口コミ', src_folder:'指定フォルダ（Drive）', srck_folder:'Excel/CSV を自動取込', acc_common:'共通', by_tpl:'テンプレ',
+ /* 共通 */
+ app_name:'デシャップボード', app_sub:'店の連絡・共有ハブ（デモ）', you:'あなた', search:'さがす', login_screen:'ログイン画面', reset:'初期化',
+ ext:'拡張', all_stores:'全店', hq:'本部', to_hq:'本部宛', everyone:'全員',
+ unread:'未読', read:'既読', handled:'✓対応', important:'重要', due:'期限',
+ add:'追加する', del:'削除', open_link:'🔗 開く', close:'閉じる', back:'← 戻る', cancel:'取消',
+ f_title:'タイトル', f_body_opt:'本文（任意）', f_kind:'種類', f_target:'宛先', f_note_opt:'メモ（任意）',
+ none:'該当なし', people_n:'{0}人',
+ show_orig:'原文', show_tr:'翻訳', tr_tag:'翻訳', raw_tag:'原文のまま',
+ tr_bar:'🌐 <b>投稿の中身も日本語で表示中です。</b>書いた人の言語のまま保存し、読む人の言語で表示します。',
+ /* タブ */
+ tab_home:'ホーム', tab_notice:'連絡', tab_share:'共有', tab_board:'相談', tab_todo:'やること',
+ tab_members:'メンバー', tab_pl:'PL・KPI', tab_relay:'融通',
+ /* ホーム */
+ hq_view:'本部ビュー',
+ home_clear:'キャッチアップ、コンプリート！🎉', home_catch:'今日のキャッチアップ、あと{0}件',
+ home_done:'未読も、返す相談もありません',
+ st_now:'🔥 {0}日連続キャッチアップ！', st_best:'自己ベスト {0}日', st_next:'あと{0}件で {1}日連続 🔥', st_first:'今日からスタート！',
+ home_n_unread:'未読の連絡', home_n_todo:'要対応のやること', home_n_share:'新着の共有',
+ home_n_board:'返す相談', home_board_todo:'あなたが返す番 {0}', home_board_wait:'未返信',
+ home_board_all_done:'返す相談はありません 🎉',
+ home_hq_big:'全{0}店中 {1}店が未対応あり',
+ home_hq_unread:'全店の未読連絡', home_hq_todo:'全店の未完タスク', home_hq_relay:'融通の募集中',
+ home_pain:'📌 <b>散らばりを1か所に。</b> 連絡（LINE/メール/Slack）も、情報（Excel/Drive）も、店の人が“開けばキャッチアップできる”ようここへ集約します。',
+ home_notice_hq:'新着の連絡', home_notice_me:'未読・要対応の連絡', home_caught:'未読はありません 🎉',
+ home_see_notice:'連絡をすべて見る', home_todo_head:'要対応のやること', home_todo_none:'未完のやることはありません 🎉',
+ home_to_todo:'やることへ', home_pinned:'ピン留めの共有', home_no_pin:'ピン留めはありません',
+ home_see_share:'共有をすべて見る', home_board_head:'相談ボード', home_board_tome:'＠あなた宛 {0}',
+ home_board_new:'未解決・新着', home_board_none:'未解決の相談はありません 🎉', home_to_board:'相談ボードへ',
+ home_ext:'🔁 <b>拡張（あとで繋がる）：</b> ハブが定着したら、シフトの応援（ヒト）・食材の融通（モノ）＝<b>シフト/フードリレー</b>と、それが<b>管理PLに乗る</b>仕組みを同じ場所に追加します。',
+ mark_read:'既読', mark_handled:'✓ 対応済み', mark_done:'✓ 完了にする', replies_n:'返信{0}',
+ /* 連絡 */
+ notice_head:'連絡',
+ notice_lede:'オーナー・店長・本部の通達を1か所に。<b>既読／対応済み</b>で「読んだ・やった」を記録。LINEやメールに埋もれさせない。',
+ notice_form:'連絡を出す（{0}から）', n_subject:'件名', n_body:'本文', n_pri:'重要度',
+ n_normal:'通常', n_due:'期限（任意 MM-DD）', n_post:'掲示する', notice_none:'連絡はありません',
+ mark_read_f:'既読にする', mark_handled_f:'✓ 対応済みにする', you_handled:'あなたは対応済み ✓',
+ /* 共有 */
+ share_head:'共有（情報ハブ）',
+ share_lede:'理念・ハウスルール・手順・媒体運用・業者・販促を<b>1か所に集約</b>。Excelやドライブの「どこだっけ？」を無くし、<b>店長になったら必要な知識</b>が全部ここにある状態を作る。',
+ share_pain:'📦 <b>初日から中身が入っています。</b> 食べログ/ぐるなびの編集手順・見積もりの取り方・SNS運用・看板の作り方など<b>{0}件のテンプレ</b>を初期搭載。自社のルールを足していくだけ。',
+ perm_head:'🔐 権限のテスト（表示を切り替え）',
+ role_owner:'オーナー', role_mgr:'店長', role_staff:'スタッフ',
+ perm_note:'見えるのは自分の権限までの情報。<b>スタッフ</b>に切り替えると、媒体の手順やアカウント台帳は消えます。',
+ share_add:'共有を追加', s_scope:'公開範囲', s_url:'リンクURL（任意）', s_pin:'ピン留め',
+ pin_no:'しない', pin_yes:'する', pin_do:'ピン留め', pin_undo:'ピン解除',
+ scope_all:'全員', scope_mgr:'店長以上', scope_owner:'オーナーのみ', tpl_badge:'テンプレ',
+ cat_all:'すべて', cat_rinen:'理念', cat_house:'ハウスルール', cat_manual:'マニュアル',
+ cat_media:'媒体・SNS', cat_vendor:'業者・仕入', cat_promo:'販促', cat_form:'様式',
+ cat_decision:'決定事項', cat_link:'リンク', cat_account:'アカウント',
+ acc_head:'🔑 アカウント台帳', acc_sub:'（誰が権限を持っているか）',
+ acc_admin:'管理者', acc_id:'ID', acc_updated:'更新', acc_pw:'パスワード ••••••••',
+ acc_req:'表示をリクエスト', acc_denied:'この権限では表示できません',
+ acc_note:'⚠️ パスワード本体はアプリに保存しない設計（漏洩時の被害が大きすぎるため）。まずは<b>「誰が権限を持ち・誰に聞けば良いか」</b>を記録します。金庫機能は暗号化＋閲覧権限＋監査ログを満たしてから。',
+ /* 相談ボード */
+ board_head:'相談ボード',
+ board_lede:'店舗をまたいで<b>相談・質問・気づき</b>を交換。<b>@メンション</b>で宛先を指定でき、<b>絵文字</b>でひと押しの反応も。連絡（下り）・共有（蓄積）に対する<b>双方向</b>の面。',
+ board_post:'投稿する（{0}から）', board_post_btn:'投稿する',
+ bt_soudan:'相談', bt_q:'質問', bt_share:'共有', bt_req:'依頼',
+ bf_tome:'自分宛', bf_open:'未解決', bf_unread:'未読',
+ tg_ops:'#オペ', tg_menu:'#メニュー', tg_claim:'#クレーム', tg_order:'#発注', tg_shift:'#シフト', tg_equip:'#設備', tg_hygiene:'#衛生', tg_promo:'#販促',
+ tag_f:'タグ（複数可）', bq_ph:'このボードの中を検索（原文・翻訳の両方に効きます）', bq_n:'{0}件', bq_clear:'条件をクリア', bq_none:'該当する投稿はありません',
+ sort_f:'並び', sort_open:'未解決を先に', sort_new:'新しい順', sort_hot:'反応が多い順',
+ bd_new:'NEW', bd_new_re:'新着の返信 {0}', qr_f:'ワンタップで返す', ts_qr:'返信しました（全店それぞれの言語で読めます）',
+ mention_f:'＠メンション（宛先・複数可）', mention_s:'＠メンション',
+ solved:'解決済み', recruiting:'募集中', to_me:'＠あなた宛',
+ reply_btn:'💬 返信（{0}）', do_solve:'✓ 解決済みにする', do_unsolve:'未解決に戻す',
+ rep_to:'↩ この返信に返す', rep_to_who:'↳ {0} への返信', rep_clear:'解除',
+ bd_to_me_reply:'↩ あなたへの返信', rep_sub:'↳ {0} へ',
+ send:'送信', reply_ph:'返信を書く（{0}）',
+ best_badge:'ベストアンサー', best_do:'⭐ これが答え', best_undo:'指定を外す',
+ pick_best:'どの返信が答えでしたか？1つ選ぶと「共有」に残せます。',
+ promote_btn:'📚 共有に昇格', promote_head:'共有に昇格（ナレッジとして残す）',
+ promote_note:'相談は流れて消えます。答えを「共有」に残せば、次に入った人も同じ答えにたどり着けます。',
+ promote_do:'共有に登録', promote_cancel:'やめる',
+ promoted_to:'📚 共有に昇格済み', ts_promoted:'共有に登録しました（出典リンク付き）',
+ ts_best:'ベストアンサーに指定しました', src_from:'🔗 出典の相談を見る', src_badge:'相談から',
+ ph_f:'写真（現場は文字より写真）', ph_add:'📷 写真を追加', ph_rm:'この写真を外す',
+ ph_note:'スマホならその場で撮って添付できます。端末内で縮小してから保存（デモはブラウザ内だけ）。',
+ ph_n:'📷 {0}', ts_photo:'写真を添付しました', ts_photo_ng:'写真が大きすぎて保存できませんでした。枚数を減らしてください。',
+ /* やること */
+ todo_head:'やること',
+ todo_lede:'店ごとの「確認・対応」を可視化。誰が終わって誰が未対応か、本部からも各店からも一目で。',
+ todo_add:'やることを追加', t_content:'内容', t_target:'対象', t_due:'期限（MM-DD）', t_note:'メモ（任意）',
+ todo_none:'やることはありません', todo_target:'対象', todo_done_n:'完了 {0}/{1}',
+ todo_mine_done:'あなたの店：完了 ✓', todo_done_btn:'✓ {0}を完了にする',
+ done_short:'✓完了', not_done:'未',
+ /* メンバー */
+ mem_head:'メンバー',
+ mem_lede:'誰が参加しているかを一覧に。参加は<b>招待リンクを送るだけ</b>——<b>LINEでそのまま</b>入れて、LINEを使わない人は<b>電話番号の下4桁</b>で入れます。',
+ mem_count:'参加人数', mem_line:'LINEで利用', mem_pending:'招待中', unit_person:'人',
+ mem_invite:'➕ メンバーを招待する', m_name:'お名前', m_role:'役割', m_store:'所属', m_last4:'電話番号の下4桁',
+ invite_btn:'🔗 招待リンクを発行する',
+ invite_note:'発行したリンクをLINEやSMSで本人に送るだけ。本人は<b>LINEでタップ参加</b>、LINEを使わない場合は<b>下4桁</b>で入ります（メール・パスワードは不要）。',
+ role_part:'アルバイト', role_emp:'社員',
+ auth_line:'LINE', auth_l4:'リンク＋下4桁', auth_inv:'招待中（未参加）',
+ last_used:'最終利用', joined:'参加', resend:'再送',
+ /* 検索 */
+ search_head:'🔍 さがす', search_sub:'連絡・共有・相談・やること をまとめて検索',
+ search_ph:'例：棚卸／ラー油／エアコン', search_hint:'キーワードを入れてください',
+ search_n:'{0}件', search_none:'「{0}」は見つかりませんでした', search_todo:'やること',
+ /* 融通 */
+ relay_head:'融通',
+ relay_lede:'ハブに繋がる拡張。<b>ヒト＝シフトリレー</b>（応援）と<b>モノ＝フードリレー</b>（食材の余り/不足）を店舗間で回す。成立分は下の「PL」に自動計上。',
+ relay_note:'最初の売りは連絡・共有ハブ。融通は<b>定着後に開放する“見せ球＋実利”</b>。同一法人グループ内の応援なので合法。',
+ relay_goods:'📦 モノ（フードリレー）', relay_help:'🧑 ヒト（シフトリレー）',
+ relay_bd_goods:'融通ボード', relay_bd_help:'応援ボード',
+ f_post_goods:'融通を投稿', f_post_help:'応援を投稿',
+ ty_offer:'出す（余り）', ty_need:'欲しい（不足）', ty_need_h:'欲しい（人手不足）', ty_offer_h:'出せる（シフト余り）',
+ f_item:'品目', f_qty:'数量', f_unit:'単位', f_price:'振替単価（円/単位）', f_me:'自店', f_note:'メモ',
+ f_submit:'この内容で募集する', f_people:'人数', f_hours:'時間（h）', f_wage:'日当（円/人）',
+ st_open:'募集中', st_matched:'承認待ち', st_booked:'成立', st_cancelled:'取消',
+ relay_none:'まだありません', take_here:'この店でもらう', give_here:'この店で出す',
+ do_book:'✓ 承認して成立', do_unmatch:'相手を外す', booked_note:'✅ 成立・PLに計上', cancelled_done:'取消済み',
+ provide:'提供', receive:'受入', transfer:'振替', help_title:'応援 {0}名 × {1}h',
+ /* PL */
+ pl_head:'PL・KPI', pl_badge:'オーナー/MGR',
+ pl_lede:'指定フォーマットのExcel、レジ(POS)・グルメ媒体・SNSのデータを<b>取り込む／指定フォルダに入れる</b>と、<b>管理PLとKPIが自動で埋まる</b>。店の人は入力に触れず、経営はここで管理。',
+ pl_dummy:'（数値はダミー）',
+ pl_import:'📥 データを取り込む', pl_up1:'指定フォーマットのExcel / スプレッドシートを取り込む',
+ pl_up2:'売上日報・原価・人件費・客数など（.xlsx / .csv）', pl_upbtn:'📄 ファイルを選んで取り込む',
+ pl_sources:'連携ソース', link_ok:'連携済み', link_part:'一部連携', link_no:'未連携',
+ link_do:'連携する', link_re:'再連携', pl_recent:'最近の取り込み', pl_recent_none:'まだありません',
+ pl_kpi:'📈 経営KPI（当月・全店・ダミー）',
+ k_sales:'売上', k_guests:'客数', k_avg:'客単価', k_cost:'原価率', k_labor:'人件費率', k_fl:'FL率',
+ pl_mkpi:'📣 マーケKPI（グルメ媒体・SNS・ダミー）',
+ k_tabelog:'食べログ 評価', k_hp:'ホットペッパー', k_ig:'Instagram', k_google:'Google 口コミ',
+ u_reviews:'件', u_reserv_m:'媒体予約', u_reserv:'予約', u_views:'閲覧', u_follow:'フォロワー', u_reach:'リーチ',
+ pl_mkpi_note:'※媒体・SNSのインサイトを取り込むと、売上KPIと並べて「販促の効き」まで一画面で見られる。',
+ pl_table:'🏪 店舗別 管理PL（融通も反映）',
+ th_store:'店舗', th_cost:'原価率(前→後)', th_labor:'人件費率(前→後)', th_net:'融通収支', th_total:'合計',
+ pl_note:'「前→後」は<b>融通（拡張タブ）</b>の成立を内部振替で反映した実力値。付け替えなのでグループ合計は不変＝どこが助け／助けられかだけが見える。',
+ /* ログイン */
+ lg_inv:'📩 <b>{0}</b> に招待されています', lg_inv_sub:'店長 佐藤さんからの招待リンク',
+ lg_first:'はじめての方（初回登録）', lg_line_start:'LINEではじめる', lg_line_login:'LINEでログイン',
+ lg_note1:'<b>タップだけで完了。</b>メールもパスワードも作りません。<br>次からもLINEでそのまま入れます。',
+ lg_or:'LINEを使わない方', lg_last4:'📱 電話番号の下4桁で入る', lg_link4:'🔗 リンク＋電話下4桁で入る',
+ lg_note2:'このリンクは<b>あなた専用</b>です（14日で期限切れ）。<br>※デモは見た目のみ。LINEログインは本体アプリで稼働中です。',
+ lg_back:'おかえりなさい', lg_note_line:'いつものLINEでそのまま入れます。',
+ lg_note3:'機種変更・スマホを変えたときも、この2つのどちらかで入り直せます。',
+ lg_swap_again:'▸ 2回目以降のログイン画面を見る', lg_swap_inv:'▸ 初回（招待リンク）の画面を見る',
+ lg_tel:'電話番号のご確認', lg_tel_sub:'ご本人確認のためだけに使います',
+ lg_tel_hint:'店長に登録してもらった<b>ご自身の携帯番号の下4桁</b>を入れてください。<br>（例：090-1234-<b>5678</b> → 5678）',
+ lg_tel_go:'この番号で入る',
+ lg_tel_note:'SMSは送りません（通信料もかかりません）。<br>5回まちがえると10分お休みになります。',
+ /* alert / toast */
+ al_title:'タイトルを入力してください', al_subject:'件名を入力してください',
+ al_content:'内容を入力してください', al_item:'品目を入力してください', al_name:'お名前を入力してください',
+ al_hq_todo:'各店（あなた）を選んで完了にできます',
+ al_same_store:'提供と受入が同じ店舗です', al_need_both:'提供店・受入店が必要です',
+ cf_reset:'デモデータを初期状態に戻します。よろしいですか？', cf_del:'削除しますか？',
+ ts_invited:'招待リンクを発行しました。LINEで送れます', ts_resent:'招待リンクを再送しました（デモ）',
+ ts_share:'共有に追加しました', ts_posted:'投稿しました', ts_replied:'返信しました',
+ ts_import:'取り込みました：{0}（PL・KPIに反映）', ts_linked:'{0} を連携しました',
+ ts_acc:'管理者に表示リクエストを送りました（誰がいつ見たかは記録されます）',
+ ts_line:'（デモ）LINEで参加しました。次からもLINEで入れます', ts_last4:'（デモ）電話番号の下4桁で入りました',
+},
+en:{
+ /* 連携ソース等 */
+ src_pos:'Register (POS)', srck_pos:'Sales, guests, average spend', src_gourmet:'Listing sites (Tabelog / Gurunavi / Hot Pepper)', srck_gourmet:'Bookings, views, ratings', src_sns:'Social (Instagram / Google)', srck_sns:'Reach, followers, reviews', src_folder:'Watched folder (Drive)', srck_folder:'Auto-import Excel / CSV', acc_common:'Shared', by_tpl:'Template',
+ app_name:'DESHABO', app_sub:'Communication & knowledge hub (demo)', you:'You', search:'Search', login_screen:'Login screen', reset:'Reset',
+ ext:'Add-on', all_stores:'All stores', hq:'HQ', to_hq:'To HQ', everyone:'Everyone',
+ unread:'Unread', read:'Read', handled:'✓ Done', important:'Important', due:'Due',
+ add:'Add', del:'Delete', open_link:'🔗 Open', close:'Close', back:'← Back', cancel:'Cancel',
+ f_title:'Title', f_body_opt:'Message (optional)', f_kind:'Type', f_target:'To', f_note_opt:'Note (optional)',
+ none:'No results', people_n:'{0} people',
+ show_orig:'Original', show_tr:'Translation', tr_tag:'Translated', raw_tag:'Original only',
+ tr_bar:'🌐 <b>Posts are shown in your language.</b> Everyone writes in their own language; each reader sees it in theirs.',
+ tab_home:'Home', tab_notice:'Notices', tab_share:'Library', tab_board:'Ask', tab_todo:'To-do',
+ tab_members:'Members', tab_pl:'P&L・KPI', tab_relay:'Sharing',
+ hq_view:'HQ view',
+ home_clear:'Catch-up complete! 🎉', home_catch:'Today’s catch-up — {0} to go',
+ home_done:'Nothing unread, nothing waiting on you',
+ st_now:'🔥 {0}-day streak!', st_best:'Best {0} days', st_next:'{0} more to reach a {1}-day streak 🔥', st_first:'Your streak starts today!',
+ home_n_unread:'Unread notices', home_n_todo:'Pending to-dos', home_n_share:'New in Library',
+ home_n_board:'Waiting on you', home_board_todo:'Your turn to reply {0}', home_board_wait:'No reply yet',
+ home_board_all_done:'Nothing waiting on you 🎉',
+ home_hq_big:'{1} of {0} stores have pending items',
+ home_hq_unread:'Unread notices (all)', home_hq_todo:'Open to-dos (all)', home_hq_relay:'Open sharing requests',
+ home_pain:'📌 <b>Everything in one place.</b> Messages (LINE/email/Slack) and files (Excel/Drive) all land here, so anyone can open the app and catch up.',
+ home_notice_hq:'Latest notices', home_notice_me:'Unread & pending notices', home_caught:'Nothing unread 🎉',
+ home_see_notice:'See all notices', home_todo_head:'Pending to-dos', home_todo_none:'No open to-dos 🎉',
+ home_to_todo:'Go to To-do', home_pinned:'Pinned items', home_no_pin:'Nothing pinned',
+ home_see_share:'See all of Library', home_board_head:'Ask board', home_board_tome:'@you {0}',
+ home_board_new:'Open & new', home_board_none:'No open questions 🎉', home_to_board:'Go to Ask board',
+ home_ext:'🔁 <b>Add-ons (coming later):</b> once the hub is part of the routine, staff help (people) and ingredient sharing (goods) — <b>Shift / Food Relay</b> — plus the way they <b>flow into the management P&L</b>, get added in the same place.',
+ mark_read:'Read', mark_handled:'✓ Done', mark_done:'✓ Mark done', replies_n:'{0} replies',
+ notice_head:'Notices',
+ notice_lede:'All announcements from the owner, managers and HQ in one place. <b>Read / Done</b> stamps record who saw it and who acted. Nothing gets buried in chat.',
+ notice_form:'Post a notice (from {0})', n_subject:'Subject', n_body:'Message', n_pri:'Priority',
+ n_normal:'Normal', n_due:'Due (optional, MM-DD)', n_post:'Post', notice_none:'No notices',
+ mark_read_f:'Mark as read', mark_handled_f:'✓ Mark as done', you_handled:'You are done ✓',
+ share_head:'Library (knowledge hub)',
+ share_lede:'Values, house rules, procedures, listing sites, suppliers and promotions <b>all in one place</b>. No more “where was that file?”, and <b>everything a manager needs to know</b> lives here.',
+ share_pain:'📦 <b>It is full from day one.</b> How to edit your listing pages, how to get quotes, social media basics, how to make a sign and more — <b>{0} ready-made templates</b> are pre-loaded. Just add your own rules.',
+ perm_head:'🔐 Test permissions (switch the view)',
+ role_owner:'Owner', role_mgr:'Manager', role_staff:'Staff',
+ perm_note:'You only see what your role allows. Switch to <b>Staff</b> and the listing-site procedures and the account register disappear.',
+ share_add:'Add to Library', s_scope:'Visible to', s_url:'Link URL (optional)', s_pin:'Pin',
+ pin_no:'No', pin_yes:'Yes', pin_do:'Pin', pin_undo:'Unpin',
+ scope_all:'Everyone', scope_mgr:'Manager and above', scope_owner:'Owner only', tpl_badge:'Template',
+ cat_all:'All', cat_rinen:'Values', cat_house:'House rules', cat_manual:'Manuals',
+ cat_media:'Listings & SNS', cat_vendor:'Suppliers', cat_promo:'Promotion', cat_form:'Forms',
+ cat_decision:'Decisions', cat_link:'Links', cat_account:'Accounts',
+ acc_head:'🔑 Account register', acc_sub:'(who holds which access)',
+ acc_admin:'Owner of access', acc_id:'ID', acc_updated:'Updated', acc_pw:'Password ••••••••',
+ acc_req:'Request access', acc_denied:'Not visible with this role',
+ acc_note:'⚠️ Passwords themselves are deliberately never stored in the app (a leak would be too damaging). We first record <b>who holds the access and who to ask</b>. A real vault comes only after encryption, view permissions and audit logs are in place.',
+ board_head:'Ask board',
+ board_lede:'Trade <b>questions, advice and tips</b> across stores. Use <b>@mentions</b> to direct a post and <b>emoji</b> for a one-tap reaction. This is the <b>two-way</b> side, next to Notices (top-down) and Library (archive).',
+ board_post:'Post (from {0})', board_post_btn:'Post',
+ bt_soudan:'Advice', bt_q:'Question', bt_share:'Tip', bt_req:'Request',
+ bf_tome:'For me', bf_open:'Open', bf_unread:'Unread',
+ tg_ops:'#Ops', tg_menu:'#Menu', tg_claim:'#Complaint', tg_order:'#Ordering', tg_shift:'#Shift', tg_equip:'#Equipment', tg_hygiene:'#Hygiene', tg_promo:'#Promo',
+ tag_f:'Tags (one or more)', bq_ph:'Search this board (matches the original and every translation)', bq_n:'{0} found', bq_clear:'Clear filters', bq_none:'No posts match',
+ sort_f:'Sort', sort_open:'Open first', sort_new:'Newest', sort_hot:'Most reactions',
+ bd_new:'NEW', bd_new_re:'{0} new replies', qr_f:'One-tap reply', ts_qr:'Reply sent — every store reads it in their own language',
+ mention_f:'@mention (one or more)', mention_s:'@mention',
+ solved:'Solved', recruiting:'Open', to_me:'@you',
+ reply_btn:'💬 Reply ({0})', do_solve:'✓ Mark solved', do_unsolve:'Reopen',
+ rep_to:'↩ Reply to this', rep_to_who:'↳ Replying to {0}', rep_clear:'Clear',
+ bd_to_me_reply:'↩ Reply to you', rep_sub:'↳ to {0}',
+ send:'Send', reply_ph:'Write a reply ({0})',
+ best_badge:'Best answer', best_do:'⭐ This is the answer', best_undo:'Unset',
+ pick_best:'Which reply was the answer? Pick one and you can keep it in the Library.',
+ promote_btn:'📚 Promote to Library', promote_head:'Promote to Library (keep it as knowledge)',
+ promote_note:'Threads scroll away. Keep the answer in the Library and the next new hire reaches the same answer.',
+ promote_do:'Add to Library', promote_cancel:'Cancel',
+ promoted_to:'📚 Promoted to Library', ts_promoted:'Added to the Library, with a link back to the thread',
+ ts_best:'Marked as the best answer', src_from:'🔗 See the original thread', src_badge:'From a thread',
+ ph_f:'Photos (a photo beats a paragraph)', ph_add:'📷 Add a photo', ph_rm:'Remove this photo',
+ ph_note:'On a phone you can shoot and attach on the spot. Images are shrunk on the device before saving (demo keeps them in the browser only).',
+ ph_n:'📷 {0}', ts_photo:'Photo attached', ts_photo_ng:'The photos are too large to save. Please attach fewer of them.',
+ todo_head:'To-do',
+ todo_lede:'See every store’s checks and actions. Who finished and who has not — visible from HQ and from each store.',
+ todo_add:'Add a to-do', t_content:'What to do', t_target:'For', t_due:'Due (MM-DD)', t_note:'Note (optional)',
+ todo_none:'Nothing to do', todo_target:'For', todo_done_n:'Done {0}/{1}',
+ todo_mine_done:'Your store: done ✓', todo_done_btn:'✓ Mark {0} as done',
+ done_short:'✓ done', not_done:'open',
+ mem_head:'Members',
+ mem_lede:'See everyone who has joined. To add someone you <b>just send an invite link</b> — they join <b>straight from LINE</b>, or with <b>the last 4 digits of their phone number</b> if they do not use LINE.',
+ mem_count:'Members', mem_line:'Using LINE', mem_pending:'Invited', unit_person:'',
+ mem_invite:'➕ Invite a member', m_name:'Name', m_role:'Role', m_store:'Store', m_last4:'Last 4 digits of phone',
+ invite_btn:'🔗 Create an invite link',
+ invite_note:'Just send the link over LINE or SMS. They <b>join with one tap in LINE</b>, or use <b>the last 4 digits</b> if they do not use LINE. No email, no password.',
+ role_part:'Part-time', role_emp:'Full-time',
+ auth_line:'LINE', auth_l4:'Link + last 4', auth_inv:'Invited (not joined)',
+ last_used:'Last active', joined:'Joined', resend:'Resend',
+ search_head:'🔍 Search', search_sub:'Search Notices, Library, Ask and To-do together',
+ search_ph:'e.g. stocktake / chili oil / air conditioner', search_hint:'Type a keyword',
+ search_n:'{0} results', search_none:'No results for “{0}”', search_todo:'To-do',
+ relay_head:'Sharing',
+ relay_lede:'An add-on that plugs into the hub. Share <b>people (shift relay)</b> and <b>goods (food relay)</b> between stores. Every confirmed transfer flows into the P&L below.',
+ relay_note:'The hub comes first. Sharing is <b>opened up once the hub has stuck</b> — a showpiece with real upside. Within one company group, so it is legal.',
+ relay_goods:'📦 Goods (food relay)', relay_help:'🧑 People (shift relay)',
+ relay_bd_goods:'Goods board', relay_bd_help:'Help board',
+ f_post_goods:'Post a transfer', f_post_help:'Post a request',
+ ty_offer:'Offer (surplus)', ty_need:'Need (short)', ty_need_h:'Need (short-staffed)', ty_offer_h:'Can offer (spare shift)',
+ f_item:'Item', f_qty:'Qty', f_unit:'Unit', f_price:'Transfer price (¥/unit)', f_me:'My store', f_note:'Note',
+ f_submit:'Post this', f_people:'People', f_hours:'Hours', f_wage:'Daily rate (¥/person)',
+ st_open:'Open', st_matched:'Awaiting approval', st_booked:'Confirmed', st_cancelled:'Cancelled',
+ relay_none:'Nothing yet', take_here:'Take it for this store', give_here:'Offer from this store',
+ do_book:'✓ Approve & confirm', do_unmatch:'Remove partner', booked_note:'✅ Confirmed — booked to P&L', cancelled_done:'Cancelled',
+ provide:'From', receive:'To', transfer:'Transfer', help_title:'Help: {0} people × {1}h',
+ pl_head:'P&L・KPI', pl_badge:'Owner / Manager',
+ pl_lede:'<b>Import</b> a formatted Excel file, or drop it in the watched folder, and POS, listing-site and social data <b>fill the management P&L and KPIs automatically</b>. Store staff never touch data entry.',
+ pl_dummy:'(figures are dummy)',
+ pl_import:'📥 Import data', pl_up1:'Import a formatted Excel / spreadsheet',
+ pl_up2:'Daily sales, food cost, labour, guest counts (.xlsx / .csv)', pl_upbtn:'📄 Choose a file to import',
+ pl_sources:'Connected sources', link_ok:'Connected', link_part:'Partly connected', link_no:'Not connected',
+ link_do:'Connect', link_re:'Reconnect', pl_recent:'Recent imports', pl_recent_none:'Nothing yet',
+ pl_kpi:'📈 Business KPIs (this month, all stores, dummy)',
+ k_sales:'Sales', k_guests:'Guests', k_avg:'Average spend', k_cost:'Food cost %', k_labor:'Labour %', k_fl:'FL ratio',
+ pl_mkpi:'📣 Marketing KPIs (listing sites & social, dummy)',
+ k_tabelog:'Tabelog rating', k_hp:'Hot Pepper', k_ig:'Instagram', k_google:'Google reviews',
+ u_reviews:'reviews', u_reserv_m:'bookings', u_reserv:'bookings', u_views:'views', u_follow:'followers', u_reach:'reach',
+ pl_mkpi_note:'※ Import listing-site and social insights and you can see sales KPIs and “is the marketing working?” on one screen.',
+ pl_table:'🏪 Management P&L by store (sharing included)',
+ th_store:'Store', th_cost:'Food cost % (before→after)', th_labor:'Labour % (before→after)', th_net:'Sharing balance', th_total:'Total',
+ pl_note:'“Before→after” reflects confirmed transfers from the <b>Sharing</b> tab as internal charges. It is a reallocation, so the group total never changes — you only see who helped and who was helped.',
+ lg_inv:'📩 You have been invited to <b>{0}</b>', lg_inv_sub:'Invite link from Sato, the manager',
+ lg_first:'First time here', lg_line_start:'Start with LINE', lg_line_login:'Log in with LINE',
+ lg_note1:'<b>One tap and you are in.</b> No email, no password to create.<br>Next time, just use LINE again.',
+ lg_or:'If you do not use LINE', lg_last4:'📱 Enter the last 4 digits of your phone',
+ lg_link4:'🔗 Link + last 4 digits of your phone',
+ lg_note2:'This link is <b>just for you</b> (expires in 14 days).<br>※ This demo shows the screens only. LINE login already runs in the live app.',
+ lg_back:'Welcome back', lg_note_line:'Use the same LINE you always use.',
+ lg_note3:'Changed phones? Either of these two will get you back in.',
+ lg_swap_again:'▸ See the returning-user screen', lg_swap_inv:'▸ See the first-time (invite) screen',
+ lg_tel:'Confirm your phone number', lg_tel_sub:'Used only to confirm it is you',
+ lg_tel_hint:'Enter <b>the last 4 digits of the mobile number</b> your manager registered.<br>(e.g. 090-1234-<b>5678</b> → 5678)',
+ lg_tel_go:'Continue with this number',
+ lg_tel_note:'No SMS is sent (and it costs you nothing).<br>After 5 wrong tries it pauses for 10 minutes.',
+ al_title:'Please enter a title', al_subject:'Please enter a subject',
+ al_content:'Please enter the content', al_item:'Please enter an item', al_name:'Please enter a name',
+ al_hq_todo:'Switch to a store (as yourself) to mark it done',
+ al_same_store:'The giving and receiving store are the same', al_need_both:'Both a giving and a receiving store are required',
+ cf_reset:'This resets the demo data. Continue?', cf_del:'Delete this?',
+ ts_invited:'Invite link created. You can send it over LINE', ts_resent:'Invite link resent (demo)',
+ ts_share:'Added to Library', ts_posted:'Posted', ts_replied:'Reply sent',
+ ts_import:'Imported: {0} (reflected in P&L・KPI)', ts_linked:'{0} connected',
+ ts_acc:'Request sent to the administrator (who viewed it and when is logged)',
+ ts_line:'(demo) Joined with LINE. Use LINE next time too', ts_last4:'(demo) Signed in with the last 4 digits',
+},
+zh:{
+ /* 連携ソース等 */
+ src_pos:'收银（POS）', srck_pos:'销售额・客数・客单价', src_gourmet:'美食平台（Tabelog/Gurunavi/Hot Pepper）', srck_gourmet:'预约・浏览・评分', src_sns:'社交媒体（Instagram/Google）', srck_sns:'触达・粉丝・点评', src_folder:'指定文件夹（Drive）', srck_folder:'自动导入 Excel/CSV', acc_common:'通用', by_tpl:'模板',
+ app_name:'DESHABO', app_sub:'门店沟通与共享中心（演示）', you:'你', search:'搜索', login_screen:'登录界面', reset:'重置',
+ ext:'扩展', all_stores:'全部门店', hq:'总部', to_hq:'致总部', everyone:'所有人',
+ unread:'未读', read:'已读', handled:'✓已处理', important:'重要', due:'截止',
+ add:'添加', del:'删除', open_link:'🔗 打开', close:'关闭', back:'← 返回', cancel:'取消',
+ f_title:'标题', f_body_opt:'正文（可选）', f_kind:'类型', f_target:'收件对象', f_note_opt:'备注（可选）',
+ none:'无结果', people_n:'{0}人',
+ show_orig:'原文', show_tr:'译文', tr_tag:'译文', raw_tag:'仅原文',
+ tr_bar:'🌐 <b>帖子内容已按你的语言显示。</b>各自用自己的语言书写，读的人看到自己的语言。',
+ tab_home:'首页', tab_notice:'通知', tab_share:'共享', tab_board:'咨询', tab_todo:'待办',
+ tab_members:'成员', tab_pl:'损益・KPI', tab_relay:'调剂',
+ hq_view:'总部视图',
+ home_clear:'今天的进度，全部跟上！🎉', home_catch:'今天的进度，还差{0}件',
+ home_done:'没有未读，也没有待你回复的咨询',
+ st_now:'🔥 连续{0}天跟上！', st_best:'最佳 {0}天', st_next:'还差{0}件就连续{1}天 🔥', st_first:'今天开始！',
+ home_n_unread:'未读通知', home_n_todo:'待处理待办', home_n_share:'新增共享',
+ home_n_board:'待你回复', home_board_todo:'轮到你回复 {0}', home_board_wait:'未回复',
+ home_board_all_done:'没有等你回复的咨询 🎉',
+ home_hq_big:'{0}家门店中有{1}家未处理',
+ home_hq_unread:'全店未读通知', home_hq_todo:'全店未完成待办', home_hq_relay:'调剂招募中',
+ home_pain:'📌 <b>把分散的信息集中到一处。</b>沟通（LINE/邮件/Slack）与资料（Excel/云盘）都汇集到这里，打开就能跟上进度。',
+ home_notice_hq:'最新通知', home_notice_me:'未读・待处理的通知', home_caught:'没有未读 🎉',
+ home_see_notice:'查看全部通知', home_todo_head:'待处理的待办', home_todo_none:'没有未完成的待办 🎉',
+ home_to_todo:'前往待办', home_pinned:'置顶的共享', home_no_pin:'没有置顶内容',
+ home_see_share:'查看全部共享', home_board_head:'咨询板', home_board_tome:'＠你的 {0}',
+ home_board_new:'未解决・最新', home_board_none:'没有未解决的咨询 🎉', home_to_board:'前往咨询板',
+ home_ext:'🔁 <b>扩展（之后连接）：</b>中心用起来之后，再在同一个地方加入人手支援（人）与食材调剂（物）＝<b>排班/食材接力</b>，以及它们<b>自动计入管理损益</b>的机制。',
+ mark_read:'已读', mark_handled:'✓ 已处理', mark_done:'✓ 标记完成', replies_n:'回复{0}',
+ notice_head:'通知',
+ notice_lede:'把老板、店长、总部的通知集中在一处。用<b>已读／已处理</b>记录“看了、做了”，不再淹没在聊天里。',
+ notice_form:'发布通知（来自{0}）', n_subject:'主题', n_body:'正文', n_pri:'重要度',
+ n_normal:'普通', n_due:'截止（可选 MM-DD）', n_post:'发布', notice_none:'暂无通知',
+ mark_read_f:'标为已读', mark_handled_f:'✓ 标为已处理', you_handled:'你已处理 ✓',
+ share_head:'共享（信息中心）',
+ share_lede:'把理念、店规、流程、平台运营、供应商、促销<b>集中到一处</b>。不再问“文件在哪”，<b>当上店长所需的知识</b>全都在这里。',
+ share_pain:'📦 <b>第一天就有内容。</b>点评平台的编辑步骤、如何询价、社交媒体运营、招牌怎么做等<b>{0}份模板</b>已预装。你只要补充自家的规则。',
+ perm_head:'🔐 权限测试（切换显示）',
+ role_owner:'老板', role_mgr:'店长', role_staff:'员工',
+ perm_note:'只能看到自己权限范围内的信息。切换到<b>员工</b>后，平台操作步骤和账号台账会消失。',
+ share_add:'添加共享', s_scope:'公开范围', s_url:'链接URL（可选）', s_pin:'置顶',
+ pin_no:'否', pin_yes:'是', pin_do:'置顶', pin_undo:'取消置顶',
+ scope_all:'所有人', scope_mgr:'店长及以上', scope_owner:'仅老板', tpl_badge:'模板',
+ cat_all:'全部', cat_rinen:'理念', cat_house:'店规', cat_manual:'操作手册',
+ cat_media:'平台・社媒', cat_vendor:'供应商・采购', cat_promo:'促销', cat_form:'表单',
+ cat_decision:'决定事项', cat_link:'链接', cat_account:'账号',
+ acc_head:'🔑 账号台账', acc_sub:'（谁持有哪些权限）',
+ acc_admin:'负责人', acc_id:'ID', acc_updated:'更新', acc_pw:'密码 ••••••••',
+ acc_req:'申请查看', acc_denied:'当前权限无法显示',
+ acc_note:'⚠️ 密码本身刻意不保存在应用里（一旦泄露损失太大）。先记录<b>“谁有权限、该找谁”</b>。密码保管功能要在加密＋查看权限＋审计日志齐备后再做。',
+ board_head:'咨询板',
+ board_lede:'跨门店交换<b>咨询・提问・心得</b>。用<b>@提及</b>指定对象，用<b>表情</b>一键回应。相对于通知（向下）与共享（沉淀），这里是<b>双向</b>的一面。',
+ board_post:'发帖（来自{0}）', board_post_btn:'发布',
+ bt_soudan:'咨询', bt_q:'提问', bt_share:'心得', bt_req:'请求',
+ bf_tome:'发给我的', bf_open:'未解决', bf_unread:'未读',
+ tg_ops:'#运营', tg_menu:'#菜品', tg_claim:'#投诉', tg_order:'#订货', tg_shift:'#排班', tg_equip:'#设备', tg_hygiene:'#卫生', tg_promo:'#促销',
+ tag_f:'标签（可多选）', bq_ph:'在本板内搜索（原文和译文都能命中）', bq_n:'{0}条', bq_clear:'清除条件', bq_none:'没有符合的帖子',
+ sort_f:'排序', sort_open:'未解决优先', sort_new:'最新', sort_hot:'反应最多',
+ bd_new:'NEW', bd_new_re:'新回复 {0}', qr_f:'一键回复', ts_qr:'已回复（各店都能用自己的语言阅读）',
+ mention_f:'＠提及（可多选）', mention_s:'＠提及',
+ solved:'已解决', recruiting:'征集中', to_me:'＠你的',
+ reply_btn:'💬 回复（{0}）', do_solve:'✓ 标为已解决', do_unsolve:'退回未解决',
+ rep_to:'↩ 回复这条', rep_to_who:'↳ 回复 {0}', rep_clear:'取消',
+ bd_to_me_reply:'↩ 给你的回复', rep_sub:'↳ 给 {0}',
+ send:'发送', reply_ph:'写回复（{0}）',
+ best_badge:'最佳回答', best_do:'⭐ 这就是答案', best_undo:'取消指定',
+ pick_best:'哪条回复是答案？选1条就能保存到“共享”。',
+ promote_btn:'📚 升级到共享', promote_head:'升级到共享（作为知识留下）',
+ promote_note:'咨询会被刷走。把答案留在“共享”，新来的人也能找到同样的答案。',
+ promote_do:'登记到共享', promote_cancel:'取消',
+ promoted_to:'📚 已升级到共享', ts_promoted:'已登记到共享（附出处链接）',
+ ts_best:'已指定为最佳回答', src_from:'🔗 查看出处的咨询', src_badge:'来自咨询',
+ ph_f:'照片（现场比起文字更需要照片）', ph_add:'📷 添加照片', ph_rm:'移除这张照片',
+ ph_note:'用手机可以当场拍照并添加。图片会在本机缩小后保存（演示版仅保存在浏览器内）。',
+ ph_n:'📷 {0}', ts_photo:'已添加照片', ts_photo_ng:'照片太大无法保存。请减少张数。',
+ todo_head:'待办',
+ todo_lede:'把各店的“确认・处理”可视化。谁做完了、谁还没做，总部和门店都一目了然。',
+ todo_add:'添加待办', t_content:'内容', t_target:'对象', t_due:'截止（MM-DD）', t_note:'备注（可选）',
+ todo_none:'暂无待办', todo_target:'对象', todo_done_n:'完成 {0}/{1}',
+ todo_mine_done:'你的门店：已完成 ✓', todo_done_btn:'✓ 将{0}标为完成',
+ done_short:'✓完成', not_done:'未完成',
+ mem_head:'成员',
+ mem_lede:'一览谁已加入。加人只需<b>发送邀请链接</b>——<b>用LINE直接</b>进入，不用LINE的人用<b>手机号后4位</b>进入。',
+ mem_count:'参与人数', mem_line:'使用LINE', mem_pending:'邀请中', unit_person:'人',
+ mem_invite:'➕ 邀请成员', m_name:'姓名', m_role:'角色', m_store:'所属', m_last4:'手机号后4位',
+ invite_btn:'🔗 生成邀请链接',
+ invite_note:'把链接用LINE或短信发给本人即可。本人<b>在LINE里一键加入</b>，不用LINE的话用<b>后4位</b>进入（不需要邮箱和密码）。',
+ role_part:'兼职', role_emp:'正式员工',
+ auth_line:'LINE', auth_l4:'链接＋后4位', auth_inv:'邀请中（未加入）',
+ last_used:'最近使用', joined:'加入', resend:'重发',
+ search_head:'🔍 搜索', search_sub:'通知・共享・咨询・待办一起搜',
+ search_ph:'例：盘点／辣油／空调', search_hint:'请输入关键词',
+ search_n:'{0}条', search_none:'没有找到“{0}”', search_todo:'待办',
+ relay_head:'调剂',
+ relay_lede:'与中心相连的扩展。在门店之间调剂<b>人＝排班接力</b>（支援）和<b>物＝食材接力</b>（多余/不足）。达成的部分自动计入下方“损益”。',
+ relay_note:'首先卖的是沟通与共享中心。调剂是<b>稳定使用后再开放的“亮点＋实利”</b>。同一法人集团内的支援，合法。',
+ relay_goods:'📦 物（食材接力）', relay_help:'🧑 人（排班接力）',
+ relay_bd_goods:'调剂板', relay_bd_help:'支援板',
+ f_post_goods:'发布调剂', f_post_help:'发布支援',
+ ty_offer:'提供（多余）', ty_need:'需要（不足）', ty_need_h:'需要（人手不足）', ty_offer_h:'可提供（排班有余）',
+ f_item:'品名', f_qty:'数量', f_unit:'单位', f_price:'内部单价（日元/单位）', f_me:'本店', f_note:'备注',
+ f_submit:'按此内容征集', f_people:'人数', f_hours:'时长（h）', f_wage:'日薪（日元/人）',
+ st_open:'征集中', st_matched:'待审批', st_booked:'已达成', st_cancelled:'已取消',
+ relay_none:'暂时没有', take_here:'本店接收', give_here:'本店提供',
+ do_book:'✓ 审批并达成', do_unmatch:'解除对方', booked_note:'✅ 已达成・计入损益', cancelled_done:'已取消',
+ provide:'提供', receive:'接收', transfer:'内部结转', help_title:'支援 {0}人 × {1}h',
+ pl_head:'损益・KPI', pl_badge:'老板/店长',
+ pl_lede:'把指定格式的Excel，以及收银（POS）、美食平台、社媒的数据<b>导入／放进指定文件夹</b>，<b>管理损益和KPI会自动填好</b>。门店的人不用碰录入，经营在这里管理。',
+ pl_dummy:'（数值为示例）',
+ pl_import:'📥 导入数据', pl_up1:'导入指定格式的Excel / 表格',
+ pl_up2:'销售日报・成本・人工・客数等（.xlsx / .csv）', pl_upbtn:'📄 选择文件导入',
+ pl_sources:'对接来源', link_ok:'已对接', link_part:'部分对接', link_no:'未对接',
+ link_do:'去对接', link_re:'重新对接', pl_recent:'最近导入', pl_recent_none:'暂时没有',
+ pl_kpi:'📈 经营KPI（当月・全店・示例）',
+ k_sales:'销售额', k_guests:'客数', k_avg:'客单价', k_cost:'成本率', k_labor:'人工费率', k_fl:'FL率',
+ pl_mkpi:'📣 营销KPI（美食平台・社媒・示例）',
+ k_tabelog:'Tabelog 评分', k_hp:'Hot Pepper', k_ig:'Instagram', k_google:'Google 点评',
+ u_reviews:'条', u_reserv_m:'平台预约', u_reserv:'预约', u_views:'浏览', u_follow:'粉丝', u_reach:'触达',
+ pl_mkpi_note:'※ 导入平台与社媒数据后，可以把销售KPI和“促销是否有效”放在同一屏看。',
+ pl_table:'🏪 分店管理损益（含调剂）',
+ th_store:'门店', th_cost:'成本率(前→后)', th_labor:'人工费率(前→后)', th_net:'调剂收支', th_total:'合计',
+ pl_note:'“前→后”是把<b>调剂（扩展页）</b>达成的部分按内部结转反映后的实际值。因为只是重新分摊，集团合计不变＝只看得出谁在帮、谁被帮。',
+ lg_inv:'📩 你被邀请加入 <b>{0}</b>', lg_inv_sub:'来自佐藤店长的邀请链接',
+ lg_first:'第一次使用（首次注册）', lg_line_start:'用LINE开始', lg_line_login:'用LINE登录',
+ lg_note1:'<b>点一下就完成。</b>不用注册邮箱和密码。<br>以后也用LINE直接进入。',
+ lg_or:'不使用LINE的人', lg_last4:'📱 用手机号后4位进入', lg_link4:'🔗 用链接＋手机号后4位进入',
+ lg_note2:'这个链接<b>专属于你</b>（14天后失效）。<br>※演示仅呈现界面。LINE登录已在正式应用中运行。',
+ lg_back:'欢迎回来', lg_note_line:'用你平时的LINE直接进入。',
+ lg_note3:'换手机时，用这两种方式之一都能重新进入。',
+ lg_swap_again:'▸ 查看第二次以后的登录界面', lg_swap_inv:'▸ 查看首次（邀请链接）界面',
+ lg_tel:'确认手机号码', lg_tel_sub:'仅用于确认本人',
+ lg_tel_hint:'请输入店长登记的<b>你本人手机号的后4位</b>。<br>（例：090-1234-<b>5678</b> → 5678）',
+ lg_tel_go:'用这个号码进入',
+ lg_tel_note:'不会发送短信（也不产生通信费）。<br>错5次会暂停10分钟。',
+ al_title:'请输入标题', al_subject:'请输入主题',
+ al_content:'请输入内容', al_item:'请输入品名', al_name:'请输入姓名',
+ al_hq_todo:'请切换到某家门店（你自己）再标记完成',
+ al_same_store:'提供和接收是同一家门店', al_need_both:'需要提供门店和接收门店',
+ cf_reset:'将把演示数据恢复为初始状态。确定吗？', cf_del:'确定删除吗？',
+ ts_invited:'已生成邀请链接，可用LINE发送', ts_resent:'已重发邀请链接（演示）',
+ ts_share:'已添加到共享', ts_posted:'已发布', ts_replied:'已回复',
+ ts_import:'已导入：{0}（反映到损益・KPI）', ts_linked:'已对接 {0}',
+ ts_acc:'已向管理员发送查看申请（谁在何时查看会被记录）',
+ ts_line:'（演示）已用LINE加入。以后也能用LINE进入', ts_last4:'（演示）已用手机号后4位进入',
+},
+vi:{
+ /* 連携ソース等 */
+ src_pos:'Máy tính tiền (POS)', srck_pos:'Doanh thu, lượt khách, chi tiêu/khách', src_gourmet:'Trang đánh giá (Tabelog / Gurunavi / Hot Pepper)', srck_gourmet:'Đặt chỗ, lượt xem, điểm đánh giá', src_sns:'Mạng xã hội (Instagram / Google)', srck_sns:'Tiếp cận, người theo dõi, đánh giá', src_folder:'Thư mục chỉ định (Drive)', srck_folder:'Tự động nhập Excel / CSV', acc_common:'Dùng chung', by_tpl:'Mẫu',
+ app_name:'DESHABO', app_sub:'Trung tâm liên lạc & chia sẻ của cửa hàng (demo)', you:'Bạn', search:'Tìm', login_screen:'Màn hình đăng nhập', reset:'Đặt lại',
+ ext:'Mở rộng', all_stores:'Tất cả cửa hàng', hq:'Trụ sở', to_hq:'Gửi trụ sở', everyone:'Mọi người',
+ unread:'Chưa đọc', read:'Đã đọc', handled:'✓ Đã xử lý', important:'Quan trọng', due:'Hạn',
+ add:'Thêm', del:'Xoá', open_link:'🔗 Mở', close:'Đóng', back:'← Quay lại', cancel:'Huỷ',
+ f_title:'Tiêu đề', f_body_opt:'Nội dung (tuỳ chọn)', f_kind:'Loại', f_target:'Gửi tới', f_note_opt:'Ghi chú (tuỳ chọn)',
+ none:'Không có kết quả', people_n:'{0} người',
+ show_orig:'Bản gốc', show_tr:'Bản dịch', tr_tag:'Đã dịch', raw_tag:'Chỉ có bản gốc',
+ tr_bar:'🌐 <b>Nội dung bài đăng đang hiển thị bằng tiếng của bạn.</b> Ai cũng viết bằng tiếng của mình, người đọc thấy bằng tiếng của họ.',
+ tab_home:'Trang chính', tab_notice:'Thông báo', tab_share:'Tài liệu', tab_board:'Hỏi đáp', tab_todo:'Việc cần làm',
+ tab_members:'Thành viên', tab_pl:'Lãi lỗ・KPI', tab_relay:'Hỗ trợ',
+ hq_view:'Góc nhìn trụ sở',
+ home_clear:'Theo kịp hết rồi! 🎉', home_catch:'Hôm nay còn {0} mục nữa là theo kịp',
+ home_done:'Không có mục chưa đọc, không có gì chờ bạn',
+ st_now:'🔥 Chuỗi {0} ngày!', st_best:'Kỷ lục {0} ngày', st_next:'Còn {0} mục nữa là chuỗi {1} ngày 🔥', st_first:'Bắt đầu chuỗi từ hôm nay!',
+ home_n_unread:'Thông báo chưa đọc', home_n_todo:'Việc cần xử lý', home_n_share:'Tài liệu mới',
+ home_n_board:'Đang chờ bạn', home_board_todo:'Đến lượt bạn trả lời {0}', home_board_wait:'Chưa trả lời',
+ home_board_all_done:'Không có gì đang chờ bạn 🎉',
+ home_hq_big:'{1}/{0} cửa hàng còn việc chưa xử lý',
+ home_hq_unread:'Chưa đọc (toàn hệ thống)', home_hq_todo:'Việc chưa xong (toàn hệ thống)', home_hq_relay:'Yêu cầu hỗ trợ đang mở',
+ home_pain:'📌 <b>Gom mọi thứ về một nơi.</b> Liên lạc (LINE/email/Slack) và tài liệu (Excel/Drive) đều đổ về đây, mở ứng dụng là theo kịp.',
+ home_notice_hq:'Thông báo mới', home_notice_me:'Thông báo chưa đọc・cần xử lý', home_caught:'Không có gì chưa đọc 🎉',
+ home_see_notice:'Xem tất cả thông báo', home_todo_head:'Việc cần xử lý', home_todo_none:'Không còn việc nào 🎉',
+ home_to_todo:'Tới Việc cần làm', home_pinned:'Tài liệu đã ghim', home_no_pin:'Chưa ghim mục nào',
+ home_see_share:'Xem tất cả tài liệu', home_board_head:'Bảng hỏi đáp', home_board_tome:'＠bạn {0}',
+ home_board_new:'Chưa giải quyết・mới', home_board_none:'Không có câu hỏi nào đang mở 🎉', home_to_board:'Tới bảng hỏi đáp',
+ home_ext:'🔁 <b>Mở rộng (kết nối sau):</b> khi trung tâm đã thành thói quen, sẽ thêm ngay tại đây phần hỗ trợ nhân sự (người) và điều phối nguyên liệu (hàng) — <b>Shift/Food Relay</b> — cùng cơ chế <b>tự động vào bảng lãi lỗ</b>.',
+ mark_read:'Đã đọc', mark_handled:'✓ Đã xử lý', mark_done:'✓ Đánh dấu xong', replies_n:'{0} trả lời',
+ notice_head:'Thông báo',
+ notice_lede:'Mọi thông báo của chủ, cửa hàng trưởng và trụ sở ở một nơi. <b>Đã đọc／Đã xử lý</b> ghi lại ai đã xem, ai đã làm. Không còn bị trôi trong chat.',
+ notice_form:'Đăng thông báo (từ {0})', n_subject:'Chủ đề', n_body:'Nội dung', n_pri:'Mức độ',
+ n_normal:'Bình thường', n_due:'Hạn (tuỳ chọn, MM-DD)', n_post:'Đăng', notice_none:'Chưa có thông báo',
+ mark_read_f:'Đánh dấu đã đọc', mark_handled_f:'✓ Đánh dấu đã xử lý', you_handled:'Bạn đã xử lý ✓',
+ share_head:'Tài liệu (trung tâm thông tin)',
+ share_lede:'Triết lý, nội quy, quy trình, vận hành trang đánh giá, nhà cung cấp, khuyến mãi — <b>gom về một nơi</b>. Không còn “file ở đâu nhỉ?”, và <b>mọi kiến thức cần có khi lên cửa hàng trưởng</b> đều ở đây.',
+ share_pain:'📦 <b>Có sẵn nội dung ngay từ ngày đầu.</b> Cách sửa trang đánh giá, cách xin báo giá, vận hành mạng xã hội, cách làm bảng hiệu… <b>{0} mẫu có sẵn</b> đã được cài đặt. Bạn chỉ cần thêm quy định của mình.',
+ perm_head:'🔐 Thử phân quyền (đổi góc nhìn)',
+ role_owner:'Chủ', role_mgr:'Cửa hàng trưởng', role_staff:'Nhân viên',
+ perm_note:'Bạn chỉ thấy phần thuộc quyền của mình. Chuyển sang <b>Nhân viên</b>, quy trình trang đánh giá và sổ tài khoản sẽ biến mất.',
+ share_add:'Thêm tài liệu', s_scope:'Ai được xem', s_url:'Đường dẫn (tuỳ chọn)', s_pin:'Ghim',
+ pin_no:'Không', pin_yes:'Có', pin_do:'Ghim', pin_undo:'Bỏ ghim',
+ scope_all:'Mọi người', scope_mgr:'Cửa hàng trưởng trở lên', scope_owner:'Chỉ chủ', tpl_badge:'Mẫu',
+ cat_all:'Tất cả', cat_rinen:'Triết lý', cat_house:'Nội quy', cat_manual:'Hướng dẫn',
+ cat_media:'Trang đánh giá・MXH', cat_vendor:'Nhà cung cấp', cat_promo:'Khuyến mãi', cat_form:'Biểu mẫu',
+ cat_decision:'Quyết định', cat_link:'Liên kết', cat_account:'Tài khoản',
+ acc_head:'🔑 Sổ tài khoản', acc_sub:'(ai đang giữ quyền nào)',
+ acc_admin:'Người phụ trách', acc_id:'ID', acc_updated:'Cập nhật', acc_pw:'Mật khẩu ••••••••',
+ acc_req:'Yêu cầu xem', acc_denied:'Quyền hiện tại không xem được',
+ acc_note:'⚠️ Mật khẩu cố ý không lưu trong ứng dụng (rò rỉ thì thiệt hại quá lớn). Trước hết chỉ ghi <b>ai giữ quyền và nên hỏi ai</b>. Chức năng két mật khẩu chỉ làm sau khi có mã hoá, phân quyền xem và nhật ký kiểm tra.',
+ board_head:'Bảng hỏi đáp',
+ board_lede:'Trao đổi <b>câu hỏi, lời khuyên, kinh nghiệm</b> giữa các cửa hàng. Dùng <b>@nhắc tên</b> để chỉ định người nhận, dùng <b>biểu tượng cảm xúc</b> để phản hồi nhanh. Đây là mặt <b>hai chiều</b>, bên cạnh Thông báo (một chiều) và Tài liệu (lưu trữ).',
+ board_post:'Đăng bài (từ {0})', board_post_btn:'Đăng',
+ bt_soudan:'Xin ý kiến', bt_q:'Câu hỏi', bt_share:'Kinh nghiệm', bt_req:'Nhờ giúp',
+ bf_tome:'Gửi cho tôi', bf_open:'Chưa giải quyết', bf_unread:'Chưa đọc',
+ tg_ops:'#VậnHành', tg_menu:'#ThựcĐơn', tg_claim:'#KhiếuNại', tg_order:'#ĐặtHàng', tg_shift:'#CaLàm', tg_equip:'#ThiếtBị', tg_hygiene:'#VệSinh', tg_promo:'#KhuyếnMãi',
+ tag_f:'Thẻ (có thể chọn nhiều)', bq_ph:'Tìm trong bảng này (khớp cả bản gốc lẫn bản dịch)', bq_n:'{0} kết quả', bq_clear:'Xoá bộ lọc', bq_none:'Không có bài nào khớp',
+ sort_f:'Sắp xếp', sort_open:'Chưa giải quyết trước', sort_new:'Mới nhất', sort_hot:'Nhiều phản hồi nhất',
+ bd_new:'NEW', bd_new_re:'{0} trả lời mới', qr_f:'Trả lời một chạm', ts_qr:'Đã gửi — mỗi cửa hàng đọc bằng tiếng của mình',
+ mention_f:'＠nhắc tên (có thể chọn nhiều)', mention_s:'＠nhắc tên',
+ solved:'Đã giải quyết', recruiting:'Đang mở', to_me:'＠bạn',
+ reply_btn:'💬 Trả lời ({0})', do_solve:'✓ Đánh dấu đã giải quyết', do_unsolve:'Mở lại',
+ rep_to:'↩ Trả lời câu này', rep_to_who:'↳ Đang trả lời {0}', rep_clear:'Bỏ',
+ bd_to_me_reply:'↩ Trả lời cho bạn', rep_sub:'↳ tới {0}',
+ send:'Gửi', reply_ph:'Viết trả lời ({0})',
+ best_badge:'Câu trả lời hay nhất', best_do:'⭐ Đây là câu trả lời', best_undo:'Bỏ chọn',
+ pick_best:'Câu trả lời nào là đáp án? Chọn một là có thể lưu vào Tài liệu.',
+ promote_btn:'📚 Đưa lên Tài liệu', promote_head:'Đưa lên Tài liệu (giữ lại thành kiến thức)',
+ promote_note:'Bài hỏi đáp rồi sẽ trôi mất. Lưu câu trả lời vào Tài liệu để người mới vào sau cũng tìm được đúng câu đó.',
+ promote_do:'Lưu vào Tài liệu', promote_cancel:'Hủy',
+ promoted_to:'📚 Đã đưa lên Tài liệu', ts_promoted:'Đã lưu vào Tài liệu (kèm liên kết nguồn)',
+ ts_best:'Đã chọn làm câu trả lời hay nhất', src_from:'🔗 Xem bài hỏi đáp gốc', src_badge:'Từ hỏi đáp',
+ ph_f:'Ảnh (ngoài hiện trường, một tấm ảnh hơn cả đoạn văn)', ph_add:'📷 Thêm ảnh', ph_rm:'Bỏ ảnh này',
+ ph_note:'Dùng điện thoại thì chụp và đính kèm ngay tại chỗ. Ảnh được thu nhỏ trên máy trước khi lưu (bản demo chỉ giữ trong trình duyệt).',
+ ph_n:'📷 {0}', ts_photo:'Đã đính kèm ảnh', ts_photo_ng:'Ảnh quá lớn nên không lưu được. Vui lòng đính kèm ít ảnh hơn.',
+ todo_head:'Việc cần làm',
+ todo_lede:'Hiện rõ việc “kiểm tra・xử lý” của từng cửa hàng. Ai xong, ai chưa — trụ sở và cửa hàng đều thấy ngay.',
+ todo_add:'Thêm việc', t_content:'Nội dung', t_target:'Dành cho', t_due:'Hạn (MM-DD)', t_note:'Ghi chú (tuỳ chọn)',
+ todo_none:'Không có việc nào', todo_target:'Dành cho', todo_done_n:'Xong {0}/{1}',
+ todo_mine_done:'Cửa hàng của bạn: đã xong ✓', todo_done_btn:'✓ Đánh dấu {0} đã xong',
+ done_short:'✓ xong', not_done:'chưa',
+ mem_head:'Thành viên',
+ mem_lede:'Xem ai đã tham gia. Thêm người chỉ cần <b>gửi link mời</b> — vào <b>thẳng bằng LINE</b>, ai không dùng LINE thì vào bằng <b>4 số cuối của số điện thoại</b>.',
+ mem_count:'Số thành viên', mem_line:'Dùng LINE', mem_pending:'Đã mời', unit_person:'người',
+ mem_invite:'➕ Mời thành viên', m_name:'Họ tên', m_role:'Vai trò', m_store:'Cửa hàng', m_last4:'4 số cuối điện thoại',
+ invite_btn:'🔗 Tạo link mời',
+ invite_note:'Chỉ cần gửi link qua LINE hoặc SMS. Người nhận <b>chạm một lần là vào bằng LINE</b>, nếu không dùng LINE thì dùng <b>4 số cuối</b> (không cần email, không cần mật khẩu).',
+ role_part:'Bán thời gian', role_emp:'Nhân viên chính thức',
+ auth_line:'LINE', auth_l4:'Link ＋ 4 số cuối', auth_inv:'Đã mời (chưa vào)',
+ last_used:'Lần cuối dùng', joined:'Tham gia', resend:'Gửi lại',
+ search_head:'🔍 Tìm kiếm', search_sub:'Tìm cùng lúc trong Thông báo・Tài liệu・Hỏi đáp・Việc cần làm',
+ search_ph:'vd: kiểm kê／dầu ớt／máy lạnh', search_hint:'Hãy nhập từ khoá',
+ search_n:'{0} kết quả', search_none:'Không tìm thấy “{0}”', search_todo:'Việc cần làm',
+ relay_head:'Hỗ trợ',
+ relay_lede:'Phần mở rộng gắn với trung tâm. Điều phối <b>người＝shift relay</b> (hỗ trợ ca) và <b>hàng＝food relay</b> (nguyên liệu thừa/thiếu) giữa các cửa hàng. Phần đã chốt tự động vào bảng “Lãi lỗ” bên dưới.',
+ relay_note:'Bán trước là trung tâm liên lạc & chia sẻ. Phần hỗ trợ <b>mở sau khi mọi người đã quen dùng</b>. Trong cùng một pháp nhân nên hợp pháp.',
+ relay_goods:'📦 Hàng (food relay)', relay_help:'🧑 Người (shift relay)',
+ relay_bd_goods:'Bảng điều phối hàng', relay_bd_help:'Bảng hỗ trợ ca',
+ f_post_goods:'Đăng điều phối', f_post_help:'Đăng yêu cầu hỗ trợ',
+ ty_offer:'Cho (dư)', ty_need:'Cần (thiếu)', ty_need_h:'Cần (thiếu người)', ty_offer_h:'Có thể cho (dư ca)',
+ f_item:'Mặt hàng', f_qty:'Số lượng', f_unit:'Đơn vị', f_price:'Đơn giá nội bộ (¥/đơn vị)', f_me:'Cửa hàng tôi', f_note:'Ghi chú',
+ f_submit:'Đăng nội dung này', f_people:'Số người', f_hours:'Số giờ (h)', f_wage:'Ngày công (¥/người)',
+ st_open:'Đang mở', st_matched:'Chờ duyệt', st_booked:'Đã chốt', st_cancelled:'Đã huỷ',
+ relay_none:'Chưa có gì', take_here:'Cửa hàng này nhận', give_here:'Cửa hàng này cho',
+ do_book:'✓ Duyệt và chốt', do_unmatch:'Bỏ đối tác', booked_note:'✅ Đã chốt・vào bảng lãi lỗ', cancelled_done:'Đã huỷ',
+ provide:'Bên cho', receive:'Bên nhận', transfer:'Kết chuyển', help_title:'Hỗ trợ {0} người × {1}h',
+ pl_head:'Lãi lỗ・KPI', pl_badge:'Chủ / Quản lý',
+ pl_lede:'<b>Nhập</b> file Excel đúng mẫu hoặc bỏ vào thư mục đã chỉ định, dữ liệu POS, trang đánh giá và mạng xã hội sẽ <b>tự động điền vào bảng lãi lỗ và KPI</b>. Người ở cửa hàng không phải nhập liệu.',
+ pl_dummy:'(số liệu là ví dụ)',
+ pl_import:'📥 Nhập dữ liệu', pl_up1:'Nhập Excel / bảng tính đúng mẫu',
+ pl_up2:'Báo cáo doanh thu ngày・giá vốn・nhân công・lượt khách (.xlsx / .csv)', pl_upbtn:'📄 Chọn file để nhập',
+ pl_sources:'Nguồn kết nối', link_ok:'Đã kết nối', link_part:'Kết nối một phần', link_no:'Chưa kết nối',
+ link_do:'Kết nối', link_re:'Kết nối lại', pl_recent:'Nhập gần đây', pl_recent_none:'Chưa có gì',
+ pl_kpi:'📈 KPI kinh doanh (tháng này・toàn hệ thống・ví dụ)',
+ k_sales:'Doanh thu', k_guests:'Lượt khách', k_avg:'Chi tiêu/khách', k_cost:'Tỷ lệ giá vốn', k_labor:'Tỷ lệ nhân công', k_fl:'Tỷ lệ FL',
+ pl_mkpi:'📣 KPI marketing (trang đánh giá・MXH・ví dụ)',
+ k_tabelog:'Điểm Tabelog', k_hp:'Hot Pepper', k_ig:'Instagram', k_google:'Đánh giá Google',
+ u_reviews:'đánh giá', u_reserv_m:'đặt chỗ', u_reserv:'đặt chỗ', u_views:'lượt xem', u_follow:'người theo dõi', u_reach:'tiếp cận',
+ pl_mkpi_note:'※ Khi nhập dữ liệu trang đánh giá và mạng xã hội, bạn xem được KPI doanh thu và “khuyến mãi có hiệu quả không” trên cùng một màn hình.',
+ pl_table:'🏪 Lãi lỗ theo cửa hàng (đã tính điều phối)',
+ th_store:'Cửa hàng', th_cost:'Giá vốn % (trước→sau)', th_labor:'Nhân công % (trước→sau)', th_net:'Cân đối điều phối', th_total:'Tổng',
+ pl_note:'“Trước→sau” phản ánh các giao dịch đã chốt ở tab <b>Hỗ trợ</b> dưới dạng kết chuyển nội bộ. Vì chỉ là phân bổ lại nên tổng của cả nhóm không đổi — chỉ thấy ai giúp và ai được giúp.',
+ lg_inv:'📩 Bạn được mời vào <b>{0}</b>', lg_inv_sub:'Link mời từ cửa hàng trưởng Sato',
+ lg_first:'Lần đầu sử dụng', lg_line_start:'Bắt đầu bằng LINE', lg_line_login:'Đăng nhập bằng LINE',
+ lg_note1:'<b>Chỉ một lần chạm là xong.</b> Không cần tạo email hay mật khẩu.<br>Lần sau cũng vào thẳng bằng LINE.',
+ lg_or:'Nếu bạn không dùng LINE', lg_last4:'📱 Vào bằng 4 số cuối điện thoại',
+ lg_link4:'🔗 Vào bằng link ＋ 4 số cuối điện thoại',
+ lg_note2:'Link này <b>chỉ dành riêng cho bạn</b> (hết hạn sau 14 ngày).<br>※ Demo chỉ là giao diện. Đăng nhập LINE đã chạy trên ứng dụng thật.',
+ lg_back:'Chào mừng trở lại', lg_note_line:'Dùng đúng LINE bạn vẫn dùng hằng ngày.',
+ lg_note3:'Khi đổi máy, một trong hai cách này đều giúp bạn vào lại.',
+ lg_swap_again:'▸ Xem màn hình đăng nhập lần sau', lg_swap_inv:'▸ Xem màn hình lần đầu (link mời)',
+ lg_tel:'Xác nhận số điện thoại', lg_tel_sub:'Chỉ dùng để xác nhận đúng là bạn',
+ lg_tel_hint:'Hãy nhập <b>4 số cuối của số di động</b> mà cửa hàng trưởng đã đăng ký.<br>(vd: 090-1234-<b>5678</b> → 5678)',
+ lg_tel_go:'Vào bằng số này',
+ lg_tel_note:'Không gửi SMS (và bạn không mất phí).<br>Sai 5 lần sẽ tạm nghỉ 10 phút.',
+ al_title:'Vui lòng nhập tiêu đề', al_subject:'Vui lòng nhập chủ đề',
+ al_content:'Vui lòng nhập nội dung', al_item:'Vui lòng nhập mặt hàng', al_name:'Vui lòng nhập họ tên',
+ al_hq_todo:'Hãy chuyển sang một cửa hàng (chính bạn) rồi đánh dấu xong',
+ al_same_store:'Bên cho và bên nhận là cùng một cửa hàng', al_need_both:'Cần có cả cửa hàng cho và cửa hàng nhận',
+ cf_reset:'Sẽ đưa dữ liệu demo về trạng thái ban đầu. Tiếp tục?', cf_del:'Xoá mục này?',
+ ts_invited:'Đã tạo link mời. Bạn có thể gửi qua LINE', ts_resent:'Đã gửi lại link mời (demo)',
+ ts_share:'Đã thêm vào Tài liệu', ts_posted:'Đã đăng', ts_replied:'Đã gửi trả lời',
+ ts_import:'Đã nhập: {0} (đã phản ánh vào Lãi lỗ・KPI)', ts_linked:'Đã kết nối {0}',
+ ts_acc:'Đã gửi yêu cầu xem tới quản trị viên (ai xem, lúc nào đều được ghi lại)',
+ ts_line:'(demo) Đã tham gia bằng LINE. Lần sau cũng vào bằng LINE', ts_last4:'(demo) Đã vào bằng 4 số cuối điện thoại',
+},
+ne:{
+ /* 連携ソース等 */
+ src_pos:'क्यास काउन्टर (POS)', srck_pos:'बिक्री・ग्राहक・प्रति ग्राहक', src_gourmet:'रिभ्यु साइट (Tabelog / Gurunavi / Hot Pepper)', srck_gourmet:'बुकिङ・हेराइ・मूल्याङ्कन', src_sns:'सोसल मिडिया (Instagram / Google)', srck_sns:'पहुँच・फलोअर・रिभ्यु', src_folder:'तोकिएको फोल्डर (Drive)', srck_folder:'Excel / CSV स्वतः भित्र्याउने', acc_common:'साझा', by_tpl:'टेम्प्लेट',
+ app_name:'DESHABO', app_sub:'पसलको सम्पर्क र साझेदारी केन्द्र (डेमो)', you:'तपाईं', search:'खोज्नुहोस्', login_screen:'लगइन स्क्रिन', reset:'रिसेट',
+ ext:'विस्तार', all_stores:'सबै पसल', hq:'प्रधान कार्यालय', to_hq:'प्रधान कार्यालयलाई', everyone:'सबैलाई',
+ unread:'नपढेको', read:'पढेको', handled:'✓ सकियो', important:'महत्त्वपूर्ण', due:'म्याद',
+ add:'थप्नुहोस्', del:'मेट्नुहोस्', open_link:'🔗 खोल्नुहोस्', close:'बन्द', back:'← पछाडि', cancel:'रद्द',
+ f_title:'शीर्षक', f_body_opt:'विवरण (वैकल्पिक)', f_kind:'प्रकार', f_target:'कसलाई', f_note_opt:'नोट (वैकल्पिक)',
+ none:'कुनै नतिजा छैन', people_n:'{0} जना',
+ show_orig:'मूल', show_tr:'अनुवाद', tr_tag:'अनुवादित', raw_tag:'मूल मात्र',
+ tr_bar:'🌐 <b>पोस्टको विवरण तपाईंको भाषामा देखिँदैछ।</b> लेख्ने आफ्नै भाषामा लेख्छ, पढ्नेले आफ्नै भाषामा पढ्छ।',
+ tab_home:'गृह', tab_notice:'सूचना', tab_share:'सामग्री', tab_board:'सोध्ने', tab_todo:'गर्नुपर्ने',
+ tab_members:'सदस्य', tab_pl:'नाफा・KPI', tab_relay:'सहयोग',
+ hq_view:'प्रधान कार्यालय दृश्य',
+ home_clear:'सबै भ्याइयो! 🎉', home_catch:'आजको लागि अझै {0} बाँकी',
+ home_done:'नपढेको छैन, तपाईंलाई पर्खिरहेको पनि छैन',
+ st_now:'🔥 {0} दिन लगातार!', st_best:'उत्कृष्ट {0} दिन', st_next:'अझै {0} बाँकी, {1} दिन लगातार बन्छ 🔥', st_first:'आजबाट सुरु!',
+ home_n_unread:'नपढेका सूचना', home_n_todo:'बाँकी काम', home_n_share:'नयाँ सामग्री',
+ home_n_board:'तपाईंको पालो', home_board_todo:'जवाफ दिने तपाईंको पालो {0}', home_board_wait:'जवाफ बाँकी',
+ home_board_all_done:'तपाईंलाई पर्खिरहेको केही छैन 🎉',
+ home_hq_big:'{0} मध्ये {1} पसलमा काम बाँकी छ',
+ home_hq_unread:'सबै पसलका नपढेका सूचना', home_hq_todo:'सबै पसलका बाँकी काम', home_hq_relay:'खुला सहयोग अनुरोध',
+ home_pain:'📌 <b>छरिएका कुरा एकै ठाउँमा।</b> सम्पर्क (LINE/इमेल/Slack) र कागजात (Excel/Drive) सबै यहीँ आउँछ — खोल्नेबित्तिकै भ्याइन्छ।',
+ home_notice_hq:'नयाँ सूचना', home_notice_me:'नपढेका・बाँकी सूचना', home_caught:'नपढेको छैन 🎉',
+ home_see_notice:'सबै सूचना हेर्नुहोस्', home_todo_head:'बाँकी काम', home_todo_none:'बाँकी काम छैन 🎉',
+ home_to_todo:'गर्नुपर्नेमा जानुहोस्', home_pinned:'पिन गरिएको सामग्री', home_no_pin:'पिन गरिएको छैन',
+ home_see_share:'सबै सामग्री हेर्नुहोस्', home_board_head:'सोध्ने बोर्ड', home_board_tome:'＠तपाईंलाई {0}',
+ home_board_new:'नसुल्झेको・नयाँ', home_board_none:'नसुल्झेको प्रश्न छैन 🎉', home_to_board:'सोध्ने बोर्डमा जानुहोस्',
+ home_ext:'🔁 <b>विस्तार (पछि जोडिने):</b> यो केन्द्र बानी भइसकेपछि, कर्मचारी सहयोग (मान्छे) र सामग्री आदानप्रदान (सामान) ＝ <b>Shift/Food Relay</b>, र ती <b>व्यवस्थापन नाफा-नोक्सानमा आफैँ जोडिने</b> प्रणाली यहीँ थपिन्छ।',
+ mark_read:'पढेँ', mark_handled:'✓ सकियो', mark_done:'✓ सकियो भन्ने', replies_n:'{0} जवाफ',
+ notice_head:'सूचना',
+ notice_lede:'मालिक, पसल प्रमुख र प्रधान कार्यालयका सबै सूचना एकै ठाउँमा। <b>पढेको／सकिएको</b> ले “हेरेँ・गरेँ” रेकर्ड हुन्छ। च्याटमा हराउँदैन।',
+ notice_form:'सूचना पठाउनुहोस् ({0} बाट)', n_subject:'विषय', n_body:'विवरण', n_pri:'महत्त्व',
+ n_normal:'सामान्य', n_due:'म्याद (वैकल्पिक MM-DD)', n_post:'पठाउनुहोस्', notice_none:'सूचना छैन',
+ mark_read_f:'पढेको जनाउनुहोस्', mark_handled_f:'✓ सकियो जनाउनुहोस्', you_handled:'तपाईंले सक्नुभयो ✓',
+ share_head:'सामग्री (सूचना केन्द्र)',
+ share_lede:'सिद्धान्त, पसलका नियम, कार्यविधि, रिभ्यु साइट सञ्चालन, आपूर्तिकर्ता र प्रचार — <b>सबै एकै ठाउँमा</b>। “फाइल कहाँ थियो?” हट्छ, र <b>पसल प्रमुख हुँदा चाहिने सबै ज्ञान</b> यहीँ हुन्छ।',
+ share_pain:'📦 <b>पहिलो दिनदेखि नै सामग्री भरिएको छ।</b> रिभ्यु साइट सम्पादन, कोटेशन कसरी लिने, सोसल मिडिया सञ्चालन, साइनबोर्ड कसरी बनाउने आदि <b>{0} वटा टेम्प्लेट</b> पहिल्यै राखिएका छन्। आफ्ना नियम मात्र थप्नुहोस्।',
+ perm_head:'🔐 अनुमति परीक्षण (दृश्य बदल्नुहोस्)',
+ role_owner:'मालिक', role_mgr:'पसल प्रमुख', role_staff:'कर्मचारी',
+ perm_note:'आफ्नो अधिकार अनुसारको मात्र देखिन्छ। <b>कर्मचारी</b> मा बदल्दा रिभ्यु साइटका कार्यविधि र खाता विवरण हराउँछन्।',
+ share_add:'सामग्री थप्नुहोस्', s_scope:'कसले हेर्न पाउने', s_url:'लिंक URL (वैकल्पिक)', s_pin:'पिन',
+ pin_no:'गर्दिन', pin_yes:'गर्छु', pin_do:'पिन गर्नुहोस्', pin_undo:'पिन हटाउनुहोस्',
+ scope_all:'सबैलाई', scope_mgr:'पसल प्रमुख माथि', scope_owner:'मालिकलाई मात्र', tpl_badge:'टेम्प्लेट',
+ cat_all:'सबै', cat_rinen:'सिद्धान्त', cat_house:'पसलका नियम', cat_manual:'निर्देशिका',
+ cat_media:'रिभ्यु साइट・SNS', cat_vendor:'आपूर्तिकर्ता', cat_promo:'प्रचार', cat_form:'फारम',
+ cat_decision:'निर्णय', cat_link:'लिंक', cat_account:'खाता',
+ acc_head:'🔑 खाता विवरण', acc_sub:'(कसले कुन पहुँच राखेको छ)',
+ acc_admin:'जिम्मेवार व्यक्ति', acc_id:'ID', acc_updated:'अद्यावधिक', acc_pw:'पासवर्ड ••••••••',
+ acc_req:'हेर्न अनुरोध', acc_denied:'यो अधिकारमा देखाउन मिल्दैन',
+ acc_note:'⚠️ पासवर्ड आफैँ जानाजान एपमा राखिँदैन (चुहिए क्षति धेरै हुन्छ)। पहिले <b>“कसले पहुँच राख्छ र कसलाई सोध्ने”</b> मात्र रेकर्ड गरिन्छ। भल्ट सुविधा इन्क्रिप्सन, हेर्ने अनुमति र अडिट लग पूरा भएपछि मात्र।',
+ board_head:'सोध्ने बोर्ड',
+ board_lede:'पसलहरूबीच <b>सल्लाह, प्रश्न र अनुभव</b> आदानप्रदान। <b>@उल्लेख</b> ले कसलाई हो तोक्न सकिन्छ, <b>इमोजी</b> ले एकै ट्यापमा प्रतिक्रिया। सूचना (माथिबाट) र सामग्री (संग्रह) को तुलनामा यो <b>दुईतर्फी</b> पाटो हो।',
+ board_post:'पोस्ट गर्नुहोस् ({0} बाट)', board_post_btn:'पोस्ट',
+ bt_soudan:'सल्लाह', bt_q:'प्रश्न', bt_share:'अनुभव', bt_req:'अनुरोध',
+ bf_tome:'मलाई आएको', bf_open:'नसुल्झेको', bf_unread:'नपढेको',
+ tg_ops:'#सञ्चालन', tg_menu:'#मेनु', tg_claim:'#गुनासो', tg_order:'#अर्डर', tg_shift:'#शिफ्ट', tg_equip:'#उपकरण', tg_hygiene:'#सरसफाइ', tg_promo:'#प्रचार',
+ tag_f:'ट्याग (धेरै छान्न सकिन्छ)', bq_ph:'यही बोर्डमा खोज्नुहोस् (मूल र अनुवाद दुवैमा लाग्छ)', bq_n:'{0} वटा', bq_clear:'फिल्टर हटाउने', bq_none:'मिल्ने पोस्ट छैन',
+ sort_f:'क्रम', sort_open:'नसुल्झेको पहिले', sort_new:'नयाँ पहिले', sort_hot:'बढी प्रतिक्रिया',
+ bd_new:'NEW', bd_new_re:'नयाँ जवाफ {0}', qr_f:'एक ट्यापमा जवाफ', ts_qr:'जवाफ पठाइयो — हरेक पसलले आफ्नै भाषामा पढ्छ',
+ mention_f:'＠उल्लेख (धेरै छान्न सकिन्छ)', mention_s:'＠उल्लेख',
+ solved:'सुल्झियो', recruiting:'खुला', to_me:'＠तपाईंलाई',
+ reply_btn:'💬 जवाफ ({0})', do_solve:'✓ सुल्झियो भन्ने', do_unsolve:'फेरि खोल्नुहोस्',
+ rep_to:'↩ यसैलाई जवाफ', rep_to_who:'↳ {0} लाई जवाफ', rep_clear:'हटाउने',
+ bd_to_me_reply:'↩ तपाईंलाई जवाफ', rep_sub:'↳ {0} लाई',
+ send:'पठाउनुहोस्', reply_ph:'जवाफ लेख्नुहोस् ({0})',
+ best_badge:'उत्तम उत्तर', best_do:'⭐ यही उत्तर हो', best_undo:'हटाउने',
+ pick_best:'कुन जवाफ उत्तर थियो? एउटा छान्नुभयो भने “सामग्री” मा राख्न सकिन्छ।',
+ promote_btn:'📚 सामग्रीमा सार्ने', promote_head:'सामग्रीमा सार्ने (ज्ञानका रूपमा राख्ने)',
+ promote_note:'सोधपुछ बगेर हराउँछ। उत्तर “सामग्री” मा राखे नयाँ आउनेले पनि त्यही उत्तर भेट्टाउँछ।',
+ promote_do:'सामग्रीमा दर्ता', promote_cancel:'रद्द',
+ promoted_to:'📚 सामग्रीमा सारिएको', ts_promoted:'सामग्रीमा दर्ता भयो (स्रोत लिंकसहित)',
+ ts_best:'उत्तम उत्तरमा छानियो', src_from:'🔗 स्रोतको सोधपुछ हेर्ने', src_badge:'सोधपुछबाट',
+ ph_f:'फोटो (कार्यस्थलमा अक्षरभन्दा फोटो)', ph_add:'📷 फोटो थप्ने', ph_rm:'यो फोटो हटाउने',
+ ph_note:'मोबाइलबाट त्यहीँ खिचेर पठाउन सकिन्छ। फोटो यन्त्रमै सानो बनाएर सुरक्षित हुन्छ (डेमोमा ब्राउजरभित्रै मात्र)।',
+ ph_n:'📷 {0}', ts_photo:'फोटो थपियो', ts_photo_ng:'फोटो ठूलो भएर सुरक्षित गर्न सकिएन। संख्या घटाउनुहोस्।',
+ todo_head:'गर्नुपर्ने',
+ todo_lede:'हरेक पसलको “जाँच・काम” देखिने बनाउँछ। कसले सक्यो, कसले सकेन — प्रधान कार्यालय र पसल दुवैबाट एकैचोटि देखिन्छ।',
+ todo_add:'काम थप्नुहोस्', t_content:'के गर्ने', t_target:'कसका लागि', t_due:'म्याद (MM-DD)', t_note:'नोट (वैकल्पिक)',
+ todo_none:'गर्नुपर्ने केही छैन', todo_target:'कसका लागि', todo_done_n:'सकियो {0}/{1}',
+ todo_mine_done:'तपाईंको पसल: सकियो ✓', todo_done_btn:'✓ {0} सकियो भन्ने',
+ done_short:'✓ सकियो', not_done:'बाँकी',
+ mem_head:'सदस्य',
+ mem_lede:'को-को सहभागी छन् एकै ठाउँमा। थप्न <b>निम्तो लिंक पठाए पुग्छ</b> — <b>LINE बाटै</b> छिर्न सकिन्छ, LINE नचलाउनेले <b>फोन नम्बरको अन्तिम ४ अंक</b> ले छिर्छन्।',
+ mem_count:'सहभागी संख्या', mem_line:'LINE प्रयोग', mem_pending:'निम्तो पठाइएको', unit_person:'जना',
+ mem_invite:'➕ सदस्य निम्त्याउनुहोस्', m_name:'नाम', m_role:'भूमिका', m_store:'पसल', m_last4:'फोनको अन्तिम ४ अंक',
+ invite_btn:'🔗 निम्तो लिंक बनाउनुहोस्',
+ invite_note:'लिंक LINE वा SMS बाट पठाए पुग्छ। सम्बन्धित व्यक्ति <b>LINE मा एक ट्यापमै</b> छिर्छन्, LINE नचलाए <b>अन्तिम ४ अंक</b> ले छिर्छन् (इमेल र पासवर्ड चाहिँदैन)।',
+ role_part:'पार्टटाइम', role_emp:'स्थायी कर्मचारी',
+ auth_line:'LINE', auth_l4:'लिंक ＋ अन्तिम ४ अंक', auth_inv:'निम्तो पठाइएको (नछिरेको)',
+ last_used:'पछिल्लो प्रयोग', joined:'सहभागी', resend:'फेरि पठाउनुहोस्',
+ search_head:'🔍 खोज्नुहोस्', search_sub:'सूचना・सामग्री・सोध्ने・गर्नुपर्ने सबै एकैचोटि खोज्नुहोस्',
+ search_ph:'जस्तै: स्टक गणना／चिली तेल／एसी', search_hint:'कुनै शब्द लेख्नुहोस्',
+ search_n:'{0} नतिजा', search_none:'“{0}” भेटिएन', search_todo:'गर्नुपर्ने',
+ relay_head:'सहयोग',
+ relay_lede:'केन्द्रसँग जोडिने विस्तार। पसलहरूबीच <b>मान्छे＝shift relay</b> (सहयोग) र <b>सामान＝food relay</b> (बढी/कम भएको सामग्री) आदानप्रदान। मिलेको कारोबार तलको “नाफा-नोक्सान” मा आफैँ चढ्छ।',
+ relay_note:'पहिले बेच्ने भनेको सम्पर्क र साझेदारी केन्द्र। सहयोग <b>सबैले चलाउन थालेपछि खोलिने</b> — देखाउन पनि राम्रो, फाइदा पनि। एउटै कम्पनी समूहभित्र भएकाले कानुनी रूपमा मिल्छ।',
+ relay_goods:'📦 सामान (food relay)', relay_help:'🧑 मान्छे (shift relay)',
+ relay_bd_goods:'सामान बोर्ड', relay_bd_help:'सहयोग बोर्ड',
+ f_post_goods:'आदानप्रदान पोस्ट', f_post_help:'सहयोग अनुरोध पोस्ट',
+ ty_offer:'दिन्छु (बढी छ)', ty_need:'चाहियो (कम छ)', ty_need_h:'चाहियो (मान्छे पुगेन)', ty_offer_h:'दिन सक्छु (शिफ्ट बढी छ)',
+ f_item:'सामान', f_qty:'परिमाण', f_unit:'एकाइ', f_price:'आन्तरिक दर (¥/एकाइ)', f_me:'मेरो पसल', f_note:'नोट',
+ f_submit:'यही अनुसार पोस्ट गर्नुहोस्', f_people:'जना', f_hours:'घण्टा (h)', f_wage:'दैनिक ज्याला (¥/जना)',
+ st_open:'खुला', st_matched:'स्वीकृति पर्खाइमा', st_booked:'मिल्यो', st_cancelled:'रद्द',
+ relay_none:'अहिलेसम्म केही छैन', take_here:'यो पसलले लिने', give_here:'यो पसलले दिने',
+ do_book:'✓ स्वीकृत गरी मिलाउनुहोस्', do_unmatch:'साझेदार हटाउनुहोस्', booked_note:'✅ मिल्यो・नाफा-नोक्सानमा चढ्यो', cancelled_done:'रद्द भइसक्यो',
+ provide:'दिने', receive:'लिने', transfer:'आन्तरिक हिसाब', help_title:'सहयोग {0} जना × {1}h',
+ pl_head:'नाफा・KPI', pl_badge:'मालिक / प्रबन्धक',
+ pl_lede:'तोकिएको ढाँचाको Excel <b>अपलोड गर्दा वा तोकिएको फोल्डरमा राख्दा</b>, POS, रिभ्यु साइट र सोसल मिडियाको डाटाले <b>व्यवस्थापन नाफा-नोक्सान र KPI आफैँ भरिन्छ</b>। पसलका मान्छेले डाटा हाल्नै पर्दैन।',
+ pl_dummy:'(अंकहरू नमुना हुन्)',
+ pl_import:'📥 डाटा भित्र्याउनुहोस्', pl_up1:'तोकिएको ढाँचाको Excel / स्प्रेडसिट भित्र्याउनुहोस्',
+ pl_up2:'दैनिक बिक्री・लागत・ज्याला・ग्राहक संख्या आदि (.xlsx / .csv)', pl_upbtn:'📄 फाइल छानेर भित्र्याउनुहोस्',
+ pl_sources:'जोडिएका स्रोत', link_ok:'जोडिएको', link_part:'आंशिक जोडिएको', link_no:'नजोडिएको',
+ link_do:'जोड्नुहोस्', link_re:'फेरि जोड्नुहोस्', pl_recent:'हालैका आयात', pl_recent_none:'अहिलेसम्म केही छैन',
+ pl_kpi:'📈 व्यवसाय KPI (यो महिना・सबै पसल・नमुना)',
+ k_sales:'बिक्री', k_guests:'ग्राहक', k_avg:'प्रति ग्राहक', k_cost:'लागत दर', k_labor:'ज्याला दर', k_fl:'FL दर',
+ pl_mkpi:'📣 मार्केटिङ KPI (रिभ्यु साइट・SNS・नमुना)',
+ k_tabelog:'Tabelog मूल्याङ्कन', k_hp:'Hot Pepper', k_ig:'Instagram', k_google:'Google रिभ्यु',
+ u_reviews:'रिभ्यु', u_reserv_m:'बुकिङ', u_reserv:'बुकिङ', u_views:'हेराइ', u_follow:'फलोअर', u_reach:'पहुँच',
+ pl_mkpi_note:'※ रिभ्यु साइट र सोसल मिडियाको डाटा भित्र्याएपछि, बिक्री KPI र “प्रचार काम गरिरहेको छ कि छैन” एउटै स्क्रिनमा हेर्न सकिन्छ।',
+ pl_table:'🏪 पसल अनुसार व्यवस्थापन नाफा-नोक्सान (सहयोग समेत)',
+ th_store:'पसल', th_cost:'लागत दर (अघि→पछि)', th_labor:'ज्याला दर (अघि→पछि)', th_net:'सहयोग हिसाब', th_total:'जम्मा',
+ pl_note:'“अघि→पछि” भनेको <b>सहयोग</b> ट्याबमा मिलेका कारोबारलाई आन्तरिक हिसाबमा जोडेपछिको वास्तविक अंक हो। यो पुनर्वितरण मात्र भएकाले समूहको जम्मा फेरिँदैन — कसले सघायो र कसले सहयोग पायो मात्र देखिन्छ।',
+ lg_inv:'📩 तपाईंलाई <b>{0}</b> मा निम्त्याइएको छ', lg_inv_sub:'पसल प्रमुख सातोबाट आएको निम्तो लिंक',
+ lg_first:'पहिलो पटक हो (नयाँ दर्ता)', lg_line_start:'LINE बाट सुरु गर्नुहोस्', lg_line_login:'LINE बाट लगइन',
+ lg_note1:'<b>एक ट्यापमै सकियो।</b> इमेल वा पासवर्ड बनाउनु पर्दैन।<br>अर्को पटक पनि LINE बाटै छिर्न सकिन्छ।',
+ lg_or:'LINE नचलाउनेका लागि', lg_last4:'📱 फोनको अन्तिम ४ अंकले छिर्नुहोस्',
+ lg_link4:'🔗 लिंक ＋ फोनको अन्तिम ४ अंकले छिर्नुहोस्',
+ lg_note2:'यो लिंक <b>तपाईंकै लागि मात्र</b> हो (१४ दिनमा म्याद सकिन्छ)।<br>※ डेमोमा स्क्रिन मात्र देखाइएको हो। LINE लगइन वास्तविक एपमा चलिरहेको छ।',
+ lg_back:'फेरि स्वागत छ', lg_note_line:'सधैँ चलाउने LINE बाटै छिर्नुहोस्।',
+ lg_note3:'फोन फेरे पनि, यी दुईमध्ये कुनै एकबाट फेरि छिर्न सकिन्छ।',
+ lg_swap_again:'▸ दोस्रो पटकदेखिको लगइन स्क्रिन हेर्नुहोस्', lg_swap_inv:'▸ पहिलो पटक (निम्तो लिंक) को स्क्रिन हेर्नुहोस्',
+ lg_tel:'फोन नम्बर पुष्टि', lg_tel_sub:'तपाईं नै हो भनी पुष्टि गर्न मात्र प्रयोग हुन्छ',
+ lg_tel_hint:'पसल प्रमुखले दर्ता गरिदिएको <b>तपाईंकै मोबाइल नम्बरको अन्तिम ४ अंक</b> लेख्नुहोस्।<br>(जस्तै: 090-1234-<b>5678</b> → 5678)',
+ lg_tel_go:'यही नम्बरबाट छिर्नुहोस्',
+ lg_tel_note:'SMS पठाइँदैन (शुल्क पनि लाग्दैन)।<br>५ पटक गलत भए १० मिनेट रोकिन्छ।',
+ al_title:'कृपया शीर्षक लेख्नुहोस्', al_subject:'कृपया विषय लेख्नुहोस्',
+ al_content:'कृपया विवरण लेख्नुहोस्', al_item:'कृपया सामानको नाम लेख्नुहोस्', al_name:'कृपया नाम लेख्नुहोस्',
+ al_hq_todo:'कुनै पसल (तपाईं आफै) छानेर मात्र सकियो भन्न मिल्छ',
+ al_same_store:'दिने र लिने पसल एउटै हो', al_need_both:'दिने पसल र लिने पसल दुवै चाहिन्छ',
+ cf_reset:'डेमो डाटा सुरुकै अवस्थामा फर्काइन्छ। अघि बढ्ने?', cf_del:'मेट्ने हो?',
+ ts_invited:'निम्तो लिंक बन्यो। LINE बाट पठाउन सकिन्छ', ts_resent:'निम्तो लिंक फेरि पठाइयो (डेमो)',
+ ts_share:'सामग्रीमा थपियो', ts_posted:'पोस्ट भयो', ts_replied:'जवाफ पठाइयो',
+ ts_import:'भित्र्याइयो: {0} (नाफा・KPI मा देखिन्छ)', ts_linked:'{0} जोडियो',
+ ts_acc:'प्रशासकलाई हेर्ने अनुरोध पठाइयो (कसले कहिले हेर्‍यो रेकर्ड हुन्छ)',
+ ts_line:'(डेमो) LINE बाट सहभागी हुनुभयो। अर्को पटक पनि LINE बाट छिर्न सकिन्छ', ts_last4:'(डेमो) फोनको अन्तिम ४ अंकबाट छिर्नुभयो',
+},
+};
+
+/* UI文言：L('key', 置換1, 置換2...)　※コード内で t を別用途に使っているため L */
+function L(k){
+  let s = (I18N[LANG]&&I18N[LANG][k]!==undefined) ? I18N[LANG][k] : (I18N.ja[k]!==undefined?I18N.ja[k]:k);
+  for(let i=1;i<arguments.length;i++) s=String(s).split('{'+(i-1)+'}').join(arguments[i]);
+  return s;
+}
+/* 投稿の中身：翻訳があればその言語で、無ければ原文 */
+function tx(o,field){
+  if(!o) return '';
+  if(LANG==='ja'||SHOW_ORIG) return o[field]||'';
+  const tr=o.i18n&&o.i18n[LANG];
+  return (tr&&tr[field]) ? tr[field] : (o[field]||'');
+}
+/* この項目は翻訳済みか（バッジ表示用） */
+/* キーワードが原文・全訳のどちらかに含まれるか（横断検索とボード内検索で共用） */
+function hitTr(o,field,kk){
+  if(!o) return false;
+  const vals=[o[field]];
+  if(o.i18n) LANGS.forEach(l=>{ const tr=o.i18n[l.id]; if(tr&&tr[field]) vals.push(tr[field]); });
+  return vals.some(v=>String(v||'').toLowerCase().includes(kk));
+}
+function hasTr(o,field){
+  if(LANG==='ja') return null;
+  const tr=o&&o.i18n&&o.i18n[LANG];
+  return !!(tr&&tr[field]);
+}
+function trTag(o,field){
+  if(LANG==='ja'||!o) return '';
+  if(!(o[field]||'')) return '';
+  if(SHOW_ORIG) return `<span class="tr-tag raw">${L('show_orig')}</span>`;
+  return hasTr(o,field) ? `<span class="tr-tag">${L('tr_tag')}</span>` : `<span class="tr-tag raw">${L('raw_tag')}</span>`;
+}
+/* カテゴリ・役割など、データ側が日本語キーのものを訳す */
+/* A5：タグは定型8種のみ。5言語の対訳を持てるので、他言語でもタグが母語で出る＆表記ゆれが起きない */
+const BOARD_TAGS=['オペ','メニュー','クレーム','発注','シフト','設備','衛生','販促'];
+const TAG_KEY={'オペ':'tg_ops','メニュー':'tg_menu','クレーム':'tg_claim','発注':'tg_order',
+               'シフト':'tg_shift','設備':'tg_equip','衛生':'tg_hygiene','販促':'tg_promo'};
+const tagL=t=>L(TAG_KEY[t]||('#'+t));
+const CAT_KEY={'すべて':'cat_all','理念':'cat_rinen','ハウスルール':'cat_house','マニュアル':'cat_manual','媒体・SNS':'cat_media','業者・仕入':'cat_vendor','販促':'cat_promo','様式':'cat_form','決定事項':'cat_decision','リンク':'cat_link','アカウント':'cat_account'};
+const BT_KEY={'相談':'bt_soudan','質問':'bt_q','共有':'bt_share','依頼':'bt_req'};
+const ROLE_KEY={'アルバイト':'role_part','社員':'role_emp','店長':'role_mgr','オーナー':'role_owner'};
+const BY_KEY={'テンプレ':'by_tpl','オーナー':'role_owner','本部':'hq','共通':'acc_common'};
+const catL=c=>L(CAT_KEY[c]||c), btL=b=>L(BT_KEY[b]||b), roleL=r=>L(ROLE_KEY[r]||r);
+const byL=v=>BY_KEY[v]?L(BY_KEY[v]):v;
+
+const yen=n=>'¥'+Math.round(n).toLocaleString('ja-JP');
+const pct=n=>(n*100).toFixed(1)+'%';
+let idc=100; const g=()=>'x'+(++idc);
+
+/* ===== 写真（A3）=====
+   デモなので実写は載せない（ダミー厳守）。SVGのdata URIで「それっぽい現場写真」を作る。
+   実運用ではアップロード先のURLがここに入るだけなので、表示側のコードは変わらない。 */
+function PH(bg,items,cap){
+  const dots=items.map((it,i)=>`<circle cx="${90+i*95}" cy="205" r="${it.r}" fill="${it.c}" opacity=".92"/>`).join('');
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360">
+    <rect width="480" height="360" fill="${bg}"/>
+    <rect x="28" y="30" width="424" height="270" rx="18" fill="#ffffff" opacity=".14"/>
+    <ellipse cx="240" cy="205" rx="176" ry="96" fill="#ffffff" opacity=".9"/>
+    <ellipse cx="240" cy="205" rx="150" ry="78" fill="#f6f1e7"/>
+    ${dots}
+    <text x="240" y="330" font-family="sans-serif" font-size="19" font-weight="700" fill="#ffffff" opacity=".85" text-anchor="middle">${cap}</text>
+  </svg>`;
+  return 'data:image/svg+xml;utf8,'+encodeURIComponent(svg.replace(/\s+/g,' '));
+}
+const PHOTO_MAX=3, PHOTO_PX=960;
+function photoGrid(list,rmAttr,rmId){
+  if(!list||!list.length) return '';
+  return `<div class="pgrid">${list.map((src,i)=>`<div class="pth" data-lb="${i}"${rmId?` data-lbid="${rmId}"`:''}${rmAttr?` data-lbkind="${rmAttr}"`:''}>
+    <img src="${src}" alt="">
+    ${rmAttr?`<button class="rm" data-${rmAttr}="${i}"${rmId?` data-id="${rmId}"`:''} title="${L('ph_rm')}">×</button>`:''}
+  </div>`).join('')}</div>`;
+}
+/* 一覧では枚数バッジだけ出す（本文を開かなくても「写真あり」が分かる） */
+function photoBadge(o){
+  const n=(o&&o.photos?o.photos.length:0)+((o&&o.comments)?o.comments.reduce((a,c)=>a+((c.photos||[]).length),0):0);
+  return n?`<span class="pcount">${L('ph_n',n)}</span>`:'';
+}
+/* 端末内で縮小してから data URL 化（localStorageに巨大な画像を入れないため） */
+function readPhoto(file){
+  return new Promise(res=>{
+    const fr=new FileReader();
+    fr.onload=()=>{ const img=new Image();
+      img.onload=()=>{ const s=Math.min(1,PHOTO_PX/Math.max(img.width,img.height));
+        const w=Math.round(img.width*s), h=Math.round(img.height*s);
+        const c=document.createElement('canvas'); c.width=w; c.height=h;
+        c.getContext('2d').drawImage(img,0,0,w,h);
+        res(c.toDataURL('image/jpeg',0.72)); };
+      img.onerror=()=>res(null); img.src=fr.result; };
+    fr.onerror=()=>res(null); fr.readAsDataURL(file);
+  });
+}
+function bindPhotoInput(btnId,inputId,onDone){
+  const b=document.getElementById(btnId), f=document.getElementById(inputId);
+  if(!b||!f) return;
+  b.onclick=()=>f.click();
+  f.onchange=async()=>{
+    const files=[...(f.files||[])]; f.value='';
+    for(const file of files){ const d=await readPhoto(file); if(d) onDone(d); }
+    save(); render(); toast(L('ts_photo'));
+  };
+}
+
+function seed(){
+  const stores=[
+    {id:'honten',name:'本店'},{id:'ekimae',name:'駅前店'},{id:'kitaguchi',name:'北口店'},
+    {id:'minamiguchi',name:'南口店'},{id:'mall',name:'モール店'},{id:'kogai',name:'郊外店'},
+    {id:'daigaku',name:'大学前店'},{id:'minato',name:'港店'},
+  ];
+  // ==== 連絡（お知らせ・通達） target: 'all' | storeId | 'hq' ====
+  const notices=[
+    {id:g(),author:'hq',target:'all',priority:'high',due:'07-30',date:'07-22',
+      title:'月末棚卸は7/31。前日までに発注調整を',
+      body:'棚卸当日の欠品/過剰を避けるため、7/30までに翌週分の発注を見直してください。様式は「共有」の新棚卸フォーマットを使用。',
+      i18n:{
+        en:{title:'Month-end stocktake is 7/31 — adjust orders by the day before',body:'To avoid shortages or excess on stocktake day, review next week’s orders by 7/30. Use the new stocktake form in Library.'},
+        zh:{title:'月末盘点为7/31，请在前一天前调整订货',body:'为避免盘点当天缺货或积压，请在7/30前重新检查下周的订货。表格请使用“共享”里的新盘点格式。'},
+        vi:{title:'Kiểm kê cuối tháng ngày 31/7 — điều chỉnh đơn hàng trước một ngày',body:'Để tránh thiếu hoặc thừa vào ngày kiểm kê, hãy xem lại đơn đặt hàng tuần sau trước ngày 30/7. Dùng mẫu kiểm kê mới trong mục Tài liệu.'},
+        ne:{title:'महिनान्तको स्टक गणना ७/३१ — अघिल्लो दिनसम्ममा अर्डर मिलाउनुहोस्',body:'गणनाको दिन सामान नपुग्ने वा बढी हुने नहोस् भन्नाका लागि ७/३० भित्र अर्को हप्ताको अर्डर पुनः जाँच्नुहोस्। ढाँचा “सामग्री” मा रहेको नयाँ स्टक गणना फारम प्रयोग गर्नुहोस्।'}},
+      reads:{honten:{at:'07-22',handled:true},mall:{at:'07-22',handled:false},minato:{at:'07-22',handled:true}}},
+    {id:g(),author:'hq',target:'all',priority:'normal',date:'07-21',
+      title:'新メニュー「冷やし坦々」7/25開始',
+      body:'POP掲示と券売機/POS登録をお願いします。原価表は「共有」フォルダ参照。',
+      i18n:{
+        en:{title:'New item “Chilled Tantan” starts 7/25',body:'Please put up the POP and register it on the ticket machine / POS. The cost sheet is in the Library folder.'},
+        zh:{title:'新菜品“冷担担”7/25开始',body:'请张贴POP并在售票机／POS登记。成本表请参考“共享”文件夹。'},
+        vi:{title:'Món mới “Tantan lạnh” bắt đầu từ 25/7',body:'Vui lòng dán POP và đăng ký trên máy bán vé / POS. Bảng giá vốn có trong thư mục Tài liệu.'},
+        ne:{title:'नयाँ मेनु “चिस्याइएको तान्तान” ७/२५ बाट सुरु',body:'कृपया POP टाँस्नुहोस् र टिकट मेसिन／POS मा दर्ता गर्नुहोस्। लागत तालिका “सामग्री” फोल्डरमा छ।'}},
+      reads:{honten:{at:'07-21',handled:true},ekimae:{at:'07-21',handled:true},daigaku:{at:'07-22',handled:false}}},
+    {id:g(),author:'hq',target:'ekimae',priority:'normal',date:'07-23',
+      title:'【駅前店】エアコン修理は26日13時',
+      body:'業者来店に立ち会いをお願いします。ピーク時は扇風機併用で。',
+      i18n:{
+        en:{title:'[Ekimae] Air conditioner repair on the 26th at 13:00',body:'Please be present when the technician arrives. Use fans as well during peak hours.'},
+        zh:{title:'【站前店】空调维修为26日13点',body:'请在维修人员到店时陪同。高峰时段请同时使用电风扇。'},
+        vi:{title:'[Cửa hàng Ekimae] Sửa máy lạnh ngày 26 lúc 13:00',body:'Vui lòng có mặt khi thợ tới. Giờ cao điểm hãy dùng thêm quạt.'},
+        ne:{title:'[एकिमाए पसल] एसी मर्मत २६ तारिख १:०० बजे',body:'मिस्त्री आउँदा साथमा बस्नुहोस्। भीडको समयमा पंखा पनि चलाउनुहोस्।'}},
+      reads:{}},
+    {id:g(),author:'ekimae',target:'hq',priority:'normal',date:'07-20',
+      title:'（駅前店→本部）券売機の釣銭切れが頻発',
+      body:'両替の頻度が高いです。釣銭準備金の見直しをご相談したいです。',
+      i18n:{
+        en:{title:'(Ekimae → HQ) The ticket machine keeps running out of change',body:'We are refilling very often. We would like to discuss raising the change float.'},
+        zh:{title:'（站前店→总部）售票机频繁缺零钱',body:'换零钱的次数很多。希望商量一下调整备用零钱金额。'},
+        vi:{title:'(Ekimae → Trụ sở) Máy bán vé liên tục hết tiền lẻ',body:'Chúng tôi phải đổi tiền lẻ rất thường xuyên. Mong được trao đổi về việc tăng quỹ tiền lẻ.'},
+        ne:{title:'(एकिमाए → प्रधान कार्यालय) टिकट मेसिनमा बारम्बार खुद्रा सकिन्छ',body:'धेरै पटक खुद्रा भर्नुपर्छ। खुद्रा रकम बढाउने विषयमा छलफल गर्न चाहन्छौं।'}},
+      reads:{hq:{at:'07-20',handled:false}}},
+  ];
+  // ==== 共有（情報ハブ）散らばった情報を1か所に ====
+  // scope: all=全員 / mgr=店長以上 / owner=オーナーのみ　　origin: 'own'=自社 / 'tpl'=テンプレ（初期搭載）
+  const shares=[
+    {id:g(),cat:'理念',title:'私たちが大事にしていること（行動指針）',body:'①お客様の名前を覚える ②迷ったら丁寧な方 ③仲間の失敗を責めない。判断に迷ったらここに戻る。',url:'',pinned:true,scope:'all',origin:'own',by:'オーナー',date:'04-01',
+      i18n:{
+        en:{title:'What we care about (our principles)',body:'1) Remember guests’ names 2) When unsure, choose the more careful option 3) Never blame a teammate for a mistake. When a decision is hard, come back here.'},
+        zh:{title:'我们重视的事（行为准则）',body:'①记住客人的名字 ②犹豫时选更周到的做法 ③不责怪同事的失误。判断犹豫时就回到这里。'},
+        vi:{title:'Những điều chúng ta coi trọng (nguyên tắc hành động)',body:'1) Nhớ tên khách 2) Khi phân vân, chọn cách chu đáo hơn 3) Không trách lỗi của đồng nghiệp. Khi khó quyết định, hãy quay lại đây.'},
+        ne:{title:'हामीले महत्त्व दिने कुरा (आचरण सिद्धान्त)',body:'१) ग्राहकको नाम सम्झने २) अन्योल भए बढी ध्यान दिइएको बाटो रोज्ने ३) साथीको गल्तीमा दोष नलगाउने। निर्णय गर्न गाह्रो भए यहीँ फर्कनुहोस्।'}}},
+    {id:g(),cat:'ハウスルール',title:'本店のハウスルール',body:'出勤は10分前／私語はホールで控える／まかないは14-15時。店舗ごとに追記可。',url:'',pinned:true,scope:'all',origin:'own',by:'本店 店長',date:'05-12',
+      i18n:{
+        en:{title:'House rules — Main store',body:'Arrive 10 minutes early / no chatting in the dining area / staff meals 14:00–15:00. Each store may add its own.'},
+        zh:{title:'本店店规',body:'提前10分钟到岗／大堂内避免闲聊／员工餐14-15点。各店可自行追加。'},
+        vi:{title:'Nội quy — Cửa hàng chính',body:'Đến sớm 10 phút / không nói chuyện riêng ở khu khách / cơm nhân viên 14:00–15:00. Mỗi cửa hàng có thể bổ sung.'},
+        ne:{title:'मुख्य पसलका नियम',body:'१० मिनेट अगाडि आउने／ग्राहक क्षेत्रमा गफ नगर्ने／कर्मचारी खाना १४:००–१५:००। हरेक पसलले थप्न सक्छ।'}}},
+    {id:'sdrink',cat:'マニュアル',title:'週末ピークのドリンクが遅れる。どう回してる？',body:'金土だけドリンク専任を1人固定にしました。開店前にグラス60個を氷ごと仕込んでおくと、提供までの時間が半分になります。',url:'',pinned:false,scope:'all',origin:'promoted',by:'駅前店',date:'07-19',
+      src:{postId:'bdrink',type:'相談',by:'minato',date:'07-18'},
+      photos:[PH('#0c4a6e',[{r:22,c:'#e0f2fe'},{r:22,c:'#bae6fd'},{r:22,c:'#e0f2fe'},{r:22,c:'#bae6fd'}],'DUMMY PHOTO')],
+      i18n:{
+        en:{title:'Drinks fall behind at the weekend peak — how do you handle it?',body:'We assign one person to drinks only, on Fridays and Saturdays. Prepping 60 glasses with ice before opening cuts the time to serve in half.'},
+        zh:{title:'周末高峰饮料出得慢，大家怎么安排？',body:'我们只在周五・周六固定1人专做饮料。开店前把60个杯子连冰一起备好，出品时间能缩短一半。'},
+        vi:{title:'Đồ uống bị chậm vào giờ cao điểm cuối tuần — mọi người xoay sở thế nào?',body:'Bên mình cố định 1 người chuyên pha đồ uống, chỉ thứ Sáu và thứ Bảy. Chuẩn bị sẵn 60 ly kèm đá trước giờ mở cửa thì thời gian phục vụ giảm một nửa.'},
+        ne:{title:'सप्ताहन्तको भीडमा पेय ढिलो हुन्छ — तपाईंहरू कसरी मिलाउनुहुन्छ?',body:'शुक्र र शनिमा मात्र १ जनालाई पेयका लागि मात्र तोक्यौं। पसल खोल्नुअघि ६० गिलास बरफसहित तयार पारे सर्भ गर्ने समय आधा हुन्छ।'}}},
+    {id:g(),cat:'決定事項',title:'週末の樽ビール発注は各店＋1本を基準に',body:'7/24 定例MTG決定。金・土は+1本で欠品防止。翌週見直し。',url:'',pinned:false,scope:'mgr',origin:'own',by:'本部',date:'07-24',
+      i18n:{
+        en:{title:'Weekend keg beer orders: +1 keg per store as standard',body:'Decided at the 7/24 regular meeting. +1 on Fri/Sat to avoid running out. To be reviewed next week.'},
+        zh:{title:'周末桶装啤酒订货以各店＋1桶为标准',body:'7/24例会决定。周五・周六加1桶防止断货。下周复核。'},
+        vi:{title:'Đặt bia keg cuối tuần: chuẩn là +1 keg mỗi cửa hàng',body:'Quyết định tại cuộc họp định kỳ 24/7. Thứ Sáu・Bảy thêm 1 keg để tránh hết hàng. Xem lại vào tuần sau.'},
+        ne:{title:'सप्ताहन्तको केग बियर अर्डर: हरेक पसलमा +१ लाई मानक',body:'७/२४ को नियमित बैठकको निर्णय। शुक्र・शनि +१ ले सामान नसकियोस्। अर्को हप्ता पुनरावलोकन।'}}},
+    {id:g(),cat:'マニュアル',title:'開店準備チェック（キッチン）',body:'冷蔵庫温度確認→仕込み→火入れ→レジ点検の順。',url:'',pinned:false,scope:'all',origin:'own',by:'本店 店長',date:'07-10',
+      i18n:{
+        en:{title:'Opening checklist (kitchen)',body:'Check fridge temperature → prep → fire up → check the register, in that order.'},
+        zh:{title:'开店准备检查（厨房）',body:'确认冰箱温度→备料→点火→检查收银，按此顺序。'},
+        vi:{title:'Kiểm tra chuẩn bị mở cửa (bếp)',body:'Kiểm tra nhiệt độ tủ lạnh → sơ chế → bật bếp → kiểm tra máy tính tiền, theo thứ tự đó.'},
+        ne:{title:'पसल खोल्ने तयारी जाँच (भान्सा)',body:'फ्रिजको तापक्रम जाँच → तयारी → आगो बाल्ने → क्यास काउन्टर जाँच, यही क्रममा।'}}},
+    {id:g(),cat:'様式',title:'棚卸フォーマット（新様式）',body:'月末棚卸はこの様式で。旧Excelは廃止。',url:'https://example.com/tanaoroshi',pinned:false,scope:'all',origin:'own',by:'本部',date:'07-20',
+      i18n:{
+        en:{title:'Stocktake form (new)',body:'Use this form for the month-end stocktake. The old Excel file is discontinued.'},
+        zh:{title:'盘点格式（新版）',body:'月末盘点使用此格式。旧Excel废止。'},
+        vi:{title:'Mẫu kiểm kê (mới)',body:'Dùng mẫu này cho kiểm kê cuối tháng. File Excel cũ đã bỏ.'},
+        ne:{title:'स्टक गणना फारम (नयाँ)',body:'महिनान्तको गणनामा यही फारम प्रयोग गर्नुहोस्। पुरानो Excel खारेज।'}}},
+    // ▼ テンプレ（初期搭載＝導入初日から中身がある）
+    {id:g(),cat:'媒体・SNS',title:'食べログ 掲載情報の編集手順',body:'管理画面→店舗情報→基本情報。写真は3:2で10枚以上。営業時間の変更は反映に1〜2営業日。',url:'',pinned:false,scope:'mgr',origin:'tpl',by:'テンプレ',date:'06-01',
+      i18n:{
+        en:{title:'How to edit your Tabelog listing',body:'Admin page → Store info → Basic info. Photos at 3:2, 10 or more. Opening-hour changes take 1–2 business days to appear.'},
+        zh:{title:'Tabelog 刊登信息的编辑步骤',body:'管理后台→店铺信息→基本信息。照片为3:2、10张以上。营业时间的修改需1〜2个工作日生效。'},
+        vi:{title:'Cách sửa thông tin đăng trên Tabelog',body:'Trang quản trị → Thông tin cửa hàng → Thông tin cơ bản. Ảnh tỉ lệ 3:2, từ 10 tấm trở lên. Đổi giờ mở cửa mất 1–2 ngày làm việc mới hiện.'},
+        ne:{title:'Tabelog मा जानकारी सम्पादन गर्ने तरिका',body:'एड्मिन पेज → पसल जानकारी → आधारभूत जानकारी। फोटो ३:२ मा, १० वटा वा बढी। खुल्ने समय परिवर्तन देखिन १–२ कार्यदिन लाग्छ।'}}},
+    {id:g(),cat:'媒体・SNS',title:'ぐるなび クーポン設定の手順',body:'クーポンは「来店動機」を1つに絞る。併用不可の明記を忘れずに。',url:'',pinned:false,scope:'mgr',origin:'tpl',by:'テンプレ',date:'06-01',
+      i18n:{
+        en:{title:'How to set up a Gurunavi coupon',body:'Narrow the coupon down to one reason to visit. Do not forget to state that it cannot be combined with other offers.'},
+        zh:{title:'Gurunavi 优惠券设置步骤',body:'优惠券要把“到店动机”收敛为一个。别忘了注明不可与其他优惠同时使用。'},
+        vi:{title:'Cách thiết lập phiếu giảm giá trên Gurunavi',body:'Mỗi phiếu chỉ nhắm vào một lý do khiến khách tới. Đừng quên ghi rõ không dùng chung với ưu đãi khác.'},
+        ne:{title:'Gurunavi मा कुपन सेट गर्ने तरिका',body:'कुपनलाई “पसल आउने कारण” एउटैमा सीमित गर्नुहोस्। अन्य छुटसँग जोड्न नमिल्ने कुरा लेख्न नबिर्सनुहोस्।'}}},
+    {id:g(),cat:'媒体・SNS',title:'Instagram 運用の基本（週3投稿の型）',body:'①料理の寄り ②店内の空気 ③人（スタッフ）。リールは冒頭1秒が命。ハッシュタグは地域＋料理名。',url:'',pinned:false,scope:'all',origin:'tpl',by:'テンプレ',date:'06-01',
+      i18n:{
+        en:{title:'Instagram basics (a 3-posts-a-week pattern)',body:'1) A close-up of a dish 2) The mood inside the restaurant 3) People (staff). For Reels, the first second decides everything. Hashtags = area + dish name.'},
+        zh:{title:'Instagram 运营基础（每周3帖的模板）',body:'①菜品特写 ②店内氛围 ③人（员工）。Reels的开头1秒最关键。话题标签用地区＋菜名。'},
+        vi:{title:'Cơ bản về Instagram (mẫu 3 bài mỗi tuần)',body:'1) Cận cảnh món ăn 2) Không khí trong quán 3) Con người (nhân viên). Với Reels, một giây đầu quyết định tất cả. Hashtag = khu vực + tên món.'},
+        ne:{title:'Instagram सञ्चालनको आधार (हप्तामा ३ पोस्टको ढाँचा)',body:'१) परिकारको नजिकको फोटो २) पसलभित्रको वातावरण ३) मान्छे (कर्मचारी)। Reels मा पहिलो १ सेकेन्ड नै निर्णायक। ह्यासट्याग = क्षेत्र + परिकारको नाम।'}}},
+    {id:g(),cat:'業者・仕入',title:'業者への見積もりの取り方',body:'①相見積もりは必ず3社 ②条件を同じ紙に揃える（数量・納期・支払サイト）③価格だけで決めない（欠品時の対応を聞く）。',url:'',pinned:false,scope:'mgr',origin:'tpl',by:'テンプレ',date:'06-01',
+      i18n:{
+        en:{title:'How to get quotes from suppliers',body:'1) Always compare three suppliers 2) Put the same conditions on one sheet (quantity, lead time, payment terms) 3) Do not decide on price alone — ask what they do when an item is out of stock.'},
+        zh:{title:'如何向供应商询价',body:'①比价务必找3家 ②把条件写在同一张纸上（数量・交期・付款账期）③不要只看价格（要问缺货时如何处理）。'},
+        vi:{title:'Cách xin báo giá từ nhà cung cấp',body:'1) Luôn so sánh 3 nhà cung cấp 2) Ghi cùng điều kiện trên một tờ (số lượng, thời gian giao, kỳ hạn thanh toán) 3) Đừng chỉ chọn theo giá — hãy hỏi họ xử lý ra sao khi hết hàng.'},
+        ne:{title:'आपूर्तिकर्तासँग कोटेशन लिने तरिका',body:'१) सधैँ ३ वटा कम्पनीसँग तुलना गर्ने २) सर्तहरू एउटै कागजमा मिलाउने (परिमाण・डेलिभरी समय・भुक्तानी अवधि) ३) मूल्य मात्र हेरेर नछान्ने — सामान नभएको बेला कसरी गर्छन् सोध्ने।'}}},
+    {id:g(),cat:'販促',title:'看板（A型・ファサード）の作り方',body:'伝えるのは1つだけ。3m先から読める文字サイズ。価格を入れるなら税込。屋外広告物条例の確認を。',url:'',pinned:false,scope:'mgr',origin:'tpl',by:'テンプレ',date:'06-01',
+      i18n:{
+        en:{title:'How to make a sign (A-board / facade)',body:'Say one thing only. Text big enough to read from 3 m away. If you show a price, show it tax-included. Check your local outdoor advertising rules.'},
+        zh:{title:'招牌（A型・门面）的做法',body:'只传达一件事。字号要在3米外能看清。若写价格请用含税价。请确认户外广告物条例。'},
+        vi:{title:'Cách làm bảng hiệu (bảng chữ A / mặt tiền)',body:'Chỉ nói một điều duy nhất. Cỡ chữ đọc được từ cách 3 m. Nếu ghi giá thì ghi giá đã gồm thuế. Nhớ kiểm tra quy định quảng cáo ngoài trời của địa phương.'},
+        ne:{title:'साइनबोर्ड (A-बोर्ड・अगाडिको भाग) बनाउने तरिका',body:'भन्ने कुरा एउटै मात्र। ३ मिटर टाढाबाट पढ्न सकिने अक्षर आकार। मूल्य लेख्ने हो भने कर सहितको लेख्नुहोस्। बाहिरी विज्ञापनसम्बन्धी नियम जाँच्नुहोस्।'}}},
+    {id:g(),cat:'リンク',title:'発注サイト（卸）',body:'',url:'https://example.com/order',pinned:false,scope:'all',origin:'own',by:'本部',date:'06-15',
+      i18n:{
+        en:{title:'Ordering site (wholesaler)'},
+        zh:{title:'订货网站（批发）'},
+        vi:{title:'Trang đặt hàng (nhà bán sỉ)'},
+        ne:{title:'अर्डर गर्ने साइट (होलसेल)'}}},
+  ];
+  // ==== アカウント台帳（“誰が権限を持っているか”を記録。パスワード本体は持たない） ====
+  const accounts=[
+    {id:g(),svc:'食べログ 管理画面',store:'共通',admin:'本部 藤井',contact:'内線101',login:'tabelog-honbu',updated:'07-01',scope:'mgr'},
+    {id:g(),svc:'ぐるなび 管理画面',store:'共通',admin:'本部 藤井',contact:'内線101',login:'gnavi-honbu',updated:'06-20',scope:'mgr'},
+    {id:g(),svc:'Instagram（本店）',store:'本店',admin:'本店 鈴木',contact:'店舗携帯',login:'@honten_official',updated:'07-18',scope:'mgr'},
+    {id:g(),svc:'Googleビジネスプロフィール',store:'共通',admin:'本部 藤井',contact:'内線101',login:'google-honbu',updated:'05-30',scope:'owner'},
+  ];
+  // ==== やること（タスク・確認） done: {storeId: date} ====
+  const todos=[
+    {id:g(),target:'all',due:'07-25',note:'券売機/POS登録も',title:'新メニュー「冷やし坦々」POP掲示',done:{honten:'07-24'},
+      i18n:{
+        en:{title:'Put up the POP for “Chilled Tantan”',note:'Register on the ticket machine / POS too'},
+        zh:{title:'张贴新菜品“冷担担”的POP',note:'售票机／POS登记也要做'},
+        vi:{title:'Dán POP cho món mới “Tantan lạnh”',note:'Đăng ký cả trên máy bán vé / POS'},
+        ne:{title:'नयाँ मेनु “चिस्याइएको तान्तान” को POP टाँस्ने',note:'टिकट मेसिन／POS मा पनि दर्ता गर्ने'}}},
+    {id:g(),target:'all',due:'07-30',note:'様式DL・在庫整理',title:'月末棚卸の準備',done:{},
+      i18n:{
+        en:{title:'Prepare for the month-end stocktake',note:'Download the form, tidy the stock'},
+        zh:{title:'月末盘点的准备',note:'下载表格・整理库存'},
+        vi:{title:'Chuẩn bị kiểm kê cuối tháng',note:'Tải mẫu, sắp xếp lại hàng tồn'},
+        ne:{title:'महिनान्तको स्टक गणनाको तयारी',note:'फारम डाउनलोड・स्टक मिलाउने'}}},
+    {id:g(),target:'all',due:'07-26',note:'',title:'冷蔵庫の温度記録を再開',done:{honten:'07-23',mall:'07-24'},
+      i18n:{
+        en:{title:'Restart the fridge temperature log'},
+        zh:{title:'恢复冰箱温度记录'},
+        vi:{title:'Ghi lại nhiệt độ tủ lạnh trở lại'},
+        ne:{title:'फ्रिजको तापक्रम रेकर्ड फेरि सुरु गर्ने'}}},
+    {id:g(),target:'ekimae',due:'07-26',note:'業者13時来店',title:'エアコン修理の立ち会い',done:{},
+      i18n:{
+        en:{title:'Be present for the air conditioner repair',note:'Technician arrives at 13:00'},
+        zh:{title:'空调维修陪同',note:'维修人员13点到店'},
+        vi:{title:'Có mặt khi sửa máy lạnh',note:'Thợ tới lúc 13:00'},
+        ne:{title:'एसी मर्मतमा साथ बस्ने',note:'मिस्त्री १:०० बजे आउँछन्'}}},
+  ];
+  // ==== 融通（拡張）：ベースラインと成立/募集中データ ====
+  const baseline={
+    honten:{sales:8000000,cost:2000000,labor:2240000}, ekimae:{sales:6000000,cost:1560000,labor:1920000},
+    kitaguchi:{sales:5000000,cost:1250000,labor:1450000}, minamiguchi:{sales:4500000,cost:1215000,labor:1440000},
+    mall:{sales:6500000,cost:1560000,labor:1885000}, kogai:{sales:4000000,cost:1080000,labor:1280000},
+    daigaku:{sales:5500000,cost:1375000,labor:1650000}, minato:{sales:7000000,cost:1680000,labor:2030000},
+  };
+  const goods=[
+    {id:g(),type:'offer',item:'まぐろ 半身',qty:1,unit:'本',unitPrice:18000,from:'honten',to:'kogai',status:'booked',note:'発注過多',date:'07-08'},
+    {id:g(),type:'offer',item:'レタス',qty:3,unit:'ケース',unitPrice:2000,from:'mall',to:'minamiguchi',status:'booked',note:'',date:'07-11'},
+    {id:g(),type:'offer',item:'生ビール樽',qty:2,unit:'本',unitPrice:9000,from:'honten',to:'kitaguchi',status:'booked',note:'週末補填',date:'07-13'},
+    {id:g(),type:'offer',item:'冷凍ポテト',qty:12,unit:'kg',unitPrice:650,from:'honten',to:'minamiguchi',status:'booked',note:'',date:'07-17'},
+    {id:g(),type:'offer',item:'玉ねぎ',qty:5,unit:'kg',unitPrice:300,from:'honten',to:null,status:'open',note:'余り。引き取り歓迎',date:'07-23'},
+    {id:g(),type:'need',item:'鶏もも',qty:4,unit:'kg',unitPrice:900,from:null,to:'ekimae',status:'open',note:'明日ランチで不足',date:'07-23'},
+  ];
+  const help=[
+    {id:g(),people:1,hours:8,wage:12000,from:'honten',to:'kogai',status:'booked',note:'ディナー応援',date:'07-06'},
+    {id:g(),people:2,hours:6,wage:11000,from:'mall',to:'minamiguchi',status:'booked',note:'ランチ応援',date:'07-12'},
+    {id:g(),people:1,hours:6,wage:11000,from:'mall',to:'ekimae',status:'booked',note:'金曜応援',date:'07-21'},
+    {id:g(),people:1,hours:5,wage:11000,from:null,to:'minamiguchi',status:'open',note:'明日ランチ 1名ほしい',date:'07-23'},
+  ];
+  // ==== 経営管理レイヤー（オーナー/マネージャー）：取り込みデータ由来のKPI ====
+  const guests={honten:2200,ekimae:1750,kitaguchi:1500,minamiguchi:1350,mall:1950,kogai:1150,daigaku:1700,minato:2050};
+  const marketing={
+    tabelog:{rating:3.52,reviews:214,reserv:86},
+    hotpepper:{reserv:132,views:9800},
+    instagram:{followers:5400,reach:23000},
+    google:{rating:4.1,reviews:520},
+  };
+  const sources=[
+    {id:'pos',    nk:'src_pos',    kk:'srck_pos',    status:'ok',   last:'07-24'},
+    {id:'gourmet',nk:'src_gourmet',kk:'srck_gourmet',status:'ok',   last:'07-24'},
+    {id:'sns',    nk:'src_sns',    kk:'srck_sns',    status:'part', last:'07-23'},
+    {id:'folder', nk:'src_folder', kk:'srck_folder', status:'no',   last:''},
+  ];
+  const uploads=[
+    {name:'売上日報_2026-07.xlsx',date:'07-24',kind:'Excel'},
+    {name:'原価・人件費_07月.xlsx',date:'07-22',kind:'Excel'},
+  ];
+  // ==== 相談ボード（双方向の情報交換：相談/質問/共有/依頼＋スレッド） ====
+  const board=[
+    {id:g(),type:'質問',title:'冷やし坦々のラー油、卓上と別添えどっち？',by:'ekimae',date:'07-24',solved:false,to:['honten'],tags:['メニュー','オペ'],
+      reactions:{'👍':['honten']},
+      photos:[PH('#7f1d1d',[{r:24,c:'#dc2626'},{r:20,c:'#16a34a'},{r:16,c:'#f59e0b'},{r:22,c:'#fef3c7'}],'DUMMY PHOTO')],
+      i18n:{
+        en:{title:'Chilled Tantan chili oil — the table bottle or served separately?'},
+        zh:{title:'冷担担的辣油，用桌上的还是另外附上？'},
+        vi:{title:'Dầu ớt cho món Tantan lạnh — dùng lọ trên bàn hay để riêng?'},
+        ne:{title:'चिस्याइएको तान्तानको चिली तेल — टेबलको बोतल कि छुट्टै दिने?'}},
+      comments:[{by:'honten',body:'本店は別添えにしてます。卓上のと味がケンカしないので。',date:'07-24',to:[],
+        photos:[PH('#14532d',[{r:20,c:'#dc2626'},{r:26,c:'#f6f1e7'},{r:18,c:'#16a34a'}],'DUMMY PHOTO')],
+        i18n:{
+          en:{body:'At the main store we serve it separately — that way it does not clash with the one on the table.'},
+          zh:{body:'本店是另外附上的。这样和桌上的辣油味道不会冲突。'},
+          vi:{body:'Cửa hàng chính để riêng. Như vậy không bị đụng vị với lọ trên bàn.'},
+          ne:{body:'मुख्य पसलमा छुट्टै दिन्छौं। यसो गर्दा टेबलको सँग स्वाद बाझिँदैन।'}}}]},
+    {id:g(),type:'相談',title:'ランチのピーク、オペレーションどう回してる？',by:'minamiguchi',date:'07-23',solved:false,to:['all'],tags:['オペ','シフト'],
+      reactions:{'👍':['mall','daigaku'],'🙏':['minamiguchi']},
+      i18n:{
+        en:{title:'How do you run the lunch peak?'},
+        zh:{title:'午餐高峰的操作大家怎么安排？'},
+        vi:{title:'Giờ cao điểm buổi trưa mọi người vận hành thế nào?'},
+        ne:{title:'दिउँसोको भीडमा तपाईंहरू कसरी चलाउनुहुन्छ?'}},
+      comments:[
+        {by:'mall',body:'モールはレジ→ドリンク→提供の3人固定。券売機前に案内1人置くと詰まりません。',date:'07-23',to:[],
+          i18n:{
+            en:{body:'At the mall store we fix three people: register → drinks → serving. Putting one person in front of the ticket machine to guide guests keeps the queue moving.'},
+            zh:{body:'商场店固定3人：收银→饮料→出餐。在售票机前安排1人引导就不会堵。'},
+            vi:{body:'Ở cửa hàng trong trung tâm thương mại, chúng tôi cố định 3 người: thu ngân → đồ uống → phục vụ. Đặt một người hướng dẫn trước máy bán vé là không bị nghẽn.'},
+            ne:{body:'मल पसलमा ३ जना तोकिएका छन्: क्यास → पेय → सर्भ। टिकट मेसिन अगाडि १ जना बाटो देखाउन राखे लाइन अड्किँदैन।'}}},
+        {by:'minamiguchi',body:'案内1人置くのは思いつきませんでした。券売機の前、何時から立たせてますか？',date:'07-23',to:['mall'],re:0,
+          i18n:{
+            en:{body:'Putting someone in front of the machine had not occurred to us. From what time do you station them there?'},
+            zh:{body:'在售票机前安排引导员，我们没想到。请问从几点开始安排？'},
+            vi:{body:'Đặt người hướng dẫn trước máy thì bên mình chưa nghĩ ra. Các bạn bố trí từ mấy giờ?'},
+            ne:{body:'मेसिन अगाडि मान्छे राख्ने कुरा हामीले सोचेका थिएनौं। कति बजेदेखि राख्नुहुन्छ?'}}},
+        {by:'daigaku',body:'大学前は学割の時間帯だけ応援を1名もらってます（融通タブで募集）。',date:'07-23',to:[],
+          i18n:{
+            en:{body:'At the university store we borrow one extra person just for the student-discount hours (posted on the Sharing tab).'},
+            zh:{body:'大学前店只在学生优惠时段请1名支援（在“调剂”页征集）。'},
+            vi:{body:'Cửa hàng gần đại học chỉ mượn thêm 1 người vào khung giờ giảm giá sinh viên (đăng ở tab Hỗ trợ).'},
+            ne:{body:'विश्वविद्यालय अगाडिको पसलले विद्यार्थी छुटको समयमा मात्र १ जना सहयोग लिन्छ (सहयोग ट्याबमा पोस्ट गरेर)।'}}}]},
+    {id:g(),type:'共有',title:'クレーム対応でうまくいった言い回し',by:'honten',date:'07-22',solved:false,to:['all'],tags:['クレーム'],
+      reactions:{'👍':['kogai','mall','minato'],'🙏':['ekimae','kogai']},
+      i18n:{
+        en:{title:'A phrase that worked well when handling a complaint'},
+        zh:{title:'处理投诉时效果好的说法'},
+        vi:{title:'Một câu nói hiệu quả khi xử lý khiếu nại'},
+        ne:{title:'गुनासो व्यवस्थापनमा राम्ररी काम गरेको वाक्य'}},
+      comments:[{by:'kogai',body:'それ良いですね、うちでも使います。',date:'07-22',to:['honten'],
+        i18n:{
+          en:{body:'That is good — we will use it too.'},
+          zh:{body:'这个不错，我们店也用。'},
+          vi:{body:'Hay đấy, bên mình cũng sẽ dùng.'},
+          ne:{body:'राम्रो रहेछ, हामी पनि प्रयोग गर्छौं।'}}}]},
+    {id:'bdrink',type:'相談',title:'週末ピークのドリンクが遅れる。どう回してる？',by:'minato',date:'07-18',solved:true,to:['all'],best:1,tags:['オペ','メニュー'],
+      promoted:{shareId:'sdrink',title:'週末ピークのドリンクが遅れる。どう回してる？',date:'07-19'},
+      reactions:{'👍':['ekimae','mall'],'✅':['minato']},
+      i18n:{
+        en:{title:'Drinks fall behind at the weekend peak — how do you handle it?'},
+        zh:{title:'周末高峰饮料出得慢，大家怎么安排？'},
+        vi:{title:'Đồ uống bị chậm vào giờ cao điểm cuối tuần — mọi người xoay sở thế nào?'},
+        ne:{title:'सप्ताहन्तको भीडमा पेय ढिलो हुन्छ — तपाईंहरू कसरी मिलाउनुहुन्छ?'}},
+      comments:[
+        {by:'kitaguchi',body:'うちも同じでした。ホールの誰かが手が空いたら作る、だと絶対に遅れます。',date:'07-18',to:[],
+          i18n:{
+            en:{body:'We had the same problem. If whoever is free makes the drinks, you will always fall behind.'},
+            zh:{body:'我们店也一样。谁有空谁做饮料的话，一定会慢。'},
+            vi:{body:'Bên mình cũng vậy. Ai rảnh thì pha đồ uống thì chắc chắn sẽ chậm.'},
+            ne:{body:'हाम्रोमा पनि उस्तै थियो। जो फुर्सद छ उसैले बनाउने भन्ने भयो भने पक्कै ढिलो हुन्छ।'}}},
+        {by:'ekimae',body:'金土だけドリンク専任を1人固定にしました。開店前にグラス60個を氷ごと仕込んでおくと、提供までの時間が半分になります。',date:'07-19',to:['minato'],
+          photos:[PH('#0c4a6e',[{r:22,c:'#e0f2fe'},{r:22,c:'#bae6fd'},{r:22,c:'#e0f2fe'},{r:22,c:'#bae6fd'}],'DUMMY PHOTO')],
+          i18n:{
+            en:{body:'We assign one person to drinks only, on Fridays and Saturdays. Prepping 60 glasses with ice before opening cuts the time to serve in half.'},
+            zh:{body:'我们只在周五・周六固定1人专做饮料。开店前把60个杯子连冰一起备好，出品时间能缩短一半。'},
+            vi:{body:'Bên mình cố định 1 người chuyên pha đồ uống, chỉ thứ Sáu và thứ Bảy. Chuẩn bị sẵn 60 ly kèm đá trước giờ mở cửa thì thời gian phục vụ giảm một nửa.'},
+            ne:{body:'शुक्र र शनिमा मात्र १ जनालाई पेयका लागि मात्र तोक्यौं। पसल खोल्नुअघि ६० गिलास बरफसहित तयार पारे सर्भ गर्ने समय आधा हुन्छ।'}}}]},
+    {id:g(),type:'質問',title:'棚卸の新様式、原価の入れ方が分からない',by:'kogai',date:'07-21',solved:true,to:['hq'],best:0,tags:['発注'],
+      reactions:{'✅':['kogai']},
+      i18n:{
+        en:{title:'New stocktake form — I do not know how to enter the cost'},
+        zh:{title:'盘点新格式，不知道成本怎么填'},
+        vi:{title:'Mẫu kiểm kê mới — không biết nhập giá vốn thế nào'},
+        ne:{title:'नयाँ स्टक गणना फारममा लागत कसरी हाल्ने थाहा भएन'}},
+      comments:[{by:'hq',body:'「共有」タブの棚卸フォーマット2枚目に記入例あります。仕入単価×在庫数でOK。',date:'07-21',to:['kogai'],
+        i18n:{
+          en:{body:'There is a filled-in example on the second sheet of the stocktake form in the Library tab. Purchase unit price × stock quantity is fine.'},
+          zh:{body:'“共享”页盘点格式的第2页有填写示例。用进货单价×库存数量即可。'},
+          vi:{body:'Có ví dụ điền sẵn ở trang thứ 2 của mẫu kiểm kê trong tab Tài liệu. Lấy đơn giá nhập × số lượng tồn là được.'},
+          ne:{body:'“सामग्री” ट्याबको स्टक गणना फारमको दोस्रो पानामा भरिएको उदाहरण छ। खरिद दर × स्टक संख्या भए पुग्छ।'}}}]},
+
+    // ---- D1：賑わい用の追加投稿（依頼タイプ・タグ・写真・入れ子・翻訳なしを散らす） ----
+    {id:g(),type:'依頼',title:'金曜だけ18-21時にホール1名お願いできませんか',by:'daigaku',date:'07-26',solved:false,to:['all'],tags:['シフト'],
+      reactions:{'🙏':['daigaku']},
+      i18n:{
+        en:{title:'Could someone cover the floor 18:00–21:00 on Fridays only?'},
+        zh:{title:'能否只在周五18-21点支援大堂1人？'},
+        vi:{title:'Có ai hỗ trợ khu khách 18:00–21:00 chỉ thứ Sáu được không?'},
+        ne:{title:'शुक्रबार मात्र १८-२१ बजे हलमा १ जना सहयोग गर्न सकिन्छ?'}},
+      comments:[{by:'kitaguchi',body:'北口は金曜だけ手が空きます。来週から出せます。',date:'07-26',to:['daigaku'],
+        i18n:{
+          en:{body:'Our north-gate store has spare hands on Fridays. We can send someone from next week.'},
+          zh:{body:'北口店只有周五有余力。下周开始可以派人。'},
+          vi:{body:'Cửa hàng cổng bắc rảnh tay vào thứ Sáu. Từ tuần sau bọn mình cử người được.'},
+          ne:{body:'उत्तर गेट पसलमा शुक्रबार मात्र फुर्सद हुन्छ। अर्को हप्तादेखि पठाउन सक्छौं।'}}}]},
+
+    {id:g(),type:'質問',title:'ビールサーバーの泡が粗い。洗浄以外に見るところは？',by:'mall',date:'07-25',solved:true,to:['all'],best:0,tags:['設備'],
+      reactions:{'👍':['minato','honten'],'✅':['mall']},
+      photos:[PH('#78350f',[{r:24,c:'#fbbf24'},{r:20,c:'#fef3c7'},{r:18,c:'#f59e0b'}],'DUMMY PHOTO')],
+      i18n:{
+        en:{title:'Beer tap foam is coarse. Anything to check besides cleaning?'},
+        zh:{title:'啤酒机泡沫太粗。除了清洗还要看哪里？'},
+        vi:{title:'Bọt bia bị thô. Ngoài vệ sinh còn phải kiểm tra gì?'},
+        ne:{title:'बियर ट्यापको फिंज बाक्लो छ। सफा गर्नुबाहेक के हेर्ने?'}},
+      comments:[{by:'minato',body:'ガス圧です。0.15MPa前後に落とすと落ち着きます。あとはグラスの油分。',date:'07-25',to:['mall'],
+        i18n:{
+          en:{body:'It is the gas pressure. Bringing it down to around 0.15 MPa settles it. After that, check for oil on the glasses.'},
+          zh:{body:'是气压问题。降到0.15MPa左右就稳定了。另外检查杯子上的油渍。'},
+          vi:{body:'Là áp suất ga. Hạ xuống khoảng 0.15 MPa là ổn. Sau đó kiểm tra dầu mỡ trên ly.'},
+          ne:{body:'ग्यास प्रेसर हो। ०.१५ MPa जति झारे ठीक हुन्छ। त्यसपछि गिलासको तेल हेर्नुहोस्।'}}}]},
+
+    {id:g(),type:'共有',title:'雨の日にPOPを入口内側へ移したら、入店が増えました',by:'kitaguchi',date:'07-24',solved:false,to:['all'],tags:['販促'],
+      reactions:{'👍':['ekimae','mall','daigaku','minamiguchi'],'🙏':['honten']},
+      photos:[PH('#1e3a8a',[{r:22,c:'#bfdbfe'},{r:26,c:'#ffffff'},{r:20,c:'#93c5fd'}],'DUMMY PHOTO')],
+      i18n:{
+        en:{title:'Moving the POP just inside the entrance on rainy days brought more walk-ins'},
+        zh:{title:'下雨天把POP移到入口内侧后，进店的人变多了'},
+        vi:{title:'Ngày mưa chuyển POP vào phía trong cửa thì khách vào nhiều hơn'},
+        ne:{title:'पानी परेको दिन POP ढोकाभित्र सारेपछि पसलमा आउने बढे'}},
+      comments:[]},
+
+    {id:g(),type:'相談',title:'まかないの残り食材、どこまで翌日に回してますか',by:'ekimae',date:'07-22',solved:false,to:['all'],tags:['衛生','発注'],
+      reactions:{'👍':['kogai']},
+      i18n:{
+        en:{title:'How far do you carry over leftover staff-meal ingredients to the next day?'},
+        zh:{title:'员工餐剩下的食材，你们会留到第二天用到什么程度？'},
+        vi:{title:'Nguyên liệu cơm nhân viên còn dư, mọi người để sang hôm sau tới mức nào?'},
+        ne:{title:'कर्मचारी खानाको बाँकी सामान भोलिसम्म कति राख्नुहुन्छ?'}},
+      comments:[{by:'honten',body:'加熱するものだけ翌日まで。生ものは当日で切ってます。',date:'07-22',to:['ekimae'],
+        i18n:{
+          en:{body:'Only things we cook through go to the next day. Anything raw we cut off the same day.'},
+          zh:{body:'只有会加热的留到第二天。生的当天就处理掉。'},
+          vi:{body:'Chỉ những thứ nấu chín mới để sang hôm sau. Đồ sống thì bỏ trong ngày.'},
+          ne:{body:'पकाउने कुरा मात्र भोलिसम्म। काँचो सामान उही दिन नै हटाउँछौं।'}}}]},
+
+    {id:g(),type:'質問',title:'領収書の宛名、その場で聞く？後から直す？',by:'minato',date:'07-20',solved:false,to:['all'],tags:['オペ'],
+      reactions:{'👍':['kitaguchi']},
+      i18n:{
+        en:{title:'Receipt name: do you ask on the spot, or fix it later?'},
+        zh:{title:'收据抬头是当场问，还是事后再改？'},
+        vi:{title:'Tên trên hoá đơn: hỏi ngay tại chỗ hay sửa sau?'},
+        ne:{title:'रसिदको नाम: त्यहीँ सोध्ने कि पछि सच्याउने?'}},
+      comments:[]},
+
+    // 翻訳なし（新しく投稿されたものは訳が付いていない＝「原文のまま」バッジの実例）
+    {id:g(),type:'共有',title:'銀のトレー、洗浄機に入れると曇るので手洗いに戻しました',by:'kogai',date:'07-19',solved:false,to:['all'],tags:['設備','衛生'],
+      reactions:{'👍':['minamiguchi']},comments:[]},
+    {id:g(),type:'質問',title:'ハンディの電池、どのくらいで交換してますか',by:'kitaguchi',date:'07-14',solved:false,to:['all'],tags:['設備'],
+      reactions:{},comments:[{by:'mall',body:'うちは月初に一斉交換です。切れてから替えると必ず混みます。',date:'07-15',to:['kitaguchi']}]},
+  ];
+  // ==== メンバー（いろんな人が参加する：役割・参加方法・LINE連携） ====
+  const members=[
+    {id:g(),name:'佐藤 健一',store:'honten',role:'店長',auth:'line',last:'今日',joined:'04-02'},
+    {id:g(),name:'鈴木 美咲',store:'honten',role:'社員',auth:'line',last:'今日',joined:'04-02'},
+    {id:g(),name:'田中 大輔',store:'honten',role:'アルバイト',auth:'last4',last:'昨日',joined:'06-15'},
+    {id:g(),name:'高橋 由紀',store:'ekimae',role:'店長',auth:'line',last:'今日',joined:'04-02'},
+    {id:g(),name:'伊藤 翔',store:'ekimae',role:'アルバイト',auth:'line',last:'3日前',joined:'07-01'},
+    {id:g(),name:'渡辺 恵',store:'mall',role:'店長',auth:'line',last:'今日',joined:'04-05'},
+    {id:g(),name:'山本 拓也',store:'mall',role:'アルバイト',auth:'invited',last:'—',joined:'07-24'},
+    {id:g(),name:'中村 彩',store:'minamiguchi',role:'店長',auth:'line',last:'今日',joined:'04-05'},
+    {id:g(),name:'小林 亮',store:'kogai',role:'店長',auth:'last4',last:'昨日',joined:'05-10'},
+    {id:g(),name:'加藤 望',store:'kitaguchi',role:'店長',auth:'line',last:'今日',joined:'04-08'},
+    {id:g(),name:'吉田 直樹',store:'daigaku',role:'店長',auth:'line',last:'今日',joined:'04-08'},
+    {id:g(),name:'松本 隆',store:'minato',role:'店長',auth:'line',last:'今日',joined:'04-10'},
+    {id:g(),name:'藤井 卓',store:'hq',role:'オーナー',auth:'line',last:'今日',joined:'04-01'},
+  ];
+  // 連続キャッチアップ（店ごと）。last は「昨日まで達成済み」の想定
+  const y='07-27';
+  const streaks={
+    honten:{days:11,best:14,last:y,celebrated:''}, ekimae:{days:6,best:9,last:y,celebrated:''},
+    kitaguchi:{days:3,best:8,last:y,celebrated:''}, minamiguchi:{days:22,best:22,last:y,celebrated:''},
+    mall:{days:1,best:5,last:y,celebrated:''},      kogai:{days:0,best:4,last:'',celebrated:''},
+    daigaku:{days:8,best:8,last:y,celebrated:''},   minato:{days:15,best:19,last:y,celebrated:''},
+  };
+  return {stores,notices,shares,accounts,board,todos,members,baseline,guests,marketing,sources,uploads,goods,help,streaks,actor:'honten',config:{priceMode:'cost'}};
+}
+
+let S=load();
+function load(){ try{const r=localStorage.getItem(LS_KEY); if(r){const d=JSON.parse(r); if(d&&d.stores) return d;}}catch(e){} const s=seed(); localStorage.setItem(LS_KEY,JSON.stringify(s)); return s; }
+function save(){ try{ localStorage.setItem(LS_KEY,JSON.stringify(S)); }
+  catch(e){ toast(L('ts_photo_ng')); } }
+function reset(){ if(confirm(L('cf_reset'))){ localStorage.removeItem(LS_KEY); S=load(); render(); } }
+
+const storeName=id=> id==='hq'?L('hq'):(S.stores.find(s=>s.id===id)||{}).name||id;
+const isHQ=()=> S.actor==='hq';
+const esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const today=()=>{const d=new Date();return String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
+const val=id=>{const e=document.getElementById(id);return e?e.value.trim():'';};
+const num=(id,d)=>{const e=document.getElementById(id);const n=e?parseFloat(e.value):NaN;return isNaN(n)?d:n;};
+const sum=a=>a.reduce((p,c)=>p+c,0);
+/* ===== 連続達成（ストリーク）と紙吹雪 =====
+   毎日開く画面なので「今日ぶんを片付けた」に手応えを返す。
+   ※デモなので前日かどうかの厳密な日付差判定はしない（last!==today なら +1）。 */
+function streakOf(){
+  if(!S.streaks) S.streaks={};
+  if(!S.streaks[S.actor]) S.streaks[S.actor]={days:0,best:0,last:'',celebrated:''};
+  return S.streaks[S.actor];
+}
+function markCatchUp(){
+  const st=streakOf(), td=today();
+  if(st.celebrated===td) return false;          // 今日はもう祝ったので静かにしておく
+  if(st.last!==td){ st.days=(st.days||0)+1; st.last=td; }
+  if(st.days>(st.best||0)) st.best=st.days;
+  st.celebrated=td; save();
+  return true;                                   // 初回だけ true ＝ 紙吹雪を出す
+}
+function confetti(){
+  const c=document.createElement('canvas'); c.className='cft';
+  const W=c.width=innerWidth, H=c.height=innerHeight;
+  const ctx=c.getContext('2d'); document.body.appendChild(c);
+  const cols=['#16a34a','#22c55e','#d97706','#f59e0b','#dc2626','#4f46e5','#ffffff'];
+  const P=Array.from({length:150},()=>({
+    x:Math.random()*W, y:-30-Math.random()*H*0.6,
+    w:5+Math.random()*7, h:8+Math.random()*9,
+    c:cols[Math.floor(Math.random()*cols.length)],
+    vy:2.4+Math.random()*3.4, vx:-1.2+Math.random()*2.4,
+    r:Math.random()*6.28, vr:-0.22+Math.random()*0.44, sw:Math.random()*6.28
+  }));
+  let t=0;
+  (function loop(){
+    t++; ctx.clearRect(0,0,W,H);
+    const fade=t>190?Math.max(0,1-(t-190)/70):1;
+    P.forEach(p=>{
+      p.y+=p.vy; p.x+=p.vx+Math.sin(p.sw+t/18)*0.7; p.r+=p.vr;
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.r);
+      ctx.globalAlpha=fade; ctx.fillStyle=p.c;
+      ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h*(0.6+0.4*Math.abs(Math.cos(p.r))));
+      ctx.restore();
+    });
+    if(t<260) requestAnimationFrame(loop); else c.remove();
+  })();
+}
+function openLightbox(src){
+  const o=document.createElement('div'); o.className='lb';
+  o.innerHTML=`<img src="${src}" alt="">`;
+  o.onclick=()=>o.remove();
+  document.addEventListener('keydown',function esc(e){ if(e.key==='Escape'){ o.remove(); document.removeEventListener('keydown',esc); } });
+  document.body.appendChild(o);
+}
+function toast(msg){ const d=document.createElement('div'); d.textContent=msg;
+  d.style.cssText='position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#111827;color:#fff;padding:11px 17px;border-radius:11px;font-weight:800;font-size:13px;z-index:99;box-shadow:0 6px 22px rgba(0,0,0,.32);max-width:90%;text-align:center';
+  document.body.appendChild(d); setTimeout(()=>{d.style.transition='opacity .3s';d.style.opacity='0';},1800); setTimeout(()=>d.remove(),2200); }
+
+/* ---- 連絡：関連性・未読判定 ---- */
+function noticeRelevant(n){ const me=S.actor; return n.author===me || n.target==='all' || n.target===me; }
+function noticeUnread(n){ const me=S.actor; return noticeRelevant(n) && n.author!==me && !(n.reads&&n.reads[me]); }
+function noticeUnhandled(n){ const me=S.actor; return noticeRelevant(n) && n.author!==me && !(n.reads&&n.reads[me]&&n.reads[me].handled); }
+/* ---- やること：自分の店に関係＆未完 ---- */
+function todoMine(t){ return isHQ() || t.target==='all' || t.target===S.actor; }
+function todoOpen(t){ return todoMine(t) && !isHQ() && !(t.done&&t.done[S.actor]); }
+
+/* ---- タブ ---- */
+const TABS=[
+  {id:'home',em:'🏠',k:'tab_home'},
+  {id:'notice',em:'📣',k:'tab_notice'},
+  {id:'share',em:'📚',k:'tab_share'},
+  {id:'board',em:'💬',k:'tab_board'},
+  {id:'todo',em:'✅',k:'tab_todo'},
+  {id:'members',em:'👥',k:'tab_members'},
+  {id:'pl',em:'📊',k:'tab_pl'},
+  {id:'relay',em:'🔁',k:'tab_relay',ext:1},
+];
+let TAB='home';
+let RELAY_KIND='goods';
+
+/* B2：ボードで「自分が返す番」のもの。
+   単なる未解決だと自分が答えた後も残り続けて“追いつけない”ので、
+   自分宛のメンションがあり、まだ自分が1件も返していない未解決だけを拾う。 */
+/* B1：未読＝まだ見ていない投稿、または前回見たあとに返信が増えたもの */
+function boardUnread(p){
+  const me=S.actor;
+  if(p.by===me) return false;                       // 自分の投稿は未読にしない
+  const s=p.seen&&p.seen[me];
+  if(s===undefined) return true;                    // 投稿そのものが新規
+  return p.comments.length>s;                       // 見たあとに返信が増えた
+}
+function boardUnreadCount(){ return S.board.filter(boardUnread).length; }
+function newReplies(p){ const s=p.seen&&p.seen[S.actor]; return (s===undefined)?0:Math.max(0,p.comments.length-s); }
+/* 相談タブを描画したら既読にする（開いた回だけ NEW が見えて、次に開くと消えている） */
+function markBoardSeen(){
+  if(!PENDING_SEEN) return; PENDING_SEEN=false;
+  const me=S.actor; let changed=false;
+  S.board.forEach(p=>{ if(!p.seen) p.seen={};
+    if(p.seen[me]!==p.comments.length){ p.seen[me]=p.comments.length; changed=true; } });
+  if(changed) save();
+}
+function boardTodo(p){ return boardTodoKind(p)!==null; }
+/* A4：最後に自分が@された位置より後に自分が返しているか、で判定する。
+   「返信済みなら永久に対象外」だと、返したあとに@返信が来ても気づけないため。
+   戻り値 'post'＝投稿で名指し / 'reply'＝返信で名指し / null＝返す番ではない */
+function boardTodoKind(p){
+  const me=S.actor;
+  if(p.solved||p.type==='共有') return null;
+  let lastM=null, kind=null;
+  if(p.by!==me && mentionsMe(p.to)){ lastM=-1; kind='post'; }   // 投稿本体の宛先
+  p.comments.forEach((c,i)=>{ if(c.by!==me && mentionsMe(c.to)){ lastM=i; kind='reply'; } });
+  if(lastM===null) return null;
+  const replied=p.comments.some((c,i)=>c.by===me && i>lastM);   // その@より後に自分が返したか
+  return replied?null:kind;
+}
+function boardTodoCount(){ return S.board.filter(boardTodo).length; }
+function unreadCount(){ return S.notices.filter(noticeUnread).length; }
+function todoOpenCount(){ return S.todos.filter(todoOpen).length; }
+
+function buildHead(){
+  /* 言語 */
+  const lsel=document.getElementById('langSel');
+  lsel.innerHTML=LANGS.map(l=>`<option value="${l.id}">${l.label}</option>`).join('');
+  lsel.value=LANG;
+  lsel.onchange=()=>{ LANG=lsel.value; localStorage.setItem(LS_LANG,LANG);
+    document.documentElement.lang=(LANGS.find(l=>l.id===LANG)||{}).html||'ja'; render(); };
+  document.documentElement.lang=(LANGS.find(l=>l.id===LANG)||{}).html||'ja';
+  /* 原文↔翻訳トグル（日本語のときは不要なので隠す） */
+  const ob=document.getElementById('origBtn');
+  ob.style.display = LANG==='ja' ? 'none' : '';
+  ob.textContent = SHOW_ORIG ? '🌐 '+L('show_tr') : '📄 '+L('show_orig');
+  ob.onclick=()=>{ SHOW_ORIG=!SHOW_ORIG; localStorage.setItem(LS_ORIG,SHOW_ORIG?'1':'0'); render(); };
+  /* 固定ラベル */
+  document.getElementById('brandName').textContent=L('app_name');
+  document.getElementById('brandSub').textContent=L('app_sub');
+  document.getElementById('actorLbl').textContent=L('you');
+  document.getElementById('searchLbl').textContent=L('search');
+  document.getElementById('loginLbl').textContent=L('login_screen');
+  document.getElementById('resetLbl').textContent=L('reset');
+  const sel=document.getElementById('actorSel');
+  sel.innerHTML=`<option value="hq">${L('hq')}（HQ）</option>`+S.stores.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
+  sel.value=S.actor; sel.onchange=()=>{S.actor=sel.value; NEW_SET=null; save(); render();};
+  document.getElementById('resetBtn').onclick=reset;
+  document.getElementById('loginBtn').onclick=()=>showLogin('invite');
+  document.getElementById('searchBtn').onclick=()=>openSearch('');
+  const nav=document.getElementById('tabs');
+  const un=unreadCount();
+  nav.innerHTML=TABS.map(tb=>{
+    let bn=''; if(tb.id==='notice'&&un>0) bn=`<span class="bn">${un}</span>`;
+    /* 返す相談があれば赤（自分が動くべき）、無ければ未読数を灰色（見るだけでよい） */
+    if(tb.id==='board'){ const ub=boardTodoCount(), ur=boardUnreadCount();
+      if(ub>0) bn=`<span class="bn">${ub}</span>`; else if(ur>0) bn=`<span class="bn soft">${ur}</span>`; }
+    return `<button class="tab ${tb.id===TAB?'active':''}" data-tab="${tb.id}"><span class="em">${tb.em}</span>${L(tb.k)}${tb.ext?`<span class="ext">${L('ext')}</span>`:''}${bn}</button>`;
+  }).join('');
+  nav.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{TAB=b.dataset.tab; HILITE=null; PROMOTE=null; NEW_SET=null; render();});
+}
+
+function render(){
+  buildHead();
+  document.getElementById('app').innerHTML=({home:viewHome,notice:viewNotice,share:viewShare,board:viewBoard,todo:viewTodo,members:viewMembers,relay:viewRelay,pl:viewPL}[TAB])();
+  bindActions();
+  const h=HILITE&&(document.getElementById('bd-'+HILITE)||document.getElementById('sh-'+HILITE));
+  if(h) h.scrollIntoView({block:'center'}); else window.scrollTo({top:0});
+  if(TAB==='board') markBoardSeen();   // 描画後に既読化（この画面では NEW が見えたまま残る）
+  if(CELEBRATE){ CELEBRATE=false; confetti(); }
+}
+let CELEBRATE=false;
+
+/* ===================== ホーム（キャッチアップ） ===================== */
+function viewHome(){
+  const me=S.actor;
+  const un=S.notices.filter(noticeUnread);
+  const unhandled=S.notices.filter(noticeUnhandled);
+  const openTodos=S.todos.filter(todoOpen);
+  const pinned=S.shares.filter(s=>s.pinned);
+  const openBoard=S.board.filter(p=>!p.solved&&p.type!=='共有');
+  const mineBoard=S.board.filter(boardTodo);
+  const relayOpen=[...S.goods,...S.help].filter(x=>x.status==='open').length;
+
+  let catch_ = '';
+  if(!isHQ()){
+    const nUn=un.length, nTodo=openTodos.length, nBoard=mineBoard.length;
+    const clear = nUn===0 && nTodo===0 && nBoard===0;
+    const st=streakOf();
+    if(clear){ CELEBRATE=markCatchUp(); }   // 片付いた瞬間だけ紙吹雪（render後に発火）
+    const days=st.days||0;
+    const streakBar = clear
+      ? `<div class="streak pop">${days?L('st_now',days):L('st_first')}${st.best>1?` <span class="bst">${L('st_best',st.best)}</span>`:''}</div>`
+      : `<div class="streak">${L('st_next',nUn+nTodo+nBoard,days+1)}${st.best>1?` <span class="bst">${L('st_best',st.best)}</span>`:''}</div>`;
+    catch_=`
+    <div class="catchup">
+      <div class="hi">${storeName(me)}・${today().replace('-','/')}</div>
+      <div class="big">${clear?L('home_clear'):L('home_catch',nUn+nTodo+nBoard)}</div>
+      ${clear?`<div class="done">${L('home_done')}</div>`:`
+      <div class="nums">
+        <div class="n"><div class="v">${nUn}</div><div class="l">${L('home_n_unread')}</div></div>
+        <div class="n"><div class="v">${nTodo}</div><div class="l">${L('home_n_todo')}</div></div>
+        <div class="n"><div class="v">${nBoard}</div><div class="l">${L('home_n_board')}</div></div>
+      </div>`}
+      ${streakBar}
+    </div>`;
+  } else {
+    // 本部：全店の追いつき状況サマリー
+    const rows=S.stores.map(s=>{
+      const un2=S.notices.filter(n=>(n.target==='all'||n.target===s.id)&&n.author!=='hq'?false:(n.target==='all'||n.target===s.id)&&!(n.reads&&n.reads[s.id])).length;
+      const td=S.todos.filter(t=>(t.target==='all'||t.target===s.id)&&!(t.done&&t.done[s.id])).length;
+      return {name:s.name, un:un2, td};
+    });
+    const behind=rows.filter(r=>r.un>0||r.td>0).length;
+    catch_=`
+    <div class="catchup">
+      <div class="hi">${L('hq_view')}・${today().replace('-','/')}</div>
+      <div class="big">${L('home_hq_big',S.stores.length,behind)}</div>
+      <div class="nums">
+        <div class="n"><div class="v">${sum(rows.map(r=>r.un))}</div><div class="l">${L('home_hq_unread')}</div></div>
+        <div class="n"><div class="v">${sum(rows.map(r=>r.td))}</div><div class="l">${L('home_hq_todo')}</div></div>
+        <div class="n"><div class="v">${relayOpen}</div><div class="l">${L('home_hq_relay')}</div></div>
+      </div>
+    </div>`;
+  }
+
+  return `
+  ${catch_}
+  ${LANG!=='ja'?`<div class="tr-bar">${L('tr_bar')}</div>`:''}
+  <div class="pain">${L('home_pain')}</div>
+
+  <div class="card">
+    <h3>📣 ${isHQ()?L('home_notice_hq'):L('home_notice_me')}</h3>
+    ${(isHQ()?S.notices.slice(0,3):(unhandled.length?unhandled:[])).map(n=>noticeRow(n,true)).join('') || `<div class="empty">${L('home_caught')}</div>`}
+    <div style="margin-top:8px;"><button class="act ghost mini" data-go="notice">${L('home_see_notice')}</button></div>
+  </div>
+
+  ${!isHQ()?`
+  <div class="card">
+    <h3>✅ ${L('home_todo_head')}</h3>
+    ${openTodos.length?openTodos.map(o=>`
+      <div class="item">
+        <div class="t">${esc(tx(o,'title'))}${trTag(o,'title')}</div>
+        <div class="m">${L('due')} ${o.due||'—'}${tx(o,'note')?'・'+esc(tx(o,'note')):''}</div>
+        <div style="margin-top:6px;"><button class="act primary mini" data-todo="done" data-id="${o.id}">${L('mark_done')}</button></div>
+      </div>`).join(''):`<div class="empty">${L('home_todo_none')}</div>`}
+    <div style="margin-top:8px;"><button class="act ghost mini" data-go="todo">${L('home_to_todo')}</button></div>
+  </div>`:''}
+
+  <div class="card${mineBoard.length?' tome':''}">
+    <h3>💬 ${L('home_board_head')}（${mineBoard.length?L('home_board_todo',mineBoard.length):L('home_board_new')}）</h3>
+    ${(!mineBoard.length&&openBoard.length)?`<div class="done-line">${L('home_board_all_done')}</div>`:''}
+    ${(mineBoard.length?mineBoard:openBoard).slice(0,3).map(p=>`<div class="item jump" data-boardgo="${p.id}">
+      <div class="t">${btChip(p.type)} ${esc(tx(p,'title'))}${photoBadge(p)}${trTag(p,'title')}${boardTodoKind(p)?` <span class="mchip me">${boardTodoKind(p)==='reply'?L('bd_to_me_reply'):L('home_board_wait')}</span>`:''}</div>
+      <div class="m">${storeName(p.by)}・${p.date}・${L('replies_n',p.comments.length)}</div></div>`).join('')
+      ||`<div class="empty">${L('home_board_none')}</div>`}
+    <div style="margin-top:8px;"><button class="act ghost mini" data-go="board">${L('home_to_board')}</button></div>
+  </div>
+
+  <div class="card">
+    <h3>📌 ${L('home_pinned')}</h3>
+    ${pinned.length?pinned.map(shareRow).join(''):`<div class="empty">${L('home_no_pin')}</div>`}
+    <div style="margin-top:8px;"><button class="act ghost mini" data-go="share">${L('home_see_share')}</button></div>
+  </div>
+
+  <div class="note-ext">${L('home_ext')}</div>
+  `;
+}
+function targetBadge(target){
+  return target==='all'?`<span class="badge b-all">${L('all_stores')}</span>`
+    : target==='hq'?`<span class="badge b-hq">${L('to_hq')}</span>`
+    : `<span class="badge b-me">${storeName(target)}</span>`;
+}
+function noticeRow(n,compact){
+  const me=S.actor; const seen=n.author===me||(n.reads&&n.reads[me]);
+  return `<div class="item">
+    <div class="t">${n.priority==='high'?`<span class="badge b-high">${L('important')}</span> `:''}${esc(tx(n,'title'))}${trTag(n,'title')}</div>
+    <div class="m">${storeName(n.author)} → ${targetBadge(n.target)} ・${n.date}${n.due?'・'+L('due')+' '+n.due:''} ${seen?'':`<span class="stamp unread">${L('unread')}</span>`}</div>
+    ${compact&&!isHQ()&&n.author!==me?`<div style="margin-top:6px;">
+      ${!(n.reads&&n.reads[me])?`<button class="act blue mini" data-nt="read" data-id="${n.id}">${L('mark_read')}</button> `:''}
+      ${!(n.reads&&n.reads[me]&&n.reads[me].handled)?`<button class="act primary mini" data-nt="handle" data-id="${n.id}">${L('mark_handled')}</button>`:`<span class="muted" style="font-size:12px;">${L('mark_handled')}</span>`}
+    </div>`:''}
+  </div>`;
+}
+function shareRow(s){
+  const c={'理念':'decision','ハウスルール':'rule','マニュアル':'manual','様式':'form','リンク':'link','決定事項':'decision','媒体・SNS':'media','業者・仕入':'vendor','販促':'promo'}[s.cat]||'link';
+  const sc=s.scope||'all';
+  return `<div class="item">
+    <div class="t"><span class="cat cat-${c}">${catL(s.cat)}</span> ${esc(tx(s,'title'))}${s.pinned?' 📌':''}${trTag(s,'title')}
+      ${s.origin==='tpl'?`<span class="tpl">${L('tpl_badge')}</span>`:''}
+      ${s.src?`<span class="from-bd">${L('src_badge')}</span>`:''}
+      ${sc!=='all'?`<span class="sc sc-${sc}">${L(SCOPE_LABEL[sc])}</span>`:''}</div>
+    ${tx(s,'body')?`<div class="m" style="color:#374151;">${esc(tx(s,'body'))}</div>`:''}
+    ${photoGrid(s.photos)}
+    <div class="m">${esc(byL(s.by))}・${s.date}</div>
+    ${s.src?`<div style="margin-top:6px;"><button class="act ghost mini" data-boardgo="${s.src.postId}">${L('src_from')}</button></div>`:''}
+    ${s.url?`<div style="margin-top:6px;"><a href="${esc(s.url)}" target="_blank" rel="noopener"><button class="act ghost mini">${L('open_link')}</button></a></div>`:''}
+  </div>`;
+}
+
+/* ===================== 連絡 ===================== */
+function viewNotice(){
+  const me=S.actor;
+  const list=S.notices.filter(n=>isHQ()||noticeRelevant(n));
+  const optTargets=`<option value="all">${L('all_stores')}</option>${S.stores.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}<option value="hq">${L('to_hq')}</option>`;
+  return `
+  <h2 class="page">📣 ${L('notice_head')}</h2>
+  <p class="lede">${L('notice_lede')}</p>
+  ${LANG!=='ja'?`<div class="tr-bar">${L('tr_bar')}</div>`:''}
+  <div class="card">
+    <h3>${L('notice_form',storeName(me))}</h3>
+    <div class="form-grid">
+      <div class="full"><label class="field">${L('n_subject')}</label><input id="n_title"></div>
+      <div class="full"><label class="field">${L('n_body')}</label><textarea id="n_body" rows="2"></textarea></div>
+      <div><label class="field">${L('f_target')}</label><select id="n_target">${optTargets}</select></div>
+      <div><label class="field">${L('n_pri')}</label><select id="n_pri"><option value="normal">${L('n_normal')}</option><option value="high">${L('important')}</option></select></div>
+      <div><label class="field">${L('n_due')}</label><input id="n_due" placeholder="07-30"></div>
+      <div style="align-self:end;"><button class="act primary" id="postNotice">${L('n_post')}</button></div>
+    </div>
+  </div>
+  ${list.length?list.map(noticeCard).join(''):`<div class="empty">${L('notice_none')}</div>`}
+  `;
+}
+function noticeCard(n){
+  const me=S.actor;
+  const targets=(n.target==='all')?['hq',...S.stores.map(s=>s.id)].filter(id=>id!==n.author):[n.target];
+  const stamps=targets.map(id=>{
+    const r=n.reads&&n.reads[id];
+    if(!r) return `<span class="stamp unread">${storeName(id)} ${L('unread')}</span>`;
+    if(r.handled) return `<span class="stamp handled">${storeName(id)} ${L('handled')}</span>`;
+    return `<span class="stamp read">${storeName(id)} ${L('read')}</span>`;
+  }).join('');
+  const mine=n.author===me;
+  const myRead=n.reads&&n.reads[me];
+  let acts='';
+  if(!mine && noticeRelevant(n)){
+    acts=`<div class="row" style="margin-top:9px;">
+      ${!myRead?`<button class="act blue mini" data-nt="read" data-id="${n.id}">${L('mark_read_f')}</button>`:''}
+      ${!(myRead&&myRead.handled)?`<button class="act primary mini" data-nt="handle" data-id="${n.id}">${L('mark_handled_f')}</button>`:`<span class="muted" style="font-size:12.5px;align-self:center;">${L('you_handled')}</span>`}
+    </div>`;
+  }
+  return `<div class="card">
+    <div style="display:flex;justify-content:space-between;gap:8px;">
+      <h3 style="margin:0;">${n.priority==='high'?`<span class="badge b-high">${L('important')}</span> `:''}${esc(tx(n,'title'))}${trTag(n,'title')}</h3>
+      <span class="muted" style="font-size:12px;white-space:nowrap;">${n.date}${n.due?'・'+L('due')+' '+n.due:''}</span>
+    </div>
+    <div class="m muted" style="font-size:12px;">${storeName(n.author)} → ${targetBadge(n.target)}</div>
+    ${tx(n,'body')?`<p style="margin:8px 0 0;font-size:13.5px;">${esc(tx(n,'body'))}</p>`:''}
+    <div style="margin-top:10px;">${stamps}</div>
+    ${acts}
+  </div>`;
+}
+
+/* ===================== 共有（情報ハブ） ===================== */
+let SHARE_FILTER='すべて';
+let SHARE_PHOTOS=[]; // 共有に添付中の写真
+let VIEW_AS='owner'; // 権限デモ：owner=オーナー / mgr=店長 / all=スタッフ
+const SCOPE_LABEL={all:'scope_all',mgr:'scope_mgr',owner:'scope_owner'};
+const SCOPE_RANK={all:0,mgr:1,owner:2};
+const canSee=item=>SCOPE_RANK[item.scope||'all']<=SCOPE_RANK[VIEW_AS];
+function viewShare(){
+  const cats=['すべて','理念','ハウスルール','マニュアル','媒体・SNS','業者・仕入','販促','様式','決定事項','リンク','アカウント'];
+  let list=S.shares.filter(canSee).sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0)||b.date.localeCompare(a.date));
+  if(SHARE_FILTER==='アカウント') list=[];
+  else if(SHARE_FILTER!=='すべて') list=list.filter(s=>s.cat===SHARE_FILTER);
+  const tplN=S.shares.filter(s=>s.origin==='tpl').length;
+  const showAcc=(SHARE_FILTER==='すべて'||SHARE_FILTER==='アカウント');
+  const accs=S.accounts.filter(canSee);
+  return `
+  <h2 class="page">📚 ${L('share_head')}</h2>
+  <p class="lede">${L('share_lede')}</p>
+  ${LANG!=='ja'?`<div class="tr-bar">${L('tr_bar')}</div>`:''}
+  <div class="pain">${L('share_pain',tplN)}</div>
+
+  <div class="card">
+    <h3>${L('perm_head')}</h3>
+    <div class="seg">
+      ${['owner','mgr','all'].map(r=>`<button class="${VIEW_AS===r?'on':''}" data-va="${r}">${r==='owner'?L('role_owner'):r==='mgr'?L('role_mgr'):L('role_staff')}</button>`).join('')}
+    </div>
+    <p class="muted" style="margin:0;font-size:12px;">${L('perm_note')}</p>
+  </div>
+
+  <div class="card">
+    <h3>${L('share_add')}</h3>
+    <div class="form-grid">
+      <div><label class="field">${L('f_kind')}</label><select id="s_cat">${cats.filter(c=>c!=='すべて'&&c!=='アカウント').map(c=>`<option value="${c}">${catL(c)}</option>`).join('')}</select></div>
+      <div><label class="field">${L('s_scope')}</label><select id="s_scope"><option value="all">${L('scope_all')}</option><option value="mgr">${L('scope_mgr')}</option><option value="owner">${L('scope_owner')}</option></select></div>
+      <div class="full"><label class="field">${L('f_title')}</label><input id="s_title"></div>
+      <div class="full"><label class="field">${L('f_body_opt')}</label><textarea id="s_body" rows="2"></textarea></div>
+      <div><label class="field">${L('s_url')}</label><input id="s_url" placeholder="https://..."></div>
+      <div><label class="field">${L('s_pin')}</label><select id="s_pin"><option value="0">${L('pin_no')}</option><option value="1">${L('pin_yes')}</option></select></div>
+      <div class="full"><label class="field">${L('ph_f')}</label>
+        <button class="act ghost mini" id="sPhotoBtn">${L('ph_add')}</button>
+        <input type="file" id="sPhotoIn" accept="image/*" multiple style="display:none;">
+        ${photoGrid(SHARE_PHOTOS,'rmshare')}</div>
+      <div class="full"><button class="act primary" id="postShare">${L('add')}</button></div>
+    </div>
+  </div>
+
+  <div class="row" style="margin-bottom:10px;">
+    ${cats.map(c=>`<button class="pill" data-sf="${c}" style="cursor:pointer;${c===SHARE_FILTER?'background:var(--green);color:#fff;':''}">${catL(c)}</button>`).join('')}
+  </div>
+
+  ${showAcc?`<div class="card accent-b">
+    <h3>${L('acc_head')}<span class="muted" style="font-size:12px;font-weight:700;">${L('acc_sub')}</span></h3>
+    ${accs.length?accs.map(a=>`<div class="item">
+      <div class="t">${esc(a.svc)} <span class="rl">${esc(byL(a.store))}</span> <span class="sc sc-${a.scope}">${L(SCOPE_LABEL[a.scope])}</span></div>
+      <div class="m">${L('acc_admin')}：<b>${esc(a.admin)}</b>（${esc(a.contact)}）・${L('acc_id')}：${esc(a.login)}・${L('acc_updated')} ${a.updated}</div>
+      <div style="margin-top:5px;"><span class="pw">${L('acc_pw')}</span> <button class="act ghost mini" data-acc="${a.id}">${L('acc_req')}</button></div>
+    </div>`).join(''):`<div class="empty">${L('acc_denied')}</div>`}
+    <p class="muted" style="margin:9px 0 0;font-size:11.5px;line-height:1.6;">${L('acc_note')}</p>
+  </div>`:''}
+
+  ${list.length?list.map(s=>`<div class="card${HILITE===s.id?' hilite':''}" id="sh-${s.id}">${shareRow(s)}
+    <div class="row" style="margin-top:6px;">
+      <button class="act ghost mini" data-share="pin" data-id="${s.id}">${s.pinned?L('pin_undo'):L('pin_do')}</button>
+      <button class="act ghost mini" data-share="del" data-id="${s.id}">${L('del')}</button>
+    </div></div>`).join(''):(SHARE_FILTER==='アカウント'?'':`<div class="empty">${L('none')}</div>`)}
+  `;
+}
+
+/* ===================== 相談ボード（双方向） ===================== */
+let BOARD_FILTER='すべて';
+let BOARD_Q='';        // ボード内検索のキーワード
+let BOARD_TAG='';      // 絞り込み中のタグ
+let BOARD_SORT='open'; // open=未解決を先に / new=新しい順 / hot=反応が多い順
+let NEW_TAGS=[];       // 新規投稿に付けるタグ
+let NEW_SET=null;      // 相談タブに入った時点の未読集合。タブ内の操作では再計算しない（押した瞬間に消えないように）
+let PENDING_SEEN=false;
+let PROMOTE=null;      // 昇格フォームを開いている投稿ID
+let HILITE=null;       // 出典リンクから飛んできた投稿ID（ハイライト）
+const PROMOTE_CATS=['マニュアル','ハウスルール','決定事項','業者・仕入','販促','様式','リンク','理念'];
+let NEW_MENTIONS=[];   // 新規投稿のメンション（宛先）
+let REPLY_MENTIONS={}; // 返信ごとのメンション {postId:[...]}
+let NEW_PHOTOS=[];     // 新規投稿に添付中の写真
+let REPLY_PHOTOS={};   // 返信ごとに添付中の写真 {postId:[...]}
+let RE_TO={};          // どの返信に返しているか {postId: 親コメントのindex}
+const EMOJIS=['👍','🙏','✅','😂','❗'];
+/* C2：定型文はワンタップで送る。5言語の対訳を持っているので、
+   押した瞬間に i18n 付きの返信になる＝書くのが苦手な人が返しても全店が母語で読める。 */
+const QUICK_REPLIES=[
+  {ja:'了解です',            en:'Got it',              zh:'明白了',     vi:'Đã rõ',             ne:'बुझें'},
+  {ja:'確認します',          en:'I will check',        zh:'我确认一下', vi:'Mình sẽ kiểm tra',  ne:'हेर्छु'},
+  {ja:'うちも同じでした',    en:'Same here',           zh:'我们也一样', vi:'Bên mình cũng vậy', ne:'हाम्रोमा पनि उस्तै'},
+  {ja:'ありがとうございます', en:'Thank you',          zh:'谢谢',       vi:'Cảm ơn',            ne:'धन्यवाद'},
+  {ja:'あとで見ます',        en:'I will look later',   zh:'我稍后看',   vi:'Lát nữa mình xem',  ne:'पछि हेर्छु'},
+  {ja:'写真を送ります',      en:'I will send a photo', zh:'我发照片',   vi:'Mình sẽ gửi ảnh',   ne:'फोटो पठाउँछु'},
+];
+function btChip(ty){ const m={'相談':'soudan','質問':'q','共有':'share','依頼':'req'}[ty]||'share'; return `<span class="bt bt-${m}">${btL(ty)}</span>`; }
+const mentionTargets=()=>['all','hq',...S.stores.map(s=>s.id)];
+const mentionLabel=id=> id==='all'?L('everyone'):storeName(id);
+function mentionsMe(list){ return (list||[]).some(t=>t==='all'||t===S.actor); }
+function mentionChips(list){ return (list||[]).map(t=>`<span class="mchip${t==='all'||t===S.actor?' me':''}">@${mentionLabel(t)}</span>`).join(''); }
+function tagPicker(sel,attr){
+  return `<div class="mrow">${BOARD_TAGS.map(t=>
+    `<button class="tgchip${sel.includes(t)?' on':''}" data-${attr}="${t}">${tagL(t)}</button>`).join('')}</div>`;
+}
+function tagChips(list){ return (list||[]).map(t=>`<button class="tgchip sm" data-btag="${t}">${tagL(t)}</button>`).join(''); }
+function mentionPicker(sel,attr,id){
+  return `<div class="mrow">${mentionTargets().map(t=>
+    `<button class="mpick${sel.includes(t)?' on':''}" data-${attr}="${t}"${id?` data-id="${id}"`:''}>@${mentionLabel(t)}</button>`).join('')}</div>`;
+}
+/* A4：返信を親子に並べ替える。入れ子は1段だけ（深くすると現場では追えない）。
+   孫以降が来ても、親をたどってトップの直下にぶら下げる。 */
+function threadOrder(p){
+  const cs=p.comments||[];
+  const rootOf=i=>{ let n=i,guard=0; while(cs[n]&&typeof cs[n].re==='number'&&guard++<20) n=cs[n].re; return n; };
+  const out=[];
+  cs.forEach((c,i)=>{
+    if(typeof c.re!=='number'){
+      out.push({c,i,sub:false});
+      cs.forEach((k,j)=>{ if(typeof k.re==='number'&&rootOf(j)===i) out.push({c:k,i:j,sub:true}); });
+    }
+  });
+  return out;
+}
+function reactionBar(p){
+  const me=S.actor; const r=p.reactions||{};
+  return `<div class="rrow">${EMOJIS.map(e=>{
+    const users=r[e]||[]; const on=users.includes(me);
+    return `<button class="rbtn${on?' on':''}" data-bd="react" data-id="${p.id}" data-emoji="${e}">${e}${users.length?` <b>${users.length}</b>`:''}</button>`;
+  }).join('')}</div>`;
+}
+function viewBoard(){
+  const types=['すべて','自分宛','未読','未解決','相談','質問','共有','依頼'];
+  /* B1：相談タブに入った最初の描画で NEW の集合を確定する。
+     フィルタ・検索・並び替えで再計算すると、押した瞬間に NEW が消えてしまう。 */
+  if(NEW_SET===null){ NEW_SET=new Set(S.board.filter(boardUnread).map(p=>p.id)); PENDING_SEEN=true; }
+  let list=S.board.slice();
+  if(BOARD_FILTER==='未解決') list=list.filter(p=>!p.solved&&p.type!=='共有');
+  else if(BOARD_FILTER==='自分宛') list=list.filter(p=>mentionsMe(p.to)||p.comments.some(c=>mentionsMe(c.to)));
+  else if(BOARD_FILTER==='未読') list=list.filter(p=>NEW_SET.has(p.id));  // 入った時点の未読集合で絞る
+  else if(BOARD_FILTER!=='すべて') list=list.filter(p=>p.type===BOARD_FILTER);
+  if(BOARD_TAG) list=list.filter(p=>(p.tags||[]).includes(BOARD_TAG));
+  if(BOARD_Q){ const kk=BOARD_Q.toLowerCase();
+    list=list.filter(p=>hitTr(p,'title',kk)||hitTr(p,'body',kk)||p.comments.some(c=>hitTr(c,'body',kk))); }
+  /* B3：並び替え */
+  const hotOf=p=>Object.values(p.reactions||{}).reduce((a,u)=>a+u.length,0)+p.comments.length;
+  if(BOARD_SORT==='new') list.sort((a,b)=>b.date.localeCompare(a.date));
+  else if(BOARD_SORT==='hot') list.sort((a,b)=>hotOf(b)-hotOf(a)||b.date.localeCompare(a.date));
+  else list.sort((a,b)=>(a.solved?1:0)-(b.solved?1:0)||b.date.localeCompare(a.date));
+  const filtered = BOARD_Q||BOARD_TAG||BOARD_FILTER!=='すべて';
+  const filterL=f=> f==='すべて'?L('cat_all'):f==='自分宛'?L('bf_tome'):f==='未解決'?L('bf_open'):f==='未読'?L('bf_unread'):btL(f);
+  return `
+  <h2 class="page">💬 ${L('board_head')}</h2>
+  <p class="lede">${L('board_lede')}</p>
+  ${LANG!=='ja'?`<div class="tr-bar">${L('tr_bar')}</div>`:''}
+  <div class="card">
+    <h3>${L('board_post',storeName(S.actor))}</h3>
+    <div class="form-grid">
+      <div><label class="field">${L('f_kind')}</label><select id="b_type">${['相談','質問','共有','依頼'].map(v=>`<option value="${v}">${btL(v)}</option>`).join('')}</select></div>
+      <div style="align-self:end;"><button class="act primary" id="postBoard">${L('board_post_btn')}</button></div>
+      <div class="full"><label class="field">${L('f_title')}</label><input id="b_title"></div>
+      <div class="full"><label class="field">${L('f_body_opt')}</label><textarea id="b_body" rows="2"></textarea></div>
+      <div class="full"><label class="field">${L('mention_f')}</label>${mentionPicker(NEW_MENTIONS,'mnew')}</div>
+      <div class="full"><label class="field">${L('tag_f')}</label>${tagPicker(NEW_TAGS,'tgnew')}</div>
+      <div class="full"><label class="field">${L('ph_f')}</label>
+        <button class="act ghost mini" id="bPhotoBtn">${L('ph_add')}</button>
+        <input type="file" id="bPhotoIn" accept="image/*" multiple style="display:none;">
+        ${photoGrid(NEW_PHOTOS,'rmnew')}
+        <p class="phint">${L('ph_note')}</p></div>
+    </div>
+  </div>
+  <div class="bq-row">
+    <input id="bq" value="${esc(BOARD_Q)}" placeholder="${L('bq_ph')}">
+    <button class="act ghost mini" id="bqGo">🔍</button>
+    ${filtered?`<button class="act ghost mini" data-bf="__clear">${L('bq_clear')}</button>`:''}
+    <select id="b_sort" title="${L('sort_f')}">
+      ${[['open','sort_open'],['new','sort_new'],['hot','sort_hot']].map(([v,k])=>
+        `<option value="${v}"${BOARD_SORT===v?' selected':''}>${L(k)}</option>`).join('')}
+    </select>
+  </div>
+  <div class="row" style="margin-bottom:6px;">
+    ${types.map(f=>`<button class="pill" data-bf="${f}" style="cursor:pointer;${f===BOARD_FILTER?'background:var(--green);color:#fff;':''}">${filterL(f)}${f==='未読'&&NEW_SET&&NEW_SET.size?` ${NEW_SET.size}`:''}</button>`).join('')}
+  </div>
+  <div class="row" style="margin-bottom:10px;">
+    ${BOARD_TAGS.map(t=>`<button class="tgchip${BOARD_TAG===t?' on':''}" data-btag="${t}">${tagL(t)}</button>`).join('')}
+  </div>
+  ${filtered?`<div class="muted" style="font-size:12px;font-weight:800;margin-bottom:8px;">${L('bq_n',list.length)}</div>`:''}
+  ${list.length?list.map(boardCard).join(''):`<div class="empty">${filtered?L('bq_none'):L('none')}</div>`}
+  `;
+}
+function boardCard(p){
+  const me=S.actor;
+  const status = p.solved?`<span class="badge b-book">${L('solved')}</span>`:(p.type!=='共有'?`<span class="badge b-open">${L('recruiting')}</span>`:'');
+  const kind = boardTodoKind(p);
+  const forMe = mentionsMe(p.to) || kind==='reply';
+  const rep=REPLY_MENTIONS[p.id]||[];
+  const canBest = p.type!=='共有';
+  const bestIdx = (typeof p.best==='number')?p.best:-1;
+  const promotable = p.type!=='共有' && p.solved && !p.promoted;
+  const src = (bestIdx>=0&&p.comments[bestIdx]) ? p.comments[bestIdx] : null;
+  return `<div class="card${forMe?' tome':''}${HILITE===p.id?' hilite':''}" id="bd-${p.id}">
+    ${forMe?`<div class="tome-tag">${kind==='reply'?L('bd_to_me_reply'):L('to_me')}</div>`:''}
+    <div style="display:flex;justify-content:space-between;gap:8px;align-items:start;">
+      <h3 style="margin:0;">${(NEW_SET&&NEW_SET.has(p.id))?`<span class="new-tag">${newReplies(p)?L('bd_new_re',newReplies(p)):L('bd_new')}</span>`:''}${btChip(p.type)} ${esc(tx(p,'title'))} ${status}${trTag(p,'title')}</h3>
+      <span class="muted" style="font-size:12px;white-space:nowrap;">${storeName(p.by)}・${p.date}</span>
+    </div>
+    ${p.tags&&p.tags.length?`<div style="margin-top:5px;">${tagChips(p.tags)}</div>`:''}
+    ${p.to&&p.to.length?`<div style="margin-top:5px;">${mentionChips(p.to)}</div>`:''}
+    ${tx(p,'body')?`<p style="margin:8px 0 0;font-size:13.5px;">${esc(tx(p,'body'))}</p>`:''}
+    ${photoGrid(p.photos)}
+    ${reactionBar(p)}
+    ${(canBest&&p.solved&&bestIdx<0&&p.comments.length)?`<div class="hint">${L('pick_best')}</div>`:''}
+    ${threadOrder(p).map(({c,i,sub})=>`<div class="reply${sub?' sub':''}${bestIdx===i?' best':(mentionsMe(c.to)?' tome':'')}">
+      <div class="who">💬 ${storeName(c.by)}・${c.date}${sub?`<span class="sub-to">${L('rep_sub',storeName(p.comments[c.re].by))}</span>`:''}${bestIdx===i?`<span class="best-tag">⭐ ${L('best_badge')}</span>`:''}${trTag(c,'body')}</div>
+      ${c.to&&c.to.length?`<div style="margin:3px 0;">${mentionChips(c.to)}</div>`:''}
+      <div class="bd">${esc(tx(c,'body'))}</div>
+      ${photoGrid(c.photos)}
+      <div style="margin-top:6px;">
+        ${sub?'':`<button class="act ghost mini" data-bd="replyTo" data-id="${p.id}" data-i="${i}">${L('rep_to')}</button> `}
+        ${canBest?(bestIdx===i
+          ?`<button class="act ghost mini" data-bd="unbest" data-id="${p.id}">${L('best_undo')}</button>`
+          :`<button class="act ghost mini" data-bd="best" data-id="${p.id}" data-i="${i}">${L('best_do')}</button>`):''}
+      </div>
+      </div>`).join('')}
+    <div class="row" style="margin-top:9px;align-items:center;">
+      <button class="act blue mini" data-bd="reply" data-id="${p.id}">${L('reply_btn',p.comments.length)}</button>
+      ${p.type!=='共有'?(p.solved?`<button class="act ghost mini" data-bd="unsolve" data-id="${p.id}">${L('do_unsolve')}</button>`:`<button class="act primary mini" data-bd="solve" data-id="${p.id}">${L('do_solve')}</button>`):''}
+      ${promotable&&PROMOTE!==p.id?`<button class="act primary mini" data-bd="promote" data-id="${p.id}">${L('promote_btn')}</button>`:''}
+    </div>
+    ${p.promoted?`<div class="promoted">${L('promoted_to')} → <a data-sharego="${p.promoted.shareId}">${esc(p.promoted.title)}</a></div>`:''}
+    ${(promotable&&PROMOTE===p.id)?`<div class="prom">
+      <h4>📚 ${L('promote_head')}</h4>
+      <p class="nt">${L('promote_note')}</p>
+      <div class="form-grid">
+        <div><label class="field">${L('f_kind')}</label><select id="pc-${p.id}">${PROMOTE_CATS.map(c=>`<option value="${c}"${c==='マニュアル'?' selected':''}>${catL(c)}</option>`).join('')}</select></div>
+        <div><label class="field">${L('s_scope')}</label><select id="ps-${p.id}"><option value="all">${L('scope_all')}</option><option value="mgr">${L('scope_mgr')}</option><option value="owner">${L('scope_owner')}</option></select></div>
+        <div class="full"><label class="field">${L('f_title')}</label><input id="pt-${p.id}" value="${esc(tx(p,'title'))}"></div>
+        <div class="full"><label class="field">${L('f_body_opt')}</label><textarea id="pb-${p.id}" rows="3">${esc(src?tx(src,'body'):tx(p,'body'))}</textarea></div>
+        <div class="full"><button class="act primary mini" data-bd="promoteGo" data-id="${p.id}">${L('promote_do')}</button>
+          <button class="act ghost mini" data-bd="promoteNo" data-id="${p.id}">${L('promote_cancel')}</button></div>
+      </div>
+    </div>`:''}
+    <div id="rep-${p.id}" style="display:${(rep.length||(REPLY_PHOTOS[p.id]||[]).length||typeof RE_TO[p.id]==='number')?'block':'none'};margin-top:8px;">
+      <div class="muted" style="font-size:11.5px;font-weight:800;margin-bottom:4px;">${L('qr_f')}</div>
+      <div class="qr-row">${QUICK_REPLIES.map((q,qi)=>
+        `<button class="qrbtn" data-bd="quick" data-id="${p.id}" data-i="${qi}">${esc(q[LANG]||q.ja)}</button>`).join('')}</div>
+      ${typeof RE_TO[p.id]==='number'&&p.comments[RE_TO[p.id]]?`<div class="re-bar">${L('rep_to_who',storeName(p.comments[RE_TO[p.id]].by))}
+        <button class="act ghost mini" data-bd="replyToClear" data-id="${p.id}">${L('rep_clear')}</button></div>`:''}
+      <textarea id="rt-${p.id}" rows="2" placeholder="${L('reply_ph',storeName(me))}"></textarea>
+      <div style="margin-top:6px;"><div class="muted" style="font-size:11.5px;font-weight:800;margin-bottom:3px;">${L('mention_s')}</div>${mentionPicker(rep,'mrep',p.id)}</div>
+      <div style="margin-top:6px;">
+        <button class="act ghost mini" id="rp-btn-${p.id}">${L('ph_add')}</button>
+        <input type="file" id="rp-in-${p.id}" accept="image/*" multiple style="display:none;">
+        ${photoGrid(REPLY_PHOTOS[p.id]||[],'rmrep',p.id)}</div>
+      <div style="margin-top:6px;"><button class="act primary mini" data-bd="send" data-id="${p.id}">${L('send')}</button></div>
+    </div>
+  </div>`;
+}
+function doBoard(a,id,emoji,idx){
+  const p=S.board.find(o=>o.id===id); if(!p) return;
+  if(a==='reply'){ const el=document.getElementById('rep-'+id); if(el) el.style.display=el.style.display==='none'?'block':'none'; return; }
+  if(a==='quick'){ const q=QUICK_REPLIES[Number(idx)]; if(!q) return;
+    // 原文は日本語で保存し、4言語の訳を丸ごと付ける＝押した人も相手も母語で読める
+    const i18n={}; ['en','zh','vi','ne'].forEach(l=>{ if(q[l]) i18n[l]={body:q[l]}; });
+    const c={by:S.actor,body:q.ja,date:today(),to:(REPLY_MENTIONS[id]||[]).slice(),photos:[],i18n};
+    if(typeof RE_TO[id]==='number') c.re=RE_TO[id];
+    p.comments.push(c);
+    REPLY_MENTIONS[id]=[]; delete RE_TO[id]; save(); render(); toast(L('ts_qr')); return; }
+  if(a==='replyTo'){ RE_TO[id]=Number(idx);
+    // 返信相手を自動で宛先に入れる＝@を付け忘れて気づかれない事故を防ぐ
+    const tgt=p.comments[Number(idx)]; const cur=REPLY_MENTIONS[id]||[];
+    if(tgt&&tgt.by!==S.actor&&!cur.includes(tgt.by)) cur.push(tgt.by);
+    REPLY_MENTIONS[id]=cur; render();
+    const el=document.getElementById('rep-'+id); if(el) el.style.display='block'; return; }
+  if(a==='replyToClear'){ delete RE_TO[id]; render();
+    const el=document.getElementById('rep-'+id); if(el) el.style.display='block'; return; }
+  if(a==='send'){ const t=document.getElementById('rt-'+id); const b=t?t.value.trim():'';
+    const ph=(REPLY_PHOTOS[id]||[]).slice(); if(!b&&!ph.length) return;
+    const c={by:S.actor,body:b,date:today(),to:(REPLY_MENTIONS[id]||[]).slice(),photos:ph};
+    if(typeof RE_TO[id]==='number') c.re=RE_TO[id];
+    p.comments.push(c);
+    REPLY_MENTIONS[id]=[]; REPLY_PHOTOS[id]=[]; delete RE_TO[id]; save(); render(); toast(L('ts_replied')); return; }
+  if(a==='react'){ if(!p.reactions) p.reactions={}; const u=p.reactions[emoji]||[]; const i=u.indexOf(S.actor);
+    if(i>=0) u.splice(i,1); else u.push(S.actor); p.reactions[emoji]=u; if(!u.length) delete p.reactions[emoji]; }
+  if(a==='best'){ p.best=Number(idx); save(); render(); toast(L('ts_best')); return; }
+  if(a==='unbest'){ delete p.best; }
+  if(a==='promote'){ PROMOTE=id; render(); return; }
+  if(a==='promoteNo'){ PROMOTE=null; render(); return; }
+  if(a==='promoteGo'){ promoteToShare(p); return; }
+  if(a==='solve') p.solved=true;
+  if(a==='unsolve'){ p.solved=false; if(PROMOTE===id) PROMOTE=null; }
+  save(); render();
+}
+/* A1：解決した相談を「共有」へ昇格（出典リンク付き・翻訳は無編集なら引き継ぐ） */
+function promoteToShare(p){
+  const title=val('pt-'+p.id), body=val('pb-'+p.id);
+  if(!title){ alert(L('al_title')); return; }
+  const bi=(typeof p.best==='number')?p.best:-1;
+  const src=(bi>=0&&p.comments[bi])?p.comments[bi]:null;
+  // 表示中の言語で編集せずに登録した場合は、原文＋既存の訳をそのまま引き継ぐ
+  const keepT = title===tx(p,'title');
+  const keepB = body===(src?tx(src,'body'):tx(p,'body'));
+  const i18n={};
+  ['en','zh','vi','ne'].forEach(l=>{
+    const t=keepT&&p.i18n&&p.i18n[l]?p.i18n[l].title:null;
+    const b=keepB&&src&&src.i18n&&src.i18n[l]?src.i18n[l].body:(keepB&&!src&&p.i18n&&p.i18n[l]?p.i18n[l].body:null);
+    if(t||b) i18n[l]=Object.assign({},t?{title:t}:{},b?{body:b}:{});
+  });
+  const sid=g();
+  S.shares.unshift({id:sid,cat:val('pc-'+p.id),
+    title:keepT?p.title:title,
+    body:keepB?(src?src.body:(p.body||'')):body,
+    url:'',pinned:false,scope:val('ps-'+p.id)||'all',origin:'promoted',
+    by:storeName(src?src.by:p.by),date:today(),
+    src:{postId:p.id,type:p.type,by:p.by,date:p.date},
+    photos:((src&&src.photos&&src.photos.length)?src.photos:(p.photos||[])).slice(),
+    i18n:Object.keys(i18n).length?i18n:undefined});
+  p.promoted={shareId:sid,title:keepT?p.title:title,date:today()};
+  PROMOTE=null; save(); render(); toast(L('ts_promoted'));
+}
+
+/* ===================== やること ===================== */
+function viewTodo(){
+  const optTargets=`<option value="all">${L('all_stores')}</option>${S.stores.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}`;
+  const list=S.todos.filter(todoMine);
+  return `
+  <h2 class="page">✅ ${L('todo_head')}</h2>
+  <p class="lede">${L('todo_lede')}</p>
+  ${LANG!=='ja'?`<div class="tr-bar">${L('tr_bar')}</div>`:''}
+  <div class="card">
+    <h3>${L('todo_add')}</h3>
+    <div class="form-grid">
+      <div class="full"><label class="field">${L('t_content')}</label><input id="t_title"></div>
+      <div><label class="field">${L('t_target')}</label><select id="t_target">${optTargets}</select></div>
+      <div><label class="field">${L('t_due')}</label><input id="t_due" placeholder="07-30"></div>
+      <div class="full"><label class="field">${L('t_note')}</label><input id="t_note"></div>
+      <div class="full"><button class="act primary" id="postTodo">${L('add')}</button></div>
+    </div>
+  </div>
+  ${list.length?list.map(o=>{
+    const targetStores=o.target==='all'?S.stores.map(s=>s.id):[o.target];
+    const doneN=targetStores.filter(id=>o.done&&o.done[id]).length;
+    const myDone=!isHQ()&&o.done&&o.done[S.actor];
+    return `<div class="card">
+      <h3 style="margin:0 0 4px;">${esc(tx(o,'title'))}${trTag(o,'title')}</h3>
+      <div class="muted" style="font-size:12px;">${L('todo_target')} ${o.target==='all'?L('all_stores'):storeName(o.target)}・${L('due')} ${o.due||'—'}${tx(o,'note')?'・'+esc(tx(o,'note')):''}</div>
+      <div style="margin-top:8px;">${targetStores.map(id=>`<span class="stamp ${o.done&&o.done[id]?'handled':'unread'}">${storeName(id)} ${o.done&&o.done[id]?L('done_short'):L('not_done')}</span>`).join('')}</div>
+      <div class="muted" style="font-size:12px;margin-top:6px;">${L('todo_done_n',doneN,targetStores.length)}</div>
+      ${!isHQ()&&(o.target==='all'||o.target===S.actor)?`<div style="margin-top:8px;">
+        ${myDone?`<span class="muted" style="font-size:12.5px;">${L('todo_mine_done')}</span>`:`<button class="act primary mini" data-todo="done" data-id="${o.id}">${L('todo_done_btn',storeName(S.actor))}</button>`}
+      </div>`:''}
+    </div>`;
+  }).join(''):`<div class="empty">${L('todo_none')}</div>`}
+  `;
+}
+
+/* ===================== メンバー ===================== */
+const AUTH_LABEL={line:{k:'auth_line',c:'a-line'},last4:{k:'auth_l4',c:'a-l4'},invited:{k:'auth_inv',c:'a-inv'}};
+function viewMembers(){
+  const scope=isHQ()?S.members:S.members.filter(m=>m.store===S.actor||m.store==='hq');
+  const byLine=S.members.filter(m=>m.auth==='line').length;
+  const pend=S.members.filter(m=>m.auth==='invited').length;
+  const groups={};
+  scope.forEach(m=>{ (groups[m.store]=groups[m.store]||[]).push(m); });
+  return `
+  <h2 class="page">👥 ${L('mem_head')}</h2>
+  <p class="lede">${L('mem_lede')}</p>
+
+  <div class="kpis" style="grid-template-columns:repeat(3,1fr);margin-bottom:12px;">
+    <div class="k"><div class="l">${L('mem_count')}</div><div class="v">${S.members.length}<small> ${L('unit_person')}</small></div></div>
+    <div class="k"><div class="l">${L('mem_line')}</div><div class="v">${byLine}<small> ${L('unit_person')}</small></div></div>
+    <div class="k"><div class="l">${L('mem_pending')}</div><div class="v">${pend}<small> ${L('unit_person')}</small></div></div>
+  </div>
+
+  <div class="card accent">
+    <h3>${L('mem_invite')}</h3>
+    <div class="form-grid">
+      <div><label class="field">${L('m_name')}</label><input id="m_name"></div>
+      <div><label class="field">${L('m_role')}</label><select id="m_role">${['アルバイト','社員','店長','オーナー'].map(r=>`<option value="${r}">${roleL(r)}</option>`).join('')}</select></div>
+      <div><label class="field">${L('m_store')}</label><select id="m_store">${S.stores.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select></div>
+      <div><label class="field">${L('m_last4')}</label><input id="m_last4" inputmode="numeric" maxlength="4" placeholder="5678"></div>
+      <div class="full"><button class="act primary" id="inviteBtn">${L('invite_btn')}</button></div>
+    </div>
+    <p class="muted" style="margin:8px 0 0;font-size:12px;">${L('invite_note')}</p>
+  </div>
+
+  ${Object.keys(groups).map(sid=>`
+    <div class="card">
+      <h3>${sid==='hq'?'🏛 '+L('hq'):'🏪 '+storeName(sid)}<span class="muted" style="font-size:12px;font-weight:700;">（${L('people_n',groups[sid].length)}）</span></h3>
+      ${groups[sid].map(m=>{
+        const a=AUTH_LABEL[m.auth]||AUTH_LABEL.line;
+        return `<div class="item" style="display:flex;align-items:center;gap:10px;">
+          <div class="ava">${esc(m.name.slice(0,1))}</div>
+          <div style="flex:1;min-width:0;">
+            <div class="t">${esc(m.name)} <span class="rl">${roleL(m.role)}</span></div>
+            <div class="m"><span class="au ${a.c}">${L(a.k)}</span>・${L('last_used')} ${m.last}・${L('joined')} ${m.joined}</div>
+          </div>
+          ${m.auth==='invited'?`<button class="act ghost mini" data-mem="resend" data-id="${m.id}">${L('resend')}</button>`:''}
+        </div>`;
+      }).join('')}
+    </div>`).join('')}
+  `;
+}
+
+/* ===================== 横断検索 ===================== */
+function openSearch(q){
+  document.querySelectorAll('.ov').forEach(e=>e.remove());
+  const ov=document.createElement('div'); ov.className='ov';
+  ov.innerHTML=`<div class="ov-in" style="max-width:520px;">
+    <h3 style="text-align:left;font-size:18px;">${L('search_head')}</h3>
+    <div class="sb" style="text-align:left;">${L('search_sub')}</div>
+    <input id="sq" placeholder="${L('search_ph')}" value="${esc(q||'')}" autofocus>
+    <div id="sres" style="margin-top:12px;"></div>
+    <button class="ov-close" data-sc="close">${L('close')}</button>
+  </div>`;
+  document.body.appendChild(ov);
+  ov.onclick=e=>{ if(e.target===ov) ov.remove(); };
+  ov.querySelector('[data-sc]').onclick=()=>ov.remove();
+  const inp=ov.querySelector('#sq'), res=ov.querySelector('#sres');
+  const run=()=>{
+    const k=inp.value.trim(); if(!k){ res.innerHTML=`<div class="empty">${L('search_hint')}</div>`; return; }
+    const kk=k.toLowerCase();
+    /* 原文でも翻訳でもヒットさせる（母語で探して、母語で読める） */
+    const hit=(o,f)=>hitTr(o,f,kk);
+    const out=[];
+    S.notices.filter(n=>hit(n,'title')||hit(n,'body')).forEach(n=>out.push({tab:'notice',ic:'📣',cat:L('notice_head'),t:tx(n,'title'),m:`${storeName(n.author)}・${n.date}`}));
+    S.shares.filter(s=>hit(s,'title')||hit(s,'body')).forEach(s=>out.push({tab:'share',ic:'📚',cat:catL(s.cat),t:tx(s,'title'),m:`${s.by}・${s.date}`}));
+    S.board.filter(p=>hit(p,'title')||hit(p,'body')||p.comments.some(c=>hit(c,'body'))).forEach(p=>out.push({tab:'board',ic:'💬',cat:btL(p.type),t:tx(p,'title'),m:`${storeName(p.by)}・${p.date}`}));
+    S.todos.filter(o=>hit(o,'title')||hit(o,'note')).forEach(o=>out.push({tab:'todo',ic:'✅',cat:L('search_todo'),t:tx(o,'title'),m:`${L('due')} ${o.due||'—'}`}));
+    res.innerHTML = out.length
+      ? `<div class="muted" style="font-size:12px;font-weight:800;margin-bottom:6px;">${L('search_n',out.length)}</div>`+
+        out.map(o=>`<div class="sres-i" data-go2="${o.tab}">
+          <div class="t">${o.ic} ${esc(o.t)}</div><div class="m"><span class="pill" style="font-size:10.5px;">${esc(o.cat)}</span>${esc(o.m)}</div></div>`).join('')
+      : `<div class="empty">${L('search_none',esc(k))}</div>`;
+    res.querySelectorAll('[data-go2]').forEach(b=>b.onclick=()=>{ TAB=b.dataset.go2; ov.remove(); render(); });
+  };
+  inp.oninput=run; if(q) run();
+  setTimeout(()=>inp.focus(),50);
+}
+
+/* ===================== 融通（拡張：シフト/フードリレー） ===================== */
+const amtGoods=x=>x.qty*x.unitPrice, amtHelp=x=>x.people*x.wage;
+function viewRelay(){
+  return `
+  <h2 class="page">🔁 ${L('relay_head')} <span class="badge b-book" style="font-size:11px;">${L('ext')}</span></h2>
+  <p class="lede">${L('relay_lede')}</p>
+  <div class="note-ext">${L('relay_note')}</div>
+  <div class="seg">
+    <button class="${RELAY_KIND==='goods'?'on':''}" data-rk="goods">${L('relay_goods')}</button>
+    <button class="${RELAY_KIND==='help'?'on':''}" data-rk="help">${L('relay_help')}</button>
+  </div>
+  ${transferForm(RELAY_KIND)}
+  <h3 style="margin:16px 2px 6px;font-size:16px;">${RELAY_KIND==='goods'?L('relay_bd_goods'):L('relay_bd_help')}</h3>
+  ${transferList(RELAY_KIND)}
+  `;
+}
+function transferForm(kind){
+  const opts=S.stores.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
+  if(kind==='goods') return `<div class="card">
+    <h3>${L('f_post_goods')}</h3>
+    <div class="form-grid">
+      <div class="full"><label class="field">${L('f_kind')}</label><select id="f_type"><option value="offer">${L('ty_offer')}</option><option value="need">${L('ty_need')}</option></select></div>
+      <div><label class="field">${L('f_item')}</label><input id="f_item"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;"><div><label class="field">${L('f_qty')}</label><input id="f_qty" type="number" value="1"></div><div><label class="field">${L('f_unit')}</label><input id="f_unit" value="kg"></div></div>
+      <div><label class="field">${L('f_price')}</label><input id="f_price" type="number" value="0"></div>
+      <div><label class="field">${L('f_me')}</label><select id="f_me">${opts}</select></div>
+      <div class="full"><label class="field">${L('f_note')}</label><input id="f_note"></div>
+      <div class="full"><button class="act primary" id="postGoods">${L('f_submit')}</button></div>
+    </div>
+  </div>`;
+  return `<div class="card">
+    <h3>${L('f_post_help')}</h3>
+    <div class="form-grid">
+      <div class="full"><label class="field">${L('f_kind')}</label><select id="f_type"><option value="need">${L('ty_need_h')}</option><option value="offer">${L('ty_offer_h')}</option></select></div>
+      <div><label class="field">${L('f_people')}</label><input id="f_people" type="number" value="1"></div>
+      <div><label class="field">${L('f_hours')}</label><input id="f_hours" type="number" value="8"></div>
+      <div><label class="field">${L('f_wage')}</label><input id="f_wage" type="number" value="12000"></div>
+      <div><label class="field">${L('f_me')}</label><select id="f_me">${opts}</select></div>
+      <div class="full"><label class="field">${L('f_note')}</label><input id="f_note"></div>
+      <div class="full"><button class="act primary" id="postHelp">${L('f_submit')}</button></div>
+    </div>
+  </div>`;
+}
+function statusBadge(s){return({open:`<span class="badge b-open">${L('st_open')}</span>`,matched:`<span class="badge b-match">${L('st_matched')}</span>`,booked:`<span class="badge b-book">${L('st_booked')}</span>`,cancelled:`<span class="badge b-cancel">${L('st_cancelled')}</span>`})[s]||'';}
+function transferList(kind){
+  const arr=(kind==='goods'?S.goods:S.help).slice().reverse();
+  if(!arr.length) return `<div class="empty">${L('relay_none')}</div>`;
+  return arr.map(x=>{
+    const title=kind==='goods'?`${esc(x.item)} ${x.qty}${x.unit}`:L('help_title',x.people,x.hours);
+    const amt=kind==='goods'?amtGoods(x):amtHelp(x);
+    return `<div class="card" style="margin-bottom:10px;">
+      <div style="font-weight:900;font-size:15px;">${kind==='goods'?'📦':'🧑'} ${title} ${statusBadge(x.status)}</div>
+      <div class="muted" style="font-size:12.5px;margin-top:3px;">${L('provide')} <b>${x.from?storeName(x.from):'—'}</b> → ${L('receive')} <b>${x.to?storeName(x.to):'—'}</b>・${L('transfer')} <b>${yen(amt)}</b></div>
+      ${x.note?`<div class="muted" style="font-size:12px;margin-top:3px;">📝 ${esc(x.note)}</div>`:''}
+      <div class="row" style="margin-top:9px;">${transferActions(kind,x)}</div>
+    </div>`;
+  }).join('');
+}
+function transferActions(kind,x){
+  const btns=[];
+  if(x.status==='open'){
+    if(x.from&&!x.to) btns.push(`<button class="act blue mini" data-tf="claim" data-kind="${kind}" data-id="${x.id}" data-role="to">${L('take_here')}</button>`);
+    else if(x.to&&!x.from) btns.push(`<button class="act blue mini" data-tf="claim" data-kind="${kind}" data-id="${x.id}" data-role="from">${L('give_here')}</button>`);
+    btns.push(`<button class="act ghost mini" data-tf="cancel" data-kind="${kind}" data-id="${x.id}">${L('cancel')}</button>`);
+  } else if(x.status==='matched'){
+    btns.push(`<button class="act primary mini" data-tf="book" data-kind="${kind}" data-id="${x.id}">${L('do_book')}</button>`);
+    btns.push(`<button class="act ghost mini" data-tf="unmatch" data-kind="${kind}" data-id="${x.id}">${L('do_unmatch')}</button>`);
+  } else if(x.status==='booked'){
+    btns.push(`<span class="muted" style="font-size:12.5px;align-self:center;">${L('booked_note')}</span>`);
+    btns.push(`<button class="act ghost mini" data-tf="unbook" data-kind="${kind}" data-id="${x.id}">${L('cancel')}</button>`);
+  } else btns.push(`<span class="muted" style="font-size:12.5px;">${L('cancelled_done')}</span>`);
+  return btns.join(' ');
+}
+
+/* ===================== PL（拡張） ===================== */
+function computePL(){
+  const o={};
+  for(const s of S.stores){
+    const b=S.baseline[s.id];
+    const gO=sum(S.goods.filter(x=>x.status==='booked'&&x.from===s.id).map(amtGoods));
+    const gI=sum(S.goods.filter(x=>x.status==='booked'&&x.to===s.id).map(amtGoods));
+    const hO=sum(S.help.filter(x=>x.status==='booked'&&x.from===s.id).map(amtHelp));
+    const hI=sum(S.help.filter(x=>x.status==='booked'&&x.to===s.id).map(amtHelp));
+    o[s.id]={id:s.id,name:s.name,sales:b.sales,baseCost:b.cost,baseLabor:b.labor,cost:b.cost-gO+gI,labor:b.labor-hO+hI,gOut:gO,gIn:gI,hOut:hO,hIn:hI,net:(gO+hO)-(gI+hI)};
+  }
+  return o;
+}
+function viewPL(){
+  const pl=computePL(); const st=S.stores.map(s=>pl[s.id]);
+  const T={sales:sum(st.map(p=>p.sales)),baseCost:sum(st.map(p=>p.baseCost)),cost:sum(st.map(p=>p.cost)),baseLabor:sum(st.map(p=>p.baseLabor)),labor:sum(st.map(p=>p.labor))};
+  const guests=sum(S.stores.map(s=>S.guests[s.id]||0));
+  const m=S.marketing;
+  const row=p=>{const cr0=p.baseCost/p.sales,cr1=p.cost/p.sales,lr0=p.baseLabor/p.sales,lr1=p.labor/p.sales;
+    return `<tr><td class="n">${p.name}</td><td>${yen(p.sales)}</td><td>${(S.guests[p.id]||0).toLocaleString()}</td>
+      <td>${pct(cr0)} <span class="arrow">→</span> <b class="${cr1>cr0?'up':cr1<cr0?'down':''}">${pct(cr1)}</b></td>
+      <td>${pct(lr0)} <span class="arrow">→</span> <b class="${lr1>lr0?'up':lr1<lr0?'down':''}">${pct(lr1)}</b></td>
+      <td>${p.net>0?`<span class="give">+${yen(p.net)}</span>`:p.net<0?`<span class="recv">${yen(p.net)}</span>`:'—'}</td></tr>`;};
+  const stStatus={ok:'link_ok',part:'link_part',no:'link_no'};
+  return `
+  <h2 class="page">📊 ${L('pl_head')} <span class="badge b-hq" style="font-size:11px;">${L('pl_badge')}</span></h2>
+  <p class="lede">${L('pl_lede')}<span class="muted">${L('pl_dummy')}</span></p>
+
+  <div class="card">
+    <h3>${L('pl_import')}</h3>
+    <div class="upzone">
+      <div style="font-weight:900;font-size:14px;">${L('pl_up1')}</div>
+      <div class="muted" style="font-size:12px;margin:4px 0 10px;">${L('pl_up2')}</div>
+      <input type="file" id="upFile" accept=".xlsx,.xls,.csv" style="display:none">
+      <button class="act primary" id="upBtn">${L('pl_upbtn')}</button>
+    </div>
+    <div class="muted" style="font-size:12px;margin:12px 0 6px;font-weight:800;">${L('pl_sources')}</div>
+    <div class="srcs">
+      ${S.sources.map(s=>`<div class="src">
+        <div style="flex:1;min-width:0;"><div style="font-weight:800;font-size:13.5px;">${L(s.nk)}</div><div class="muted" style="font-size:11.5px;">${L(s.kk)}${s.last?'・'+s.last:''}</div></div>
+        <span class="st ${s.status}">${L(stStatus[s.status])}</span>
+        ${s.status!=='ok'?`<button class="act ghost mini" data-src="${s.id}">${s.status==='no'?L('link_do'):L('link_re')}</button>`:''}
+      </div>`).join('')}
+    </div>
+    <div class="muted" style="font-size:12px;margin:12px 0 4px;font-weight:800;">${L('pl_recent')}</div>
+    ${S.uploads.slice(0,4).map(u=>`<div class="item" style="padding:6px 0;"><span class="pill">${u.kind}</span> ${esc(u.name)} <span class="muted" style="font-size:11.5px;">・${u.date}</span></div>`).join('')||`<div class="empty">${L('pl_recent_none')}</div>`}
+  </div>
+
+  <div class="card">
+    <h3>${L('pl_kpi')}</h3>
+    <div class="kpis m4">
+      <div class="k"><div class="l">${L('k_sales')}</div><div class="v" style="font-size:18px;">${yen(T.sales)}</div></div>
+      <div class="k"><div class="l">${L('k_guests')}</div><div class="v">${guests.toLocaleString()}</div></div>
+      <div class="k"><div class="l">${L('k_avg')}</div><div class="v">${yen(T.sales/guests)}</div></div>
+      <div class="k"><div class="l">${L('k_cost')}</div><div class="v">${pct(T.cost/T.sales)}</div></div>
+      <div class="k"><div class="l">${L('k_labor')}</div><div class="v">${pct(T.labor/T.sales)}</div></div>
+      <div class="k"><div class="l">${L('k_fl')}</div><div class="v">${pct((T.cost+T.labor)/T.sales)}</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>${L('pl_mkpi')}</h3>
+    <div class="kpis m4">
+      <div class="k"><div class="l">${L('k_tabelog')}</div><div class="v">${m.tabelog.rating}<small> ★</small></div><div class="sub">${m.tabelog.reviews} ${L('u_reviews')}・${L('u_reserv_m')} ${m.tabelog.reserv}</div></div>
+      <div class="k"><div class="l">${L('k_hp')}</div><div class="v">${m.hotpepper.reserv}<small> ${L('u_reserv')}</small></div><div class="sub">${L('u_views')} ${m.hotpepper.views.toLocaleString()}</div></div>
+      <div class="k"><div class="l">${L('k_ig')}</div><div class="v">${(m.instagram.followers/1000).toFixed(1)}k<small> ${L('u_follow')}</small></div><div class="sub">${L('u_reach')} ${m.instagram.reach.toLocaleString()}</div></div>
+      <div class="k"><div class="l">${L('k_google')}</div><div class="v">${m.google.rating}<small> ★</small></div><div class="sub">${m.google.reviews} ${L('u_reviews')}</div></div>
+    </div>
+    <p class="muted" style="font-size:12px;margin-top:10px;">${L('pl_mkpi_note')}</p>
+  </div>
+
+  <div class="card">
+    <h3>${L('pl_table')}</h3>
+    <div style="overflow-x:auto;"><table class="pl">
+      <thead><tr><th class="n">${L('th_store')}</th><th>${L('k_sales')}</th><th>${L('k_guests')}</th><th>${L('th_cost')}</th><th>${L('th_labor')}</th><th>${L('th_net')}</th></tr></thead>
+      <tbody>${st.map(row).join('')}</tbody>
+      <tfoot><tr style="border-top:2px solid var(--line2);"><td class="n">${L('th_total')}</td><td>${yen(T.sales)}</td><td>${guests.toLocaleString()}</td>
+        <td>${pct(T.baseCost/T.sales)} <span class="arrow">→</span> <b>${pct(T.cost/T.sales)}</b></td>
+        <td>${pct(T.baseLabor/T.sales)} <span class="arrow">→</span> <b>${pct(T.labor/T.sales)}</b></td><td>±0</td></tr></tfoot>
+    </table></div>
+    <p class="muted" style="font-size:12px;margin-top:10px;">${L('pl_note')}</p>
+  </div>`;
+}
+
+/* ===================== ログイン画面デモ ===================== */
+function showLogin(step){
+  document.querySelectorAll('.ov').forEach(e=>e.remove());
+  const ov=document.createElement('div'); ov.className='ov';
+  const swap = s=>`<div class="lg-swap"><button data-lg="${s==='invite'?'again':'invite'}">${s==='invite'?L('lg_swap_again'):L('lg_swap_inv')}</button></div>`;
+  /* ログイン画面だけは、その場で言語を選べるようにする（招待された本人はまだ設定できないため） */
+  const langRow=`<div class="lg-swap" style="margin:0 0 12px;display:flex;gap:5px;justify-content:center;flex-wrap:wrap;">
+    ${LANGS.map(l=>`<button class="mpick${LANG===l.id?' on':''}" data-lgset="${l.id}">${l.label}</button>`).join('')}</div>`;
+  let body;
+  if(step==='last4'){
+    body=`${langRow}<h3>${L('lg_tel')}</h3>
+    <div class="sb">${L('lg_tel_sub')}</div>
+    <div class="lg-hint">${L('lg_tel_hint')}</div>
+    <div class="otp">${[1,2,3,4].map(()=>'<input maxlength="1" inputmode="numeric">').join('')}</div>
+    <button class="line-btn" style="background:var(--green)" data-lg="done4">${L('lg_tel_go')}</button>
+    <div class="ov-note">${L('lg_tel_note')}</div>
+    <button class="ov-close" data-lg="back">${L('back')}</button>`;
+  } else if(step==='again'){
+    body=`${langRow}<h3>${L('app_name')}</h3>
+    <div class="sb">${L('lg_back')}</div>
+    <button class="line-btn" data-lg="line"><span class="lg">L</span>${L('lg_line_login')}</button>
+    <div class="ov-note" style="text-align:center;margin-top:9px;">${L('lg_note_line')}</div>
+    <div class="or"><span></span><b>${L('lg_or')}</b><span></span></div>
+    <button class="tel-btn" data-lg="last4">${L('lg_link4')}</button>
+    <div class="ov-note">${L('lg_note3')}</div>
+    ${swap('again')}
+    <button class="ov-close" data-lg="close">${L('close')}</button>`;
+  } else {
+    body=`${langRow}<div class="lg-inv">${L('lg_inv','本店')}<br><span>${L('lg_inv_sub')}</span></div>
+    <h3>${L('app_name')}</h3>
+    <div class="sb">${L('lg_first')}</div>
+    <button class="line-btn" data-lg="line"><span class="lg">L</span>${L('lg_line_start')}</button>
+    <div class="ov-note" style="text-align:center;margin-top:9px;">${L('lg_note1')}</div>
+    <div class="or"><span></span><b>${L('lg_or')}</b><span></span></div>
+    <button class="tel-btn" data-lg="last4">${L('lg_last4')}</button>
+    <div class="ov-note">${L('lg_note2')}</div>
+    ${swap('invite')}
+    <button class="ov-close" data-lg="close">${L('close')}</button>`;
+  }
+  ov.innerHTML=`<div class="ov-in">${body}</div>`;
+  document.body.appendChild(ov);
+  ov.onclick=e=>{ if(e.target===ov) ov.remove(); };
+  ov.querySelectorAll('[data-lgset]').forEach(b=>b.onclick=()=>{
+    LANG=b.dataset.lgset; localStorage.setItem(LS_LANG,LANG);
+    document.documentElement.lang=(LANGS.find(l=>l.id===LANG)||{}).html||'ja';
+    render(); showLogin(step);
+  });
+  ov.querySelectorAll('[data-lg]').forEach(b=>b.onclick=()=>{
+    const a=b.dataset.lg;
+    if(a==='close') ov.remove();
+    else if(a==='back') showLogin('invite');
+    else if(a==='invite') showLogin('invite');
+    else if(a==='again') showLogin('again');
+    else if(a==='last4') showLogin('last4');
+    else if(a==='line'){ ov.remove(); toast(L('ts_line')); }
+    else if(a==='done4'){ ov.remove(); toast(L('ts_last4')); }
+  });
+}
+
+/* ===================== actions ===================== */
+function bindActions(){
+  const app=document.getElementById('app');
+  const meSel=document.getElementById('f_me'); if(meSel) meSel.value=isHQ()?S.stores[0].id:S.actor;
+  app.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{TAB=b.dataset.go; HILITE=null; PROMOTE=null; NEW_SET=null; render();});
+  app.querySelectorAll('[data-nt]').forEach(b=>b.onclick=()=>doNotice(b.dataset.nt,b.dataset.id));
+  app.querySelectorAll('[data-sf]').forEach(b=>b.onclick=()=>{SHARE_FILTER=b.dataset.sf; HILITE=null; render();});
+  app.querySelectorAll('[data-va]').forEach(b=>b.onclick=()=>{VIEW_AS=b.dataset.va; render();});
+  app.querySelectorAll('[data-acc]').forEach(b=>b.onclick=()=>toast(L('ts_acc')));
+  app.querySelectorAll('[data-share]').forEach(b=>b.onclick=()=>doShare(b.dataset.share,b.dataset.id));
+  app.querySelectorAll('[data-bf]').forEach(b=>b.onclick=()=>{
+    if(b.dataset.bf==='__clear'){ BOARD_FILTER='すべて'; BOARD_Q=''; BOARD_TAG=''; }
+    else BOARD_FILTER=b.dataset.bf;
+    HILITE=null; render(); });
+  app.querySelectorAll('[data-btag]').forEach(b=>b.onclick=()=>{
+    BOARD_TAG = BOARD_TAG===b.dataset.btag ? '' : b.dataset.btag; TAB='board'; HILITE=null; render(); });
+  app.querySelectorAll('[data-tgnew]').forEach(b=>b.onclick=()=>{ const t=b.dataset.tgnew;
+    const i=NEW_TAGS.indexOf(t); if(i>=0) NEW_TAGS.splice(i,1); else NEW_TAGS.push(t); render(); });
+  const bq=document.getElementById('bq'), bqGo=document.getElementById('bqGo');
+  if(bq){
+    const runQ=()=>{ BOARD_Q=bq.value.trim(); render();
+      const el=document.getElementById('bq'); if(el){ el.focus(); el.setSelectionRange(el.value.length,el.value.length); } };
+    bq.onkeydown=e=>{ if(e.key==='Enter') runQ(); };
+    bq.onchange=runQ; if(bqGo) bqGo.onclick=runQ;
+  }
+  const bs=document.getElementById('b_sort'); if(bs) bs.onchange=()=>{ BOARD_SORT=bs.value; render(); };
+  app.querySelectorAll('[data-bd]').forEach(b=>b.onclick=()=>doBoard(b.dataset.bd,b.dataset.id,b.dataset.emoji,b.dataset.i));
+  // 出典リンク：共有 → 元の相談へジャンプ／相談 → 昇格した共有へジャンプ
+  app.querySelectorAll('[data-boardgo]').forEach(b=>b.onclick=()=>{
+    const p=S.board.find(o=>o.id===b.dataset.boardgo); if(!p) return;
+    TAB='board'; BOARD_FILTER='すべて'; HILITE=p.id; PROMOTE=null; NEW_SET=null; render(); });
+  app.querySelectorAll('[data-sharego]').forEach(b=>b.onclick=()=>{
+    const s=S.shares.find(o=>o.id===b.dataset.sharego); if(!s) return;
+    TAB='share'; SHARE_FILTER=s.cat; VIEW_AS='owner'; HILITE=s.id; render(); });
+  app.querySelectorAll('[data-mnew]').forEach(b=>b.onclick=()=>{ const t=b.dataset.mnew; const i=NEW_MENTIONS.indexOf(t);
+    if(i>=0) NEW_MENTIONS.splice(i,1); else NEW_MENTIONS.push(t); render(); });
+  app.querySelectorAll('[data-mrep]').forEach(b=>b.onclick=()=>{ const id=b.dataset.id, t=b.dataset.mrep;
+    const cur=REPLY_MENTIONS[id]||[]; const i=cur.indexOf(t); if(i>=0) cur.splice(i,1); else cur.push(t);
+    REPLY_MENTIONS[id]=cur; render(); const el=document.getElementById('rep-'+id); if(el) el.style.display='block'; });
+  app.querySelectorAll('[data-mem]').forEach(b=>b.onclick=()=>toast(L('ts_resent')));
+  const ib=document.getElementById('inviteBtn'); if(ib) ib.onclick=()=>{
+    const name=val('m_name'); if(!name){alert(L('al_name'));return;}
+    S.members.push({id:g(),name,store:val('m_store'),role:val('m_role'),auth:'invited',last:'—',joined:today()});
+    save(); render(); toast(L('ts_invited'));
+  };
+  const pb=document.getElementById('postBoard'); if(pb) pb.onclick=()=>{
+    const title=val('b_title'); if(!title){alert(L('al_title'));return;}
+    S.board.unshift({id:g(),type:val('b_type'),title,body:val('b_body'),by:S.actor,date:today(),solved:false,to:NEW_MENTIONS.slice(),tags:NEW_TAGS.slice(),reactions:{},comments:[],photos:NEW_PHOTOS.slice()});
+    NEW_MENTIONS=[]; NEW_TAGS=[]; NEW_PHOTOS=[]; save(); render(); toast(L('ts_posted')); };
+  /* --- 写真（A3）：添付・取り消し・拡大 --- */
+  bindPhotoInput('bPhotoBtn','bPhotoIn',d=>{ if(NEW_PHOTOS.length<PHOTO_MAX) NEW_PHOTOS.push(d); });
+  bindPhotoInput('sPhotoBtn','sPhotoIn',d=>{ if(SHARE_PHOTOS.length<PHOTO_MAX) SHARE_PHOTOS.push(d); });
+  S.board.forEach(p=>bindPhotoInput('rp-btn-'+p.id,'rp-in-'+p.id,d=>{
+    const cur=REPLY_PHOTOS[p.id]||[]; if(cur.length<PHOTO_MAX) cur.push(d); REPLY_PHOTOS[p.id]=cur; }));
+  app.querySelectorAll('[data-rmnew]').forEach(b=>b.onclick=e=>{ e.stopPropagation();
+    NEW_PHOTOS.splice(Number(b.dataset.rmnew),1); render(); });
+  app.querySelectorAll('[data-rmshare]').forEach(b=>b.onclick=e=>{ e.stopPropagation();
+    SHARE_PHOTOS.splice(Number(b.dataset.rmshare),1); render(); });
+  app.querySelectorAll('[data-rmrep]').forEach(b=>b.onclick=e=>{ e.stopPropagation();
+    const id=b.dataset.id; (REPLY_PHOTOS[id]||[]).splice(Number(b.dataset.rmrep),1); render();
+    const el=document.getElementById('rep-'+id); if(el) el.style.display='block'; });
+  app.querySelectorAll('.pth').forEach(el=>el.onclick=()=>{
+    const img=el.querySelector('img'); if(img) openLightbox(img.src); });
+  app.querySelectorAll('[data-todo]').forEach(b=>b.onclick=()=>doTodo(b.dataset.todo,b.dataset.id));
+  app.querySelectorAll('[data-rk]').forEach(b=>b.onclick=()=>{RELAY_KIND=b.dataset.rk; render();});
+  app.querySelectorAll('[data-tf]').forEach(b=>b.onclick=()=>doTransfer(b.dataset.tf,b.dataset.kind,b.dataset.id,b.dataset.role));
+  const upBtn=document.getElementById('upBtn'), upFile=document.getElementById('upFile');
+  if(upBtn&&upFile){ upBtn.onclick=()=>upFile.click();
+    upFile.onchange=()=>{ const f=upFile.files&&upFile.files[0]; if(!f) return;
+      S.uploads.unshift({name:f.name,date:today(),kind:/\.csv$/i.test(f.name)?'CSV':'Excel'}); save(); render();
+      toast(L('ts_import',f.name)); }; }
+  app.querySelectorAll('[data-src]').forEach(b=>b.onclick=()=>{ const s=S.sources.find(o=>o.id===b.dataset.src); if(!s) return;
+    s.status='ok'; s.last=today(); save(); render(); toast(L('ts_linked',L(s.nk))); });
+  const pn=document.getElementById('postNotice'); if(pn) pn.onclick=()=>{
+    const title=val('n_title'); if(!title){alert(L('al_subject'));return;}
+    S.notices.unshift({id:g(),author:S.actor,target:val('n_target')||'all',priority:val('n_pri'),due:val('n_due'),title,body:val('n_body'),date:today(),reads:{}}); save(); render();
+  };
+  const ps=document.getElementById('postShare'); if(ps) ps.onclick=()=>{
+    const title=val('s_title'); if(!title){alert(L('al_title'));return;}
+    S.shares.unshift({id:g(),cat:val('s_cat'),title,body:val('s_body'),url:val('s_url'),pinned:val('s_pin')==='1',scope:val('s_scope')||'all',origin:'own',by:storeName(S.actor),date:today(),photos:SHARE_PHOTOS.slice()});
+    SHARE_PHOTOS=[]; save(); render(); toast(L('ts_share'));
+  };
+  const pt=document.getElementById('postTodo'); if(pt) pt.onclick=()=>{
+    const title=val('t_title'); if(!title){alert(L('al_content'));return;}
+    S.todos.unshift({id:g(),target:val('t_target')||'all',due:val('t_due'),note:val('t_note'),title,done:{}}); save(); render();
+  };
+  const pg=document.getElementById('postGoods'); if(pg) pg.onclick=()=>{
+    const item=val('f_item'); if(!item){alert(L('al_item'));return;}
+    const type=val('f_type'),me=val('f_me');
+    S.goods.push({id:g(),type,item,qty:num('f_qty',1),unit:val('f_unit')||'個',unitPrice:num('f_price',0),note:val('f_note'),status:'open',date:today(),from:type==='offer'?me:null,to:type==='need'?me:null}); save(); render();
+  };
+  const ph=document.getElementById('postHelp'); if(ph) ph.onclick=()=>{
+    const type=val('f_type'),me=val('f_me');
+    S.help.push({id:g(),type,people:num('f_people',1),hours:num('f_hours',8),wage:num('f_wage',12000),note:val('f_note'),status:'open',date:today(),from:type==='offer'?me:null,to:type==='need'?me:null}); save(); render();
+  };
+}
+function doNotice(a,id){ const n=S.notices.find(o=>o.id===id); if(!n||n.author===S.actor) return; if(!n.reads)n.reads={};
+  if(a==='read') n.reads[S.actor]={at:today(),handled:false}; if(a==='handle') n.reads[S.actor]={at:today(),handled:true}; save(); render(); }
+function doShare(a,id){ const i=S.shares.findIndex(o=>o.id===id); if(i<0) return;
+  if(a==='pin') S.shares[i].pinned=!S.shares[i].pinned; if(a==='del'){ if(!confirm(L('cf_del')))return; S.shares.splice(i,1);} save(); render(); }
+function doTodo(a,id){ const o=S.todos.find(v=>v.id===id); if(!o) return; if(isHQ()){alert(L('al_hq_todo'));return;}
+  if(a==='done'){ if(!o.done)o.done={}; o.done[S.actor]=today(); } save(); render(); }
+function doTransfer(a,kind,id,role){ const arr=kind==='goods'?S.goods:S.help; const x=arr.find(o=>o.id===id); if(!x) return; const me=S.actor;
+  if(a==='claim'){ let tgt=me; if(isHQ()){ const pick=prompt(`${role==='to'?'受け入れる':'提供する'}店舗（${S.stores.map(s=>s.name).join(' / ')}）`,''); const st=S.stores.find(s=>s.name===(pick||'').trim()); if(!st)return; tgt=st.id; }
+      if(role==='to')x.to=tgt; else x.from=tgt; if(x.from&&x.to&&x.from===x.to){alert(L('al_same_store')); if(role==='to')x.to=null;else x.from=null;return;} x.status='matched'; }
+  else if(a==='book'){ if(!x.from||!x.to){alert(L('al_need_both'));return;} x.status='booked'; }
+  else if(a==='unmatch'){ if(x.type==='offer')x.to=null; else x.from=null; x.status='open'; }
+  else if(a==='unbook') x.status='matched';
+  else if(a==='cancel') x.status='cancelled';
+  save(); render();
+}
+
+render();
+</script>
+</body>
+</html>
