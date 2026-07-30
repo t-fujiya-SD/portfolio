@@ -38,6 +38,30 @@
   .lang-pick .gl{font-size:14px;}
   select.lang{font-size:13px; font-weight:800; border:none; border-radius:7px; padding:6px 7px; background:#fff; color:var(--green-d); max-width:150px;}
   .btn-orig{background:#fff; color:var(--green-d); border:none; padding:6px 10px; border-radius:8px; font-size:12px; font-weight:800; cursor:pointer;}
+  /* 右上のハンバーガー（ログイン画面・初期化・ログアウトを畳む） */
+  .menu-wrap{position:relative; order:3;}
+  #menuBtn{font-size:15px; line-height:1; padding:6px 11px;}
+  .menu{position:absolute; right:0; top:calc(100% + 7px); background:#fff; border:1px solid var(--line);
+    border-radius:11px; box-shadow:0 10px 30px rgba(15,23,42,.22); padding:6px; min-width:186px; z-index:70; display:none;}
+  .menu.on{display:block;}
+  .menu button{display:flex; align-items:center; gap:7px; width:100%; text-align:left; background:none;
+    border:none; padding:10px 12px; font-size:13.5px; font-weight:700; color:var(--ink);
+    cursor:pointer; border-radius:8px; font-family:inherit;}
+  .menu button:hover{background:var(--card);}
+  /* 狭い画面：ラベルを畳んでヘッダーを1行に収め、ドロップダウンは画面内へ */
+  @media(max-width:560px){
+    #searchLbl, #guideLbl{display:none;}
+    #searchBtn, .head-right a.btn-reset{padding:6px 9px; font-size:14px;}
+    .actor-pick label{display:none;}
+    .lang-pick, .actor-pick{padding:4px 6px;}
+    .lang-pick select, .actor-pick select{font-size:12px; padding:5px 6px;}
+    .menu{min-width:172px;}
+    .head-in{padding:9px 10px; gap:8px;}
+    .brand{font-size:15px;}
+    /* ☰ はブランドと同じ行の右端へ。操作系は2行目にまとめる */
+    .menu-wrap{order:1; margin-left:auto;}
+    .head-right{order:2; width:100%; margin-left:0;}
+  }
   .tr-tag{display:inline-block; font-size:10px; font-weight:800; background:var(--blue-soft); color:var(--blue); border-radius:999px; padding:1px 7px; margin-left:5px; vertical-align:middle;}
   .tr-tag.raw{background:#f3f4f6; color:var(--muted);}
   .tr-bar{background:var(--blue-soft); border:1px solid #bfdbfe; color:#1e40af; border-radius:10px; padding:8px 12px; font-size:12.5px; margin:0 2px 12px; line-height:1.6;}
@@ -250,7 +274,13 @@
   .up{color:var(--red); font-weight:800;} .down{color:var(--green); font-weight:800;} .arrow{color:var(--muted); font-size:11px;}
   .give{color:var(--green-d); font-weight:800;} .recv{color:var(--amber); font-weight:800;}
   .foot{color:var(--muted); font-size:11.5px; text-align:center; padding:22px 8px; line-height:1.7;}
+  /* 共有モードの状態表示 */
+  .conn-bar{position:fixed; top:0; left:0; right:0; z-index:200; padding:8px 12px; text-align:center;
+    font-size:12.5px; font-weight:800; color:#fff; line-height:1.5;}
+  .conn-bar.err{background:var(--red);} .conn-bar.warn{background:var(--amber);}
 </style>
+<!-- 共有バックエンド。config.js が無ければ読み込まれず、localStorage 単独モードで動く -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body>
 <header>
@@ -260,10 +290,16 @@
       <div class="lang-pick"><span class="gl">🌐</span><select class="lang" id="langSel"></select></div>
       <button class="btn-orig" id="origBtn" style="display:none;"></button>
       <div class="actor-pick"><label id="actorLbl">あなた</label><select class="actor" id="actorSel"></select></div>
-      <button class="btn-reset" id="searchBtn">🔍 <span id="searchLbl">さがす</span></button>
-      <button class="btn-reset" id="loginBtn">🔑 <span id="loginLbl">ログイン画面</span></button>
-      <button class="btn-reset" id="resetBtn">↺ <span id="resetLbl">初期化</span></button>
-      <a class="btn-reset" href="./guide.html" style="text-decoration:none;">📖 かんたんガイド</a>
+      <button class="btn-reset" id="searchBtn">🔍 <span id="searchLbl">探す</span></button>
+      <a class="btn-reset" href="./guide.html" style="text-decoration:none;">📖 <span id="guideLbl">取説</span></a>
+    </div>
+    <div class="menu-wrap">
+      <button class="btn-reset" id="menuBtn" aria-label="メニュー" aria-expanded="false">☰</button>
+      <div class="menu" id="menuPop">
+        <button id="loginBtn">🔑 <span id="loginLbl">ログイン画面</span></button>
+        <button id="resetBtn">↺ <span id="resetLbl">初期化</span></button>
+        <button id="signOutBtn" style="display:none;">⏏ <span id="signOutLbl">ログアウト</span></button>
+      </div>
     </div>
   </div>
   <nav class="tabs" id="tabs"></nav>
@@ -279,6 +315,273 @@
    ======================================================================= */
 const LS_KEY='msr_demo_v15';
 const LS_LANG='msr_lang', LS_ORIG='msr_orig';
+
+/* =======================================================================
+   共有モード（Supabase）か、単独モード（localStorage）か
+   ---------------------------------------------------------------------
+   config.js（window.DSB_CONFIG）があれば共有モード＝全員が同じデータを見る。
+   無ければ従来どおりこの端末の localStorage だけで動く（お試し・公開デモ用）。
+   ※ 厨房マニュアル(krm_)と同じ考え方。HTMLは1本のままで両方に対応する。
+   ======================================================================= */
+const CFG = window.DSB_CONFIG || null;
+const SHARED_INTENDED = !!(CFG && CFG.SUPABASE_URL && CFG.SUPABASE_ANON_KEY);
+let sb = null;
+if (SHARED_INTENDED && window.supabase) {
+  try { sb = window.supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY); }
+  catch(e){ console.error('supabase init failed', e); }
+}
+const SHARED = SHARED_INTENDED && !!sb;
+/* 権限をサーバー側で強制するか（招待を配り終えるまでは false で運用） */
+const AUTH_ENFORCED = !!(CFG && CFG.AUTH_ENFORCED);
+/* 共有モードでのログイン中の自分。単独モードでは使わない */
+let ME = null;   // {id, company_id, store_id, name, role}
+
+/* 画面上部の状態バー（つながっていない時だけ出す） */
+function connBar(kind){
+  let b=document.getElementById('conn-bar');
+  const M={
+    nolib:'通信ライブラリを読み込めませんでした。ページを再読み込みしてください。',
+    offline:'オフラインです。書いた内容は反映されません。電波の良い場所でお試しください。',
+    noauth:'ログインが切れました。店長から届いた参加リンクをもう一度開いてください。',
+  };
+  if(!kind){ if(b) b.remove(); return; }
+  if(!b){ b=document.createElement('div'); b.id='conn-bar'; document.body.appendChild(b); }
+  b.className='conn-bar '+(kind==='offline'?'warn':'err');
+  b.textContent=M[kind]||'';
+}
+if(SHARED_INTENDED && !window.supabase) connBar('nolib');
+if(SHARED){
+  window.addEventListener('online',  ()=>connBar(null));
+  window.addEventListener('offline', ()=>connBar('offline'));
+  if(!navigator.onLine) connBar('offline');
+}
+
+/* -----------------------------------------------------------------------
+   書き込みの土台（厨房マニュアルと同じ楽観的更新）
+     ①先にローカルの S を更新して画面を出す（速い・オフラインでも崩れない）
+     ②そのあと該当行だけサーバーへ送る
+     ③失敗したらトーストで必ず知らせる（黙って消えるのが一番怖い）
+   単独モードでは従来どおり localStorage に全書きする。
+   ----------------------------------------------------------------------- */
+function saveFail(){ try{ toast(L('ts_save_ng')); }catch(e){ console.error(e); } }
+
+async function upsertRow(table, row){
+  if(!SHARED){ save(); return true; }
+  const { error } = await sb.from(table).upsert(row, { onConflict:'id' });
+  if(error){ console.error(table+' upsert', error); saveFail(); return false; }
+  return true;
+}
+async function insertRow(table, row){
+  if(!SHARED){ save(); return null; }
+  const { data, error } = await sb.from(table).insert(row).select().single();
+  if(error){ console.error(table+' insert', error); saveFail(); return null; }
+  return data;
+}
+async function patchRow(table, id, patch){
+  if(!SHARED){ save(); return true; }
+  const { error } = await sb.from(table).update(patch).eq('id', id);
+  if(error){ console.error(table+' update', error); saveFail(); return false; }
+  return true;
+}
+/* 物理削除はしない。hidden_at を打って隠す（バックアップが無いので消さない） */
+async function hideRow(table, id){
+  if(!SHARED){ save(); return true; }
+  const { error } = await sb.from(table).update({ hidden_at:new Date().toISOString() }).eq('id', id);
+  if(error){ console.error(table+' hide', error); saveFail(); return false; }
+  return true;
+}
+
+/* -----------------------------------------------------------------------
+   共有モードの読み込み
+   DBの行を、デモと同じ形の S に組み立て直す。
+   こうしておけば画面側のコードをほとんど書き換えずに済む。
+   ★変換が必要なのは3か所だけ：
+     ・created_at → date（'MM-DD'。画面はこの形を前提にしている）
+     ・parent_id（UUID） → re（返信配列のindex）※元のUUIDは _id に残す
+     ・best_comment_id（UUID） → best（index）
+   ----------------------------------------------------------------------- */
+const md = (iso)=> iso ? String(iso).slice(5,10).replace('-','-') : '';   // 2026-07-30T… → 07-30
+const alive = (rows)=> (rows||[]).filter(r=>!r.hidden_at);                // 非表示はここ1か所で落とす
+
+async function loadShared(){
+  // 1) 自分は誰か
+  const { data:ures } = await sb.auth.getUser();
+  const user = ures && ures.user;
+  if(!user){ connBar('noauth'); return null; }
+  const { data:me, error:meErr } = await sb.from('dsb_members').select('*').eq('id', user.id).maybeSingle();
+  if(meErr || !me){ connBar('noauth'); return null; }
+  ME = me; connBar(null);
+
+  // 2) 会社ぶんを一括で取る（RLSが会社の壁なので、条件を書かなくても他社は返らない）
+  const q = (t, sel='*')=> sb.from(t).select(sel);
+  const [st, mb, nt, nr, sh, ac, bd, bc, br, td, tdn, sk] = await Promise.all([
+    q('dsb_stores'), q('dsb_members'),
+    q('dsb_notices'), q('dsb_notice_reads'),
+    q('dsb_shares'),  q('dsb_accounts'),
+    q('dsb_board'),   q('dsb_board_comments'), q('dsb_board_reads'),
+    q('dsb_todos'),   q('dsb_todo_dones'),     q('dsb_streaks'),
+  ]);
+  const bad = [st,mb,nt,nr,sh,ac,bd,bc,br,td,tdn,sk].find(r=>r.error);
+  if(bad){ console.error('load', bad.error); saveFail(); return null; }
+
+  // 3) デモと同じ形へ
+  const stores = alive(st.data).sort((a,b)=>a.sort_order-b.sort_order)
+    .map(s=>({ id:s.id, name:s.name, is_hq:s.is_hq }));
+
+  const members = alive(mb.data).map(m=>({
+    id:m.id, name:m.name, store:m.store_id, role:
+      m.role==='owner'?'オーナー':m.role==='manager'?'店長':'社員',
+    auth:m.line_user_id?'line':'invited',
+    last:m.last_seen_at?md(m.last_seen_at):'—', joined:md(m.joined_at),
+  }));
+
+  const readsOf = (id)=>{
+    const o={}; (nr.data||[]).filter(r=>r.notice_id===id)
+      .forEach(r=>{ o[r.member_id]={ at:md(r.read_at), handled:!!r.handled_at }; });
+    return o;
+  };
+  const notices = alive(nt.data)
+    .sort((a,b)=>String(b.created_at).localeCompare(String(a.created_at)))
+    .map(n=>({ id:n.id, author:n.author_store_id, target:n.target, priority:n.priority,
+      due:n.due, title:n.title, body:n.body, i18n:n.i18n||{}, date:md(n.created_at),
+      reads:readsOf(n.id) }));
+
+  const shares = alive(sh.data)
+    .sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0)||String(b.created_at).localeCompare(String(a.created_at)))
+    .map(s=>({ id:s.id, cat:s.cat, scope:s.scope, title:s.title, body:s.body, url:s.url,
+      pinned:s.pinned, origin:s.origin, src:s.src||undefined, photos:s.photos||[],
+      i18n:s.i18n||{}, by:s.by_label||storeNameRaw(stores,s.by_store_id), date:md(s.created_at) }));
+
+  const accounts = alive(ac.data).map(a=>({ id:a.id, svc:a.svc, store:a.store_id, admin:a.admin,
+    contact:a.contact, login:a.login, scope:a.scope, updated:a.updated }));
+
+  const board = alive(bd.data)
+    .sort((a,b)=>String(b.created_at).localeCompare(String(a.created_at)))
+    .map(p=>{
+      const cs = alive(bc.data).filter(c=>c.post_id===p.id)
+        .sort((a,b)=>String(a.created_at).localeCompare(String(b.created_at)));
+      const idxOf = {}; cs.forEach((c,i)=>{ idxOf[c.id]=i; });
+      const comments = cs.map(c=>({
+        _id:c.id, by:c.by_store_id, by_member:c.by_member_id, body:c.body,
+        to:c.to_targets||[], photos:c.photos||[], i18n:c.i18n||{}, date:md(c.created_at),
+        ...(c.parent_id!=null && idxOf[c.parent_id]!=null ? { re:idxOf[c.parent_id] } : {}),
+      }));
+      const seen={}; (br.data||[]).filter(r=>r.post_id===p.id)
+        .forEach(r=>{ seen[r.member_id]=r.seen_comment_count; });
+      return { id:p.id, type:p.type, title:p.title, body:p.body, by:p.by_store_id,
+        by_member:p.by_member_id, solved:p.solved, to:p.to_targets||[], tags:p.tags||[],
+        reactions:p.reactions||{}, photos:p.photos||[], i18n:p.i18n||{},
+        promoted:p.promoted||undefined, date:md(p.created_at), comments, seen,
+        _bestId:p.best_comment_id||null,
+        ...(p.best_comment_id && idxOf[p.best_comment_id]!=null ? { best:idxOf[p.best_comment_id] } : {}),
+      };
+    });
+
+  const todos = alive(td.data)
+    .sort((a,b)=>String(b.created_at).localeCompare(String(a.created_at)))
+    .map(t=>{
+      const done={}; (tdn.data||[]).filter(d=>d.todo_id===t.id)
+        .forEach(d=>{ done[d.store_id]=md(d.done_at); });
+      return { id:t.id, target:t.target, title:t.title, note:t.note, due:t.due,
+        i18n:t.i18n||{}, done };
+    });
+
+  const streaks={};
+  (sk.data||[]).forEach(r=>{ streaks[r.member_id]={ days:r.days, best:r.best,
+    last:r.last_date||'', celebrated:r.celebrated_date||'' }; });
+
+  // 写真：Storageのパスを集めて署名付きURLを一括で作る（1枚ずつ取ると遅い）
+  const paths=[];
+  const pick=(arr)=>arr.forEach(v=>{ if(typeof v==='string' && !v.startsWith('data:') && !PHOTO_URL[v]) paths.push(v); });
+  shares.forEach(x=>pick(x.photos||[]));
+  board.forEach(x=>{ pick(x.photos||[]); (x.comments||[]).forEach(c=>pick(c.photos||[])); });
+  if(paths.length){
+    const { data:signed, error:sErr } = await sb.storage.from('dsb-photos')
+      .createSignedUrls([...new Set(paths)], 60*60*24);   // 24時間有効
+    if(sErr) console.error('signedUrls', sErr);
+    (signed||[]).forEach(o=>{ if(o && o.path && o.signedUrl) PHOTO_URL[o.path]=o.signedUrl; });
+  }
+
+  // 融通・PLタブはモニターでは使わないので、デモの初期値をそのまま流用する
+  const demo = seed();
+  return Object.assign({}, demo, {
+    stores, members, notices, shares, accounts, board, todos, streaks,
+    actor: me.store_id || (stores[0]||{}).id,
+  });
+}
+/* -----------------------------------------------------------------------
+   共有モードのログイン
+     ・ふつうのスタッフ … 店長が配る参加リンク（join.html）から入る＝ここは通らない
+     ・店長／オーナー   … メールとパスワードでここから入る（人数が少ないので）
+   ----------------------------------------------------------------------- */
+function showLoginForm(msg){
+  const app=document.getElementById('app'); if(!app) return;
+  app.innerHTML=`
+  <div class="card" style="max-width:430px;margin:22px auto;">
+    <h3>🔑 ${L('login_screen')}</h3>
+    <p class="muted" style="font-size:12.5px;line-height:1.75;margin:0 0 12px;">
+      参加リンクをお持ちの方は、そのリンクを開いてください。<br>店長・オーナーはこちらから入れます。</p>
+    <div class="form-grid">
+      <div class="full"><label class="field">メールアドレス</label>
+        <input id="lg_email" type="email" autocomplete="username" placeholder="owner@deshabo.local"></div>
+      <div class="full"><label class="field">パスワード</label>
+        <input id="lg_pw" type="password" autocomplete="current-password"></div>
+      <div class="full"><button class="act primary" id="lg_go">ログイン</button></div>
+    </div>
+    <div id="lg_msg" class="muted" style="font-size:12.5px;margin-top:10px;line-height:1.7;">${msg||''}</div>
+  </div>`;
+  const go=document.getElementById('lg_go'), m=document.getElementById('lg_msg');
+  const submit=async()=>{
+    const email=(document.getElementById('lg_email').value||'').trim();
+    const pw=document.getElementById('lg_pw').value||'';   // パスワードは trim しない
+    if(!email||!pw){ m.textContent='メールアドレスとパスワードを入れてください。'; return; }
+    go.disabled=true; m.textContent='確認中…';
+    const { error }=await sb.auth.signInWithPassword({ email, password:pw });
+    if(error){ go.disabled=false; m.textContent='メールアドレスかパスワードが違います。'; return; }
+    const d=await loadShared();
+    if(d){ S=d; render(); startRealtime(); }
+    else { go.disabled=false; m.textContent='このアカウントはまだメンバー登録されていません。'; }
+  };
+  go.onclick=submit;
+  document.getElementById('lg_pw').addEventListener('keydown',e=>{ if(e.key==='Enter') submit(); });
+}
+async function doSignOut(){
+  if(!SHARED) return;
+  await sb.auth.signOut();
+  location.reload();
+}
+/* -----------------------------------------------------------------------
+   Realtime（相談・返信・連絡だけ購読する。全テーブルを購読すると重い）
+   届いたら差分を当てるのではなく、まとめて読み直す。
+     ・自分の書き込みでも通知は飛ぶので、連打すると読み直しが重なる
+       → 800ms ぶん束ねてから1回だけ読む
+     ・入力中に画面が作り直されると打っている内容が消える
+       → テキストを入力中は読み直しを先送りする
+   ----------------------------------------------------------------------- */
+let RT_TIMER=null, RT_CH=null;
+function isTyping(){
+  const el=document.activeElement;
+  return !!(el && (el.tagName==='INPUT'||el.tagName==='TEXTAREA'||el.isContentEditable));
+}
+function scheduleReload(){
+  if(RT_TIMER) clearTimeout(RT_TIMER);
+  RT_TIMER=setTimeout(async()=>{
+    RT_TIMER=null;
+    if(isTyping()){ scheduleReload(); return; }        // 入力が終わるまで待つ
+    const d=await loadShared();
+    if(d){ const actor=S.actor; S=d; if(actor) S.actor=actor; render(); }
+  }, 800);
+}
+function startRealtime(){
+  if(!SHARED || RT_CH) return;
+  RT_CH = sb.channel('dsb')
+    .on('postgres_changes',{event:'*',schema:'public',table:'dsb_board'},         scheduleReload)
+    .on('postgres_changes',{event:'*',schema:'public',table:'dsb_board_comments'},scheduleReload)
+    .on('postgres_changes',{event:'*',schema:'public',table:'dsb_notices'},       scheduleReload)
+    .subscribe();
+}
+/* stores 配列がまだ S に入っていない段階で使う店名引き */
+function storeNameRaw(stores, id){ return (stores.find(s=>s.id===id)||{}).name || ''; }
 
 /* =======================================================================
    多言語（5言語）
@@ -303,8 +606,8 @@ ja:{
  /* 連携ソース等 */
  src_pos:'レジ（POS）', srck_pos:'売上・客数・客単価', src_gourmet:'グルメ媒体（食べログ/ぐるなび/HP）', srck_gourmet:'予約・閲覧・評価', src_sns:'SNS（Instagram/Google）', srck_sns:'リーチ・フォロワー・口コミ', src_folder:'指定フォルダ（Drive）', srck_folder:'Excel/CSV を自動取込', acc_common:'共通', by_tpl:'テンプレ',
  /* 共通 */
- app_name:'デシャップボード', app_sub:'店の連絡・共有ハブ（デモ）', you:'あなた', search:'さがす', login_screen:'ログイン画面', reset:'初期化',
- ext:'拡張', all_stores:'全店', hq:'本部', to_hq:'本部宛', everyone:'全員',
+ app_name:'デシャップボード', app_sub:'店の連絡・共有ハブ（デモ）', you:'あなた', search:'探す', login_screen:'ログイン画面', reset:'初期化',
+ guide_btn:'取説', ext:'拡張', all_stores:'全店', hq:'本部', to_hq:'本部宛', everyone:'全員',
  unread:'未読', read:'既読', handled:'✓対応', important:'重要', due:'期限',
  add:'追加する', del:'削除', open_link:'🔗 開く', close:'閉じる', back:'← 戻る', cancel:'取消',
  f_title:'タイトル', f_body_opt:'本文（任意）', f_kind:'種類', f_target:'宛先', f_note_opt:'メモ（任意）',
@@ -377,7 +680,7 @@ ja:{
  promote_note:'相談は流れて消えます。答えを「共有」に残せば、次に入った人も同じ答えにたどり着けます。',
  promote_do:'共有に登録', promote_cancel:'やめる',
  promoted_to:'📚 共有に昇格済み', ts_promoted:'共有に登録しました（出典リンク付き）',
- ts_best:'ベストアンサーに指定しました', src_from:'🔗 出典の相談を見る', src_badge:'相談から',
+ ts_best:'ベストアンサーに指定しました', ts_save_ng:'保存できませんでした。電波の良い場所でもう一度お試しください。', src_from:'🔗 出典の相談を見る', src_badge:'相談から',
  ph_f:'写真（現場は文字より写真）', ph_add:'📷 写真を追加', ph_rm:'この写真を外す',
  ph_note:'スマホならその場で撮って添付できます。端末内で縮小してから保存（デモはブラウザ内だけ）。',
  ph_n:'📷 {0}', ts_photo:'写真を添付しました', ts_photo_ng:'写真が大きすぎて保存できませんでした。枚数を減らしてください。',
@@ -390,13 +693,16 @@ ja:{
  done_short:'✓完了', not_done:'未',
  /* メンバー */
  mem_head:'メンバー',
- mem_lede:'誰が参加しているかを一覧に。参加は<b>招待リンクを送るだけ</b>——<b>LINEでそのまま</b>入れて、LINEを使わない人は<b>電話番号の下4桁</b>で入れます。',
+ mem_lede:'誰が参加しているかを一覧に。参加は<b>リンクを配るだけ</b>——本人は名前を入れるだけで入れます。複数人で使うリンクには<b>合言葉</b>が付きます（メール・パスワードは作りません）。',
  mem_count:'参加人数', mem_line:'LINEで利用', mem_pending:'招待中', unit_person:'人',
- mem_invite:'➕ メンバーを招待する', m_name:'お名前', m_role:'役割', m_store:'所属', m_last4:'電話番号の下4桁',
+ mem_invite:'➕ メンバーを招待する', m_name:'お名前（任意）', m_role:'役割', m_store:'所属', m_last4:'電話番号の下4桁',
+ inv_kind:'招待のしかた', inv_one:'この人だけ（リンクを本人に送る）', inv_many:'店みんな（QRを見せて合言葉で入ってもらう）',
+ inv_pass:'合言葉', inv_pass_auto:'自動で作る', inv_pass_hint:'紛らわしい文字を除いた6文字を自動で作ります。朝礼で口で伝えてください。',
+ inv_issued:'発行しました', inv_copy:'コピー', inv_copied:'コピーしました', inv_link:'参加リンク',
  invite_btn:'🔗 招待リンクを発行する',
- invite_note:'発行したリンクをLINEやSMSで本人に送るだけ。本人は<b>LINEでタップ参加</b>、LINEを使わない場合は<b>下4桁</b>で入ります（メール・パスワードは不要）。',
+ invite_note:'<b>この人だけ</b>＝リンクを本人に送る（リンクが鍵なので合言葉は不要・1回で使い切り）。<br><b>店みんな</b>＝1本のリンクを配って、<b>合言葉</b>で入ってもらう（朝礼でQRを見せる使い方）。どちらもメール・パスワードは作りません。',
  role_part:'アルバイト', role_emp:'社員',
- auth_line:'LINE', auth_l4:'リンク＋下4桁', auth_inv:'招待中（未参加）',
+ auth_line:'LINE', auth_l4:'リンク＋合言葉', auth_inv:'招待中（未参加）',
  last_used:'最終利用', joined:'参加', resend:'再送',
  /* 検索 */
  search_head:'🔍 さがす', search_sub:'連絡・共有・相談・やること をまとめて検索',
@@ -437,15 +743,15 @@ ja:{
  lg_inv:'📩 <b>{0}</b> に招待されています', lg_inv_sub:'店長 佐藤さんからの招待リンク',
  lg_first:'はじめての方（初回登録）', lg_line_start:'LINEではじめる', lg_line_login:'LINEでログイン',
  lg_note1:'<b>タップだけで完了。</b>メールもパスワードも作りません。<br>次からもLINEでそのまま入れます。',
- lg_or:'LINEを使わない方', lg_last4:'📱 電話番号の下4桁で入る', lg_link4:'🔗 リンク＋電話下4桁で入る',
+ lg_or:'LINEを使わない方', lg_last4:'🔑 合言葉で入る', lg_link4:'🔑 リンク＋合言葉で入る',
  lg_note2:'このリンクは<b>あなた専用</b>です（14日で期限切れ）。<br>※デモは見た目のみ。LINEログインは本体アプリで稼働中です。',
  lg_back:'おかえりなさい', lg_note_line:'いつものLINEでそのまま入れます。',
  lg_note3:'機種変更・スマホを変えたときも、この2つのどちらかで入り直せます。',
  lg_swap_again:'▸ 2回目以降のログイン画面を見る', lg_swap_inv:'▸ 初回（招待リンク）の画面を見る',
- lg_tel:'電話番号のご確認', lg_tel_sub:'ご本人確認のためだけに使います',
- lg_tel_hint:'店長に登録してもらった<b>ご自身の携帯番号の下4桁</b>を入れてください。<br>（例：090-1234-<b>5678</b> → 5678）',
- lg_tel_go:'この番号で入る',
- lg_tel_note:'SMSは送りません（通信料もかかりません）。<br>5回まちがえると10分お休みになります。',
+ lg_tel:'合言葉を入れてください', lg_tel_sub:'店長から聞いた6文字です',
+ lg_tel_hint:'朝礼などで<b>店長から聞いた合言葉（6文字）</b>を入れてください。<br>（例：<b>ABC123</b>）',
+ lg_tel_go:'この合言葉で入る',
+ lg_tel_note:'電話番号もメールも使いません。<br>5回まちがえると10分お休みになります。',
  /* alert / toast */
  al_title:'タイトルを入力してください', al_subject:'件名を入力してください',
  al_content:'内容を入力してください', al_item:'品目を入力してください', al_name:'お名前を入力してください',
@@ -456,13 +762,13 @@ ja:{
  ts_share:'共有に追加しました', ts_posted:'投稿しました', ts_replied:'返信しました',
  ts_import:'取り込みました：{0}（PL・KPIに反映）', ts_linked:'{0} を連携しました',
  ts_acc:'管理者に表示リクエストを送りました（誰がいつ見たかは記録されます）',
- ts_line:'（デモ）LINEで参加しました。次からもLINEで入れます', ts_last4:'（デモ）電話番号の下4桁で入りました',
+ ts_line:'（デモ）LINEで参加しました。次からもLINEで入れます', ts_last4:'（デモ）合言葉で入りました',
 },
 en:{
  /* 連携ソース等 */
  src_pos:'Register (POS)', srck_pos:'Sales, guests, average spend', src_gourmet:'Listing sites (Tabelog / Gurunavi / Hot Pepper)', srck_gourmet:'Bookings, views, ratings', src_sns:'Social (Instagram / Google)', srck_sns:'Reach, followers, reviews', src_folder:'Watched folder (Drive)', srck_folder:'Auto-import Excel / CSV', acc_common:'Shared', by_tpl:'Template',
  app_name:'DESHABO', app_sub:'Communication & knowledge hub (demo)', you:'You', search:'Search', login_screen:'Login screen', reset:'Reset',
- ext:'Add-on', all_stores:'All stores', hq:'HQ', to_hq:'To HQ', everyone:'Everyone',
+ guide_btn:'Guide', ext:'Add-on', all_stores:'All stores', hq:'HQ', to_hq:'To HQ', everyone:'Everyone',
  unread:'Unread', read:'Read', handled:'✓ Done', important:'Important', due:'Due',
  add:'Add', del:'Delete', open_link:'🔗 Open', close:'Close', back:'← Back', cancel:'Cancel',
  f_title:'Title', f_body_opt:'Message (optional)', f_kind:'Type', f_target:'To', f_note_opt:'Note (optional)',
@@ -530,7 +836,7 @@ en:{
  promote_note:'Threads scroll away. Keep the answer in the Library and the next new hire reaches the same answer.',
  promote_do:'Add to Library', promote_cancel:'Cancel',
  promoted_to:'📚 Promoted to Library', ts_promoted:'Added to the Library, with a link back to the thread',
- ts_best:'Marked as the best answer', src_from:'🔗 See the original thread', src_badge:'From a thread',
+ ts_best:'Marked as the best answer', ts_save_ng:'Could not save. Please try again where the signal is better.', src_from:'🔗 See the original thread', src_badge:'From a thread',
  ph_f:'Photos (a photo beats a paragraph)', ph_add:'📷 Add a photo', ph_rm:'Remove this photo',
  ph_note:'On a phone you can shoot and attach on the spot. Images are shrunk on the device before saving (demo keeps them in the browser only).',
  ph_n:'📷 {0}', ts_photo:'Photo attached', ts_photo_ng:'The photos are too large to save. Please attach fewer of them.',
@@ -541,13 +847,16 @@ en:{
  todo_mine_done:'Your store: done ✓', todo_done_btn:'✓ Mark {0} as done',
  done_short:'✓ done', not_done:'open',
  mem_head:'Members',
- mem_lede:'See everyone who has joined. To add someone you <b>just send an invite link</b> — they join <b>straight from LINE</b>, or with <b>the last 4 digits of their phone number</b> if they do not use LINE.',
+ mem_lede:'See everyone who has joined. To add someone you <b>just share a link</b> — they only enter their name. Links meant for several people come with a <b>passphrase</b> (no email, no password).',
  mem_count:'Members', mem_line:'Using LINE', mem_pending:'Invited', unit_person:'',
- mem_invite:'➕ Invite a member', m_name:'Name', m_role:'Role', m_store:'Store', m_last4:'Last 4 digits of phone',
+ mem_invite:'➕ Invite a member', m_name:'Name (optional)', m_role:'Role', m_store:'Store', m_last4:'Last 4 digits of phone',
+ inv_kind:'How to invite', inv_one:'One person (send them the link)', inv_many:'Whole store (show a QR, they enter a passphrase)',
+ inv_pass:'Passphrase', inv_pass_auto:'Generate', inv_pass_hint:'A 6-character code is generated, avoiding look-alike letters. Say it out loud at the morning meeting.',
+ inv_issued:'Created', inv_copy:'Copy', inv_copied:'Copied', inv_link:'Join link',
  invite_btn:'🔗 Create an invite link',
- invite_note:'Just send the link over LINE or SMS. They <b>join with one tap in LINE</b>, or use <b>the last 4 digits</b> if they do not use LINE. No email, no password.',
+ invite_note:'<b>One person</b> = send them the link (the link itself is the key, so no passphrase; it works once).<br><b>Whole store</b> = share one link and let people in with a <b>passphrase</b> (show a QR at the morning meeting). Neither needs an email or a password.',
  role_part:'Part-time', role_emp:'Full-time',
- auth_line:'LINE', auth_l4:'Link + last 4', auth_inv:'Invited (not joined)',
+ auth_line:'LINE', auth_l4:'Link + passphrase', auth_inv:'Invited (not joined)',
  last_used:'Last active', joined:'Joined', resend:'Resend',
  search_head:'🔍 Search', search_sub:'Search Notices, Library, Ask and To-do together',
  search_ph:'e.g. stocktake / chili oil / air conditioner', search_hint:'Type a keyword',
@@ -584,16 +893,16 @@ en:{
  lg_inv:'📩 You have been invited to <b>{0}</b>', lg_inv_sub:'Invite link from Sato, the manager',
  lg_first:'First time here', lg_line_start:'Start with LINE', lg_line_login:'Log in with LINE',
  lg_note1:'<b>One tap and you are in.</b> No email, no password to create.<br>Next time, just use LINE again.',
- lg_or:'If you do not use LINE', lg_last4:'📱 Enter the last 4 digits of your phone',
- lg_link4:'🔗 Link + last 4 digits of your phone',
+ lg_or:'If you do not use LINE', lg_last4:'🔑 Enter with a passphrase',
+ lg_link4:'🔑 Link + passphrase',
  lg_note2:'This link is <b>just for you</b> (expires in 14 days).<br>※ This demo shows the screens only. LINE login already runs in the live app.',
  lg_back:'Welcome back', lg_note_line:'Use the same LINE you always use.',
  lg_note3:'Changed phones? Either of these two will get you back in.',
  lg_swap_again:'▸ See the returning-user screen', lg_swap_inv:'▸ See the first-time (invite) screen',
- lg_tel:'Confirm your phone number', lg_tel_sub:'Used only to confirm it is you',
- lg_tel_hint:'Enter <b>the last 4 digits of the mobile number</b> your manager registered.<br>(e.g. 090-1234-<b>5678</b> → 5678)',
- lg_tel_go:'Continue with this number',
- lg_tel_note:'No SMS is sent (and it costs you nothing).<br>After 5 wrong tries it pauses for 10 minutes.',
+ lg_tel:'Enter the passphrase', lg_tel_sub:'The 6 characters your manager told you',
+ lg_tel_hint:'Enter the <b>6-character passphrase</b> your manager told you (e.g. at the morning meeting).<br>(e.g. <b>ABC123</b>)',
+ lg_tel_go:'Continue with this passphrase',
+ lg_tel_note:'No phone number or email is used.<br>After 5 wrong tries it pauses for 10 minutes.',
  al_title:'Please enter a title', al_subject:'Please enter a subject',
  al_content:'Please enter the content', al_item:'Please enter an item', al_name:'Please enter a name',
  al_hq_todo:'Switch to a store (as yourself) to mark it done',
@@ -603,13 +912,13 @@ en:{
  ts_share:'Added to Library', ts_posted:'Posted', ts_replied:'Reply sent',
  ts_import:'Imported: {0} (reflected in P&L・KPI)', ts_linked:'{0} connected',
  ts_acc:'Request sent to the administrator (who viewed it and when is logged)',
- ts_line:'(demo) Joined with LINE. Use LINE next time too', ts_last4:'(demo) Signed in with the last 4 digits',
+ ts_line:'(demo) Joined with LINE. Use LINE next time too', ts_last4:'(demo) Signed in with the passphrase',
 },
 zh:{
  /* 連携ソース等 */
  src_pos:'收银（POS）', srck_pos:'销售额・客数・客单价', src_gourmet:'美食平台（Tabelog/Gurunavi/Hot Pepper）', srck_gourmet:'预约・浏览・评分', src_sns:'社交媒体（Instagram/Google）', srck_sns:'触达・粉丝・点评', src_folder:'指定文件夹（Drive）', srck_folder:'自动导入 Excel/CSV', acc_common:'通用', by_tpl:'模板',
  app_name:'DESHABO', app_sub:'门店沟通与共享中心（演示）', you:'你', search:'搜索', login_screen:'登录界面', reset:'重置',
- ext:'扩展', all_stores:'全部门店', hq:'总部', to_hq:'致总部', everyone:'所有人',
+ guide_btn:'说明书', ext:'扩展', all_stores:'全部门店', hq:'总部', to_hq:'致总部', everyone:'所有人',
  unread:'未读', read:'已读', handled:'✓已处理', important:'重要', due:'截止',
  add:'添加', del:'删除', open_link:'🔗 打开', close:'关闭', back:'← 返回', cancel:'取消',
  f_title:'标题', f_body_opt:'正文（可选）', f_kind:'类型', f_target:'收件对象', f_note_opt:'备注（可选）',
@@ -677,7 +986,7 @@ zh:{
  promote_note:'咨询会被刷走。把答案留在“共享”，新来的人也能找到同样的答案。',
  promote_do:'登记到共享', promote_cancel:'取消',
  promoted_to:'📚 已升级到共享', ts_promoted:'已登记到共享（附出处链接）',
- ts_best:'已指定为最佳回答', src_from:'🔗 查看出处的咨询', src_badge:'来自咨询',
+ ts_best:'已指定为最佳回答', ts_save_ng:'未能保存。请在信号良好的地方重试。', src_from:'🔗 查看出处的咨询', src_badge:'来自咨询',
  ph_f:'照片（现场比起文字更需要照片）', ph_add:'📷 添加照片', ph_rm:'移除这张照片',
  ph_note:'用手机可以当场拍照并添加。图片会在本机缩小后保存（演示版仅保存在浏览器内）。',
  ph_n:'📷 {0}', ts_photo:'已添加照片', ts_photo_ng:'照片太大无法保存。请减少张数。',
@@ -688,13 +997,16 @@ zh:{
  todo_mine_done:'你的门店：已完成 ✓', todo_done_btn:'✓ 将{0}标为完成',
  done_short:'✓完成', not_done:'未完成',
  mem_head:'成员',
- mem_lede:'一览谁已加入。加人只需<b>发送邀请链接</b>——<b>用LINE直接</b>进入，不用LINE的人用<b>手机号后4位</b>进入。',
+ mem_lede:'一览谁已加入。加人只需<b>分发链接</b>——本人只要输入姓名即可。多人共用的链接会附带<b>口令</b>（不需要邮箱和密码）。',
  mem_count:'参与人数', mem_line:'使用LINE', mem_pending:'邀请中', unit_person:'人',
- mem_invite:'➕ 邀请成员', m_name:'姓名', m_role:'角色', m_store:'所属', m_last4:'手机号后4位',
+ mem_invite:'➕ 邀请成员', m_name:'姓名（可不填）', m_role:'角色', m_store:'所属', m_last4:'手机号后4位',
+ inv_kind:'邀请方式', inv_one:'仅此人（把链接发给本人）', inv_many:'全店（出示二维码，用口令进入）',
+ inv_pass:'口令', inv_pass_auto:'自动生成', inv_pass_hint:'自动生成6位（去掉易混淆字符）。请在早会上口头告知。',
+ inv_issued:'已发行', inv_copy:'复制', inv_copied:'已复制', inv_link:'参加链接',
  invite_btn:'🔗 生成邀请链接',
- invite_note:'把链接用LINE或短信发给本人即可。本人<b>在LINE里一键加入</b>，不用LINE的话用<b>后4位</b>进入（不需要邮箱和密码）。',
+ invite_note:'<b>仅此人</b>＝把链接发给本人（链接就是钥匙，不需要口令，只能用一次）。<br><b>全店</b>＝分发1条链接，用<b>口令</b>进入（早会上出示二维码的用法）。两者都不需要邮箱和密码。',
  role_part:'兼职', role_emp:'正式员工',
- auth_line:'LINE', auth_l4:'链接＋后4位', auth_inv:'邀请中（未加入）',
+ auth_line:'LINE', auth_l4:'链接＋口令', auth_inv:'邀请中（未加入）',
  last_used:'最近使用', joined:'加入', resend:'重发',
  search_head:'🔍 搜索', search_sub:'通知・共享・咨询・待办一起搜',
  search_ph:'例：盘点／辣油／空调', search_hint:'请输入关键词',
@@ -731,15 +1043,15 @@ zh:{
  lg_inv:'📩 你被邀请加入 <b>{0}</b>', lg_inv_sub:'来自佐藤店长的邀请链接',
  lg_first:'第一次使用（首次注册）', lg_line_start:'用LINE开始', lg_line_login:'用LINE登录',
  lg_note1:'<b>点一下就完成。</b>不用注册邮箱和密码。<br>以后也用LINE直接进入。',
- lg_or:'不使用LINE的人', lg_last4:'📱 用手机号后4位进入', lg_link4:'🔗 用链接＋手机号后4位进入',
+ lg_or:'不使用LINE的人', lg_last4:'🔑 用口令进入', lg_link4:'🔑 用链接＋口令进入',
  lg_note2:'这个链接<b>专属于你</b>（14天后失效）。<br>※演示仅呈现界面。LINE登录已在正式应用中运行。',
  lg_back:'欢迎回来', lg_note_line:'用你平时的LINE直接进入。',
  lg_note3:'换手机时，用这两种方式之一都能重新进入。',
  lg_swap_again:'▸ 查看第二次以后的登录界面', lg_swap_inv:'▸ 查看首次（邀请链接）界面',
- lg_tel:'确认手机号码', lg_tel_sub:'仅用于确认本人',
- lg_tel_hint:'请输入店长登记的<b>你本人手机号的后4位</b>。<br>（例：090-1234-<b>5678</b> → 5678）',
- lg_tel_go:'用这个号码进入',
- lg_tel_note:'不会发送短信（也不产生通信费）。<br>错5次会暂停10分钟。',
+ lg_tel:'请输入口令', lg_tel_sub:'店长告知的6位字符',
+ lg_tel_hint:'请输入店长（例如在早会上）告知的<b>6位口令</b>。<br>（例：<b>ABC123</b>）',
+ lg_tel_go:'用这个口令进入',
+ lg_tel_note:'不使用手机号，也不使用邮箱。<br>错5次会暂停10分钟。',
  al_title:'请输入标题', al_subject:'请输入主题',
  al_content:'请输入内容', al_item:'请输入品名', al_name:'请输入姓名',
  al_hq_todo:'请切换到某家门店（你自己）再标记完成',
@@ -749,13 +1061,13 @@ zh:{
  ts_share:'已添加到共享', ts_posted:'已发布', ts_replied:'已回复',
  ts_import:'已导入：{0}（反映到损益・KPI）', ts_linked:'已对接 {0}',
  ts_acc:'已向管理员发送查看申请（谁在何时查看会被记录）',
- ts_line:'（演示）已用LINE加入。以后也能用LINE进入', ts_last4:'（演示）已用手机号后4位进入',
+ ts_line:'（演示）已用LINE加入。以后也能用LINE进入', ts_last4:'（演示）已用口令进入',
 },
 vi:{
  /* 連携ソース等 */
  src_pos:'Máy tính tiền (POS)', srck_pos:'Doanh thu, lượt khách, chi tiêu/khách', src_gourmet:'Trang đánh giá (Tabelog / Gurunavi / Hot Pepper)', srck_gourmet:'Đặt chỗ, lượt xem, điểm đánh giá', src_sns:'Mạng xã hội (Instagram / Google)', srck_sns:'Tiếp cận, người theo dõi, đánh giá', src_folder:'Thư mục chỉ định (Drive)', srck_folder:'Tự động nhập Excel / CSV', acc_common:'Dùng chung', by_tpl:'Mẫu',
  app_name:'DESHABO', app_sub:'Trung tâm liên lạc & chia sẻ của cửa hàng (demo)', you:'Bạn', search:'Tìm', login_screen:'Màn hình đăng nhập', reset:'Đặt lại',
- ext:'Mở rộng', all_stores:'Tất cả cửa hàng', hq:'Trụ sở', to_hq:'Gửi trụ sở', everyone:'Mọi người',
+ guide_btn:'Hướng dẫn', ext:'Mở rộng', all_stores:'Tất cả cửa hàng', hq:'Trụ sở', to_hq:'Gửi trụ sở', everyone:'Mọi người',
  unread:'Chưa đọc', read:'Đã đọc', handled:'✓ Đã xử lý', important:'Quan trọng', due:'Hạn',
  add:'Thêm', del:'Xoá', open_link:'🔗 Mở', close:'Đóng', back:'← Quay lại', cancel:'Huỷ',
  f_title:'Tiêu đề', f_body_opt:'Nội dung (tuỳ chọn)', f_kind:'Loại', f_target:'Gửi tới', f_note_opt:'Ghi chú (tuỳ chọn)',
@@ -823,7 +1135,7 @@ vi:{
  promote_note:'Bài hỏi đáp rồi sẽ trôi mất. Lưu câu trả lời vào Tài liệu để người mới vào sau cũng tìm được đúng câu đó.',
  promote_do:'Lưu vào Tài liệu', promote_cancel:'Hủy',
  promoted_to:'📚 Đã đưa lên Tài liệu', ts_promoted:'Đã lưu vào Tài liệu (kèm liên kết nguồn)',
- ts_best:'Đã chọn làm câu trả lời hay nhất', src_from:'🔗 Xem bài hỏi đáp gốc', src_badge:'Từ hỏi đáp',
+ ts_best:'Đã chọn làm câu trả lời hay nhất', ts_save_ng:'Không lưu được. Hãy thử lại ở nơi có sóng tốt.', src_from:'🔗 Xem bài hỏi đáp gốc', src_badge:'Từ hỏi đáp',
  ph_f:'Ảnh (ngoài hiện trường, một tấm ảnh hơn cả đoạn văn)', ph_add:'📷 Thêm ảnh', ph_rm:'Bỏ ảnh này',
  ph_note:'Dùng điện thoại thì chụp và đính kèm ngay tại chỗ. Ảnh được thu nhỏ trên máy trước khi lưu (bản demo chỉ giữ trong trình duyệt).',
  ph_n:'📷 {0}', ts_photo:'Đã đính kèm ảnh', ts_photo_ng:'Ảnh quá lớn nên không lưu được. Vui lòng đính kèm ít ảnh hơn.',
@@ -834,13 +1146,16 @@ vi:{
  todo_mine_done:'Cửa hàng của bạn: đã xong ✓', todo_done_btn:'✓ Đánh dấu {0} đã xong',
  done_short:'✓ xong', not_done:'chưa',
  mem_head:'Thành viên',
- mem_lede:'Xem ai đã tham gia. Thêm người chỉ cần <b>gửi link mời</b> — vào <b>thẳng bằng LINE</b>, ai không dùng LINE thì vào bằng <b>4 số cuối của số điện thoại</b>.',
+ mem_lede:'Xem ai đã tham gia. Thêm người chỉ cần <b>chia sẻ link</b> — họ chỉ nhập tên là vào được. Link dùng cho nhiều người sẽ kèm <b>mật khẩu chung</b> (không cần email, không cần mật khẩu riêng).',
  mem_count:'Số thành viên', mem_line:'Dùng LINE', mem_pending:'Đã mời', unit_person:'người',
- mem_invite:'➕ Mời thành viên', m_name:'Họ tên', m_role:'Vai trò', m_store:'Cửa hàng', m_last4:'4 số cuối điện thoại',
+ mem_invite:'➕ Mời thành viên', m_name:'Họ tên (không bắt buộc)', m_role:'Vai trò', m_store:'Cửa hàng', m_last4:'4 số cuối điện thoại',
+ inv_kind:'Cách mời', inv_one:'Chỉ một người (gửi link cho họ)', inv_many:'Cả cửa hàng (cho xem QR, nhập mật khẩu chung)',
+ inv_pass:'Mật khẩu chung', inv_pass_auto:'Tạo tự động', inv_pass_hint:'Tạo 6 ký tự, tránh các chữ dễ nhầm. Hãy đọc to trong buổi họp sáng.',
+ inv_issued:'Đã tạo', inv_copy:'Sao chép', inv_copied:'Đã sao chép', inv_link:'Link tham gia',
  invite_btn:'🔗 Tạo link mời',
- invite_note:'Chỉ cần gửi link qua LINE hoặc SMS. Người nhận <b>chạm một lần là vào bằng LINE</b>, nếu không dùng LINE thì dùng <b>4 số cuối</b> (không cần email, không cần mật khẩu).',
+ invite_note:'<b>Chỉ một người</b> = gửi link cho họ (link chính là chìa khoá, không cần mật khẩu chung, dùng được một lần).<br><b>Cả cửa hàng</b> = chia sẻ một link và cho vào bằng <b>mật khẩu chung</b> (cách dùng: cho xem QR ở buổi họp sáng). Cả hai đều không cần email hay mật khẩu riêng.',
  role_part:'Bán thời gian', role_emp:'Nhân viên chính thức',
- auth_line:'LINE', auth_l4:'Link ＋ 4 số cuối', auth_inv:'Đã mời (chưa vào)',
+ auth_line:'LINE', auth_l4:'Link ＋ mật khẩu chung', auth_inv:'Đã mời (chưa vào)',
  last_used:'Lần cuối dùng', joined:'Tham gia', resend:'Gửi lại',
  search_head:'🔍 Tìm kiếm', search_sub:'Tìm cùng lúc trong Thông báo・Tài liệu・Hỏi đáp・Việc cần làm',
  search_ph:'vd: kiểm kê／dầu ớt／máy lạnh', search_hint:'Hãy nhập từ khoá',
@@ -877,16 +1192,16 @@ vi:{
  lg_inv:'📩 Bạn được mời vào <b>{0}</b>', lg_inv_sub:'Link mời từ cửa hàng trưởng Sato',
  lg_first:'Lần đầu sử dụng', lg_line_start:'Bắt đầu bằng LINE', lg_line_login:'Đăng nhập bằng LINE',
  lg_note1:'<b>Chỉ một lần chạm là xong.</b> Không cần tạo email hay mật khẩu.<br>Lần sau cũng vào thẳng bằng LINE.',
- lg_or:'Nếu bạn không dùng LINE', lg_last4:'📱 Vào bằng 4 số cuối điện thoại',
- lg_link4:'🔗 Vào bằng link ＋ 4 số cuối điện thoại',
+ lg_or:'Nếu bạn không dùng LINE', lg_last4:'🔑 Vào bằng mật khẩu chung',
+ lg_link4:'🔑 Vào bằng link ＋ mật khẩu chung',
  lg_note2:'Link này <b>chỉ dành riêng cho bạn</b> (hết hạn sau 14 ngày).<br>※ Demo chỉ là giao diện. Đăng nhập LINE đã chạy trên ứng dụng thật.',
  lg_back:'Chào mừng trở lại', lg_note_line:'Dùng đúng LINE bạn vẫn dùng hằng ngày.',
  lg_note3:'Khi đổi máy, một trong hai cách này đều giúp bạn vào lại.',
  lg_swap_again:'▸ Xem màn hình đăng nhập lần sau', lg_swap_inv:'▸ Xem màn hình lần đầu (link mời)',
- lg_tel:'Xác nhận số điện thoại', lg_tel_sub:'Chỉ dùng để xác nhận đúng là bạn',
- lg_tel_hint:'Hãy nhập <b>4 số cuối của số di động</b> mà cửa hàng trưởng đã đăng ký.<br>(vd: 090-1234-<b>5678</b> → 5678)',
- lg_tel_go:'Vào bằng số này',
- lg_tel_note:'Không gửi SMS (và bạn không mất phí).<br>Sai 5 lần sẽ tạm nghỉ 10 phút.',
+ lg_tel:'Nhập mật khẩu chung', lg_tel_sub:'6 ký tự quản lý đã cho bạn',
+ lg_tel_hint:'Nhập <b>mật khẩu chung 6 ký tự</b> mà quản lý đã báo (ví dụ ở buổi họp sáng).<br>(vd: <b>ABC123</b>)',
+ lg_tel_go:'Vào bằng mật khẩu này',
+ lg_tel_note:'Không dùng số điện thoại hay email.<br>Sai 5 lần sẽ tạm nghỉ 10 phút.',
  al_title:'Vui lòng nhập tiêu đề', al_subject:'Vui lòng nhập chủ đề',
  al_content:'Vui lòng nhập nội dung', al_item:'Vui lòng nhập mặt hàng', al_name:'Vui lòng nhập họ tên',
  al_hq_todo:'Hãy chuyển sang một cửa hàng (chính bạn) rồi đánh dấu xong',
@@ -896,13 +1211,13 @@ vi:{
  ts_share:'Đã thêm vào Tài liệu', ts_posted:'Đã đăng', ts_replied:'Đã gửi trả lời',
  ts_import:'Đã nhập: {0} (đã phản ánh vào Lãi lỗ・KPI)', ts_linked:'Đã kết nối {0}',
  ts_acc:'Đã gửi yêu cầu xem tới quản trị viên (ai xem, lúc nào đều được ghi lại)',
- ts_line:'(demo) Đã tham gia bằng LINE. Lần sau cũng vào bằng LINE', ts_last4:'(demo) Đã vào bằng 4 số cuối điện thoại',
+ ts_line:'(demo) Đã tham gia bằng LINE. Lần sau cũng vào bằng LINE', ts_last4:'(demo) Đã vào bằng mật khẩu chung',
 },
 ne:{
  /* 連携ソース等 */
  src_pos:'क्यास काउन्टर (POS)', srck_pos:'बिक्री・ग्राहक・प्रति ग्राहक', src_gourmet:'रिभ्यु साइट (Tabelog / Gurunavi / Hot Pepper)', srck_gourmet:'बुकिङ・हेराइ・मूल्याङ्कन', src_sns:'सोसल मिडिया (Instagram / Google)', srck_sns:'पहुँच・फलोअर・रिभ्यु', src_folder:'तोकिएको फोल्डर (Drive)', srck_folder:'Excel / CSV स्वतः भित्र्याउने', acc_common:'साझा', by_tpl:'टेम्प्लेट',
  app_name:'DESHABO', app_sub:'पसलको सम्पर्क र साझेदारी केन्द्र (डेमो)', you:'तपाईं', search:'खोज्नुहोस्', login_screen:'लगइन स्क्रिन', reset:'रिसेट',
- ext:'विस्तार', all_stores:'सबै पसल', hq:'प्रधान कार्यालय', to_hq:'प्रधान कार्यालयलाई', everyone:'सबैलाई',
+ guide_btn:'निर्देशिका', ext:'विस्तार', all_stores:'सबै पसल', hq:'प्रधान कार्यालय', to_hq:'प्रधान कार्यालयलाई', everyone:'सबैलाई',
  unread:'नपढेको', read:'पढेको', handled:'✓ सकियो', important:'महत्त्वपूर्ण', due:'म्याद',
  add:'थप्नुहोस्', del:'मेट्नुहोस्', open_link:'🔗 खोल्नुहोस्', close:'बन्द', back:'← पछाडि', cancel:'रद्द',
  f_title:'शीर्षक', f_body_opt:'विवरण (वैकल्पिक)', f_kind:'प्रकार', f_target:'कसलाई', f_note_opt:'नोट (वैकल्पिक)',
@@ -970,7 +1285,7 @@ ne:{
  promote_note:'सोधपुछ बगेर हराउँछ। उत्तर “सामग्री” मा राखे नयाँ आउनेले पनि त्यही उत्तर भेट्टाउँछ।',
  promote_do:'सामग्रीमा दर्ता', promote_cancel:'रद्द',
  promoted_to:'📚 सामग्रीमा सारिएको', ts_promoted:'सामग्रीमा दर्ता भयो (स्रोत लिंकसहित)',
- ts_best:'उत्तम उत्तरमा छानियो', src_from:'🔗 स्रोतको सोधपुछ हेर्ने', src_badge:'सोधपुछबाट',
+ ts_best:'उत्तम उत्तरमा छानियो', ts_save_ng:'सुरक्षित गर्न सकिएन। राम्रो सिग्नलमा पुनः प्रयास गर्नुहोस्।', src_from:'🔗 स्रोतको सोधपुछ हेर्ने', src_badge:'सोधपुछबाट',
  ph_f:'फोटो (कार्यस्थलमा अक्षरभन्दा फोटो)', ph_add:'📷 फोटो थप्ने', ph_rm:'यो फोटो हटाउने',
  ph_note:'मोबाइलबाट त्यहीँ खिचेर पठाउन सकिन्छ। फोटो यन्त्रमै सानो बनाएर सुरक्षित हुन्छ (डेमोमा ब्राउजरभित्रै मात्र)।',
  ph_n:'📷 {0}', ts_photo:'फोटो थपियो', ts_photo_ng:'फोटो ठूलो भएर सुरक्षित गर्न सकिएन। संख्या घटाउनुहोस्।',
@@ -981,13 +1296,16 @@ ne:{
  todo_mine_done:'तपाईंको पसल: सकियो ✓', todo_done_btn:'✓ {0} सकियो भन्ने',
  done_short:'✓ सकियो', not_done:'बाँकी',
  mem_head:'सदस्य',
- mem_lede:'को-को सहभागी छन् एकै ठाउँमा। थप्न <b>निम्तो लिंक पठाए पुग्छ</b> — <b>LINE बाटै</b> छिर्न सकिन्छ, LINE नचलाउनेले <b>फोन नम्बरको अन्तिम ४ अंक</b> ले छिर्छन्।',
+ mem_lede:'को-को सहभागी छन् एकै ठाउँमा। थप्न <b>लिंक बाँडे पुग्छ</b> — नाम लेखे भित्र पसिन्छ। धेरै जनाले चलाउने लिंकमा <b>साझा शब्द</b> हुन्छ (इमेल र पासवर्ड चाहिँदैन)।',
  mem_count:'सहभागी संख्या', mem_line:'LINE प्रयोग', mem_pending:'निम्तो पठाइएको', unit_person:'जना',
- mem_invite:'➕ सदस्य निम्त्याउनुहोस्', m_name:'नाम', m_role:'भूमिका', m_store:'पसल', m_last4:'फोनको अन्तिम ४ अंक',
+ mem_invite:'➕ सदस्य निम्त्याउनुहोस्', m_name:'नाम (अनिवार्य छैन)', m_role:'भूमिका', m_store:'पसल', m_last4:'फोनको अन्तिम ४ अंक',
+ inv_kind:'निमन्त्रणा तरिका', inv_one:'यही व्यक्ति मात्र (लिंक पठाउने)', inv_many:'पूरै पसल (QR देखाएर साझा शब्दले भित्र)',
+ inv_pass:'साझा शब्द', inv_pass_auto:'स्वतः बनाउने', inv_pass_hint:'मिल्दोजुल्दो अक्षर हटाएर ६ अक्षर बनाइन्छ। बिहानको बैठकमा मुखै बताउनुहोस्।',
+ inv_issued:'बनाइयो', inv_copy:'कपी', inv_copied:'कपी भयो', inv_link:'सहभागी लिंक',
  invite_btn:'🔗 निम्तो लिंक बनाउनुहोस्',
- invite_note:'लिंक LINE वा SMS बाट पठाए पुग्छ। सम्बन्धित व्यक्ति <b>LINE मा एक ट्यापमै</b> छिर्छन्, LINE नचलाए <b>अन्तिम ४ अंक</b> ले छिर्छन् (इमेल र पासवर्ड चाहिँदैन)।',
+ invite_note:'<b>यही व्यक्ति मात्र</b> ＝ लिंक निजलाई पठाउने (लिंक नै साँचो हो, साझा शब्द चाहिँदैन, एक पटक मात्र चल्छ)।<br><b>पूरै पसल</b> ＝ एउटै लिंक बाँडेर <b>साझा शब्द</b> ले भित्र पठाउने (बिहानको बैठकमा QR देखाउने तरिका)। दुवैमा इमेल र पासवर्ड चाहिँदैन।',
  role_part:'पार्टटाइम', role_emp:'स्थायी कर्मचारी',
- auth_line:'LINE', auth_l4:'लिंक ＋ अन्तिम ४ अंक', auth_inv:'निम्तो पठाइएको (नछिरेको)',
+ auth_line:'LINE', auth_l4:'लिंक ＋ साझा शब्द', auth_inv:'निम्तो पठाइएको (नछिरेको)',
  last_used:'पछिल्लो प्रयोग', joined:'सहभागी', resend:'फेरि पठाउनुहोस्',
  search_head:'🔍 खोज्नुहोस्', search_sub:'सूचना・सामग्री・सोध्ने・गर्नुपर्ने सबै एकैचोटि खोज्नुहोस्',
  search_ph:'जस्तै: स्टक गणना／चिली तेल／एसी', search_hint:'कुनै शब्द लेख्नुहोस्',
@@ -1024,16 +1342,16 @@ ne:{
  lg_inv:'📩 तपाईंलाई <b>{0}</b> मा निम्त्याइएको छ', lg_inv_sub:'पसल प्रमुख सातोबाट आएको निम्तो लिंक',
  lg_first:'पहिलो पटक हो (नयाँ दर्ता)', lg_line_start:'LINE बाट सुरु गर्नुहोस्', lg_line_login:'LINE बाट लगइन',
  lg_note1:'<b>एक ट्यापमै सकियो।</b> इमेल वा पासवर्ड बनाउनु पर्दैन।<br>अर्को पटक पनि LINE बाटै छिर्न सकिन्छ।',
- lg_or:'LINE नचलाउनेका लागि', lg_last4:'📱 फोनको अन्तिम ४ अंकले छिर्नुहोस्',
- lg_link4:'🔗 लिंक ＋ फोनको अन्तिम ४ अंकले छिर्नुहोस्',
+ lg_or:'LINE नचलाउनेका लागि', lg_last4:'🔑 साझा शब्दले छिर्नुहोस्',
+ lg_link4:'🔑 लिंक ＋ साझा शब्दले छिर्नुहोस्',
  lg_note2:'यो लिंक <b>तपाईंकै लागि मात्र</b> हो (१४ दिनमा म्याद सकिन्छ)।<br>※ डेमोमा स्क्रिन मात्र देखाइएको हो। LINE लगइन वास्तविक एपमा चलिरहेको छ।',
  lg_back:'फेरि स्वागत छ', lg_note_line:'सधैँ चलाउने LINE बाटै छिर्नुहोस्।',
  lg_note3:'फोन फेरे पनि, यी दुईमध्ये कुनै एकबाट फेरि छिर्न सकिन्छ।',
  lg_swap_again:'▸ दोस्रो पटकदेखिको लगइन स्क्रिन हेर्नुहोस्', lg_swap_inv:'▸ पहिलो पटक (निम्तो लिंक) को स्क्रिन हेर्नुहोस्',
- lg_tel:'फोन नम्बर पुष्टि', lg_tel_sub:'तपाईं नै हो भनी पुष्टि गर्न मात्र प्रयोग हुन्छ',
- lg_tel_hint:'पसल प्रमुखले दर्ता गरिदिएको <b>तपाईंकै मोबाइल नम्बरको अन्तिम ४ अंक</b> लेख्नुहोस्।<br>(जस्तै: 090-1234-<b>5678</b> → 5678)',
- lg_tel_go:'यही नम्बरबाट छिर्नुहोस्',
- lg_tel_note:'SMS पठाइँदैन (शुल्क पनि लाग्दैन)।<br>५ पटक गलत भए १० मिनेट रोकिन्छ।',
+ lg_tel:'साझा शब्द लेख्नुहोस्', lg_tel_sub:'म्यानेजरले भनेको ६ अक्षर',
+ lg_tel_hint:'म्यानेजरले (बिहानको बैठकमा जस्तै) भनेको <b>६ अक्षरको साझा शब्द</b> लेख्नुहोस्।<br>(जस्तै: <b>ABC123</b>)',
+ lg_tel_go:'यही साझा शब्दले छिर्नुहोस्',
+ lg_tel_note:'फोन नम्बर वा इमेल प्रयोग हुँदैन।<br>५ पटक गलत भए १० मिनेट रोकिन्छ।',
  al_title:'कृपया शीर्षक लेख्नुहोस्', al_subject:'कृपया विषय लेख्नुहोस्',
  al_content:'कृपया विवरण लेख्नुहोस्', al_item:'कृपया सामानको नाम लेख्नुहोस्', al_name:'कृपया नाम लेख्नुहोस्',
  al_hq_todo:'कुनै पसल (तपाईं आफै) छानेर मात्र सकियो भन्न मिल्छ',
@@ -1043,7 +1361,7 @@ ne:{
  ts_share:'सामग्रीमा थपियो', ts_posted:'पोस्ट भयो', ts_replied:'जवाफ पठाइयो',
  ts_import:'भित्र्याइयो: {0} (नाफा・KPI मा देखिन्छ)', ts_linked:'{0} जोडियो',
  ts_acc:'प्रशासकलाई हेर्ने अनुरोध पठाइयो (कसले कहिले हेर्‍यो रेकर्ड हुन्छ)',
- ts_line:'(डेमो) LINE बाट सहभागी हुनुभयो। अर्को पटक पनि LINE बाट छिर्न सकिन्छ', ts_last4:'(डेमो) फोनको अन्तिम ४ अंकबाट छिर्नुभयो',
+ ts_line:'(डेमो) LINE बाट सहभागी हुनुभयो। अर्को पटक पनि LINE बाट छिर्न सकिन्छ', ts_last4:'(डेमो) साझा शब्दबाट छिर्नुभयो',
 },
 };
 
@@ -1112,10 +1430,17 @@ function PH(bg,items,cap){
   return 'data:image/svg+xml;utf8,'+encodeURIComponent(svg.replace(/\s+/g,' '));
 }
 const PHOTO_MAX=3, PHOTO_PX=960;
+/* 写真の「保存する値」と「表示するURL」を分ける。
+     単独モード … dataURL をそのまま持つ（従来どおり）
+     共有モード … Storage のパス（<会社ID>/<uuid>.jpg）を持ち、表示は署名付きURL
+   PHOTO_URL は パス → 表示URL の対応表。読み込み時に一括で作る。 */
+const PHOTO_URL = {};
+const photoSrc = (v)=> (v && PHOTO_URL[v]) ? PHOTO_URL[v] : v;
+
 function photoGrid(list,rmAttr,rmId){
   if(!list||!list.length) return '';
   return `<div class="pgrid">${list.map((src,i)=>`<div class="pth" data-lb="${i}"${rmId?` data-lbid="${rmId}"`:''}${rmAttr?` data-lbkind="${rmAttr}"`:''}>
-    <img src="${src}" alt="">
+    <img src="${photoSrc(src)}" alt="">
     ${rmAttr?`<button class="rm" data-${rmAttr}="${i}"${rmId?` data-id="${rmId}"`:''} title="${L('ph_rm')}">×</button>`:''}
   </div>`).join('')}</div>`;
 }
@@ -1138,14 +1463,33 @@ function readPhoto(file){
     fr.onerror=()=>res(null); fr.readAsDataURL(file);
   });
 }
+/* 共有モードでは Storage に上げてパスを返す。
+   パスの先頭を会社IDにするのは、Storage側のRLSがそれで会社を判定しているため。 */
+async function uploadPhoto(dataUrl){
+  if(!SHARED) return dataUrl;
+  try{
+    const blob = await (await fetch(dataUrl)).blob();
+    const path = `${ME.company_id}/${crypto.randomUUID()}.jpg`;
+    const { error } = await sb.storage.from('dsb-photos')
+      .upload(path, blob, { contentType:'image/jpeg', upsert:false });
+    if(error){ console.error('storage upload', error); saveFail(); return null; }
+    PHOTO_URL[path] = dataUrl;   // 上げた直後は手元のdataURLで表示する（署名URLを待たない）
+    return path;
+  }catch(e){ console.error('upload', e); saveFail(); return null; }
+}
 function bindPhotoInput(btnId,inputId,onDone){
   const b=document.getElementById(btnId), f=document.getElementById(inputId);
   if(!b||!f) return;
   b.onclick=()=>f.click();
   f.onchange=async()=>{
     const files=[...(f.files||[])]; f.value='';
-    for(const file of files){ const d=await readPhoto(file); if(d) onDone(d); }
-    save(); render(); toast(L('ts_photo'));
+    for(const file of files){
+      const d=await readPhoto(file); if(!d) continue;      // 端末内で960px/JPEG0.72に縮小
+      const stored=await uploadPhoto(d);                    // 共有ならStorageへ
+      if(stored) onDone(stored);
+    }
+    if(!SHARED) save();
+    render(); toast(L('ts_photo'));
   };
 }
 
@@ -1534,14 +1878,28 @@ function seed(){
   return {stores,notices,shares,accounts,board,todos,members,baseline,guests,marketing,sources,uploads,goods,help,streaks,actor:'honten',config:{priceMode:'cost'}};
 }
 
-let S=load();
+/* 共有モードでは、まず器だけ作っておき、読み込み完了後に差し替える。
+   （S を null にすると描画側が落ちるので、空の形を入れておく） */
+let S = SHARED ? { stores:[],notices:[],shares:[],accounts:[],board:[],todos:[],members:[],
+                   streaks:{},goods:[],help:[],uploads:[],sources:[],baseline:{},guests:{},
+                   marketing:{},actor:null,config:{priceMode:'cost'} }
+               : load();
 function load(){ try{const r=localStorage.getItem(LS_KEY); if(r){const d=JSON.parse(r); if(d&&d.stores) return d;}}catch(e){} const s=seed(); localStorage.setItem(LS_KEY,JSON.stringify(s)); return s; }
 function save(){ try{ localStorage.setItem(LS_KEY,JSON.stringify(S)); }
   catch(e){ toast(L('ts_photo_ng')); } }
 function reset(){ if(confirm(L('cf_reset'))){ localStorage.removeItem(LS_KEY); S=load(); render(); } }
 
 const storeName=id=> id==='hq'?L('hq'):(S.stores.find(s=>s.id===id)||{}).name||id;
-const isHQ=()=> S.actor==='hq';
+const isHQ=()=> SHARED ? !!(S.stores.find(s=>s.id===S.actor)||{}).is_hq : S.actor==='hq';
+
+/* -----------------------------------------------------------------------
+   「店単位」と「人単位」の切り分け
+     店単位 … 投稿者、@メンションの宛先、やることの完了（店の作業だから）
+     人単位 … 連絡の既読、相談の未読、連続キャッチアップ（← 個人の記録だから）
+   デモ（単独モード）は操作者が「店」なので、両方 S.actor で足りていた。
+   共有モードでは人単位のものだけ自分の member.id を使う。
+   ----------------------------------------------------------------------- */
+const myKey = ()=> (SHARED && ME) ? ME.id : S.actor;
 const esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const today=()=>{const d=new Date();return String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
 const val=id=>{const e=document.getElementById(id);return e?e.value.trim():'';};
@@ -1552,15 +1910,22 @@ const sum=a=>a.reduce((p,c)=>p+c,0);
    ※デモなので前日かどうかの厳密な日付差判定はしない（last!==today なら +1）。 */
 function streakOf(){
   if(!S.streaks) S.streaks={};
-  if(!S.streaks[S.actor]) S.streaks[S.actor]={days:0,best:0,last:'',celebrated:''};
-  return S.streaks[S.actor];
+  const k=myKey();
+  if(!S.streaks[k]) S.streaks[k]={days:0,best:0,last:'',celebrated:''};
+  return S.streaks[k];
 }
 function markCatchUp(){
   const st=streakOf(), td=today();
   if(st.celebrated===td) return false;          // 今日はもう祝ったので静かにしておく
   if(st.last!==td){ st.days=(st.days||0)+1; st.last=td; }
   if(st.days>(st.best||0)) st.best=st.days;
-  st.celebrated=td; save();
+  st.celebrated=td;
+  if(SHARED){
+    const iso=new Date().toISOString().slice(0,10);
+    sb.from('dsb_streaks').upsert({ member_id:ME.id, days:st.days, best:st.best,
+      last_date:iso, celebrated_date:iso }, { onConflict:'member_id' })
+      .then(({error})=>{ if(error) console.error('streaks', error); });
+  } else save();
   return true;                                   // 初回だけ true ＝ 紙吹雪を出す
 }
 function confetti(){
@@ -1602,8 +1967,8 @@ function toast(msg){ const d=document.createElement('div'); d.textContent=msg;
 
 /* ---- 連絡：関連性・未読判定 ---- */
 function noticeRelevant(n){ const me=S.actor; return n.author===me || n.target==='all' || n.target===me; }
-function noticeUnread(n){ const me=S.actor; return noticeRelevant(n) && n.author!==me && !(n.reads&&n.reads[me]); }
-function noticeUnhandled(n){ const me=S.actor; return noticeRelevant(n) && n.author!==me && !(n.reads&&n.reads[me]&&n.reads[me].handled); }
+function noticeUnread(n){ const me=myKey(); return noticeRelevant(n) && n.author!==S.actor && !(n.reads&&n.reads[me]); }
+function noticeUnhandled(n){ const me=myKey(); return noticeRelevant(n) && n.author!==S.actor && !(n.reads&&n.reads[me]&&n.reads[me].handled); }
 /* ---- やること：自分の店に関係＆未完 ---- */
 function todoMine(t){ return isHQ() || t.target==='all' || t.target===S.actor; }
 function todoOpen(t){ return todoMine(t) && !isHQ() && !(t.done&&t.done[S.actor]); }
@@ -1627,21 +1992,29 @@ let RELAY_KIND='goods';
    自分宛のメンションがあり、まだ自分が1件も返していない未解決だけを拾う。 */
 /* B1：未読＝まだ見ていない投稿、または前回見たあとに返信が増えたもの */
 function boardUnread(p){
-  const me=S.actor;
-  if(p.by===me) return false;                       // 自分の投稿は未読にしない
+  const me=myKey();
+  if(p.by===S.actor) return false;                  // 自分の店の投稿は未読にしない（投稿者は店単位）
   const s=p.seen&&p.seen[me];
   if(s===undefined) return true;                    // 投稿そのものが新規
   return p.comments.length>s;                       // 見たあとに返信が増えた
 }
 function boardUnreadCount(){ return S.board.filter(boardUnread).length; }
-function newReplies(p){ const s=p.seen&&p.seen[S.actor]; return (s===undefined)?0:Math.max(0,p.comments.length-s); }
+function newReplies(p){ const s=p.seen&&p.seen[myKey()]; return (s===undefined)?0:Math.max(0,p.comments.length-s); }
 /* 相談タブを描画したら既読にする（開いた回だけ NEW が見えて、次に開くと消えている） */
 function markBoardSeen(){
   if(!PENDING_SEEN) return; PENDING_SEEN=false;
-  const me=S.actor; let changed=false;
+  const me=myKey(); let changed=false; const rows=[];
   S.board.forEach(p=>{ if(!p.seen) p.seen={};
-    if(p.seen[me]!==p.comments.length){ p.seen[me]=p.comments.length; changed=true; } });
-  if(changed) save();
+    if(p.seen[me]!==p.comments.length){
+      p.seen[me]=p.comments.length; changed=true;
+      if(SHARED) rows.push({ post_id:p.id, member_id:ME.id,
+        seen_comment_count:p.comments.length, seen_at:new Date().toISOString() });
+    } });
+  if(!changed) return;
+  if(SHARED){
+    if(rows.length) sb.from('dsb_board_reads').upsert(rows,{ onConflict:'post_id,member_id' })
+      .then(({error})=>{ if(error) console.error('board_reads', error); });   // 既読はトーストを出さない
+  } else save();
 }
 function boardTodo(p){ return boardTodoKind(p)!==null; }
 /* A4：最後に自分が@された位置より後に自分が返しているか、で判定する。
@@ -1679,10 +2052,33 @@ function buildHead(){
   document.getElementById('brandSub').textContent=L('app_sub');
   document.getElementById('actorLbl').textContent=L('you');
   document.getElementById('searchLbl').textContent=L('search');
+  document.getElementById('guideLbl').textContent=L('guide_btn');
+  /* 「あなた」の切替
+       単独モード（デモ）… 誰の目線でどう見えるかを営業で見せるので常に出す
+       共有モード         … オーナー・店長は複数店を見る立場なので出す。
+                            スタッフは自分の店しかないので隠す（迷わせない） */
+  const ap=document.querySelector('.actor-pick');
+  const canSwitch = !SHARED || (ME && (ME.role==='owner' || ME.role==='manager'));
+  if(ap) ap.style.display = canSwitch ? '' : 'none';
   document.getElementById('loginLbl').textContent=L('login_screen');
   document.getElementById('resetLbl').textContent=L('reset');
+  /* 共有モードのときだけログアウトを出す（単独モードには相手がいない） */
+  const so=document.getElementById('signOutBtn');
+  if(so){ so.style.display = SHARED ? '' : 'none'; so.onclick=doSignOut; }
+  /* ハンバーガーの開閉。外側クリックと Esc で閉じる */
+  const mb=document.getElementById('menuBtn'), mp=document.getElementById('menuPop');
+  if(mb&&mp&&!mb.dataset.bound){
+    mb.dataset.bound='1';
+    const close=()=>{ mp.classList.remove('on'); mb.setAttribute('aria-expanded','false'); };
+    mb.onclick=(e)=>{ e.stopPropagation();
+      const on=mp.classList.toggle('on'); mb.setAttribute('aria-expanded', on?'true':'false'); };
+    document.addEventListener('click', (e)=>{ if(!mp.contains(e.target) && e.target!==mb) close(); });
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') close(); });
+    mp.querySelectorAll('button').forEach(b=>b.addEventListener('click', close));
+  }
   const sel=document.getElementById('actorSel');
-  sel.innerHTML=`<option value="hq">${L('hq')}（HQ）</option>`+S.stores.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
+  sel.innerHTML=(SHARED?'':`<option value="hq">${L('hq')}（HQ）</option>`)
+    +S.stores.map(s=>`<option value="${s.id}">${s.name}${s.is_hq?'（HQ）':''}</option>`).join('');
   sel.value=S.actor; sel.onchange=()=>{S.actor=sel.value; NEW_SET=null; save(); render();};
   document.getElementById('resetBtn').onclick=reset;
   document.getElementById('loginBtn').onclick=()=>showLogin('invite');
@@ -1699,10 +2095,33 @@ function buildHead(){
   nav.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{TAB=b.dataset.tab; HILITE=null; PROMOTE=null; NEW_SET=null; render();});
 }
 
-function render(){
+/* -----------------------------------------------------------------------
+   画面は render() で丸ごと作り直すので、そのままだと
+   @メンションやタグを押した瞬間に「入力中のタイトル・本文」が消える。
+   作り直す前に値を控えて、作り直したあとに戻す。
+   投稿直後など「わざと空にしたい」欄は clear で渡す。
+   ----------------------------------------------------------------------- */
+function snapshotInputs(){
+  const m={};
+  document.querySelectorAll('#app input, #app textarea, #app select').forEach(el=>{
+    if(!el.id || el.type==='file') return;
+    m[el.id] = (el.type==='checkbox') ? el.checked : el.value;
+  });
+  return m;
+}
+function restoreInputs(m){
+  Object.keys(m).forEach(id=>{
+    const el=document.getElementById(id); if(!el) return;
+    if(el.type==='checkbox') el.checked=m[id]; else el.value=m[id];
+  });
+}
+function render(clear){
+  const keep=snapshotInputs();
+  if(clear) clear.forEach(id=>{ delete keep[id]; });
   buildHead();
   document.getElementById('app').innerHTML=({home:viewHome,notice:viewNotice,share:viewShare,board:viewBoard,todo:viewTodo,members:viewMembers,relay:viewRelay,pl:viewPL}[TAB])();
   bindActions();
+  restoreInputs(keep);
   const h=HILITE&&(document.getElementById('bd-'+HILITE)||document.getElementById('sh-'+HILITE));
   if(h) h.scrollIntoView({block:'center'}); else window.scrollTo({top:0});
   if(TAB==='board') markBoardSeen();   // 描画後に既読化（この画面では NEW が見えたまま残る）
@@ -1841,7 +2260,9 @@ function shareRow(s){
 function viewNotice(){
   const me=S.actor;
   const list=S.notices.filter(n=>isHQ()||noticeRelevant(n));
-  const optTargets=`<option value="all">${L('all_stores')}</option>${S.stores.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}<option value="hq">${L('to_hq')}</option>`;
+  const optTargets=`<option value="all">${L('all_stores')}</option>`
+    +S.stores.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')
+    +(SHARED?'':`<option value="hq">${L('to_hq')}</option>`);
   return `
   <h2 class="page">📣 ${L('notice_head')}</h2>
   <p class="lede">${L('notice_lede')}</p>
@@ -1893,6 +2314,7 @@ function noticeCard(n){
 /* ===================== 共有（情報ハブ） ===================== */
 let SHARE_FILTER='すべて';
 let SHARE_PHOTOS=[]; // 共有に添付中の写真
+let LAST_INVITE=null;   // 直前に発行した参加リンク（リンクと合言葉を画面に出すため）
 let VIEW_AS='owner'; // 権限デモ：owner=オーナー / mgr=店長 / all=スタッフ
 const SCOPE_LABEL={all:'scope_all',mgr:'scope_mgr',owner:'scope_owner'};
 const SCOPE_RANK={all:0,mgr:1,owner:2};
@@ -1986,7 +2408,8 @@ const QUICK_REPLIES=[
   {ja:'写真を送ります',      en:'I will send a photo', zh:'我发照片',   vi:'Mình sẽ gửi ảnh',   ne:'फोटो पठाउँछु'},
 ];
 function btChip(ty){ const m={'相談':'soudan','質問':'q','共有':'share','依頼':'req'}[ty]||'share'; return `<span class="bt bt-${m}">${btL(ty)}</span>`; }
-const mentionTargets=()=>['all','hq',...S.stores.map(s=>s.id)];
+/* 共有モードでは本部も dsb_stores の1行（is_hq）なので、デモ用の 'hq' は出さない＝二重に並ばない */
+const mentionTargets=()=>SHARED ? ['all',...S.stores.map(s=>s.id)] : ['all','hq',...S.stores.map(s=>s.id)];
 const mentionLabel=id=> id==='all'?L('everyone'):storeName(id);
 function mentionsMe(list){ return (list||[]).some(t=>t==='all'||t===S.actor); }
 function mentionChips(list){ return (list||[]).map(t=>`<span class="mchip${t==='all'||t===S.actor?' me':''}">@${mentionLabel(t)}</span>`).join(''); }
@@ -2156,7 +2579,10 @@ function doBoard(a,id,emoji,idx){
     const c={by:S.actor,body:q.ja,date:today(),to:(REPLY_MENTIONS[id]||[]).slice(),photos:[],i18n};
     if(typeof RE_TO[id]==='number') c.re=RE_TO[id];
     p.comments.push(c);
-    REPLY_MENTIONS[id]=[]; delete RE_TO[id]; save(); render(); toast(L('ts_qr')); return; }
+    REPLY_MENTIONS[id]=[]; delete RE_TO[id];
+    render(['rt-'+id]); toast(L('ts_qr'));
+    if(SHARED) pushComment(p,c); else save();
+    return; }
   if(a==='replyTo'){ RE_TO[id]=Number(idx);
     // 返信相手を自動で宛先に入れる＝@を付け忘れて気づかれない事故を防ぐ
     const tgt=p.comments[Number(idx)]; const cur=REPLY_MENTIONS[id]||[];
@@ -2170,17 +2596,37 @@ function doBoard(a,id,emoji,idx){
     const c={by:S.actor,body:b,date:today(),to:(REPLY_MENTIONS[id]||[]).slice(),photos:ph};
     if(typeof RE_TO[id]==='number') c.re=RE_TO[id];
     p.comments.push(c);
-    REPLY_MENTIONS[id]=[]; REPLY_PHOTOS[id]=[]; delete RE_TO[id]; save(); render(); toast(L('ts_replied')); return; }
+    REPLY_MENTIONS[id]=[]; REPLY_PHOTOS[id]=[]; delete RE_TO[id];
+    render(['rt-'+id]); toast(L('ts_replied'));
+    if(SHARED) pushComment(p,c); else save();
+    return; }
   if(a==='react'){ if(!p.reactions) p.reactions={}; const u=p.reactions[emoji]||[]; const i=u.indexOf(S.actor);
-    if(i>=0) u.splice(i,1); else u.push(S.actor); p.reactions[emoji]=u; if(!u.length) delete p.reactions[emoji]; }
-  if(a==='best'){ p.best=Number(idx); save(); render(); toast(L('ts_best')); return; }
-  if(a==='unbest'){ delete p.best; }
+    if(i>=0) u.splice(i,1); else u.push(S.actor); p.reactions[emoji]=u; if(!u.length) delete p.reactions[emoji];
+    render(); if(SHARED) patchRow('dsb_board',id,{reactions:p.reactions}); else save(); return; }
+  if(a==='best'){ p.best=Number(idx);
+    const c=p.comments[p.best]; p._bestId=(c&&c._id)||null;
+    render(); toast(L('ts_best'));
+    if(SHARED) patchRow('dsb_board',id,{best_comment_id:p._bestId}); else save();
+    return; }
+  if(a==='unbest'){ delete p.best; p._bestId=null;
+    render(); if(SHARED) patchRow('dsb_board',id,{best_comment_id:null}); else save(); return; }
   if(a==='promote'){ PROMOTE=id; render(); return; }
   if(a==='promoteNo'){ PROMOTE=null; render(); return; }
   if(a==='promoteGo'){ promoteToShare(p); return; }
-  if(a==='solve') p.solved=true;
-  if(a==='unsolve'){ p.solved=false; if(PROMOTE===id) PROMOTE=null; }
+  if(a==='solve'){ p.solved=true;
+    render(); if(SHARED) patchRow('dsb_board',id,{solved:true}); else save(); return; }
+  if(a==='unsolve'){ p.solved=false; if(PROMOTE===id) PROMOTE=null;
+    render(); if(SHARED) patchRow('dsb_board',id,{solved:false}); else save(); return; }
   save(); render();
+}
+/* 返信を送る。DBが採番したIDを _id に控える（ベストアンサー指定と入れ子で使う） */
+async function pushComment(p, c){
+  const parent = (typeof c.re==='number' && p.comments[c.re]) ? p.comments[c.re]._id : null;
+  const saved = await insertRow('dsb_board_comments', {
+    post_id:p.id, parent_id:parent||null, by_store_id:S.actor, by_member_id:ME.id,
+    body:c.body, to_targets:c.to||[], photos:c.photos||[], i18n:c.i18n||{},
+  });
+  if(saved){ c._id=saved.id; }
 }
 /* A1：解決した相談を「共有」へ昇格（出典リンク付き・翻訳は無編集なら引き継ぐ） */
 function promoteToShare(p){
@@ -2207,7 +2653,23 @@ function promoteToShare(p){
     photos:((src&&src.photos&&src.photos.length)?src.photos:(p.photos||[])).slice(),
     i18n:Object.keys(i18n).length?i18n:undefined});
   p.promoted={shareId:sid,title:keepT?p.title:title,date:today()};
-  PROMOTE=null; save(); render(); toast(L('ts_promoted'));
+  PROMOTE=null; render(); toast(L('ts_promoted'));
+  if(SHARED){
+    (async()=>{
+      const shareRow=S.shares[0];
+      const saved=await insertRow('dsb_shares',{ company_id:ME.company_id, cat:shareRow.cat,
+        scope:shareRow.scope, title:shareRow.title, body:shareRow.body, url:'',
+        pinned:false, origin:'promoted', photos:shareRow.photos||[],
+        i18n:shareRow.i18n||{}, by_store_id:S.actor, by_label:shareRow.by||'',
+        src:{ postId:p.id, type:p.type, by:p.by, date:p.date } });
+      if(saved){
+        shareRow.id=saved.id;
+        p.promoted.shareId=saved.id;
+        await patchRow('dsb_board', p.id, { promoted:p.promoted });
+        render();
+      }
+    })();
+  } else save();
 }
 
 /* ===================== やること ===================== */
@@ -2269,9 +2731,20 @@ function viewMembers(){
       <div><label class="field">${L('m_name')}</label><input id="m_name"></div>
       <div><label class="field">${L('m_role')}</label><select id="m_role">${['アルバイト','社員','店長','オーナー'].map(r=>`<option value="${r}">${roleL(r)}</option>`).join('')}</select></div>
       <div><label class="field">${L('m_store')}</label><select id="m_store">${S.stores.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select></div>
-      <div><label class="field">${L('m_last4')}</label><input id="m_last4" inputmode="numeric" maxlength="4" placeholder="5678"></div>
+      <div><label class="field">${L('inv_kind')}</label><select id="m_kind">
+        <option value="one">${L('inv_one')}</option>
+        <option value="many">${L('inv_many')}</option></select></div>
+      <div class="full" id="m_pass_wrap" style="display:none;">
+        <label class="field">${L('inv_pass')}</label>
+        <div class="row" style="align-items:center;">
+          <input id="m_pass" maxlength="12" style="flex:1 1 140px;text-transform:uppercase;letter-spacing:.18em;font-weight:800;">
+          <button class="act ghost mini" id="m_pass_gen">🎲 ${L('inv_pass_auto')}</button>
+        </div>
+        <p class="muted" style="margin:5px 0 0;font-size:11.5px;">${L('inv_pass_hint')}</p>
+      </div>
       <div class="full"><button class="act primary" id="inviteBtn">${L('invite_btn')}</button></div>
     </div>
+    <div id="inv_result"></div>
     <p class="muted" style="margin:8px 0 0;font-size:12px;">${L('invite_note')}</p>
   </div>
 
@@ -2500,7 +2973,7 @@ function showLogin(step){
     body=`${langRow}<h3>${L('lg_tel')}</h3>
     <div class="sb">${L('lg_tel_sub')}</div>
     <div class="lg-hint">${L('lg_tel_hint')}</div>
-    <div class="otp">${[1,2,3,4].map(()=>'<input maxlength="1" inputmode="numeric">').join('')}</div>
+    <div class="otp">${[1,2,3,4,5,6].map(()=>'<input maxlength="1" autocapitalize="characters" style="text-transform:uppercase;">').join('')}</div>
     <button class="line-btn" style="background:var(--green)" data-lg="done4">${L('lg_tel_go')}</button>
     <div class="ov-note">${L('lg_tel_note')}</div>
     <button class="ov-close" data-lg="back">${L('back')}</button>`;
@@ -2586,15 +3059,65 @@ function bindActions(){
     const cur=REPLY_MENTIONS[id]||[]; const i=cur.indexOf(t); if(i>=0) cur.splice(i,1); else cur.push(t);
     REPLY_MENTIONS[id]=cur; render(); const el=document.getElementById('rep-'+id); if(el) el.style.display='block'; });
   app.querySelectorAll('[data-mem]').forEach(b=>b.onclick=()=>toast(L('ts_resent')));
+  /* 招待の種類で合言葉欄を出し入れする（複数人リンクだけ合言葉が要る） */
+  const mk=document.getElementById('m_kind'), mpw=document.getElementById('m_pass_wrap');
+  const genPass=()=>{ const AB='ABCDEFGHJKMNPQRSTUVWXYZ23456789';   // 0/O/1/I/L を除く
+    return Array.from({length:6},()=>AB[Math.floor(Math.random()*AB.length)]).join(''); };
+  if(mk&&mpw){
+    const sync=()=>{ const many=mk.value==='many'; mpw.style.display=many?'':'none';
+      const pi=document.getElementById('m_pass');
+      if(many&&pi&&!pi.value) pi.value=genPass(); };
+    mk.onchange=sync; sync();
+  }
+  const passGen=document.getElementById('m_pass_gen');
+  if(passGen) passGen.onclick=()=>{ const pi=document.getElementById('m_pass'); if(pi) pi.value=genPass(); };
+
   const ib=document.getElementById('inviteBtn'); if(ib) ib.onclick=()=>{
-    const name=val('m_name'); if(!name){alert(L('al_name'));return;}
-    S.members.push({id:g(),name,store:val('m_store'),role:val('m_role'),auth:'invited',last:'—',joined:today()});
-    save(); render(); toast(L('ts_invited'));
+    const name=val('m_name');
+    const many=(document.getElementById('m_kind')||{}).value==='many';
+    const pass=many?((document.getElementById('m_pass')||{}).value||'').trim().toUpperCase():'';
+    if(many&&!pass){ alert(L('inv_pass')); return; }
+    // 「この人だけ」は名前が必要（一覧に出すため）。「店みんな」は名前不要
+    if(!many&&!name){ alert(L('al_name')); return; }
+    if(name) S.members.push({id:g(),name,store:val('m_store'),role:val('m_role'),
+      auth:'invited',last:'—',joined:today()});
+    LAST_INVITE={ many, pass, url:location.origin+'/join.html?token=（デモ）' };
+    save(); render(['m_name','m_pass']); toast(L('ts_invited'));
   };
-  const pb=document.getElementById('postBoard'); if(pb) pb.onclick=()=>{
+  /* 発行結果（リンクと合言葉）を出す。コピーできるようにしておく */
+  if(LAST_INVITE){
+    const box=document.getElementById('inv_result');
+    if(box){
+      box.innerHTML=`<div class="done-line" style="margin-top:10px;">✅ ${L('inv_issued')}</div>
+        <div class="item"><div class="m">${L('inv_link')}</div>
+          <div class="t" style="font-size:12.5px;word-break:break-all;">${esc(LAST_INVITE.url)}</div>
+          ${LAST_INVITE.many?`<div class="m" style="margin-top:7px;">${L('inv_pass')}</div>
+          <div class="t" style="font-size:20px;letter-spacing:.2em;">${esc(LAST_INVITE.pass)}</div>`:''}
+          <div style="margin-top:7px;"><button class="act ghost mini" id="inv_cp">📋 ${L('inv_copy')}</button></div>
+        </div>`;
+      const cp=document.getElementById('inv_cp');
+      if(cp) cp.onclick=()=>{
+        const txt=LAST_INVITE.many?`${LAST_INVITE.url}\n${L('inv_pass')}: ${LAST_INVITE.pass}`:LAST_INVITE.url;
+        navigator.clipboard.writeText(txt).then(()=>toast(L('inv_copied'))).catch(()=>{});
+      };
+    }
+  }
+  const pb=document.getElementById('postBoard'); if(pb) pb.onclick=async()=>{
     const title=val('b_title'); if(!title){alert(L('al_title'));return;}
-    S.board.unshift({id:g(),type:val('b_type'),title,body:val('b_body'),by:S.actor,date:today(),solved:false,to:NEW_MENTIONS.slice(),tags:NEW_TAGS.slice(),reactions:{},comments:[],photos:NEW_PHOTOS.slice()});
-    NEW_MENTIONS=[]; NEW_TAGS=[]; NEW_PHOTOS=[]; save(); render(); toast(L('ts_posted')); };
+    const row={id:g(),type:val('b_type'),title,body:val('b_body'),by:S.actor,date:today(),
+      solved:false,to:NEW_MENTIONS.slice(),tags:NEW_TAGS.slice(),reactions:{},comments:[],
+      photos:NEW_PHOTOS.slice(),seen:{}};
+    S.board.unshift(row);
+    NEW_MENTIONS=[]; NEW_TAGS=[]; NEW_PHOTOS=[];
+    render(['b_title','b_body']); toast(L('ts_posted'));
+    if(SHARED){
+      // DBが採番したIDに差し替える（以後の返信・解決がこのIDに紐づくため）
+      const saved=await insertRow('dsb_board',{ company_id:ME.company_id, type:row.type,
+        title:row.title, body:row.body, by_store_id:S.actor, by_member_id:ME.id,
+        to_targets:row.to, tags:row.tags, photos:row.photos, reactions:{} });
+      if(saved){ row.id=saved.id; render(); }
+    } else save();
+  };
   /* --- 写真（A3）：添付・取り消し・拡大 --- */
   bindPhotoInput('bPhotoBtn','bPhotoIn',d=>{ if(NEW_PHOTOS.length<PHOTO_MAX) NEW_PHOTOS.push(d); });
   bindPhotoInput('sPhotoBtn','sPhotoIn',d=>{ if(SHARE_PHOTOS.length<PHOTO_MAX) SHARE_PHOTOS.push(d); });
@@ -2619,18 +3142,40 @@ function bindActions(){
       toast(L('ts_import',f.name)); }; }
   app.querySelectorAll('[data-src]').forEach(b=>b.onclick=()=>{ const s=S.sources.find(o=>o.id===b.dataset.src); if(!s) return;
     s.status='ok'; s.last=today(); save(); render(); toast(L('ts_linked',L(s.nk))); });
-  const pn=document.getElementById('postNotice'); if(pn) pn.onclick=()=>{
+  const pn=document.getElementById('postNotice'); if(pn) pn.onclick=async()=>{
     const title=val('n_title'); if(!title){alert(L('al_subject'));return;}
-    S.notices.unshift({id:g(),author:S.actor,target:val('n_target')||'all',priority:val('n_pri'),due:val('n_due'),title,body:val('n_body'),date:today(),reads:{}}); save(); render();
+    const row={id:g(),author:S.actor,target:val('n_target')||'all',priority:val('n_pri'),
+      due:val('n_due'),title,body:val('n_body'),date:today(),reads:{}};
+    S.notices.unshift(row); render(['n_title','n_body','n_due']);
+    if(SHARED){
+      const saved=await insertRow('dsb_notices',{ company_id:ME.company_id,
+        author_store_id:S.actor, author_member_id:ME.id, target:row.target,
+        priority:row.priority, due:row.due||null, title:row.title, body:row.body });
+      if(saved){ row.id=saved.id; render(); }
+    } else save();
   };
-  const ps=document.getElementById('postShare'); if(ps) ps.onclick=()=>{
+  const ps=document.getElementById('postShare'); if(ps) ps.onclick=async()=>{
     const title=val('s_title'); if(!title){alert(L('al_title'));return;}
-    S.shares.unshift({id:g(),cat:val('s_cat'),title,body:val('s_body'),url:val('s_url'),pinned:val('s_pin')==='1',scope:val('s_scope')||'all',origin:'own',by:storeName(S.actor),date:today(),photos:SHARE_PHOTOS.slice()});
-    SHARE_PHOTOS=[]; save(); render(); toast(L('ts_share'));
+    const row={id:g(),cat:val('s_cat'),title,body:val('s_body'),url:val('s_url'),
+      pinned:val('s_pin')==='1',scope:val('s_scope')||'all',origin:'own',
+      by:storeName(S.actor),date:today(),photos:SHARE_PHOTOS.slice()};
+    S.shares.unshift(row); SHARE_PHOTOS=[]; render(['s_title','s_body','s_url']); toast(L('ts_share'));
+    if(SHARED){
+      const saved=await insertRow('dsb_shares',{ company_id:ME.company_id, cat:row.cat,
+        scope:row.scope, title:row.title, body:row.body, url:row.url, pinned:row.pinned,
+        origin:'own', photos:row.photos, by_store_id:S.actor, by_label:'' });
+      if(saved){ row.id=saved.id; render(); }
+    } else save();
   };
-  const pt=document.getElementById('postTodo'); if(pt) pt.onclick=()=>{
+  const pt=document.getElementById('postTodo'); if(pt) pt.onclick=async()=>{
     const title=val('t_title'); if(!title){alert(L('al_content'));return;}
-    S.todos.unshift({id:g(),target:val('t_target')||'all',due:val('t_due'),note:val('t_note'),title,done:{}}); save(); render();
+    const row={id:g(),target:val('t_target')||'all',due:val('t_due'),note:val('t_note'),title,done:{}};
+    S.todos.unshift(row); render(['t_title','t_note','t_due']);
+    if(SHARED){
+      const saved=await insertRow('dsb_todos',{ company_id:ME.company_id, target:row.target,
+        title:row.title, note:row.note, due:row.due||null });
+      if(saved){ row.id=saved.id; render(); }
+    } else save();
   };
   const pg=document.getElementById('postGoods'); if(pg) pg.onclick=()=>{
     const item=val('f_item'); if(!item){alert(L('al_item'));return;}
@@ -2642,12 +3187,43 @@ function bindActions(){
     S.help.push({id:g(),type,people:num('f_people',1),hours:num('f_hours',8),wage:num('f_wage',12000),note:val('f_note'),status:'open',date:today(),from:type==='offer'?me:null,to:type==='need'?me:null}); save(); render();
   };
 }
-function doNotice(a,id){ const n=S.notices.find(o=>o.id===id); if(!n||n.author===S.actor) return; if(!n.reads)n.reads={};
-  if(a==='read') n.reads[S.actor]={at:today(),handled:false}; if(a==='handle') n.reads[S.actor]={at:today(),handled:true}; save(); render(); }
-function doShare(a,id){ const i=S.shares.findIndex(o=>o.id===id); if(i<0) return;
-  if(a==='pin') S.shares[i].pinned=!S.shares[i].pinned; if(a==='del'){ if(!confirm(L('cf_del')))return; S.shares.splice(i,1);} save(); render(); }
-function doTodo(a,id){ const o=S.todos.find(v=>v.id===id); if(!o) return; if(isHQ()){alert(L('al_hq_todo'));return;}
-  if(a==='done'){ if(!o.done)o.done={}; o.done[S.actor]=today(); } save(); render(); }
+/* 既読・対応済みは「人」の記録なので myKey() に紐づける */
+function doNotice(a,id){
+  const n=S.notices.find(o=>o.id===id); if(!n||n.author===S.actor) return;
+  if(!n.reads) n.reads={};
+  const me=myKey(), handled=(a==='handle');
+  n.reads[me]={at:today(),handled}; render();
+  if(SHARED){
+    const now=new Date().toISOString();
+    sb.from('dsb_notice_reads').upsert({ notice_id:id, member_id:ME.id,
+      read_at:now, handled_at:handled?now:null }, { onConflict:'notice_id,member_id' })
+      .then(({error})=>{ if(error){ console.error('notice_reads', error); saveFail(); } });
+  } else save();
+}
+function doShare(a,id){
+  const i=S.shares.findIndex(o=>o.id===id); if(i<0) return;
+  if(a==='pin'){ const v=!S.shares[i].pinned; S.shares[i].pinned=v; render();
+    if(SHARED) patchRow('dsb_shares',id,{pinned:v}); else save(); return; }
+  if(a==='del'){ if(!confirm(L('cf_del'))) return;
+    S.shares.splice(i,1); render();
+    if(SHARED) hideRow('dsb_shares',id); else save(); return; }   // 物理削除せず隠す
+  save(); render();
+}
+/* やることの完了は「店の作業を、誰がやったか」なので店IDと人IDの両方を残す */
+function doTodo(a,id){
+  const o=S.todos.find(v=>v.id===id); if(!o) return;
+  if(isHQ()){ alert(L('al_hq_todo')); return; }
+  if(a==='done'){
+    if(!o.done) o.done={}; o.done[S.actor]=today(); render();
+    if(SHARED){
+      sb.from('dsb_todo_dones').upsert({ todo_id:id, store_id:S.actor, member_id:ME.id },
+        { onConflict:'todo_id,store_id' })
+        .then(({error})=>{ if(error){ console.error('todo_dones', error); saveFail(); } });
+    } else save();
+    return;
+  }
+  save(); render();
+}
 function doTransfer(a,kind,id,role){ const arr=kind==='goods'?S.goods:S.help; const x=arr.find(o=>o.id===id); if(!x) return; const me=S.actor;
   if(a==='claim'){ let tgt=me; if(isHQ()){ const pick=prompt(`${role==='to'?'受け入れる':'提供する'}店舗（${S.stores.map(s=>s.name).join(' / ')}）`,''); const st=S.stores.find(s=>s.name===(pick||'').trim()); if(!st)return; tgt=st.id; }
       if(role==='to')x.to=tgt; else x.from=tgt; if(x.from&&x.to&&x.from===x.to){alert(L('al_same_store')); if(role==='to')x.to=null;else x.from=null;return;} x.status='matched'; }
@@ -2658,7 +3234,24 @@ function doTransfer(a,kind,id,role){ const arr=kind==='goods'?S.goods:S.help; co
   save(); render();
 }
 
-render();
+/* -----------------------------------------------------------------------
+   起動
+     単独モード … これまで通りすぐ描画
+     共有モード … 「読み込み中」を出してから、Supabaseの内容で描画
+   ----------------------------------------------------------------------- */
+if(SHARED){
+  const app=document.getElementById('app');
+  if(app) app.innerHTML='<div class="empty">読み込み中…</div>';
+  loadShared().then(d=>{
+    if(d){ S=d; render(); startRealtime(); }
+    else showLoginForm();
+  }).catch(e=>{
+    console.error('loadShared', e);
+    if(app) app.innerHTML='<div class="empty">読み込みに失敗しました。再読み込みしてください。</div>';
+  });
+}else{
+  render();
+}
 </script>
 </body>
 </html>
