@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-31T07:35:21+09:00",
+  "updated": "2026-08-01T07:32:34+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -17,6 +17,27 @@
   ],
   "items": [
     {
+      "title": "郡仙台市長が仙台市中央卸売市場を視察 ウナギが安く野菜果物は入荷減",
+      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9GRmdZYksyZlNFU2xLTjVzdjJQaXJ1dF9QNnBzeHM4c08yRmlkMWhZS1h6eEtUQ3VRd1A4WlNfMWNISkpKREhDc2JoU3BCY2M?oc=5",
+      "source": "khb東日本放送",
+      "date": "2026-07-31",
+      "cat": "market"
+    },
+    {
+      "title": "入荷状況は？お盆繁忙期を前に郡市長が市場視察＜仙台＞（2026年7月30日掲載）｜ミヤテレNEWS NNN",
+      "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxOTUZDakxRVjl1c2s0R3lGTDU0UW9FMHY2c1hQSU1BZzEtQk45Yk9MYnI4bE5YMFA4THA5aU1mUk1vUG1OdFBEdjBydkZJeVQxdnNkcWpiRm42Z1BfR0xXMXdZTnBvTFhqTEtUVWtja1B6U2hCb0lTVkZuZy1VdGRDOUNMNXhvV3c?oc=5",
+      "source": "日テレNEWS NNN",
+      "date": "2026-07-31",
+      "cat": "market"
+    },
+    {
+      "title": "特集「食品卸 商社系VS民族系頂上決戦の幕開け」④ 三菱食品／完全子会社化でじわり加速する新事業領域拡大戦略",
+      "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE5Ra3FPLXJJdDA5U1ZsbDZlT01Fc3JUcVNJVGRPX09QSVdPZGdZODByNXVXQy1rNjhQNFVod0ZCTmVNOUR0M1pwclRURWxoTndjZ2c?oc=5",
+      "source": "激流オンライン",
+      "date": "2026-07-31",
+      "cat": "business"
+    },
+    {
       "title": "夏休み親子見学会 徳島市中央卸売市場【徳島】（2026年7月29日掲載）｜JRT NEWS NNN",
       "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxPQTJCVmxoOVlILTY0UEV2ZG1yejJCVjNJR3NsbDBKZHFISTZ6YUtuTllBcVQ0RGNPR204WHlIOVpPNmItMjQyLWsyNTQ4Y0hTcVNZenRXVkpJdDJUODU3UU40NHByeWlnWGdGSTJFbUpwVDM4eDQ0WmxQUWNsZE40Rl9aN0p1VjA?oc=5",
       "source": "日テレNEWS NNN",
@@ -26,13 +47,6 @@
     {
       "title": "特集「食品卸 商社系VS民族系頂上決戦の幕開け」② 日本アクセス／マーケットインの発想で取引先の困りごとに応える",
       "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE5SVU1hVlowQVNVUEh2M3NGSWQ3QXc2T0dEVmw1SUNKSm1KbFVtanR3OTRXUVI0MU9Rdi1JTkhLaWtyQzc0OEowNWhYLTFDdDJJeWc?oc=5",
-      "source": "激流オンライン",
-      "date": "2026-07-30",
-      "cat": "business"
-    },
-    {
-      "title": "特集「食品卸 商社系VS民族系頂上決戦の幕開け」⑦ トモシアHD／新体制で挑む規模拡大と地域性深掘りの両立",
-      "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE55ZmhxUkt5amZxeTJoaVUxV3E1M1pqWTVfYW9iZGNHdENwU2NKRGdOSk96bUVRazVTVmdOa2RWMVlwdEdLSjQySVo2cmlRUUxIT2c?oc=5",
       "source": "激流オンライン",
       "date": "2026-07-30",
       "cat": "business"
@@ -80,13 +94,6 @@
       "cat": "market"
     },
     {
-      "title": "【中央卸売市場】7月イベント情報",
-      "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9Xbk9hNTJONmZFQ2hXQ2NNQ0E5a1RjN0xKcmZrTGZqVnkwVUF1T1Zud1hTT1d1WTFBM0VLTzV4Y1RoRi03R0V5QVFFSjZHcUwzSmdrRVYzUTJZa1huY3VwYXBUZGlLNERM?oc=5",
-      "source": "my.metro.tokyo.lg.jp",
-      "date": "2026-07-02",
-      "cat": "toyosu"
-    },
-    {
       "title": "中部の青果卸１２社、共同物流で新会社",
       "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE1fMk5qVDdFLWc1SEJOSWxJVW5RMXhXQXpmZ0ZUT1RXeWpMUGxwMHhvNjgtU050RXg0d0NVNFMwek5HOXcyNlNlUWRGNlFfaEZ6emxCamFkTQ?oc=5",
       "source": "日本農業新聞",
@@ -115,25 +122,11 @@
       "cat": "business"
     },
     {
-      "title": "ナガスクジラが仙台市中央卸売市場に初入荷",
-      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBldTVPSjVRVVAxRmFuWkZTUlduWHhyR0QwemxxaWhSWDFkbXhFR0g2cnQ4YXUzamhhRm9MclhCcTZhcXA1Q1FkV2lvd3FWdWM?oc=5",
-      "source": "khb東日本放送",
-      "date": "2026-06-09",
-      "cat": "market"
-    },
-    {
       "title": "２６２０ 資金ショートは２０５６年度に８年前倒し 東京都中央卸売市場会計、２０２６年経営レポート どらったら！！",
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1Xb0xLYTJ6eDV1WkxhbzgzTnFqVWRNcmxMMGc1OUVEMDZoZHJzQU1oaXlFdV9GYjNQbmxER0tmR1BnOGg0MGpEWmlOWVFhR25MS1hxZ084bFJpdUFIaU1xSERBWGVwT0E5dkE?oc=5",
       "source": "どらったら！！",
       "date": "2026-06-07",
       "cat": "toyosu"
-    },
-    {
-      "title": "【中央卸売市場】5月イベント情報",
-      "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE5JT0ktcHJFSHZxYy00cl9TZ2hmZ1g1UjNWTHdpdlZLQ2xwV2JGWWNhV2pkTmk2MkJvaUp4YXBwVzdsQzk2Z2ZtUjZ4MTN0ektiZjlnNEVKU3Z5ck5NbXV5dE1GbG42N19n?oc=5",
-      "source": "my.metro.tokyo.lg.jp",
-      "date": "2026-05-07",
-      "cat": "market"
     },
     {
       "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年5月、東京都中央卸売市場）：関東農政局",
@@ -164,9 +157,16 @@
       "cat": "toyosu"
     },
     {
+      "title": "インターネット都政モニターアンケート結果 生鮮食料品等の購買意識 〉 Q16 東京都中央卸売市場の認知|1月",
+      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE4wNEFBMThJRExadlJ6WDQ2d25pVXhNck1ldHBrcG1KVXhndDdkcWNfU2tlSW9lM0EzTGZMN2pSQlRTQjliU2JLVG1ZMlVSa3ljOWpxcTBaNmNzdUlEWFlrTXZTWmNDVzlLYmEtaGxTWWRGM3FQ?oc=5",
+      "source": "metro.tokyo.lg.jp",
+      "date": "2026-01-21",
+      "cat": "toyosu"
+    },
+    {
       "title": "東京都中央卸売市場・豊洲市場",
       "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9abnUyLWI2TWtuY0tKa1FoZlMwRUtHeDVsejhNTmwwck1sZi1iZ2ZhWlQ2OHgyU2xsQUdnM05mdzdpY1hNZGhGMzZoZTlFOWxQMHBiRVFwZmM3enM?oc=5",
-      "source": "gotokyo.org",
+      "source": "GO TOKYO, The Official Tokyo Travel Guide",
       "date": "2025-12-25",
       "cat": "toyosu"
     },
