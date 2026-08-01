@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-01T07:32:34+09:00",
+  "updated": "2026-08-02T07:26:59+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -24,18 +24,18 @@
       "cat": "market"
     },
     {
-      "title": "入荷状況は？お盆繁忙期を前に郡市長が市場視察＜仙台＞（2026年7月30日掲載）｜ミヤテレNEWS NNN",
-      "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxOTUZDakxRVjl1c2s0R3lGTDU0UW9FMHY2c1hQSU1BZzEtQk45Yk9MYnI4bE5YMFA4THA5aU1mUk1vUG1OdFBEdjBydkZJeVQxdnNkcWpiRm42Z1BfR0xXMXdZTnBvTFhqTEtUVWtja1B6U2hCb0lTVkZuZy1VdGRDOUNMNXhvV3c?oc=5",
-      "source": "日テレNEWS NNN",
-      "date": "2026-07-31",
-      "cat": "market"
-    },
-    {
       "title": "特集「食品卸 商社系VS民族系頂上決戦の幕開け」④ 三菱食品／完全子会社化でじわり加速する新事業領域拡大戦略",
       "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE5Ra3FPLXJJdDA5U1ZsbDZlT01Fc3JUcVNJVGRPX09QSVdPZGdZODByNXVXQy1rNjhQNFVod0ZCTmVNOUR0M1pwclRURWxoTndjZ2c?oc=5",
       "source": "激流オンライン",
       "date": "2026-07-31",
       "cat": "business"
+    },
+    {
+      "title": "令和8年度 トップセールス・国内外への訪問",
+      "link": "https://news.google.com/rss/articles/CBMiZkFVX3lxTFBYWU8xeG80MktMMnFEZEtwUHV4anFudmlZazJzRFpuMnc3b0lSSjlhX3FRWC1xcmM5NG5USmpPa1hBU2ljcGNOSXIwLUJjNTdKTlVGNGFSTWhtRk1GR3lSMXZ2OHp2UQ?oc=5",
+      "source": "福島県ホームページ",
+      "date": "2026-07-31",
+      "cat": "toyosu"
     },
     {
       "title": "夏休み親子見学会 徳島市中央卸売市場【徳島】（2026年7月29日掲載）｜JRT NEWS NNN",
@@ -52,25 +52,18 @@
       "cat": "business"
     },
     {
-      "title": "【夏休み2026】豊洲千客万来「親子で学ぶ中央卸売市場」8/21-22",
-      "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFBERmVqZ0x5ZjA5S0drZXpvc1Y5RmpYNldOb3NLTG4xaGxSZDhrN3lmbUozR2prTjFYWG9yNmV3T0VuOFpNWk5QS0IyazY5TnIyR2JjWXJfLVB6Zmtz?oc=5",
-      "source": "リセマム",
+      "title": "【夏休み2026】豊洲千客万来「親子で学ぶ中央卸売市場」8/21-22（リセマム）",
+      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE9RQVZrZzFldHJLRHlSbkhValBINGZwSWVpbndLWXNsd2ppWkp0R0VfS2tDUUs4RkozR0plU2RyVHZVSExFUTRaQk4tNGhTbkltTEVjb016UzZTam9zYVlWU2NMV2ltUDZFZ0VZeGNnOEtuVHVqdlFMR0VMZlhyWDA?oc=5",
+      "source": "Yahoo!ニュース",
       "date": "2026-07-30",
       "cat": "toyosu"
     },
     {
       "title": "青果卸に“AI経営参謀”が常駐する時代へ",
-      "link": "https://news.google.com/rss/articles/CBMiekFVX3lxTE0wYURuNURuUzVzS0tFVjNzbXI1UVI2MXB5cXFOd3NJNHBPQ192MjR2WVRJVVMtY2o5d3R5MVMyb09NYVpyVi1vTGNZNmhGazZmZ2g3WnlIZ2dpNXRwdHFqa09ISjJPMkVOcWFEQm8tZlNtNkQ1MVN6QWh3?oc=5",
-      "source": "イザ！",
+      "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTFB0SUtaaU5BS3JrRjMxNms3OTJSbmVScXBsZG5EbEg0YzNoZjdCVVF0RzJjNmVoNklkRXlhZnp1UE5ZOVd3YTBtTm5nRmpSLWZQS1pHYWZlazNZNHY0eENEdVZxTkV2a01hcllZV0hoVlgxUjJOazJBVGxZZw?oc=5",
+      "source": "産経ニュース",
       "date": "2026-07-27",
       "cat": "business"
-    },
-    {
-      "title": "青果、数量・金額共に増 八戸市中央卸売市場６月市況概要",
-      "link": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE9JaWVDaFA4dC02LVFYYUhXYnNxTmNnVVZSaVpDU2pMUFd5VFlSeFpSU0xXTW5aN3RfaHlSZXRVcUFPUDJHbUFPOERhQzdNdnVlYl9jRDBhWnRMRzFRenRWT0JCMmVnUEU?oc=5",
-      "source": "デーリー東北",
-      "date": "2026-07-17",
-      "cat": "market"
     },
     {
       "title": "卸売市場 市民感謝デー（7月）を開催しました！",
@@ -82,7 +75,7 @@
     {
       "title": "『食品卸・学校給食業界のための物流DXガイド』資料を無料公開",
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE50Rk55R1hQSDVmMHdYN1JRTWw0eURKUGVMczJXZkhVeC1BS2pMeUxyT0Y1aEYzUERSRThSLWlLMHJkRXJJVGI1ak4xSVV4TGV5T0dZOEhGNHViQnA4R2hsWVV0bFRtekhZT1E?oc=5",
-      "source": "PR TIMES",
+      "source": "prtimes.jp",
       "date": "2026-07-09",
       "cat": "business"
     },
@@ -129,6 +122,13 @@
       "cat": "toyosu"
     },
     {
+      "title": "【中央卸売市場】5月イベント情報",
+      "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE5JT0ktcHJFSHZxYy00cl9TZ2hmZ1g1UjNWTHdpdlZLQ2xwV2JGWWNhV2pkTmk2MkJvaUp4YXBwVzdsQzk2Z2ZtUjZ4MTN0ektiZjlnNEVKU3Z5ck5NbXV5dE1GbG42N19n?oc=5",
+      "source": "my.metro.tokyo.lg.jp",
+      "date": "2026-05-07",
+      "cat": "market"
+    },
+    {
       "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年5月、東京都中央卸売市場）：関東農政局",
       "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9nczFHbFoyclptZmt4YmZocHR2MFpLcERHY2ZMYkJETmtOa2JoLWktY1AyNTlHVWpZWmZHM0RzUHFJLVhVb20zM3dkVS1xQzJ1b0xac2VMZEE2U042SlROQWFKekR5U2dwYjBn?oc=5",
       "source": "maff.go.jp",
@@ -138,15 +138,8 @@
     {
       "title": "「大田市場に届いた果物・野菜を、一つも無駄にしない」 | 株式会社野富のプレスリリース",
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTFB4NV9fTk55VjY2X0c1YzVfWWxWU2V6UDJ5SmxMRnE2X2NSZWtFQ1RWQTY1ZjcydVE3YW9mX3FKak1oSkNsX1B2dkJycnB3blB3clluai1XS2RxV19HTnpVN0NFaExjM25UWUE?oc=5",
-      "source": "PR TIMES",
+      "source": "prtimes.jp",
       "date": "2026-04-01",
-      "cat": "toyosu"
-    },
-    {
-      "title": "拡大から持続的流通へ〜変化に対応する市場の社会的役割 – 卸売市場流通についての諸問題",
-      "link": "https://news.google.com/rss/articles/CBMiPEFVX3lxTE9acVVkRlF2ckJWRmphOW5JNTR4dGoxdjZkTlhPWEtHYnlZYWZtVEMwUURUUUlHcjdiamhyaA?oc=5",
-      "source": "fdsupply.org",
-      "date": "2026-03-06",
       "cat": "toyosu"
     },
     {
@@ -176,6 +169,13 @@
       "source": "日本経済新聞",
       "date": "2025-12-25",
       "cat": "toyosu"
+    },
+    {
+      "title": "令和8年 中央卸売市場本場「新年初市」が開催されます",
+      "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTE45dy1HMlZhSHNqRWx4eWFmRFdvZk1pWmxTc1lrX2xPWjBaNzJ3VXVOQWYzMXFzNkk3M2Q1QkNPdmN5VTEwMkNOTzRvUGNFcy1waHpYZjBXQWNpMUFJUi1GVFN4TzRhb3huSUJlVU9wTQ?oc=5",
+      "source": "city.nagoya.jp",
+      "date": "2025-12-23",
+      "cat": "market"
     },
     {
       "title": "市場まつり 令和7年11月23日（日曜日・祝日）開催",
