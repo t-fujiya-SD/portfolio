@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-02T07:26:59+09:00",
+  "updated": "2026-08-03T07:27:20+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -33,7 +33,7 @@
     {
       "title": "令和8年度 トップセールス・国内外への訪問",
       "link": "https://news.google.com/rss/articles/CBMiZkFVX3lxTFBYWU8xeG80MktMMnFEZEtwUHV4anFudmlZazJzRFpuMnc3b0lSSjlhX3FRWC1xcmM5NG5USmpPa1hBU2ljcGNOSXIwLUJjNTdKTlVGNGFSTWhtRk1GR3lSMXZ2OHp2UQ?oc=5",
-      "source": "福島県ホームページ",
+      "source": "pref.fukushima.lg.jp",
       "date": "2026-07-31",
       "cat": "toyosu"
     },
@@ -52,16 +52,16 @@
       "cat": "business"
     },
     {
-      "title": "【夏休み2026】豊洲千客万来「親子で学ぶ中央卸売市場」8/21-22（リセマム）",
-      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE9RQVZrZzFldHJLRHlSbkhValBINGZwSWVpbndLWXNsd2ppWkp0R0VfS2tDUUs4RkozR0plU2RyVHZVSExFUTRaQk4tNGhTbkltTEVjb016UzZTam9zYVlWU2NMV2ltUDZFZ0VZeGNnOEtuVHVqdlFMR0VMZlhyWDA?oc=5",
-      "source": "Yahoo!ニュース",
+      "title": "【夏休み2026】豊洲千客万来「親子で学ぶ中央卸売市場」8/21-22",
+      "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFBERmVqZ0x5ZjA5S0drZXpvc1Y5RmpYNldOb3NLTG4xaGxSZDhrN3lmbUozR2prTjFYWG9yNmV3T0VuOFpNWk5QS0IyazY5TnIyR2JjWXJfLVB6Zmtz?oc=5",
+      "source": "リセマム",
       "date": "2026-07-30",
       "cat": "toyosu"
     },
     {
       "title": "青果卸に“AI経営参謀”が常駐する時代へ",
-      "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTFB0SUtaaU5BS3JrRjMxNms3OTJSbmVScXBsZG5EbEg0YzNoZjdCVVF0RzJjNmVoNklkRXlhZnp1UE5ZOVd3YTBtTm5nRmpSLWZQS1pHYWZlazNZNHY0eENEdVZxTkV2a01hcllZV0hoVlgxUjJOazJBVGxZZw?oc=5",
-      "source": "産経ニュース",
+      "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9Hc2xhSWVQc2hwcnN6YUZHQ0l3UnJSRVo4cWJGbXNlUlpSSnpPbXQ0VzQweF9MWEZfNUNMd3NkTFVfdTllQ05tUkg2RHlJQktSVnpJdzNkZlZwQkgyVklOZUZuVkJCV2pibmc?oc=5",
+      "source": "PR TIMES",
       "date": "2026-07-27",
       "cat": "business"
     },
@@ -73,13 +73,6 @@
       "cat": "market"
     },
     {
-      "title": "『食品卸・学校給食業界のための物流DXガイド』資料を無料公開",
-      "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE50Rk55R1hQSDVmMHdYN1JRTWw0eURKUGVMczJXZkhVeC1BS2pMeUxyT0Y1aEYzUERSRThSLWlLMHJkRXJJVGI1ak4xSVV4TGV5T0dZOEhGNHViQnA4R2hsWVV0bFRtekhZT1E?oc=5",
-      "source": "prtimes.jp",
-      "date": "2026-07-09",
-      "cat": "business"
-    },
-    {
       "title": "模擬せり体験を開催します!!（1）青果編・（2）花き編・（3）水産物編",
       "link": "https://news.google.com/rss/articles/CBMifkFVX3lxTE1yanF4LWxodWQxWnJOaExMWVhHNFVYLV8yRlFYUHJ1REh2eUMwanV5eS1Pb21UeVAzeVlTTi1PY3pqUlRHSFVLbEdmNDRRdkc2YUJ4cHBlNFFJQlFMU1NvZ3U4RU1ZekNDZmV3UjJQZHZjLVJwSGJEOUZMcFhhQQ?oc=5",
       "source": "city.niigata.lg.jp",
@@ -89,7 +82,7 @@
     {
       "title": "中部の青果卸１２社、共同物流で新会社",
       "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE1fMk5qVDdFLWc1SEJOSWxJVW5RMXhXQXpmZ0ZUT1RXeWpMUGxwMHhvNjgtU050RXg0d0NVNFMwek5HOXcyNlNlUWRGNlFfaEZ6emxCamFkTQ?oc=5",
-      "source": "日本農業新聞",
+      "source": "agrinews.co.jp",
       "date": "2026-06-28",
       "cat": "business"
     },
@@ -103,7 +96,7 @@
     {
       "title": "中部圏の青果卸売会社12社、共同物流インフラ確立へ共同で新会社設立",
       "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5JcVJhUHFvZ0FzVFNDVjVnbS1NZ1ZuVENXUzl1SkJ3bF9XLUEzSTFDcElyRzIzbV8zN0U5YWpfSWZidk93RlZ2UmVjRQ?oc=5",
-      "source": "LOGI-BIZ online",
+      "source": "online.logi-biz.com",
       "date": "2026-06-17",
       "cat": "business"
     },
@@ -112,6 +105,13 @@
       "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFBsVjNZdlNydVJjdUpPWXIwbW92M2ZCX21FNkYtNHVPOFNvTWtneUJmeElOMU5zT0NraDdZNTBmV09DSmdIUF9JWFBqSU5xRnVtZl95QQ?oc=5",
       "source": "物流ニュースのLNEWS",
       "date": "2026-06-16",
+      "cat": "business"
+    },
+    {
+      "title": "三菱食品 伊藤社長インタビュー　新たな経営体制で「食品卸」の価値を最大化する",
+      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBwcUl2UXF5OTA3Sjc2b19LSzVZQTNWeklNcklKeFc0bW9NNUpZeDQ4UkVRZ1Z1Rmt4VUg5SWl3M0l1MXhyWTJ2SVYySVA4b1pXWXQ0eHNrZlpISmdRMXFJQktyd0LSAWpBVV95cUxQdnBuenZXVUhIR3NMaTYzVDJYNnJoeG9IZS1aSHVUU0lNVmtBQko1ZFhlYVBISjkwdGxXdHFuV3RYUmpRQ1hoTEZCVHh0eTVRbURJaENDY3NhdzNSbVZJUldDb2VqVnJoMWVn?oc=5",
+      "source": "ダイヤモンド・チェーンストアオンライン",
+      "date": "2026-06-15",
       "cat": "business"
     },
     {
@@ -136,10 +136,24 @@
       "cat": "market"
     },
     {
+      "title": "【人気特集】デンソーが提案した「農産物流通のDX」が拒否され卸売市場が危機！・野村アセットマネジメントら機関投資家が「京都FG・土井社長」に杜撰な賛成票",
+      "link": "https://news.google.com/rss/articles/CBMiTEFVX3lxTFB6ZmN0NVpiejRRS1RVa1BpRV9YZ1dwWm96WDl1YTFXaVREWnI0SUpFTzY4NWdkaFhCVEVKV280VXV5SFdNSDl2TmJZcFrSAU9BVV95cUxONVpaZEZ6aHJvb1l2SmRFTmdkeG1uWTRyR1dKQ2VaZ3Baa2RZQ3VzOGJEaVIwc2NmWFUwa3Y1eTFINlVDMzRSeUJUc0k5U2w0?oc=5",
+      "source": "ダイヤモンド・オンライン",
+      "date": "2026-04-22",
+      "cat": "toyosu"
+    },
+    {
       "title": "「大田市場に届いた果物・野菜を、一つも無駄にしない」 | 株式会社野富のプレスリリース",
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTFB4NV9fTk55VjY2X0c1YzVfWWxWU2V6UDJ5SmxMRnE2X2NSZWtFQ1RWQTY1ZjcydVE3YW9mX3FKak1oSkNsX1B2dkJycnB3blB3clluai1XS2RxV19HTnpVN0NFaExjM25UWUE?oc=5",
-      "source": "prtimes.jp",
+      "source": "PR TIMES",
       "date": "2026-04-01",
+      "cat": "toyosu"
+    },
+    {
+      "title": "拡大から持続的流通へ〜変化に対応する市場の社会的役割 – 卸売市場流通についての諸問題",
+      "link": "https://news.google.com/rss/articles/CBMiPEFVX3lxTE9acVVkRlF2ckJWRmphOW5JNTR4dGoxdjZkTlhPWEtHYnlZYWZtVEMwUURUUUlHcjdiamhyaA?oc=5",
+      "source": "fdsupply.org",
+      "date": "2026-03-06",
       "cat": "toyosu"
     },
     {
@@ -150,24 +164,10 @@
       "cat": "toyosu"
     },
     {
-      "title": "インターネット都政モニターアンケート結果 生鮮食料品等の購買意識 〉 Q16 東京都中央卸売市場の認知|1月",
-      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE4wNEFBMThJRExadlJ6WDQ2d25pVXhNck1ldHBrcG1KVXhndDdkcWNfU2tlSW9lM0EzTGZMN2pSQlRTQjliU2JLVG1ZMlVSa3ljOWpxcTBaNmNzdUlEWFlrTXZTWmNDVzlLYmEtaGxTWWRGM3FQ?oc=5",
-      "source": "metro.tokyo.lg.jp",
-      "date": "2026-01-21",
-      "cat": "toyosu"
-    },
-    {
-      "title": "東京都中央卸売市場・豊洲市場",
-      "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9abnUyLWI2TWtuY0tKa1FoZlMwRUtHeDVsejhNTmwwck1sZi1iZ2ZhWlQ2OHgyU2xsQUdnM05mdzdpY1hNZGhGMzZoZTlFOWxQMHBiRVFwZmM3enM?oc=5",
-      "source": "GO TOKYO, The Official Tokyo Travel Guide",
-      "date": "2025-12-25",
-      "cat": "toyosu"
-    },
-    {
-      "title": "SANKO、大田市場の青果仲卸と業務提携 販路拡大へ",
-      "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTFBRcDRxc25POTNNM19JcDRlR2ZFSnI0a2pHYmJfOTEyTW5hclM2SWVmbVN0S2lZMTg2S3Axb2ZEeW1jWk5iUTFzMkNJNnNuWkpXVG9EY1BXT3JiVGd1VkgtaW9nVHZBeEVzZ2dkbg?oc=5",
-      "source": "日本経済新聞",
-      "date": "2025-12-25",
+      "title": "東京都中央卸売市場取扱高 茨城県青果22年連続1位",
+      "link": "https://news.google.com/rss/articles/CBMic0FVX3lxTE9YLUhRU19OaGk4bFpPUU9DOWVkMFE3SXU4NVdVV2U0V01NdWUxTHl5UDNkN0dPakpqTVRtSG5xNTlOYVZfR1V6YUNpTmstU3FzUkRFWU0wajhRVlFQMi1LVTBRUVV2LVZxWGJOZ2VfczVpOHM?oc=5",
+      "source": "茨城新聞クロスアイ",
+      "date": "2026-02-11",
       "cat": "toyosu"
     },
     {
