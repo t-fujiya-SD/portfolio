@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-03T07:27:20+09:00",
+  "updated": "2026-08-04T07:33:04+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -38,6 +38,13 @@
       "cat": "toyosu"
     },
     {
+      "title": "京都の“じゃないほう市場”？「京都市中央市場」の早朝せり見学に行ってみた(1/2)",
+      "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9GSjJ5Z0Nwbmg1UlM4ZDJNVFE3ZUZma3ZmUFFwRzQyV2FCcHlxTW5qOU9ReHdNdFA3Mko1RFEwRkVvcTVIV2dRbjM3UTc0NjVFS08ydnRR0gFbQVVfeXFMTndWSm5nVjlRTzRBdkpOeHZ5Vnlvb1VlRXY2X2NoWlJJd1JyMi02YjZPM0dqWmFjOUd5Q25Yc1pEeE1CMjZJNkVkRnYyS0JwN1FrdlJsUnNDTkRZVQ?oc=5",
+      "source": "ウォーカープラス",
+      "date": "2026-07-30",
+      "cat": "market"
+    },
+    {
       "title": "夏休み親子見学会 徳島市中央卸売市場【徳島】（2026年7月29日掲載）｜JRT NEWS NNN",
       "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxPQTJCVmxoOVlILTY0UEV2ZG1yejJCVjNJR3NsbDBKZHFISTZ6YUtuTllBcVQ0RGNPR204WHlIOVpPNmItMjQyLWsyNTQ4Y0hTcVNZenRXVkpJdDJUODU3UU40NHByeWlnWGdGSTJFbUpwVDM4eDQ0WmxQUWNsZE40Rl9aN0p1VjA?oc=5",
       "source": "日テレNEWS NNN",
@@ -66,6 +73,13 @@
       "cat": "business"
     },
     {
+      "title": "青果、数量・金額共に増 八戸市中央卸売市場６月市況概要",
+      "link": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE9JaWVDaFA4dC02LVFYYUhXYnNxTmNnVVZSaVpDU2pMUFd5VFlSeFpSU0xXTW5aN3RfaHlSZXRVcUFPUDJHbUFPOERhQzdNdnVlYl9jRDBhWnRMRzFRenRWT0JCMmVnUEU?oc=5",
+      "source": "デーリー東北",
+      "date": "2026-07-17",
+      "cat": "market"
+    },
+    {
       "title": "卸売市場 市民感謝デー（7月）を開催しました！",
       "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE5jeG1YcGNEbnc3eDlLQllsMzE4UVZTQTE2Y3RmY0V0cHBuY2k2WGI5eTRiUktzbFMxQ3RSQzFEWGNtNGtFVDNFeEFtak9QOXMybWc2ZzVza2ExM0RRa3NTWHFId0M?oc=5",
       "source": "city.oita.oita.jp",
@@ -73,16 +87,9 @@
       "cat": "market"
     },
     {
-      "title": "模擬せり体験を開催します!!（1）青果編・（2）花き編・（3）水産物編",
-      "link": "https://news.google.com/rss/articles/CBMifkFVX3lxTE1yanF4LWxodWQxWnJOaExMWVhHNFVYLV8yRlFYUHJ1REh2eUMwanV5eS1Pb21UeVAzeVlTTi1PY3pqUlRHSFVLbEdmNDRRdkc2YUJ4cHBlNFFJQlFMU1NvZ3U4RU1ZekNDZmV3UjJQZHZjLVJwSGJEOUZMcFhhQQ?oc=5",
-      "source": "city.niigata.lg.jp",
-      "date": "2026-07-07",
-      "cat": "market"
-    },
-    {
       "title": "中部の青果卸１２社、共同物流で新会社",
       "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE1fMk5qVDdFLWc1SEJOSWxJVW5RMXhXQXpmZ0ZUT1RXeWpMUGxwMHhvNjgtU050RXg0d0NVNFMwek5HOXcyNlNlUWRGNlFfaEZ6emxCamFkTQ?oc=5",
-      "source": "agrinews.co.jp",
+      "source": "日本農業新聞",
       "date": "2026-06-28",
       "cat": "business"
     },
@@ -96,7 +103,7 @@
     {
       "title": "中部圏の青果卸売会社12社、共同物流インフラ確立へ共同で新会社設立",
       "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5JcVJhUHFvZ0FzVFNDVjVnbS1NZ1ZuVENXUzl1SkJ3bF9XLUEzSTFDcElyRzIzbV8zN0U5YWpfSWZidk93RlZ2UmVjRQ?oc=5",
-      "source": "online.logi-biz.com",
+      "source": "LOGI-BIZ online",
       "date": "2026-06-17",
       "cat": "business"
     },
@@ -136,24 +143,10 @@
       "cat": "market"
     },
     {
-      "title": "【人気特集】デンソーが提案した「農産物流通のDX」が拒否され卸売市場が危機！・野村アセットマネジメントら機関投資家が「京都FG・土井社長」に杜撰な賛成票",
-      "link": "https://news.google.com/rss/articles/CBMiTEFVX3lxTFB6ZmN0NVpiejRRS1RVa1BpRV9YZ1dwWm96WDl1YTFXaVREWnI0SUpFTzY4NWdkaFhCVEVKV280VXV5SFdNSDl2TmJZcFrSAU9BVV95cUxONVpaZEZ6aHJvb1l2SmRFTmdkeG1uWTRyR1dKQ2VaZ3Baa2RZQ3VzOGJEaVIwc2NmWFUwa3Y1eTFINlVDMzRSeUJUc0k5U2w0?oc=5",
-      "source": "ダイヤモンド・オンライン",
-      "date": "2026-04-22",
-      "cat": "toyosu"
-    },
-    {
       "title": "「大田市場に届いた果物・野菜を、一つも無駄にしない」 | 株式会社野富のプレスリリース",
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTFB4NV9fTk55VjY2X0c1YzVfWWxWU2V6UDJ5SmxMRnE2X2NSZWtFQ1RWQTY1ZjcydVE3YW9mX3FKak1oSkNsX1B2dkJycnB3blB3clluai1XS2RxV19HTnpVN0NFaExjM25UWUE?oc=5",
       "source": "PR TIMES",
       "date": "2026-04-01",
-      "cat": "toyosu"
-    },
-    {
-      "title": "拡大から持続的流通へ〜変化に対応する市場の社会的役割 – 卸売市場流通についての諸問題",
-      "link": "https://news.google.com/rss/articles/CBMiPEFVX3lxTE9acVVkRlF2ckJWRmphOW5JNTR4dGoxdjZkTlhPWEtHYnlZYWZtVEMwUURUUUlHcjdiamhyaA?oc=5",
-      "source": "fdsupply.org",
-      "date": "2026-03-06",
       "cat": "toyosu"
     },
     {
@@ -164,18 +157,25 @@
       "cat": "toyosu"
     },
     {
-      "title": "東京都中央卸売市場取扱高 茨城県青果22年連続1位",
-      "link": "https://news.google.com/rss/articles/CBMic0FVX3lxTE9YLUhRU19OaGk4bFpPUU9DOWVkMFE3SXU4NVdVV2U0V01NdWUxTHl5UDNkN0dPakpqTVRtSG5xNTlOYVZfR1V6YUNpTmstU3FzUkRFWU0wajhRVlFQMi1LVTBRUVV2LVZxWGJOZ2VfczVpOHM?oc=5",
-      "source": "茨城新聞クロスアイ",
-      "date": "2026-02-11",
+      "title": "インターネット都政モニターアンケート結果 生鮮食料品等の購買意識 〉 Q16 東京都中央卸売市場の認知|1月",
+      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE4wNEFBMThJRExadlJ6WDQ2d25pVXhNck1ldHBrcG1KVXhndDdkcWNfU2tlSW9lM0EzTGZMN2pSQlRTQjliU2JLVG1ZMlVSa3ljOWpxcTBaNmNzdUlEWFlrTXZTWmNDVzlLYmEtaGxTWWRGM3FQ?oc=5",
+      "source": "metro.tokyo.lg.jp",
+      "date": "2026-01-21",
       "cat": "toyosu"
     },
     {
-      "title": "令和8年 中央卸売市場本場「新年初市」が開催されます",
-      "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTE45dy1HMlZhSHNqRWx4eWFmRFdvZk1pWmxTc1lrX2xPWjBaNzJ3VXVOQWYzMXFzNkk3M2Q1QkNPdmN5VTEwMkNOTzRvUGNFcy1waHpYZjBXQWNpMUFJUi1GVFN4TzRhb3huSUJlVU9wTQ?oc=5",
-      "source": "city.nagoya.jp",
-      "date": "2025-12-23",
-      "cat": "market"
+      "title": "東京都中央卸売市場・豊洲市場",
+      "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9abnUyLWI2TWtuY0tKa1FoZlMwRUtHeDVsejhNTmwwck1sZi1iZ2ZhWlQ2OHgyU2xsQUdnM05mdzdpY1hNZGhGMzZoZTlFOWxQMHBiRVFwZmM3enM?oc=5",
+      "source": "GO TOKYO, The Official Tokyo Travel Guide",
+      "date": "2025-12-25",
+      "cat": "toyosu"
+    },
+    {
+      "title": "SANKO、大田市場の青果仲卸と業務提携 販路拡大へ",
+      "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTFBRcDRxc25POTNNM19JcDRlR2ZFSnI0a2pHYmJfOTEyTW5hclM2SWVmbVN0S2lZMTg2S3Axb2ZEeW1jWk5iUTFzMkNJNnNuWkpXVG9EY1BXT3JiVGd1VkgtaW9nVHZBeEVzZ2dkbg?oc=5",
+      "source": "日本経済新聞",
+      "date": "2025-12-25",
+      "cat": "toyosu"
     },
     {
       "title": "市場まつり 令和7年11月23日（日曜日・祝日）開催",
