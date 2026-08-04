@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-04T07:33:04+09:00",
+  "updated": "2026-08-05T07:35:32+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -33,7 +33,7 @@
     {
       "title": "令和8年度 トップセールス・国内外への訪問",
       "link": "https://news.google.com/rss/articles/CBMiZkFVX3lxTFBYWU8xeG80MktMMnFEZEtwUHV4anFudmlZazJzRFpuMnc3b0lSSjlhX3FRWC1xcmM5NG5USmpPa1hBU2ljcGNOSXIwLUJjNTdKTlVGNGFSTWhtRk1GR3lSMXZ2OHp2UQ?oc=5",
-      "source": "pref.fukushima.lg.jp",
+      "source": "福島県ホームページ",
       "date": "2026-07-31",
       "cat": "toyosu"
     },
@@ -50,13 +50,6 @@
       "source": "日テレNEWS NNN",
       "date": "2026-07-30",
       "cat": "market"
-    },
-    {
-      "title": "特集「食品卸 商社系VS民族系頂上決戦の幕開け」② 日本アクセス／マーケットインの発想で取引先の困りごとに応える",
-      "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE5SVU1hVlowQVNVUEh2M3NGSWQ3QXc2T0dEVmw1SUNKSm1KbFVtanR3OTRXUVI0MU9Rdi1JTkhLaWtyQzc0OEowNWhYLTFDdDJJeWc?oc=5",
-      "source": "激流オンライン",
-      "date": "2026-07-30",
-      "cat": "business"
     },
     {
       "title": "【夏休み2026】豊洲千客万来「親子で学ぶ中央卸売市場」8/21-22",
@@ -110,7 +103,7 @@
     {
       "title": "中部圏の青果卸12社／共同物流会社を設立、2027年6月以降稼働へ",
       "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFBsVjNZdlNydVJjdUpPWXIwbW92M2ZCX21FNkYtNHVPOFNvTWtneUJmeElOMU5zT0NraDdZNTBmV09DSmdIUF9JWFBqSU5xRnVtZl95QQ?oc=5",
-      "source": "物流ニュースのLNEWS",
+      "source": "lnews.jp",
       "date": "2026-06-16",
       "cat": "business"
     },
@@ -124,7 +117,7 @@
     {
       "title": "２６２０ 資金ショートは２０５６年度に８年前倒し 東京都中央卸売市場会計、２０２６年経営レポート どらったら！！",
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1Xb0xLYTJ6eDV1WkxhbzgzTnFqVWRNcmxMMGc1OUVEMDZoZHJzQU1oaXlFdV9GYjNQbmxER0tmR1BnOGg0MGpEWmlOWVFhR25MS1hxZ084bFJpdUFIaU1xSERBWGVwT0E5dkE?oc=5",
-      "source": "どらったら！！",
+      "source": "dorattara.hatenablog.com",
       "date": "2026-06-07",
       "cat": "toyosu"
     },
@@ -141,6 +134,13 @@
       "source": "maff.go.jp",
       "date": "2026-04-30",
       "cat": "market"
+    },
+    {
+      "title": "物流2026年問題（改正物流効率化法）で生じる3つの義務と食品卸の生存戦略",
+      "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE5Xbmx4M01mQW5Bd3VPX0h3eFllQzR2U1g2Y254UWc0bnNJR1NiQjk1NS1DakZJc1U0eDEycjhxbzBNa1h3MjZjc3p6d3ZuM0tzNXBXN2FNMTZGQm9D?oc=5",
+      "source": "フーズチャネル",
+      "date": "2026-04-21",
+      "cat": "business"
     },
     {
       "title": "「大田市場に届いた果物・野菜を、一つも無駄にしない」 | 株式会社野富のプレスリリース",
