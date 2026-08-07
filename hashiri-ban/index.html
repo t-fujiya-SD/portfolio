@@ -1,0 +1,956 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>ハシリ板（ハシリバン）— 卸の朝の申し送り</title>
+<meta name="description" content="市場・倉庫・車上・事務所で同時刻に一緒にいない人たちの間で、今朝の申し送りを確実に届けるためのボード。デモ（データはすべて架空）">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --g:#16a34a; --g-d:#15803d; --g-l:#dcfce7; --g-bg:#f0fdf4;
+  --ink:#111827; --sub:#6b7280; --line:#e5e7eb; --bg:#f6f7f9; --card:#fff;
+  --red:#dc2626; --amber:#d97706; --blue:#2563eb; --purple:#7c3aed;
+  --radius:14px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Noto Sans JP","Noto Sans",-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",sans-serif;
+  background:var(--bg); color:var(--ink); font-size:16px; line-height:1.65;
+  padding-bottom:84px; overflow-x:hidden;
+}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:none;background:none}
+.wrap{max-width:720px;margin:0 auto;padding:0 14px}
+
+/* ---- header ---- */
+header{background:var(--g);color:#fff;position:sticky;top:0;z-index:30;box-shadow:0 1px 8px rgba(0,0,0,.12)}
+.hrow{display:flex;align-items:center;gap:8px;padding:10px 14px;max-width:720px;margin:0 auto}
+.logo{font-weight:700;font-size:18px;letter-spacing:.02em;white-space:nowrap}
+.logo small{display:block;font-size:10px;font-weight:400;opacity:.85;letter-spacing:.06em;line-height:1.2}
+.hspace{flex:1}
+.hbtn{background:rgba(255,255,255,.16);color:#fff;border-radius:9px;padding:6px 9px;font-size:13px;font-weight:500}
+.hbtn:active{background:rgba(255,255,255,.3)}
+.actorbar{background:var(--g-d);color:#fff;font-size:12.5px}
+.actorbar .wrap{display:flex;align-items:center;gap:8px;padding:6px 14px;flex-wrap:wrap}
+.actorbar select{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.28);
+  border-radius:8px;padding:4px 6px;font-size:12.5px;max-width:46vw}
+.actorbar select option{color:#111}
+
+/* ---- cards ---- */
+/* ★scroll-margin-top＝stickyヘッダーの高さぶん。無いとジャンプ先がヘッダーに隠れる */
+.card{scroll-margin-top:120px;background:var(--card);border-radius:var(--radius);padding:14px;margin:12px 0;
+  box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.card.acc{border-left:5px solid var(--g)}
+.card.tome{border-left:5px solid var(--amber);background:#fffbeb}
+.card.hi{outline:3px solid var(--amber);outline-offset:2px}
+h2.sec{font-size:15px;margin:20px 0 6px;color:var(--sub);font-weight:700;letter-spacing:.02em}
+.muted{color:var(--sub);font-size:13.5px}
+.tiny{font-size:12px;color:var(--sub)}
+
+/* ---- catch-up hero ---- */
+.hero{background:linear-gradient(135deg,var(--g) 0%,var(--g-d) 100%);color:#fff;
+  border-radius:var(--radius);padding:18px 16px;margin:14px 0}
+.hero .n{font-size:27px;font-weight:700;line-height:1.25;margin:0 0 2px}
+.hero .p{font-size:13px;opacity:.92;margin:0}
+.hero.done .n{font-size:23px}
+.streak{margin-top:10px;background:rgba(255,255,255,.16);border-radius:9px;padding:7px 10px;font-size:13px}
+
+/* ---- routme panel ---- */
+.rm{display:flex;gap:10px;margin:12px 0}
+.rm .b{flex:1;background:var(--card);border-radius:var(--radius);padding:12px;text-align:center;
+  box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.rm .b b{display:block;font-size:24px;line-height:1.2}
+.rm .b.ok b{color:var(--g)}
+.rm .b.warn{background:#fef2f2;border:1px solid #fecaca}
+.rm .b.warn b{color:var(--red)}
+.rm .b span{font-size:12px;color:var(--sub)}
+.rm .b{cursor:pointer;transition:transform .1s}
+.rm .b:active{transform:scale(.97)}
+.rmfilter{display:flex;align-items:center;gap:8px;background:#dbeafe;border:1px solid #bfdbfe;
+  border-radius:10px;padding:8px 12px;margin:10px 0;font-size:13.5px;color:#1d4ed8;font-weight:700}
+.rmfilter button{margin-left:auto;background:#fff;border:1px solid #bfdbfe;border-radius:8px;
+  padding:4px 10px;font-size:12.5px;color:#1d4ed8;font-weight:700}
+
+/* ---- kind chips ---- */
+.kinds{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.kchip{border:1.5px solid var(--line);border-radius:999px;padding:5px 10px;font-size:13px;background:#fff}
+.kchip.on{border-color:var(--g);background:var(--g-l);font-weight:700}
+.kbadge{display:inline-block;border-radius:7px;padding:2px 8px;font-size:12.5px;font-weight:700;
+  background:var(--g-l);color:var(--g-d);white-space:nowrap}
+.kbadge.rm{background:#dbeafe;color:#1d4ed8}
+.kbadge.cost{background:#fef3c7;color:#92400e}
+
+/* ---- handoff card ---- */
+.hd-top{display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap}
+.hd-title{font-weight:700;font-size:16.5px;margin:6px 0 2px}
+.hd-body{font-size:14.5px;white-space:pre-wrap;margin:2px 0 8px}
+.reach{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 4px}
+.rpill{font-size:12px;border-radius:999px;padding:3px 9px;background:#f3f4f6;color:#374151;border:1px solid var(--line)}
+.rpill.full{background:var(--g-l);color:var(--g-d);border-color:#bbf7d0;font-weight:700}
+.rpill.zero{background:#fef2f2;color:var(--red);border-color:#fecaca;font-weight:700}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.btn{background:var(--g);color:#fff;border-radius:10px;padding:9px 14px;font-size:14px;font-weight:700}
+.btn:active{background:var(--g-d)}
+.btn.ghost{background:#fff;color:var(--g-d);border:1.5px solid var(--g)}
+.btn.gray{background:#fff;color:#374151;border:1.5px solid var(--line)}
+.btn.blue{background:var(--blue)}
+.btn.sm{padding:6px 11px;font-size:13px;border-radius:9px}
+.btn[disabled]{opacity:.5;pointer-events:none}
+.sent{display:inline-flex;align-items:center;gap:5px;font-size:13px;color:var(--g-d);font-weight:700}
+
+/* ---- cost box ---- */
+.costbox{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:10px;margin:6px 0}
+.costbox table{width:100%;border-collapse:collapse;font-size:14px}
+.costbox td{padding:2px 0}
+.costbox td:first-child{color:var(--sub);width:5.5em;font-size:13px}
+.costbox b{font-size:17px}
+
+/* ---- forms ---- */
+.f{margin:8px 0}
+.f label{display:block;font-size:12.5px;color:var(--sub);margin-bottom:3px;font-weight:500}
+.f input,.f select,.f textarea{width:100%;border:1.5px solid var(--line);border-radius:10px;
+  padding:9px 10px;font-size:15px;background:#fff}
+.f textarea{min-height:74px;resize:vertical}
+.f2{display:flex;gap:8px}.f2>*{flex:1}
+.deptpick{display:flex;flex-wrap:wrap;gap:6px}
+.deptpick button{border:1.5px solid var(--line);border-radius:999px;padding:6px 12px;font-size:13.5px;background:#fff}
+.deptpick button.on{border-color:var(--g);background:var(--g-l);font-weight:700}
+
+/* ---- photos ---- */
+.pgrid{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.pth{width:104px;height:78px;border-radius:8px;object-fit:cover;border:1px solid var(--line);cursor:zoom-in}
+.lb{position:fixed;inset:0;background:rgba(0,0,0,.86);display:flex;align-items:center;justify-content:center;z-index:90}
+.lb img{max-width:94vw;max-height:88vh;border-radius:8px}
+
+/* ---- board ---- */
+.tag{font-size:12px;background:#f3f4f6;border:1px solid var(--line);border-radius:999px;padding:2px 9px;color:#374151}
+.cmt{border-left:3px solid var(--line);padding:6px 0 6px 10px;margin:8px 0}
+.cmt.best{border-left-color:var(--g);background:var(--g-bg);border-radius:0 8px 8px 0;padding-right:8px}
+.who{font-size:12.5px;color:var(--sub);font-weight:500}
+.newbadge{background:var(--red);color:#fff;font-size:11px;border-radius:999px;padding:1px 7px;font-weight:700}
+
+/* ---- nav ---- */
+nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);
+  display:flex;z-index:40;padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;padding:9px 2px 8px;font-size:11px;color:var(--sub);position:relative;font-weight:500}
+nav button .i{display:block;font-size:21px;line-height:1.15}
+nav button.on{color:var(--g);font-weight:700}
+nav .bn{position:absolute;top:4px;left:50%;margin-left:6px;background:var(--red);color:#fff;
+  font-size:10px;border-radius:999px;padding:0 5px;font-weight:700;min-width:16px}
+nav .bn.soft{background:#9ca3af}
+
+/* ---- misc ---- */
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:96px;background:#111827;color:#fff;
+  padding:11px 17px;border-radius:11px;font-size:14px;z-index:95;max-width:88vw;text-align:center;
+  opacity:0;pointer-events:none;transition:opacity .2s}
+#toast.on{opacity:1}
+#cfx{position:fixed;inset:0;pointer-events:none;z-index:99}
+.demo{background:#fef3c7;border:1px solid #fde68a;border-radius:10px;padding:9px 12px;font-size:12.5px;
+  color:#92400e;margin:12px 0}
+.empty{text-align:center;color:var(--sub);font-size:14px;padding:16px 8px}
+.jump{cursor:pointer}
+.row{display:flex;gap:9px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:none}
+.row .ic{font-size:19px;line-height:1.3}
+.row .tx{flex:1;min-width:0}
+.row .tx b{display:block;font-size:14.5px;font-weight:600}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hrow">
+    <div class="logo" id="logo"></div>
+    <div class="hspace"></div>
+    <button class="hbtn" id="langBtn">🌐</button>
+  </div>
+</header>
+<div class="actorbar"><div class="wrap">
+  <span id="actorLbl">操作者</span>
+  <select id="actorSel"></select>
+  <span class="hspace"></span>
+  <span id="actorDept"></span>
+</div></div>
+
+<main class="wrap" id="app"></main>
+
+<nav id="nav"></nav>
+<div id="toast"></div>
+<canvas id="cfx"></canvas>
+
+<script>
+/* =========================================================================
+   ハシリ板（ハシリバン） — ①社内ハブ「申し送り」/ デモ
+   単一HTML・localStorage単独モード。config.js があれば共有モードに繋ぐ想定。
+   ★データはすべて架空。実在の会社・人・卸ではありません。
+   ========================================================================= */
+
+/* ★アプリ名はここ1か所だけ。名称が変わってもここを直せば済む（DBには入れない） */
+/* ★RoutMe連携の表示スイッチ（2026-08-06 判断：今回のモニターには入れない）
+   false のあいだは「RoutMeへ送る」「送信済み／未送信」を画面から落とす。
+   仕組みは全部残してあるので、true に戻せばそのまま出る。
+   理由＝一方のモニター先はRoutMeが未稼働で試せない。検証を「申し送りが隅々まで届くか」の
+   1点に絞ったほうが結果が読める。①が定着してから入れる。 */
+const SHOW_ROUTME = false;
+
+const APP_NAME = { ja:'ハシリ板', en:'HASHIRIBAN', zh:'ハシリ板', vi:'HASHIRIBAN' };
+const APP_TAG  = { ja:'申し送り｜卸の朝を、全員に', en:'Handoff — the morning, shared with everyone',
+                   zh:'交接｜把清晨传达给每个人', vi:'Bàn giao — buổi sáng, cho tất cả mọi người' };
+
+const LS_KEY = 'hsr_demo_v1';
+const TODAY  = '2026-08-06';        /* デモは日付固定 */
+const YEST   = '2026-08-05';
+
+/* ---------- 言語 ---------- */
+const LANGS = [['ja','日本語'],['en','English'],['zh','中文'],['vi','Tiếng Việt']];
+const I18N = {
+ ja:{ home:'ホーム',hand:'申し送り',board:'相談',share:'共有',
+   catch:'未確認の申し送り {0}件', done:'申し送り、確認済です 🎉', doneSub:'未読も、返す相談もありません',
+   rmSent:'RoutMeへ送信済み', rmPend:'未送信＝ドライバーが知らない',
+   onlySent:'RoutMeへ送信済みだけ', onlyPending:'未送信だけ', clearFilter:'すべて表示',
+   notFound:'その項目は今の表示に入っていません',
+   unread:'未読の申し送り', toReply:'返す相談', noUnread:'未読はありません 🎉', noReply:'返す相談はありません 🎉',
+   post:'申し送りを出す', kind:'種別', to:'誰に', title:'ひとこと', body:'くわしく',
+   send:'出す', cancel:'やめる', sendRm:'RoutMeへ送る', sent:'RoutMeへ送信済み',
+   read:'読んだ', handled:'対応した', readDone:'読んだ ✓', handledDone:'対応した ✓',
+   reach:'届いた人', photo:'写真', addPhoto:'写真を足す',
+   item:'品名', qty:'数量・建て', price:'単価（円）', supplier:'仕入先',
+   costHint:'市場から戻ったら、LINEに書く代わりにここへ。前日比アラートの元になります。',
+   ask:'相談する', solved:'解決済み', best:'これが答え', promote:'RoutMeの店舗メモに登録',
+   promote2:'共有に残す', promoted2:'共有に残しました',
+   promoted:'RoutMeに登録済み', reply:'返信', replyPh:'返信を書く…',
+   streak:'🔥 {0}日連続', streakBest:'自己ベスト{0}日', streakLeft:'あと{1}件で {0}日連続 🔥',
+   toAll:'全員', today:'今日', yest:'昨日', shareCat:'種類', noItems:'まだありません',
+   quick:'ワンタップ返信', dummy:'デモ用のダミーデータです。実在の会社・人・卸ではありません。' },
+ en:{ home:'Home',hand:'Handoff',board:'Board',share:'Shared',
+   catch:'{0} handoff(s) not checked yet', done:'All handoffs checked 🎉', doneSub:'No unread, nothing to reply',
+   rmSent:'Sent to RoutMe', rmPend:'Not sent — drivers don’t know',
+   onlySent:'Sent to RoutMe only', onlyPending:'Not sent only', clearFilter:'Show all',
+   notFound:'That item is not in the current view',
+   unread:'Unread handoffs', toReply:'Your turn to reply', noUnread:'Nothing unread 🎉', noReply:'Nothing to reply 🎉',
+   post:'Post a handoff', kind:'Type', to:'To', title:'One line', body:'Details',
+   send:'Post', cancel:'Cancel', sendRm:'Send to RoutMe', sent:'Sent to RoutMe',
+   read:'Read', handled:'Handled', readDone:'Read ✓', handledDone:'Handled ✓',
+   reach:'Reached', photo:'Photos', addPhoto:'Add photo',
+   item:'Item', qty:'Qty / unit', price:'Unit price (JPY)', supplier:'Supplier',
+   costHint:'Post it here instead of LINE when you get back from the market. It feeds the price alert.',
+   ask:'Ask', solved:'Solved', best:'Best answer', promote:'Save to RoutMe store note',
+   promote2:'Save to Shared', promoted2:'Saved to Shared',
+   promoted:'Saved to RoutMe', reply:'Reply', replyPh:'Write a reply…',
+   streak:'🔥 {0}-day streak', streakBest:'best {0} days', streakLeft:'{1} more for a {0}-day streak 🔥',
+   toAll:'Everyone', today:'Today', yest:'Yesterday', shareCat:'Category', noItems:'Nothing yet',
+   quick:'One-tap reply', dummy:'Demo data. No real company, person or supplier.' },
+ zh:{ home:'首页',hand:'交接',board:'讨论',share:'共享',
+   catch:'未确认的交接 {0} 条', done:'交接已全部确认 🎉', doneSub:'没有未读，也没有待回复',
+   rmSent:'已发送到 RoutMe', rmPend:'未发送＝司机还不知道',
+   onlySent:'仅已发送到 RoutMe', onlyPending:'仅未发送', clearFilter:'显示全部',
+   notFound:'该项目不在当前显示范围内',
+   unread:'未读交接', toReply:'轮到你回复', noUnread:'没有未读 🎉', noReply:'没有待回复 🎉',
+   post:'发布交接', kind:'类型', to:'发给谁', title:'一句话', body:'详情',
+   send:'发布', cancel:'取消', sendRm:'发送到 RoutMe', sent:'已发送到 RoutMe',
+   read:'已读', handled:'已处理', readDone:'已读 ✓', handledDone:'已处理 ✓',
+   reach:'已送达', photo:'照片', addPhoto:'添加照片',
+   item:'品名', qty:'数量・规格', price:'单价（日元）', supplier:'供应商',
+   costHint:'从市场回来后，别写在 LINE，写在这里。这是日环比预警的数据来源。',
+   ask:'提问', solved:'已解决', best:'最佳答案', promote:'保存到 RoutMe 店铺备注',
+   promote2:'保存到共享', promoted2:'已保存到共享',
+   promoted:'已保存到 RoutMe', reply:'回复', replyPh:'写回复…',
+   streak:'🔥 连续 {0} 天', streakBest:'最佳 {0} 天', streakLeft:'再 {1} 条即可连续 {0} 天 🔥',
+   toAll:'全员', today:'今天', yest:'昨天', shareCat:'类别', noItems:'暂无',
+   quick:'一键回复', dummy:'演示数据。并非真实的公司、人员或供应商。' },
+ vi:{ home:'Trang chủ',hand:'Bàn giao',board:'Thảo luận',share:'Chia sẻ',
+   catch:'{0} mục bàn giao chưa kiểm tra', done:'Đã kiểm tra hết bàn giao 🎉', doneSub:'Không có mục chưa đọc hay cần trả lời',
+   rmSent:'Đã gửi sang RoutMe', rmPend:'Chưa gửi — tài xế chưa biết',
+   onlySent:'Chỉ mục đã gửi', onlyPending:'Chỉ mục chưa gửi', clearFilter:'Hiện tất cả',
+   notFound:'Mục đó không nằm trong hiển thị hiện tại',
+   unread:'Bàn giao chưa đọc', toReply:'Đến lượt bạn trả lời', noUnread:'Không có mục chưa đọc 🎉', noReply:'Không có gì cần trả lời 🎉',
+   post:'Đăng bàn giao', kind:'Loại', to:'Gửi cho', title:'Một dòng', body:'Chi tiết',
+   send:'Đăng', cancel:'Huỷ', sendRm:'Gửi sang RoutMe', sent:'Đã gửi sang RoutMe',
+   read:'Đã đọc', handled:'Đã xử lý', readDone:'Đã đọc ✓', handledDone:'Đã xử lý ✓',
+   reach:'Đã tới', photo:'Ảnh', addPhoto:'Thêm ảnh',
+   item:'Tên hàng', qty:'SL / quy cách', price:'Đơn giá (JPY)', supplier:'Nhà cung cấp',
+   costHint:'Đi chợ về thì ghi vào đây thay vì LINE. Đây là nguồn cho cảnh báo giá.',
+   ask:'Hỏi', solved:'Đã giải quyết', best:'Câu trả lời hay nhất', promote:'Lưu vào ghi chú cửa hàng RoutMe',
+   promote2:'Lưu vào Chia sẻ', promoted2:'Đã lưu vào Chia sẻ',
+   promoted:'Đã lưu vào RoutMe', reply:'Trả lời', replyPh:'Viết trả lời…',
+   streak:'🔥 {0} ngày liên tiếp', streakBest:'kỷ lục {0} ngày', streakLeft:'Thêm {1} nữa là {0} ngày liên tiếp 🔥',
+   toAll:'Mọi người', today:'Hôm nay', yest:'Hôm qua', shareCat:'Loại', noItems:'Chưa có gì',
+   quick:'Trả lời một chạm', dummy:'Dữ liệu demo. Không phải công ty, người hay nhà cung cấp có thật.' }
+};
+let LANG = localStorage.getItem('hsr_lang') || 'ja';
+function L(k,...a){ let s=(I18N[LANG]&&I18N[LANG][k])||I18N.ja[k]||k;
+  a.forEach((v,i)=>s=s.replace('{'+i+'}',v)); return s; }
+/* 本文層：書いた人の言語で保存し、読む人の言語で表示する */
+function tx(o,f){ if(!o) return ''; const t=o.i18n&&o.i18n[LANG]&&o.i18n[LANG][f]; return t||o[f]||''; }
+function isRaw(o){ return LANG!=='ja' && !(o.i18n&&o.i18n[LANG]); }
+
+/* ---------- 持ち場 ---------- */
+const DEPTS = [
+  {key:'office',   ic:'🏢', ja:'事務所', en:'Office',   zh:'办公室', vi:'Văn phòng'},
+  {key:'picking',  ic:'📦', ja:'倉庫',   en:'Warehouse',zh:'仓库',   vi:'Kho'},
+  {key:'delivery', ic:'🚚', ja:'配送',   en:'Delivery', zh:'配送',   vi:'Giao hàng'},
+  {key:'sales',    ic:'🤝', ja:'営業',   en:'Sales',    zh:'销售',   vi:'Kinh doanh'}
+];
+const dept = k => DEPTS.find(d=>d.key===k) || {ic:'•',ja:k,en:k,zh:k,vi:k};
+const deptName = k => dept(k)[LANG] || dept(k).ja;
+
+/* ---------- 申し送りの型（10種）---------- */
+/* rm = RoutMeの受け口。null は社内共有のみ。cost は②価格・原価へ */
+const KINDS = [
+  {k:'no_order',  ic:'🚫', rm:'order_imports.order_exists=false', ja:'今日は注文なし', en:'No order today', zh:'今天无订单', vi:'Hôm nay không có đơn'},
+  {k:'add_stop',  ic:'➕', rm:'manual_stops (source=manual)',     ja:'追加・緊急',     en:'Extra / urgent', zh:'追加・紧急', vi:'Thêm / khẩn'},
+  {k:'shortage',  ic:'📦', rm:'manual_stops.cargo_note',         ja:'欠品',           en:'Out of stock',   zh:'缺货',       vi:'Hết hàng'},
+  {k:'substitute',ic:'🔄', rm:'manual_stops.cargo_note',         ja:'代替品',         en:'Substitute',     zh:'替代品',     vi:'Hàng thay thế'},
+  {k:'qty_change',ic:'🔢', rm:'manual_stops.cargo_note',         ja:'数量変更',       en:'Qty change',     zh:'数量变更',   vi:'Đổi số lượng'},
+  {k:'return',    ic:'↩',  rm:'manual_stops.collection_note',    ja:'返品・回収',     en:'Return / pickup',zh:'退货・回收', vi:'Trả / thu hồi'},
+  {k:'time',      ic:'⏰', rm:null,                              ja:'時間指定・遅延', en:'Time / delay',   zh:'时间・延误', vi:'Giờ / trễ'},
+  {k:'invoice',   ic:'🧾', rm:null,                              ja:'請求・伝票',     en:'Invoice / slip', zh:'账单・单据', vi:'Hoá đơn / phiếu'},
+  {k:'vehicle',   ic:'🚗', rm:null,                              ja:'車両・人',       en:'Vehicle / staff',zh:'车辆・人员', vi:'Xe / nhân sự'},
+  {k:'cost',      ic:'💴', rm:null, cost:true,                   ja:'仕入値の共有',   en:'Cost of the day',zh:'进价共享',   vi:'Giá nhập hôm nay'}
+];
+const kind = k => KINDS.find(x=>x.k===k) || KINDS[0];
+const kindName = k => kind(k)[LANG] || kind(k).ja;
+
+const TAGS = ['欠品','代替品','数量変更','追加緊急','クレーム','請求','車両','取引先ルール'];
+
+/* ---------- ダミー写真（実写は載せない） ---------- */
+function PH(label,hue){
+  const s=`<svg xmlns="http://www.w3.org/2000/svg" width="320" height="240">
+  <rect width="320" height="240" fill="hsl(${hue},42%,86%)"/>
+  <circle cx="160" cy="100" r="46" fill="hsl(${hue},40%,70%)"/>
+  <text x="160" y="107" font-family="sans-serif" font-size="15" fill="#fff" text-anchor="middle">${label}</text>
+  <text x="160" y="205" font-family="sans-serif" font-size="13" fill="hsl(${hue},30%,40%)" text-anchor="middle">DUMMY PHOTO</text></svg>`;
+  return 'data:image/svg+xml;utf8,'+encodeURIComponent(s);
+}
+
+/* ---------- 種データ（すべて架空） ---------- */
+function seed(){
+  const M=[
+    {id:'m1',name:'佐野',   dept:'office',   role:'owner'},
+    {id:'m2',name:'岩瀬',   dept:'office',   role:'manager'},
+    {id:'m3',name:'ダット', dept:'picking',  role:'staff'},
+    {id:'m4',name:'グエン', dept:'picking',  role:'staff'},
+    {id:'m5',name:'大久保', dept:'delivery', role:'staff'},
+    {id:'m6',name:'李',     dept:'delivery', role:'staff'},
+    {id:'m7',name:'三宅',   dept:'sales',    role:'staff'}
+  ];
+  const h=[];
+  const add=o=>{h.push(Object.assign({id:'h'+(h.length+1),date:TODAY,photos:[],to:['office','picking','delivery'],rm:'pending'},o));};
+
+  add({kind:'no_order', by:'m2', to:['picking','delivery'],
+    title:'マルシェ相模原は今日はお休み',
+    body:'週明けの棚卸しで今日は入れなくていいそうです。積み込みから外してください。',
+    i18n:{en:{title:'Marche Sagamihara — no order today',body:'They are doing stocktaking. Leave them out of the loading.'},
+          zh:{title:'Marche 相模原 今天无订单',body:'他们在盘点。装车时请排除。'},
+          vi:{title:'Marche Sagamihara — hôm nay không có đơn',body:'Họ đang kiểm kho. Bỏ khỏi danh sách xếp hàng.'}},
+    rm:'sent'});
+
+  add({kind:'shortage', by:'m3', to:['office','delivery','sales'],
+    title:'アスパラ（L）が半分しか来ていません',
+    body:'12ケースの予定で6ケースだけ。足りないぶんは明日入る見込みです。写真は現物。',
+    photos:[PH('アスパラ',120),PH('伝票',45)],
+    i18n:{en:{title:'Asparagus (L) — only half arrived',body:'6 of 12 cases. The rest should come tomorrow. Photos attached.'},
+          zh:{title:'芦笋（L）只到一半',body:'12箱只到6箱。剩余预计明天到货。附照片。'},
+          vi:{title:'Măng tây (L) chỉ về một nửa',body:'6/12 thùng. Phần còn lại dự kiến mai về. Có ảnh kèm.'}},
+    rm:'pending'});
+
+  add({kind:'substitute', by:'m3', to:['delivery','sales'],
+    title:'ルッコラ → わさび菜に振り替え',
+    body:'ルッコラが市場になく、わさび菜で代替します。伝票は書き換え済み。',
+    i18n:{en:{title:'Rocket → wasabi greens',body:'Rocket was unavailable at the market. Slips already updated.'},
+          zh:{title:'芝麻菜 → 山葵菜',body:'市场没有芝麻菜，改用山葵菜。单据已修改。'},
+          vi:{title:'Rocket → cải wasabi',body:'Chợ hết rocket, thay bằng cải wasabi. Phiếu đã sửa.'}},
+    rm:'pending'});
+
+  add({kind:'cost', by:'m1', to:['office','sales'],
+    title:'今朝の仕入値（大葉）',
+    body:'先週より上がっています。売価が85円のままだと薄いので、営業は気をつけてください。',
+    cost:{item:'大葉',qty:'1ケース',price:4200,supplier:'みどり青果（デモ）'},
+    i18n:{en:{title:'This morning’s cost (shiso)',body:'Up from last week. 85 yen retail is thin — sales, please note.'},
+          zh:{title:'今晨进价（紫苏）',body:'比上周涨了。零售85日元利润很薄，销售请注意。'},
+          vi:{title:'Giá nhập sáng nay (tía tô)',body:'Tăng so với tuần trước. Bán 85 yên là mỏng, bộ phận bán hàng lưu ý.'}},
+    rm:'none'});
+
+  add({kind:'add_stop', by:'m7', to:['picking','delivery'],
+    title:'ビストロ多摩へ飛び込みで1件',
+    body:'夕方までに小口で1件お願いします。数量は少ないので既存ルートに足せます。',
+    i18n:{en:{title:'Extra drop for Bistro Tama',body:'One small delivery by evening. Small volume — can be added to an existing route.'},
+          zh:{title:'Bistro 多摩 临时追加1单',body:'傍晚前小批量配送1单。量少，可加入现有路线。'},
+          vi:{title:'Thêm một điểm giao cho Bistro Tama',body:'Một đơn nhỏ trước chiều tối. Ít hàng, có thể thêm vào tuyến hiện có.'}},
+    rm:'pending'});
+
+  add({kind:'vehicle', by:'m2', to:['delivery'], date:YEST,
+    title:'2号車の車検が来週です',
+    body:'火曜の午前は使えません。代車の手配は済んでいます。',
+    i18n:{en:{title:'Van #2 inspection next week',body:'Unavailable Tuesday morning. A replacement is already arranged.'},
+          zh:{title:'2号车下周年检',body:'周二上午无法使用。已安排替代车辆。'},
+          vi:{title:'Xe số 2 kiểm định tuần tới',body:'Sáng thứ Ba không dùng được. Đã bố trí xe thay thế.'}},
+    rm:'none'});
+
+  const board=[
+    {id:'b1',type:'question',by:'m6',date:YEST,to:['delivery','office'],tags:['取引先ルール'],
+     title:'カフェ小金井、裏口ってどこから入るんでしたっけ',
+     body:'正面はシャッターが閉まっていて、朝は入れませんでした。',
+     i18n:{en:{title:'Cafe Koganei — where is the back entrance?',body:'The front shutter was closed in the morning.'},
+           zh:{title:'Cafe 小金井 后门在哪边？',body:'早上正门卷帘门关着，进不去。'},
+           vi:{title:'Cafe Koganei — lối sau ở đâu?',body:'Cửa trước đóng cửa cuốn, buổi sáng không vào được.'}},
+     solved:true,best:'c2',promoted:null,
+     comments:[
+      {id:'c1',by:'m5',body:'僕も最初これで迷いました',
+       i18n:{en:{body:'I got lost there the first time too.'},zh:{body:'我第一次也迷路了。'},vi:{body:'Lần đầu tôi cũng bị lạc.'}}},
+      {id:'c2',by:'m7',body:'建物の左のスロープを下りて、地下の搬入口です。7時前ならインターホンで守衛さんが開けてくれます。',
+       photos:[PH('搬入口',210)],
+       i18n:{en:{body:'Go down the ramp on the left of the building — the basement loading dock. Before 7am, ring the intercom and the guard opens it.'},
+             zh:{body:'从楼左侧的坡道下去，是地下装卸口。7点前按对讲，保安会来开门。'},
+             vi:{body:'Đi xuống dốc bên trái toà nhà, là cửa nhập hàng tầng hầm. Trước 7h bấm chuông, bảo vệ sẽ mở.'}}}
+     ]},
+    {id:'b2',type:'consult',by:'m4',date:TODAY,to:['picking','office'],tags:['数量変更'],
+     title:'ケースとバラが混ざっていて数え方が分かりません',
+     body:'伝票は「10」なんですが、ケースが10なのかパックが10なのか。',
+     i18n:{en:{title:'Cases and loose units are mixed — how do I count?',body:'The slip says 10, but is that 10 cases or 10 packs?'},
+           zh:{title:'整箱和散装混在一起，怎么数？',body:'单据写"10"，是10箱还是10包？'},
+           vi:{title:'Thùng và lẻ lẫn nhau, đếm sao?',body:'Phiếu ghi "10" — là 10 thùng hay 10 gói?'}},
+     solved:false,best:null,promoted:null,comments:[]}
+  ];
+
+  const shares=[
+    /* 昇格ずみの完成形（過去の相談から。b1 はデモでその場で押せるように未昇格にしてある） */
+    {id:'s1',cat:'取引先ルール',title:'ベーカリー国立の駐車',
+     body:'店の前は停められない。1本裏のコインパーキングに入れて台車で運ぶ。朝は3台までなら空いている。',
+     origin:'promoted',src:{postId:'b0'},routme:{field:'parking_note',store:'ベーカリー国立'},
+     i18n:{en:{title:'Parking at Bakery Kunitachi',body:'No parking out front. Use the pay lot one street back and bring a hand truck. Usually 3 spaces free in the morning.'},
+           zh:{title:'Bakery 国立 的停车',body:'店门口不能停。停到后面一条街的收费停车场，用推车搬运。早上一般有3个空位。'},
+           vi:{title:'Chỗ đỗ xe ở Bakery Kunitachi',body:'Không đỗ được trước cửa. Đỗ ở bãi thu phí phía sau một dãy rồi dùng xe đẩy. Buổi sáng thường còn 3 chỗ.'}}},
+    {id:'s2',cat:'代替品の判断基準',title:'葉物が無いときの振り替えの順番',
+     body:'①同じ科の葉物 ②色と食感が近いもの ③価格帯が近いもの。迷ったら営業に一報を入れてから決める。',
+     origin:'own',routme:null,
+     i18n:{en:{title:'Substitution order when leafy greens run out',body:'1) same family 2) similar colour and texture 3) similar price band. When unsure, tell sales first.'},
+           zh:{title:'叶菜缺货时的替换顺序',body:'①同科叶菜 ②颜色口感相近 ③价位相近。拿不准先通知销售。'},
+           vi:{title:'Thứ tự thay thế khi hết rau lá',body:'1) cùng họ 2) màu và kết cấu tương tự 3) cùng tầm giá. Không chắc thì báo bộ phận bán hàng.'}}}
+  ];
+
+  return { members:M, handoffs:h, reads:{}, board, boardReads:{},
+           shares, streaks:{m1:{days:12,best:14},m3:{days:4,best:9}},
+           suppliers:['みどり青果（デモ）','東光物産（デモ）','こうよう食品（デモ）','はまかぜ青果（デモ）'],
+           items:['大葉','アスパラ','ルッコラ','わさび菜','トマト','マッシュルーム','苺','だいこん'] };
+}
+
+/* ---------- state ---------- */
+let S, ME='m5', TAB='home', NEWK='shortage', NEWTO=[], NEWPH=[], SHOWFORM=false,
+    DATE=TODAY, KFILT='', RMF='', HILITE=null, HL_T=null, REPLY={}, CELEBRATE=false;
+/* KFILT=種別フィルタ／RMF=RoutMe送信状況フィルタ（''|'sent'|'pending'）。
+   ★この2つは排他。片方を立てたらもう片方を落とす（両方かかると0件になって迷子になる） */
+
+function load(){
+  try{ const r=localStorage.getItem(LS_KEY); if(r){ S=JSON.parse(r); return; } }catch(e){}
+  S=seed(); save();
+}
+function save(){
+  try{ localStorage.setItem(LS_KEY,JSON.stringify(S)); }
+  catch(e){ toast('写真が大きすぎて保存できませんでした'); }
+}
+const me   = () => S.members.find(m=>m.id===ME) || S.members[0];
+const mem  = id => S.members.find(m=>m.id===id) || {name:'?',dept:'office'};
+const inTo = h => h.to.includes(me().dept) || h.by===ME;
+
+/* ---------- 既読・到達 ---------- */
+function readState(h,id){ return (S.reads[h.id]||{})[id||ME] || {}; }
+function markRead(h){
+  if(h.by===ME) return;
+  S.reads[h.id]=S.reads[h.id]||{};
+  if(!S.reads[h.id][ME]) { S.reads[h.id][ME]={read:true}; save(); }
+}
+function markHandled(h){
+  S.reads[h.id]=S.reads[h.id]||{}; S.reads[h.id][ME]=S.reads[h.id][ME]||{};
+  S.reads[h.id][ME].read=true; S.reads[h.id][ME].handled=true; save(); render();
+}
+/* 持ち場ごとの到達＝その持ち場の何人中何人が読んだか */
+function reachByDept(h){
+  return h.to.map(dk=>{
+    const ppl=S.members.filter(m=>m.dept===dk && m.id!==h.by);
+    const n=ppl.filter(m=>readState(h,m.id).read).length;
+    return {dk,n,t:ppl.length};
+  });
+}
+const unreadFor = () => S.handoffs.filter(h=>h.date===DATE && inTo(h) && h.by!==ME && !readState(h).read);
+
+/* ---------- 相談：自分が返す番か ---------- */
+function boardTodo(p){
+  if(p.solved || p.by===ME) return false;
+  if(!(p.to.includes(me().dept))) return false;
+  return !p.comments.some(c=>c.by===ME);      /* 自分がまだ1件も返していない */
+}
+const toReplyList = () => S.board.filter(boardTodo);
+
+/* ---------- RoutMe（デモ）---------- */
+const rmEligible = h => !!kind(h.kind).rm;
+const rmPending  = () => S.handoffs.filter(h=>h.date===DATE && rmEligible(h) && h.rm==='pending');
+const rmSent     = () => S.handoffs.filter(h=>h.date===DATE && rmEligible(h) && h.rm==='sent');
+function sendToRoutMe(h){
+  h.rm='sent'; h.rmAt=new Date().toISOString(); save();
+  toast('RoutMeへ送りました → '+kind(h.kind).rm);
+  render();
+}
+
+/* ---------- キャッチアップ ---------- */
+function counts(){
+  const u=unreadFor().length, r=toReplyList().length, p=rmPending().length;
+  return {u,r,p,total:u+r};
+}
+
+/* =========================== 描画 =========================== */
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('on');
+  clearTimeout(t._x); t._x=setTimeout(()=>t.classList.remove('on'),2400); }
+
+function photoGrid(ps){
+  if(!ps||!ps.length) return '';
+  return '<div class="pgrid">'+ps.map(p=>`<img class="pth" src="${p}" data-lb="${p}" alt="">`).join('')+'</div>';
+}
+
+function head(){
+  document.getElementById('logo').innerHTML =
+    esc(APP_NAME[LANG]||APP_NAME.ja)+'<small>'+esc(APP_TAG[LANG]||APP_TAG.ja)+'</small>';
+  document.getElementById('actorLbl').textContent = LANG==='ja'?'操作者':'View as';
+  const sel=document.getElementById('actorSel');
+  sel.innerHTML=S.members.map(m=>
+    `<option value="${m.id}"${m.id===ME?' selected':''}>${esc(m.name)}</option>`).join('');
+  document.getElementById('actorDept').textContent = dept(me().dept).ic+' '+deptName(me().dept);
+}
+
+function nav(){
+  const c=counts();
+  const items=[['home','🏠',L('home'),0],['hand','📣',L('hand'),c.u],
+               ['board','💬',L('board'),c.r],['share','📚',L('share'),0]];
+  document.getElementById('nav').innerHTML=items.map(([k,i,lb,n])=>
+    `<button data-tab="${k}" class="${TAB===k?'on':''}"><span class="i">${i}</span>${esc(lb)}${
+      n?`<span class="bn">${n}</span>`:''}</button>`).join('');
+}
+
+/* ---------- ホーム ---------- */
+function viewHome(){
+  const c=counts(), st=S.streaks[ME]||{days:0,best:0};
+  let h='';
+  if(c.total===0){
+    h+=`<div class="hero done"><p class="n">${esc(L('done'))}</p><p class="p">${esc(L('doneSub'))}</p>`;
+    if(st.days) h+=`<div class="streak">${esc(L('streak',st.days+1))} ・ ${esc(L('streakBest',Math.max(st.best,st.days+1)))}</div>`;
+    h+='</div>';
+  }else{
+    h+=`<div class="hero"><p class="n">${esc(L('catch',c.total))}</p>
+        <p class="p">${esc(L('unread'))} ${c.u} ・ ${esc(L('toReply'))} ${c.r}</p>`;
+    if(st.days) h+=`<div class="streak">${esc(L('streakLeft',st.days+1,c.total))}</div>`;
+    h+='</div>';
+  }
+
+  /* ★卸版固有：RoutMeへ届いているか。押すと申し送りタブの該当一覧へ飛ぶ
+     （数字が押せそうに見えて押せない、を避ける）
+     SHOW_ROUTME=false のあいだは丸ごと出さない */
+  if(SHOW_ROUTME) h+=`<div class="rm">
+      <div class="b ok" data-rmf="sent"><b>${rmSent().length}</b><span>${esc(L('rmSent'))}</span></div>
+      <div class="b ${rmPending().length?'warn':''}" data-rmf="pending"><b>${rmPending().length}</b><span>${esc(L('rmPend'))}</span></div>
+    </div>`;
+  if(SHOW_ROUTME && rmPending().length){
+    h+=`<div class="card acc"><div class="muted" style="margin-bottom:6px">⚠ ${esc(L('rmPend'))}</div>`;
+    h+=rmPending().map(x=>`<div class="row jump" data-go="hand" data-hi="${x.id}">
+        <span class="ic">${kind(x.kind).ic}</span><span class="tx"><b>${esc(tx(x,'title'))}</b>
+        <span class="tiny">${esc(kindName(x.kind))} → ${esc(kind(x.kind).rm)}</span></span></div>`).join('');
+    h+='</div>';
+  }
+
+  h+=`<h2 class="sec">📣 ${esc(L('unread'))}</h2><div class="card">`;
+  const un=unreadFor();
+  h+= un.length ? un.map(x=>`<div class="row jump" data-go="hand" data-hi="${x.id}">
+        <span class="ic">${kind(x.kind).ic}</span><span class="tx"><b>${esc(tx(x,'title'))}</b>
+        <span class="tiny">${esc(mem(x.by).name)} ・ ${esc(kindName(x.kind))}</span></span>
+        <span class="newbadge">NEW</span></div>`).join('')
+    : `<div class="empty">${esc(L('noUnread'))}</div>`;
+  h+='</div>';
+
+  h+=`<h2 class="sec">💬 ${esc(L('toReply'))}</h2><div class="card${toReplyList().length?' tome':''}">`;
+  const tr=toReplyList();
+  h+= tr.length ? tr.map(p=>`<div class="row jump" data-go="board" data-hi="${p.id}">
+        <span class="ic">💬</span><span class="tx"><b>${esc(tx(p,'title'))}</b>
+        <span class="tiny">${esc(mem(p.by).name)} ・ ${dept(mem(p.by).dept).ic} ${esc(deptName(mem(p.by).dept))}</span></span></div>`).join('')
+    : `<div class="empty">${esc(L('noReply'))}</div>`;
+  h+='</div>';
+
+  h+=`<div class="demo">${esc(L('dummy'))}</div>`;
+  return h;
+}
+
+/* ---------- 申し送り ---------- */
+function costBox(c){
+  return `<div class="costbox"><table>
+    <tr><td>${esc(L('item'))}</td><td><b>${esc(c.item)}</b></td></tr>
+    <tr><td>${esc(L('qty'))}</td><td>${esc(c.qty)}</td></tr>
+    <tr><td>${esc(L('price'))}</td><td><b>¥${Number(c.price).toLocaleString()}</b></td></tr>
+    <tr><td>${esc(L('supplier'))}</td><td>${esc(c.supplier)}</td></tr>
+  </table></div>`;
+}
+
+function handoffCard(x){
+  const k=kind(x.kind), rs=readState(x), mine=x.by===ME;
+  let h=`<div class="card acc${HILITE===x.id?' hi':''}" id="hd-${x.id}">
+    <div class="hd-top">
+      <span class="kbadge ${k.cost?'cost':(k.rm?'rm':'')}">${k.ic} ${esc(kindName(x.kind))}</span>
+      <span class="tiny">${esc(mem(x.by).name)} ・ ${dept(mem(x.by).dept).ic} ${esc(deptName(mem(x.by).dept))}</span>
+      ${isRaw(x)?'<span class="tag">原文のまま</span>':''}
+    </div>
+    <div class="hd-title">${esc(tx(x,'title'))}</div>
+    <div class="hd-body">${esc(tx(x,'body'))}</div>`;
+  if(x.cost) h+=costBox(x.cost);
+  h+=photoGrid(x.photos);
+
+  h+=`<div class="reach"><span class="tiny" style="align-self:center">${esc(L('reach'))}:</span>`;
+  h+=reachByDept(x).map(r=>`<span class="rpill ${r.n===r.t&&r.t?'full':(r.n?'':'zero')}">${
+      dept(r.dk).ic} ${esc(deptName(r.dk))} ${r.n}/${r.t}</span>`).join('');
+  h+='</div>';
+
+  h+='<div class="acts">';
+  if(!mine){
+    h+= rs.handled ? `<span class="sent">✓ ${esc(L('handledDone'))}</span>`
+       : `<button class="btn sm ghost" data-handled="${x.id}">${esc(L('handled'))}</button>`;
+  }
+  if(SHOW_ROUTME && k.rm){
+    h+= x.rm==='sent'
+      ? `<span class="sent">🚚 ${esc(L('sent'))}</span>`
+      : `<button class="btn sm blue" data-rm="${x.id}">🚚 ${esc(L('sendRm'))}</button>`;
+    h+=`<div class="tiny" style="flex-basis:100%">→ ${esc(k.rm)}</div>`;
+  }
+  h+='</div></div>';
+  return h;
+}
+
+function viewHand(){
+  let h=`<div style="display:flex;gap:8px;margin:12px 0">
+    <button class="kchip ${DATE===TODAY?'on':''}" data-date="${TODAY}">${esc(L('today'))}</button>
+    <button class="kchip ${DATE===YEST?'on':''}" data-date="${YEST}">${esc(L('yest'))}</button>
+    <span style="flex:1"></span>
+    <button class="btn sm" data-form="1">＋ ${esc(L('post'))}</button>
+  </div>`;
+
+  if(SHOWFORM) h+=formHand();
+
+  /* RoutMe送信状況で絞り込み中は、外せる帯を出す（何で絞られているか分からない状態を作らない） */
+  if(RMF) h+=`<div class="rmfilter"><span>🚚 ${esc(L(RMF==='sent'?'onlySent':'onlyPending'))}</span>
+      <button data-rmf="">✕ ${esc(L('clearFilter'))}</button></div>`;
+
+  h+='<div class="kinds">';
+  h+=`<button class="kchip ${KFILT===''&&!RMF?'on':''}" data-kf="">${LANG==='ja'?'すべて':'All'}</button>`;
+  KINDS.forEach(k=>{ h+=`<button class="kchip ${KFILT===k.k?'on':''}" data-kf="${k.k}">${k.ic} ${esc(kindName(k.k))}</button>`; });
+  h+='</div>';
+
+  const list=S.handoffs.filter(x=>
+      x.date===DATE
+      && (!KFILT || x.kind===KFILT)
+      && (!RMF   || (rmEligible(x) && x.rm===RMF)));
+  h+= list.length ? list.map(handoffCard).join('') : `<div class="empty">${esc(L('noItems'))}</div>`;
+  return h;
+}
+
+function formHand(){
+  const k=kind(NEWK);
+  let h=`<div class="card"><div class="f"><label>${esc(L('kind'))}</label><div class="kinds">`;
+  KINDS.forEach(x=>{ h+=`<button class="kchip ${NEWK===x.k?'on':''}" data-nk="${x.k}">${x.ic} ${esc(kindName(x.k))}</button>`; });
+  h+='</div></div>';
+
+  h+=`<div class="f"><label>${esc(L('to'))}</label><div class="deptpick">`;
+  DEPTS.forEach(d=>{ h+=`<button class="${NEWTO.includes(d.key)?'on':''}" data-nto="${d.key}">${d.ic} ${esc(deptName(d.key))}</button>`; });
+  h+='</div></div>';
+
+  if(k.cost){
+    /* ★自由記述にしない。cost_snapshots に落とせる4欄に切る */
+    h+=`<div class="tiny" style="margin:4px 0 8px">${esc(L('costHint'))}</div>
+      <div class="f2">
+        <div class="f"><label>${esc(L('item'))}</label>
+          <input id="cItem" list="itemList" placeholder="大葉"><datalist id="itemList">${
+            S.items.map(i=>`<option value="${esc(i)}">`).join('')}</datalist></div>
+        <div class="f"><label>${esc(L('qty'))}</label><input id="cQty" placeholder="1ケース"></div>
+      </div>
+      <div class="f2">
+        <div class="f"><label>${esc(L('price'))}</label><input id="cPrice" type="number" inputmode="numeric" placeholder="4200"></div>
+        <div class="f"><label>${esc(L('supplier'))}</label>
+          <input id="cSup" list="supList"><datalist id="supList">${
+            S.suppliers.map(i=>`<option value="${esc(i)}">`).join('')}</datalist></div>
+      </div>`;
+  }
+
+  h+=`<div class="f"><label>${esc(L('title'))}</label><input id="nTitle"></div>
+      <div class="f"><label>${esc(L('body'))}</label><textarea id="nBody"></textarea></div>`;
+  h+=photoGrid(NEWPH);
+  h+=`<div class="acts">
+      <button class="btn" data-submit="1">${esc(L('send'))}</button>
+      <button class="btn gray" data-photo="1">📷 ${esc(L('addPhoto'))}</button>
+      <button class="btn gray" data-form="0">${esc(L('cancel'))}</button>
+    </div></div>`;
+  return h;
+}
+
+/* ---------- 相談 ---------- */
+function boardCard(p){
+  const isNew=boardTodo(p);
+  let h=`<div class="card${isNew?' tome':''}${HILITE===p.id?' hi':''}" id="bd-${p.id}">
+    <div class="hd-top">
+      <span class="kbadge">${p.solved?'✅ '+esc(L('solved')):'💬 '+(LANG==='ja'?'未解決':'Open')}</span>
+      ${p.tags.map(t=>`<span class="tag">#${esc(t)}</span>`).join('')}
+      ${isNew?`<span class="newbadge">${LANG==='ja'?'あなたの番':'Your turn'}</span>`:''}
+    </div>
+    <div class="hd-title">${esc(tx(p,'title'))}</div>
+    <div class="tiny">${esc(mem(p.by).name)} ・ ${dept(mem(p.by).dept).ic} ${esc(deptName(mem(p.by).dept))}</div>
+    <div class="hd-body">${esc(tx(p,'body'))}</div>`;
+
+  p.comments.forEach(c=>{
+    const best=p.best===c.id;
+    h+=`<div class="cmt${best?' best':''}">
+      <div class="who">${esc(mem(c.by).name)} ・ ${dept(mem(c.by).dept).ic} ${esc(deptName(mem(c.by).dept))}
+      ${best?`<span class="kbadge">⭐ ${esc(L('best'))}</span>`:''}</div>
+      <div>${esc(tx(c,'body'))}</div>${photoGrid(c.photos)}`;
+    if(!best && p.solved) h+=`<button class="btn sm gray" data-best="${p.id}|${c.id}">⭐ ${esc(L('best'))}</button>`;
+    h+='</div>';
+  });
+
+  h+='<div class="acts">';
+  if(!p.solved) h+=`<button class="btn sm ghost" data-solve="${p.id}">✅ ${esc(L('solved'))}</button>`;
+  h+=`<button class="btn sm gray" data-rep="${p.id}">↩ ${esc(L('reply'))}</button>`;
+
+  /* ★昇格先は共有タブではなく RoutMe の店舗マスタ */
+  if(p.solved && p.best && !p.promoted)
+    h+=`<button class="btn sm blue" data-promote="${p.id}">${SHOW_ROUTME?'📍':'📚'} ${
+        esc(L(SHOW_ROUTME?'promote':'promote2'))}</button>`;
+  if(p.promoted)
+    h+=`<span class="sent">${SHOW_ROUTME?'📍':'📚'} ${esc(L(SHOW_ROUTME?'promoted':'promoted2'))}${
+        SHOW_ROUTME?' → '+esc(p.promoted.field):''}</span>`;
+  h+='</div>';
+
+  if(REPLY[p.id]){
+    h+=`<div class="f"><textarea id="rep-${p.id}" placeholder="${esc(L('replyPh'))}"></textarea></div>
+      <div class="tiny">${esc(L('quick'))}</div><div class="kinds">`;
+    ['了解しました','確認します','代替でOKです','うちでは無理です'].forEach(q=>{
+      h+=`<button class="kchip" data-quick="${p.id}|${esc(q)}">${esc(q)}</button>`; });
+    h+=`</div><div class="acts"><button class="btn sm" data-dorep="${p.id}">${esc(L('send'))}</button></div>`;
+  }
+  h+='</div>';
+  return h;
+}
+function viewBoard(){
+  return S.board.length ? S.board.map(boardCard).join('') : `<div class="empty">${esc(L('noItems'))}</div>`;
+}
+
+/* ---------- 共有 ---------- */
+function viewShare(){
+  return S.shares.map(s=>`<div class="card acc">
+    <div class="hd-top"><span class="kbadge">${esc(s.cat)}</span>
+      ${s.origin==='promoted'?'<span class="tag">💬 相談から</span>':''}
+      ${SHOW_ROUTME&&s.routme?`<span class="tag">📍 RoutMe ${esc(s.routme.field)}</span>`:''}</div>
+    <div class="hd-title">${esc(tx(s,'title'))}</div>
+    <div class="hd-body">${esc(tx(s,'body'))}</div>
+    ${SHOW_ROUTME&&s.routme?`<div class="tiny">→ ${esc(s.routme.store)} の ${esc(s.routme.field)} に登録済み。翌朝ドライバーの画面に出ます。</div>`:''}
+  </div>`).join('');
+}
+
+/* ---------- render ---------- */
+function render(){
+  head(); nav();
+  const app=document.getElementById('app');
+  app.innerHTML = TAB==='home'?viewHome() : TAB==='hand'?viewHand()
+                : TAB==='board'?viewBoard() : viewShare();
+  bind();
+  if(HILITE){
+    const el=document.getElementById('hd-'+HILITE)||document.getElementById('bd-'+HILITE);
+    if(el){
+      scrollToCard(el);
+      /* ★オレンジ枠を自動で解除する（放置するとナビを押すまで残り続ける）。
+         再描画するとスクロール位置が飛ぶので、class を直接外す */
+      clearTimeout(HL_T);
+      HL_T=setTimeout(()=>{ HILITE=null; el.classList.remove('hi'); },3200);
+    }else{
+      /* 飛び先が無い＝フィルタ等で消えている。黙って迷子にせず知らせる */
+      HILITE=null; toast(L('notFound'));
+    }
+  }
+  /* 開いたら既読。その画面ではNEWが見えたまま残り、次に開くと消えている */
+  if(TAB==='hand') setTimeout(()=>{ S.handoffs.filter(x=>x.date===DATE&&inTo(x)).forEach(markRead); },350);
+  if(CELEBRATE){ CELEBRATE=false; confetti(); }
+}
+
+/* ジャンプ先へスクロールする
+   ⚠ scrollIntoView({behavior:'smooth'}) は環境によって黙って何もしないことがある
+     （実測：このデモの検証ブラウザでは完全に無視され、押しても画面が動かなかった）。
+     なので「smoothを試す → 動いていなければ即時で確定させる」の二段にしてある。
+   ⚠ 120px は sticky ヘッダー(62px)＋操作者バー(42px)ぶんの逃げ。CSSの
+     .card{scroll-margin-top:120px} と同じ値なので、変えるときは両方直すこと。 */
+function scrollToCard(el){
+  const y=Math.max(0, window.scrollY + el.getBoundingClientRect().top - 120);
+  try{ window.scrollTo({top:y,behavior:'smooth'}); }catch(e){}
+  setTimeout(()=>{ if(Math.abs(window.scrollY-y)>8) window.scrollTo(0,y); },420);
+}
+
+/* ---------- events ---------- */
+function bind(){
+  const app=document.getElementById('app');
+  app.querySelectorAll('[data-lb]').forEach(el=>el.onclick=()=>lightbox(el.dataset.lb));
+  /* ★ジャンプ：飛び先が確実に見えている状態を作ってから飛ぶ。
+     絞り込みが残ったまま飛ぶと、押した項目が飛び先に存在せず「何もないところ」に着地する */
+  app.querySelectorAll('[data-go]').forEach(el=>el.onclick=()=>{
+    TAB=el.dataset.go;
+    HILITE=el.dataset.hi||null;
+    KFILT=''; RMF=''; SHOWFORM=false;          // 絞り込みを外す
+    if(HILITE){                                 // 別の日の項目でも飛べるように日付を合わせる
+      const h=S.handoffs.find(x=>x.id===HILITE);
+      if(h) DATE=h.date;
+    }
+    render(); });
+  app.querySelectorAll('[data-date]').forEach(el=>el.onclick=()=>{ DATE=el.dataset.date; HILITE=null; render(); });
+  /* 種別フィルタとRoutMeフィルタは排他（両方かかると0件で迷子になる） */
+  app.querySelectorAll('[data-kf]').forEach(el=>el.onclick=()=>{ KFILT=el.dataset.kf; RMF=''; render(); });
+  app.querySelectorAll('[data-rmf]').forEach(el=>el.onclick=()=>{
+    RMF=el.dataset.rmf; KFILT=''; SHOWFORM=false; HILITE=null; TAB='hand'; render(); });
+  app.querySelectorAll('[data-nk]').forEach(el=>el.onclick=()=>{ NEWK=el.dataset.nk; render(); });
+  app.querySelectorAll('[data-nto]').forEach(el=>el.onclick=()=>{
+    const k=el.dataset.nto; const i=NEWTO.indexOf(k);
+    if(i<0) NEWTO.push(k); else NEWTO.splice(i,1); render(); });
+  app.querySelectorAll('[data-form]').forEach(el=>el.onclick=()=>{
+    SHOWFORM=el.dataset.form==='1'; if(SHOWFORM&&!NEWTO.length) NEWTO=['office','picking','delivery'];
+    render(); });
+  app.querySelectorAll('[data-photo]').forEach(el=>el.onclick=()=>{
+    NEWPH.push(PH('現物',Math.floor(Math.random()*360))); render(); toast('写真を足しました（デモ用ダミー）'); });
+  app.querySelectorAll('[data-submit]').forEach(el=>el.onclick=submitHand);
+  app.querySelectorAll('[data-handled]').forEach(el=>el.onclick=()=>{
+    const h=S.handoffs.find(x=>x.id===el.dataset.handled); markHandled(h); checkClear(); });
+  app.querySelectorAll('[data-rm]').forEach(el=>el.onclick=()=>
+    sendToRoutMe(S.handoffs.find(x=>x.id===el.dataset.rm)));
+  app.querySelectorAll('[data-solve]').forEach(el=>el.onclick=()=>{
+    S.board.find(p=>p.id===el.dataset.solve).solved=true; save(); render(); });
+  app.querySelectorAll('[data-best]').forEach(el=>el.onclick=()=>{
+    const [pid,cid]=el.dataset.best.split('|');
+    S.board.find(p=>p.id===pid).best=cid; save(); render(); toast('ベストアンサーにしました'); });
+  app.querySelectorAll('[data-rep]').forEach(el=>el.onclick=()=>{
+    const id=el.dataset.rep; REPLY[id]=!REPLY[id]; render(); });
+  app.querySelectorAll('[data-quick]').forEach(el=>el.onclick=()=>{
+    const [pid,q]=el.dataset.quick.split('|'); addComment(pid,q); });
+  app.querySelectorAll('[data-dorep]').forEach(el=>el.onclick=()=>{
+    const id=el.dataset.dorep, v=(document.getElementById('rep-'+id)||{}).value;
+    if(!v||!v.trim()){ toast('返信を入れてください'); return; } addComment(id,v.trim()); });
+  app.querySelectorAll('[data-promote]').forEach(el=>el.onclick=()=>promote(el.dataset.promote));
+
+  document.getElementById('actorSel').onchange=e=>{ ME=e.target.value; HILITE=null; render(); };
+  document.getElementById('langBtn').onclick=cycleLang;
+  document.getElementById('nav').querySelectorAll('[data-tab]').forEach(el=>el.onclick=()=>{
+    TAB=el.dataset.tab; HILITE=null; SHOWFORM=false; render(); });
+}
+
+function submitHand(){
+  const t=(document.getElementById('nTitle')||{}).value||'';
+  if(!t.trim()){ toast('ひとことを入れてください'); return; }
+  if(!NEWTO.length){ toast('誰に届けるか選んでください'); return; }
+  const k=kind(NEWK);
+  const o={ id:'h'+(S.handoffs.length+1+Date.now()%1000), date:DATE, kind:NEWK, by:ME,
+            to:NEWTO.slice(), title:t.trim(),
+            body:((document.getElementById('nBody')||{}).value||'').trim(),
+            photos:NEWPH.slice(), rm:k.rm?'pending':'none' };
+  if(k.cost){
+    const it=(document.getElementById('cItem')||{}).value||'';
+    const pr=(document.getElementById('cPrice')||{}).value||'';
+    if(!it.trim()||!pr){ toast('品名と単価を入れてください'); return; }
+    o.cost={ item:it.trim(), qty:((document.getElementById('cQty')||{}).value||'').trim(),
+             price:Number(pr), supplier:((document.getElementById('cSup')||{}).value||'').trim() };
+    if(!S.items.includes(o.cost.item)) S.items.push(o.cost.item);
+    if(o.cost.supplier && !S.suppliers.includes(o.cost.supplier)) S.suppliers.push(o.cost.supplier);
+  }
+  S.handoffs.unshift(o); NEWPH=[]; SHOWFORM=false; save();
+  toast(k.cost?'仕入値を共有しました（cost_snapshots へ）':'申し送りを出しました');
+  render();
+}
+
+function addComment(pid,body){
+  const p=S.board.find(x=>x.id===pid);
+  p.comments.push({id:'c'+Date.now(),by:ME,body:body});
+  REPLY[pid]=false; save(); toast('返信しました'); checkClear(); render();
+}
+
+/* ★昇格先＝RoutMeの店舗マスタ（entry_note / parking_note / absent_note …）
+   ここが飲食版デシャボとの一番の差。答えが「読み物」ではなく
+   翌朝ドライバーの /today/[id] に出る「実行」に着地する。 */
+const RM_FIELDS = [
+  {f:'entry_note',      re:/裏口|入り|搬入|入口|エレベータ/, ja:'入り方',   en:'entry',   zh:'进入方式', vi:'lối vào'},
+  {f:'parking_note',    re:/駐車|パーキング|停め/,           ja:'駐車',     en:'parking', zh:'停车',     vi:'chỗ đỗ'},
+  {f:'absent_note',     re:/不在|留守|閉ま/,                 ja:'不在時',   en:'absence', zh:'不在时',   vi:'khi vắng'},
+  {f:'collection_note', re:/回収|返品|空箱|コンテナ/,        ja:'回収物',   en:'pickup',  zh:'回收物',   vi:'thu hồi'},
+  {f:'cargo_note',      re:/.*/,                             ja:'積み込み', en:'loading', zh:'装车',     vi:'xếp hàng'}
+];
+function promote(pid){
+  const p=S.board.find(x=>x.id===pid);
+  const best=p.comments.find(c=>c.id===p.best);
+  const t=p.title||'';
+  const fd=RM_FIELDS.find(x=>x.re.test(t)) || RM_FIELDS[RM_FIELDS.length-1];
+  const store=(t.match(/[ぁ-んァ-ヶ一-龠A-Za-z]+(?:店|カフェ|ビストロ|ベーカリー|Cafe)[ぁ-んァ-ヶ一-龠]*/)||[])[0]
+             || (t.split(/[、,]/)[0]||'').slice(0,12);
+  p.promoted={field:fd.f,store};
+  /* ★タイトルは相談文（疑問形）のままにしない。店舗メモの見出しとして整える */
+  const mk=lg=>({ title: lg==='ja' ? `${store}の${fd.ja}`
+                : lg==='en' ? `${store} — ${fd.en}`
+                : lg==='zh' ? `${store} 的${fd.zh}` : `${fd.vi} — ${store}` });
+  const src=best||p;
+  S.shares.unshift({ id:'s'+Date.now(), cat:'取引先ルール',
+    title:mk('ja').title, body:src.body||'',
+    i18n:{ en:Object.assign(mk('en'),{body:tx2(src,'body','en')}),
+           zh:Object.assign(mk('zh'),{body:tx2(src,'body','zh')}),
+           vi:Object.assign(mk('vi'),{body:tx2(src,'body','vi')}) },
+    origin:'promoted', src:{postId:pid}, routme:{field:fd.f,store} });
+  save(); toast(SHOW_ROUTME ? 'RoutMeの '+store+' の '+fd.f+' に登録しました'
+                             : '「'+store+'の'+fd.ja+'」として共有に残しました');
+  TAB='share'; HILITE=null; render();
+}
+/* 指定言語の訳を取り出す（無ければ原文＝日本語のまま引き継ぐ） */
+function tx2(o,f,lg){ return (o.i18n&&o.i18n[lg]&&o.i18n[lg][f]) || o[f] || ''; }
+
+function checkClear(){ if(counts().total===0) CELEBRATE=true; }
+
+function cycleLang(){
+  const i=LANGS.findIndex(l=>l[0]===LANG);
+  LANG=LANGS[(i+1)%LANGS.length][0];
+  localStorage.setItem('hsr_lang',LANG);
+  document.documentElement.lang=LANG;
+  toast(LANGS.find(l=>l[0]===LANG)[1]);
+  render();
+}
+
+function lightbox(src){
+  const d=document.createElement('div'); d.className='lb';
+  d.innerHTML=`<img src="${src}" alt="">`;
+  d.onclick=()=>d.remove();
+  document.addEventListener('keydown',function k(e){ if(e.key==='Escape'){ d.remove(); document.removeEventListener('keydown',k);} });
+  document.body.appendChild(d);
+}
+
+/* 紙吹雪（外部ライブラリなし） */
+function confetti(){
+  const cv=document.getElementById('cfx'), ctx=cv.getContext('2d');
+  cv.width=innerWidth; cv.height=innerHeight;
+  const cols=['#16a34a','#4ade80','#facc15','#60a5fa','#f472b6'];
+  const ps=Array.from({length:130},()=>({x:Math.random()*cv.width,y:-20-Math.random()*cv.height*.5,
+    r:4+Math.random()*5,vy:2+Math.random()*3,vx:-1+Math.random()*2,
+    c:cols[Math.floor(Math.random()*cols.length)],a:1}));
+  let t=0;
+  (function loop(){
+    ctx.clearRect(0,0,cv.width,cv.height); t++;
+    ps.forEach(p=>{ p.y+=p.vy; p.x+=p.vx; if(t>150) p.a-=.02;
+      ctx.globalAlpha=Math.max(p.a,0); ctx.fillStyle=p.c;
+      ctx.fillRect(p.x,p.y,p.r,p.r*1.6); });
+    if(t<230) requestAnimationFrame(loop); else ctx.clearRect(0,0,cv.width,cv.height);
+  })();
+}
+
+/* ---------- 起動 ---------- */
+load();
+document.documentElement.lang=LANG;
+render();
+window.__hsr = { reset(){ localStorage.removeItem(LS_KEY); location.reload(); }, S:()=>S };
+</script>
+</body>
+</html>
