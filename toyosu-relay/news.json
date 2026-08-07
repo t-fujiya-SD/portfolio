@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-06T07:34:23+09:00",
+  "updated": "2026-08-07T10:03:26+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -16,6 +16,13 @@
     }
   ],
   "items": [
+    {
+      "title": "食品卸が営業と物流を代行 人手不足に悩む地方メーカーの販路拡大を支える新ビジネス",
+      "link": "https://news.google.com/rss/articles/CBMihgFBVV95cUxPcS1CLW4xaExiSFpIYXI0UndaU3NPUFcyNGJOS1lPRDcwTS12RU5Fa3JxTWg1MDdHX210aFRvTzF2QmVPa1h4ZkQ0TGptam44cmVreXJKLUFKdEJyZ1R4aTloZ0h2N2tPb0Y1dXhFd3NHT1BfTGxVOElTbTRLN002MFU2RVdDQQ?oc=5",
+      "source": "projectdesign.jp",
+      "date": "2026-08-07",
+      "cat": "business"
+    },
     {
       "title": "郡仙台市長が仙台市中央卸売市場を視察 ウナギが安く野菜果物は入荷減",
       "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9GRmdZYksyZlNFU2xLTjVzdjJQaXJ1dF9QNnBzeHM4c08yRmlkMWhZS1h6eEtUQ3VRd1A4WlNfMWNISkpKREhDc2JoU3BCY2M?oc=5",
@@ -108,13 +115,6 @@
       "cat": "business"
     },
     {
-      "title": "三菱食品 伊藤社長インタビュー　新たな経営体制で「食品卸」の価値を最大化する",
-      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBwcUl2UXF5OTA3Sjc2b19LSzVZQTNWeklNcklKeFc0bW9NNUpZeDQ4UkVRZ1Z1Rmt4VUg5SWl3M0l1MXhyWTJ2SVYySVA4b1pXWXQ0eHNrZlpISmdRMXFJQktyd0LSAWpBVV95cUxQdnBuenZXVUhIR3NMaTYzVDJYNnJoeG9IZS1aSHVUU0lNVmtBQko1ZFhlYVBISjkwdGxXdHFuV3RYUmpRQ1hoTEZCVHh0eTVRbURJaENDY3NhdzNSbVZJUldDb2VqVnJoMWVn?oc=5",
-      "source": "ダイヤモンド・チェーンストアオンライン",
-      "date": "2026-06-15",
-      "cat": "business"
-    },
-    {
       "title": "２６２０ 資金ショートは２０５６年度に８年前倒し 東京都中央卸売市場会計、２０２６年経営レポート どらったら！！",
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1Xb0xLYTJ6eDV1WkxhbzgzTnFqVWRNcmxMMGc1OUVEMDZoZHJzQU1oaXlFdV9GYjNQbmxER0tmR1BnOGg0MGpEWmlOWVFhR25MS1hxZ084bFJpdUFIaU1xSERBWGVwT0E5dkE?oc=5",
       "source": "どらったら！！",
@@ -157,8 +157,8 @@
       "cat": "toyosu"
     },
     {
-      "title": "インターネット都政モニターアンケート結果 生鮮食料品等の購買意識 〉 Q16 東京都中央卸売市場の認知|1月",
-      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE4wNEFBMThJRExadlJ6WDQ2d25pVXhNck1ldHBrcG1KVXhndDdkcWNfU2tlSW9lM0EzTGZMN2pSQlRTQjliU2JLVG1ZMlVSa3ljOWpxcTBaNmNzdUlEWFlrTXZTWmNDVzlLYmEtaGxTWWRGM3FQ?oc=5",
+      "title": "インターネット都政モニターアンケート結果 生鮮食料品等の購買意識 〉 Q18 信頼できる東京都中央卸売市場になるために|1月",
+      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE1Ia05iRnR5YTVxMXlEcVMxVGhDbTdQb2UtR1V3djkwNWFpdlhqWHBQX1I4VHB2a0lFUDZWM3JTTXVkZ3YzbFFVOFlaN1JGYVhrWE90YlgzSDdVajRxYnlaa0paYjhQNzU5Q1BMTXRkMm00REh0?oc=5",
       "source": "metro.tokyo.lg.jp",
       "date": "2026-01-21",
       "cat": "toyosu"
