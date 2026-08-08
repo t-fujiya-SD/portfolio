@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-08T07:05:55+09:00",
+  "updated": "2026-08-09T06:55:32+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -33,21 +33,21 @@
     {
       "title": "令和8年度 トップセールス・国内外への訪問",
       "link": "https://news.google.com/rss/articles/CBMiZkFVX3lxTFBYWU8xeG80MktMMnFEZEtwUHV4anFudmlZazJzRFpuMnc3b0lSSjlhX3FRWC1xcmM5NG5USmpPa1hBU2ljcGNOSXIwLUJjNTdKTlVGNGFSTWhtRk1GR3lSMXZ2OHp2UQ?oc=5",
-      "source": "pref.fukushima.lg.jp",
+      "source": "福島県ホームページ",
       "date": "2026-07-31",
       "cat": "toyosu"
     },
     {
       "title": "夏休み親子見学会 徳島市中央卸売市場【徳島】（2026年7月29日掲載）｜JRT NEWS NNN",
       "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxPQTJCVmxoOVlILTY0UEV2ZG1yejJCVjNJR3NsbDBKZHFISTZ6YUtuTllBcVQ0RGNPR204WHlIOVpPNmItMjQyLWsyNTQ4Y0hTcVNZenRXVkpJdDJUODU3UU40NHByeWlnWGdGSTJFbUpwVDM4eDQ0WmxQUWNsZE40Rl9aN0p1VjA?oc=5",
-      "source": "日テレNEWS NNN",
+      "source": "news.ntv.co.jp",
       "date": "2026-07-30",
       "cat": "market"
     },
     {
       "title": "特集「食品卸 商社系VS民族系頂上決戦の幕開け」⑤ 三井物産流通グループ／領域拡大と既存強化を掲げる新会社として初の中計が始動",
       "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE1iU2dzNkNqNDVHZE9OcHByT1hMYm01NHhUdS05Q1hrZlp1Y0xkTnBGdm5vMFRFMlhQamQ4RVRJaUlKRjlyYWxoMzE4MEZ3MVJsNWc?oc=5",
-      "source": "激流オンライン",
+      "source": "gekiryu-online.jp",
       "date": "2026-07-30",
       "cat": "business"
     },
@@ -103,8 +103,15 @@
     {
       "title": "中部圏の青果卸12社／共同物流会社を設立、2027年6月以降稼働へ",
       "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFBsVjNZdlNydVJjdUpPWXIwbW92M2ZCX21FNkYtNHVPOFNvTWtneUJmeElOMU5zT0NraDdZNTBmV09DSmdIUF9JWFBqSU5xRnVtZl95QQ?oc=5",
-      "source": "物流ニュースのLNEWS",
+      "source": "lnews.jp",
       "date": "2026-06-16",
+      "cat": "business"
+    },
+    {
+      "title": "三菱食品 伊藤社長インタビュー　新たな経営体制で「食品卸」の価値を最大化する",
+      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBwcUl2UXF5OTA3Sjc2b19LSzVZQTNWeklNcklKeFc0bW9NNUpZeDQ4UkVRZ1Z1Rmt4VUg5SWl3M0l1MXhyWTJ2SVYySVA4b1pXWXQ0eHNrZlpISmdRMXFJQktyd0LSAWpBVV95cUxQdnBuenZXVUhIR3NMaTYzVDJYNnJoeG9IZS1aSHVUU0lNVmtBQko1ZFhlYVBISjkwdGxXdHFuV3RYUmpRQ1hoTEZCVHh0eTVRbURJaENDY3NhdzNSbVZJUldDb2VqVnJoMWVn?oc=5",
+      "source": "ダイヤモンド・チェーンストアオンライン",
+      "date": "2026-06-15",
       "cat": "business"
     },
     {
@@ -127,13 +134,6 @@
       "source": "maff.go.jp",
       "date": "2026-04-30",
       "cat": "market"
-    },
-    {
-      "title": "物流2026年問題（改正物流効率化法）で生じる3つの義務と食品卸の生存戦略",
-      "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE5Xbmx4M01mQW5Bd3VPX0h3eFllQzR2U1g2Y254UWc0bnNJR1NiQjk1NS1DakZJc1U0eDEycjhxbzBNa1h3MjZjc3p6d3ZuM0tzNXBXN2FNMTZGQm9D?oc=5",
-      "source": "フーズチャネル",
-      "date": "2026-04-21",
-      "cat": "business"
     },
     {
       "title": "「大田市場に届いた果物・野菜を、一つも無駄にしない」 | 株式会社野富のプレスリリース",
