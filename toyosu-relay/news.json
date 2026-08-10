@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-10T06:57:51+09:00",
+  "updated": "2026-08-11T07:07:01+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -47,7 +47,7 @@
     {
       "title": "【夏休み2026】豊洲千客万来「親子で学ぶ中央卸売市場」8/21-22",
       "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFBERmVqZ0x5ZjA5S0drZXpvc1Y5RmpYNldOb3NLTG4xaGxSZDhrN3lmbUozR2prTjFYWG9yNmV3T0VuOFpNWk5QS0IyazY5TnIyR2JjWXJfLVB6Zmtz?oc=5",
-      "source": "リセマム",
+      "source": "resemom.jp",
       "date": "2026-07-30",
       "cat": "toyosu"
     },
@@ -68,15 +68,8 @@
     {
       "title": "青果、数量・金額共に増 八戸市中央卸売市場６月市況概要",
       "link": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE9JaWVDaFA4dC02LVFYYUhXYnNxTmNnVVZSaVpDU2pMUFd5VFlSeFpSU0xXTW5aN3RfaHlSZXRVcUFPUDJHbUFPOERhQzdNdnVlYl9jRDBhWnRMRzFRenRWT0JCMmVnUEU?oc=5",
-      "source": "daily-tohoku.news",
+      "source": "デーリー東北",
       "date": "2026-07-17",
-      "cat": "market"
-    },
-    {
-      "title": "卸売市場 市民感謝デー（7月）を開催しました！",
-      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE5jeG1YcGNEbnc3eDlLQllsMzE4UVZTQTE2Y3RmY0V0cHBuY2k2WGI5eTRiUktzbFMxQ3RSQzFEWGNtNGtFVDNFeEFtak9QOXMybWc2ZzVza2ExM0RRa3NTWHFId0M?oc=5",
-      "source": "city.oita.oita.jp",
-      "date": "2026-07-11",
       "cat": "market"
     },
     {
@@ -103,7 +96,7 @@
     {
       "title": "中部圏の青果卸12社／共同物流会社を設立、2027年6月以降稼働へ",
       "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFBsVjNZdlNydVJjdUpPWXIwbW92M2ZCX21FNkYtNHVPOFNvTWtneUJmeElOMU5zT0NraDdZNTBmV09DSmdIUF9JWFBqSU5xRnVtZl95QQ?oc=5",
-      "source": "lnews.jp",
+      "source": "物流ニュースのLNEWS",
       "date": "2026-06-16",
       "cat": "business"
     },
@@ -113,6 +106,13 @@
       "source": "どらったら！！",
       "date": "2026-06-07",
       "cat": "toyosu"
+    },
+    {
+      "title": "卸売市場 市民感謝デー（5月）を開催しました！",
+      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBPYXNocjRhUndROUxFMG53SXU5N3pPd0FFbE1NdkdLR2pLamtFY2tuR2VSRVJLMlNaTEZqTWhDMXBkQzRGZktzb2d4U29nRVBRNFJHSU0xWTNXR3JUemJ1RHI3akE?oc=5",
+      "source": "city.oita.oita.jp",
+      "date": "2026-05-09",
+      "cat": "market"
     },
     {
       "title": "【中央卸売市場】5月イベント情報",
