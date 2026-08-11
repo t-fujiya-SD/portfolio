@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-11T07:07:01+09:00",
+  "updated": "2026-08-12T07:11:37+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -40,14 +40,14 @@
     {
       "title": "令和8年度 トップセールス・国内外への訪問",
       "link": "https://news.google.com/rss/articles/CBMiZkFVX3lxTFBYWU8xeG80MktMMnFEZEtwUHV4anFudmlZazJzRFpuMnc3b0lSSjlhX3FRWC1xcmM5NG5USmpPa1hBU2ljcGNOSXIwLUJjNTdKTlVGNGFSTWhtRk1GR3lSMXZ2OHp2UQ?oc=5",
-      "source": "福島県ホームページ",
+      "source": "pref.fukushima.lg.jp",
       "date": "2026-07-31",
       "cat": "toyosu"
     },
     {
       "title": "【夏休み2026】豊洲千客万来「親子で学ぶ中央卸売市場」8/21-22",
       "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFBERmVqZ0x5ZjA5S0drZXpvc1Y5RmpYNldOb3NLTG4xaGxSZDhrN3lmbUozR2prTjFYWG9yNmV3T0VuOFpNWk5QS0IyazY5TnIyR2JjWXJfLVB6Zmtz?oc=5",
-      "source": "resemom.jp",
+      "source": "リセマム",
       "date": "2026-07-30",
       "cat": "toyosu"
     },
@@ -64,13 +64,6 @@
       "source": "PR TIMES",
       "date": "2026-07-27",
       "cat": "business"
-    },
-    {
-      "title": "青果、数量・金額共に増 八戸市中央卸売市場６月市況概要",
-      "link": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE9JaWVDaFA4dC02LVFYYUhXYnNxTmNnVVZSaVpDU2pMUFd5VFlSeFpSU0xXTW5aN3RfaHlSZXRVcUFPUDJHbUFPOERhQzdNdnVlYl9jRDBhWnRMRzFRenRWT0JCMmVnUEU?oc=5",
-      "source": "デーリー東北",
-      "date": "2026-07-17",
-      "cat": "market"
     },
     {
       "title": "中部の青果卸１２社、共同物流で新会社",
@@ -174,6 +167,13 @@
       "title": "令和8年 中央卸売市場本場「新年初市」が開催されます",
       "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTE45dy1HMlZhSHNqRWx4eWFmRFdvZk1pWmxTc1lrX2xPWjBaNzJ3VXVOQWYzMXFzNkk3M2Q1QkNPdmN5VTEwMkNOTzRvUGNFcy1waHpYZjBXQWNpMUFJUi1GVFN4TzRhb3huSUJlVU9wTQ?oc=5",
       "source": "city.nagoya.jp",
+      "date": "2025-12-23",
+      "cat": "market"
+    },
+    {
+      "title": "「YAOYASAN」の「市況分析」で収益を高める！ 青果物を高く売る出荷戦略",
+      "link": "https://news.google.com/rss/articles/CBMiUEFVX3lxTFA5b215aHNmaGZiay00b256WU1YVTdrUUEyLU5fblhrWTZIRXNHOE5rbzEzeE1TWDBMS1FPaExaNC1tZ1p5TUNEWTVmdXhGRllM?oc=5",
+      "source": "アグリジャーナル",
       "date": "2025-12-23",
       "cat": "market"
     },
