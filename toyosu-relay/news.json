@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-12T07:11:37+09:00",
+  "updated": "2026-08-13T07:10:05+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -26,7 +26,14 @@
     {
       "title": "郡仙台市長が仙台市中央卸売市場を視察 ウナギが安く野菜果物は入荷減",
       "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9GRmdZYksyZlNFU2xLTjVzdjJQaXJ1dF9QNnBzeHM4c08yRmlkMWhZS1h6eEtUQ3VRd1A4WlNfMWNISkpKREhDc2JoU3BCY2M?oc=5",
-      "source": "khb東日本放送",
+      "source": "khb-tv.co.jp",
+      "date": "2026-07-31",
+      "cat": "market"
+    },
+    {
+      "title": "郡仙台市長が仙台市中央卸売市場を視察 ウナギが安く野菜果物は入荷減（khb東日本放送）",
+      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTFBZZHdHdUZOOW1mXzktYVVMNV9yWUhZcXhFd0dmcXNBQzg4alF0LWhGbFRYV0JfS3ZWNXhuRVBxS1UzSTBDNXhISFpHVzhXQlh3enY2V3dKb3ZGSi1Rc3VBWmItLTBYbC1tTHNaUFl5YmRnTDdHSmozcFE1YjFmeTg?oc=5",
+      "source": "Yahoo!ニュース",
       "date": "2026-07-31",
       "cat": "market"
     },
@@ -36,13 +43,6 @@
       "source": "激流オンライン",
       "date": "2026-07-31",
       "cat": "business"
-    },
-    {
-      "title": "令和8年度 トップセールス・国内外への訪問",
-      "link": "https://news.google.com/rss/articles/CBMiZkFVX3lxTFBYWU8xeG80MktMMnFEZEtwUHV4anFudmlZazJzRFpuMnc3b0lSSjlhX3FRWC1xcmM5NG5USmpPa1hBU2ljcGNOSXIwLUJjNTdKTlVGNGFSTWhtRk1GR3lSMXZ2OHp2UQ?oc=5",
-      "source": "pref.fukushima.lg.jp",
-      "date": "2026-07-31",
-      "cat": "toyosu"
     },
     {
       "title": "【夏休み2026】豊洲千客万来「親子で学ぶ中央卸売市場」8/21-22",
@@ -66,6 +66,13 @@
       "cat": "business"
     },
     {
+      "title": "【令和8年度】夏休み親子市場せり見学会",
+      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE5xemZuXzdnYzVXUnc2WkI4VnRPSEFYbVZ4a1UzcXJOUkZ4VXVRenhLQUQ0Yzdjb3FZbUs0SVNGTnJLRjF5a1ZTMG90emtmckI0aU5MMlY1TzZpYUkxNDZpa1JYNzhoOEV6U0R5c2o5ZmgyZm5sd1pFalBMcHUxZGM?oc=5",
+      "source": "city.niigata.lg.jp",
+      "date": "2026-07-04",
+      "cat": "market"
+    },
+    {
       "title": "中部の青果卸１２社、共同物流で新会社",
       "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE1fMk5qVDdFLWc1SEJOSWxJVW5RMXhXQXpmZ0ZUT1RXeWpMUGxwMHhvNjgtU050RXg0d0NVNFMwek5HOXcyNlNlUWRGNlFfaEZ6emxCamFkTQ?oc=5",
       "source": "日本農業新聞",
@@ -75,7 +82,7 @@
     {
       "title": "決算:長野の青果卸R&CHD、純利益38％減 26年3月期",
       "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9FZ2Qwak5sY1VXM2tzWU1MTDNaS3pfZ2tQZkRpcWEyc3BFM3RiOHc1eU5nNU5CeXJ4R19VV3hWRVM3djZmWnFNQlo4dXo1eG5yWGwwUG5ldlI4QkVsRnkyTk1KV1VhMDk0SmQwMw?oc=5",
-      "source": "日本経済新聞",
+      "source": "nikkei.com",
       "date": "2026-06-22",
       "cat": "business"
     },
@@ -136,17 +143,17 @@
       "cat": "toyosu"
     },
     {
-      "title": "拡大から持続的流通へ〜変化に対応する市場の社会的役割 – 卸売市場流通についての諸問題",
-      "link": "https://news.google.com/rss/articles/CBMiPEFVX3lxTE9acVVkRlF2ckJWRmphOW5JNTR4dGoxdjZkTlhPWEtHYnlZYWZtVEMwUURUUUlHcjdiamhyaA?oc=5",
-      "source": "fdsupply.org",
-      "date": "2026-03-06",
-      "cat": "toyosu"
-    },
-    {
       "title": "東京都中央卸売市場大田市場で、香川県産青果物のトップセールスを行いました",
       "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE9Yc2piSXdfZHc0bHZacHBYWnJzR3JwZ1oxcVRUMmRPdm9wYjNwelNjeEViWjBSRTZHS1Y1aGpjV3dRbTY2MGthWXhNRThCTl9kQ3RGMzUwYU5FNHZVT1A4d18wUTZiWkNwZnR6LUtyVmdnRzhBSkRnSU9TZEtEQjA?oc=5",
       "source": "pref.kagawa.lg.jp",
       "date": "2026-02-13",
+      "cat": "toyosu"
+    },
+    {
+      "title": "東京都中央卸売市場取扱高 茨城県青果22年連続1位",
+      "link": "https://news.google.com/rss/articles/CBMic0FVX3lxTE9YLUhRU19OaGk4bFpPUU9DOWVkMFE3SXU4NVdVV2U0V01NdWUxTHl5UDNkN0dPakpqTVRtSG5xNTlOYVZfR1V6YUNpTmstU3FzUkRFWU0wajhRVlFQMi1LVTBRUVV2LVZxWGJOZ2VfczVpOHM?oc=5",
+      "source": "茨城新聞クロスアイ",
+      "date": "2026-02-11",
       "cat": "toyosu"
     },
     {
@@ -164,18 +171,11 @@
       "cat": "toyosu"
     },
     {
-      "title": "令和8年 中央卸売市場本場「新年初市」が開催されます",
-      "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTE45dy1HMlZhSHNqRWx4eWFmRFdvZk1pWmxTc1lrX2xPWjBaNzJ3VXVOQWYzMXFzNkk3M2Q1QkNPdmN5VTEwMkNOTzRvUGNFcy1waHpYZjBXQWNpMUFJUi1GVFN4TzRhb3huSUJlVU9wTQ?oc=5",
-      "source": "city.nagoya.jp",
-      "date": "2025-12-23",
-      "cat": "market"
-    },
-    {
-      "title": "「YAOYASAN」の「市況分析」で収益を高める！ 青果物を高く売る出荷戦略",
-      "link": "https://news.google.com/rss/articles/CBMiUEFVX3lxTFA5b215aHNmaGZiay00b256WU1YVTdrUUEyLU5fblhrWTZIRXNHOE5rbzEzeE1TWDBMS1FPaExaNC1tZ1p5TUNEWTVmdXhGRllM?oc=5",
-      "source": "アグリジャーナル",
-      "date": "2025-12-23",
-      "cat": "market"
+      "title": "SANKO、大田市場の青果仲卸と業務提携 販路拡大へ",
+      "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTFBRcDRxc25POTNNM19JcDRlR2ZFSnI0a2pHYmJfOTEyTW5hclM2SWVmbVN0S2lZMTg2S3Axb2ZEeW1jWk5iUTFzMkNJNnNuWkpXVG9EY1BXT3JiVGd1VkgtaW9nVHZBeEVzZ2dkbg?oc=5",
+      "source": "nikkei.com",
+      "date": "2025-12-25",
+      "cat": "toyosu"
     },
     {
       "title": "市場まつり 令和7年11月23日（日曜日・祝日）開催",
