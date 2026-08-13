@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-13T07:10:05+09:00",
+  "updated": "2026-08-14T07:10:46+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -26,14 +26,7 @@
     {
       "title": "郡仙台市長が仙台市中央卸売市場を視察 ウナギが安く野菜果物は入荷減",
       "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9GRmdZYksyZlNFU2xLTjVzdjJQaXJ1dF9QNnBzeHM4c08yRmlkMWhZS1h6eEtUQ3VRd1A4WlNfMWNISkpKREhDc2JoU3BCY2M?oc=5",
-      "source": "khb-tv.co.jp",
-      "date": "2026-07-31",
-      "cat": "market"
-    },
-    {
-      "title": "郡仙台市長が仙台市中央卸売市場を視察 ウナギが安く野菜果物は入荷減（khb東日本放送）",
-      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTFBZZHdHdUZOOW1mXzktYVVMNV9yWUhZcXhFd0dmcXNBQzg4alF0LWhGbFRYV0JfS3ZWNXhuRVBxS1UzSTBDNXhISFpHVzhXQlh3enY2V3dKb3ZGSi1Rc3VBWmItLTBYbC1tTHNaUFl5YmRnTDdHSmozcFE1YjFmeTg?oc=5",
-      "source": "Yahoo!ニュース",
+      "source": "khb東日本放送",
       "date": "2026-07-31",
       "cat": "market"
     },
@@ -73,16 +66,9 @@
       "cat": "market"
     },
     {
-      "title": "中部の青果卸１２社、共同物流で新会社",
-      "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE1fMk5qVDdFLWc1SEJOSWxJVW5RMXhXQXpmZ0ZUT1RXeWpMUGxwMHhvNjgtU050RXg0d0NVNFMwek5HOXcyNlNlUWRGNlFfaEZ6emxCamFkTQ?oc=5",
-      "source": "日本農業新聞",
-      "date": "2026-06-28",
-      "cat": "business"
-    },
-    {
       "title": "決算:長野の青果卸R&CHD、純利益38％減 26年3月期",
       "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9FZ2Qwak5sY1VXM2tzWU1MTDNaS3pfZ2tQZkRpcWEyc3BFM3RiOHc1eU5nNU5CeXJ4R19VV3hWRVM3djZmWnFNQlo4dXo1eG5yWGwwUG5ldlI4QkVsRnkyTk1KV1VhMDk0SmQwMw?oc=5",
-      "source": "nikkei.com",
+      "source": "日本経済新聞",
       "date": "2026-06-22",
       "cat": "business"
     },
@@ -106,6 +92,13 @@
       "source": "どらったら！！",
       "date": "2026-06-07",
       "cat": "toyosu"
+    },
+    {
+      "title": "物流アップデート＞中部圏物流共同化へ 青果卸、産地など１９組織 「２４年問題」対策で協議会設立",
+      "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE12bEo1OG1NN2RfSnZvRjltcVhzanE4TTBVRHNhYnlEMTFjMVBWYUJRT1diN0xqY014UE1wZHBiNllJT09ncFdnVDhwU3pXTGN3LVNwU3V1Zw?oc=5",
+      "source": "日本農業新聞",
+      "date": "2026-05-24",
+      "cat": "business"
     },
     {
       "title": "卸売市場 市民感謝デー（5月）を開催しました！",
@@ -157,25 +150,32 @@
       "cat": "toyosu"
     },
     {
-      "title": "インターネット都政モニターアンケート結果 生鮮食料品等の購買意識 〉 Q18 信頼できる東京都中央卸売市場になるために|1月",
-      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE1Ia05iRnR5YTVxMXlEcVMxVGhDbTdQb2UtR1V3djkwNWFpdlhqWHBQX1I4VHB2a0lFUDZWM3JTTXVkZ3YzbFFVOFlaN1JGYVhrWE90YlgzSDdVajRxYnlaa0paYjhQNzU5Q1BMTXRkMm00REh0?oc=5",
+      "title": "インターネット都政モニターアンケート結果 生鮮食料品等の購買意識 〉 Q16 東京都中央卸売市場の認知|1月",
+      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE4wNEFBMThJRExadlJ6WDQ2d25pVXhNck1ldHBrcG1KVXhndDdkcWNfU2tlSW9lM0EzTGZMN2pSQlRTQjliU2JLVG1ZMlVSa3ljOWpxcTBaNmNzdUlEWFlrTXZTWmNDVzlLYmEtaGxTWWRGM3FQ?oc=5",
       "source": "metro.tokyo.lg.jp",
       "date": "2026-01-21",
       "cat": "toyosu"
     },
     {
-      "title": "東京都中央卸売市場・豊洲市場",
+      "title": "東京都中央卸売市場・豊洲市場／東京の観光公式サイトGO TOKYO",
       "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9abnUyLWI2TWtuY0tKa1FoZlMwRUtHeDVsejhNTmwwck1sZi1iZ2ZhWlQ2OHgyU2xsQUdnM05mdzdpY1hNZGhGMzZoZTlFOWxQMHBiRVFwZmM3enM?oc=5",
-      "source": "GO TOKYO, The Official Tokyo Travel Guide",
+      "source": "gotokyo.org",
       "date": "2025-12-25",
       "cat": "toyosu"
     },
     {
       "title": "SANKO、大田市場の青果仲卸と業務提携 販路拡大へ",
       "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTFBRcDRxc25POTNNM19JcDRlR2ZFSnI0a2pHYmJfOTEyTW5hclM2SWVmbVN0S2lZMTg2S3Axb2ZEeW1jWk5iUTFzMkNJNnNuWkpXVG9EY1BXT3JiVGd1VkgtaW9nVHZBeEVzZ2dkbg?oc=5",
-      "source": "nikkei.com",
+      "source": "日本経済新聞",
       "date": "2025-12-25",
       "cat": "toyosu"
+    },
+    {
+      "title": "令和8年 中央卸売市場本場「新年初市」が開催されます",
+      "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTE45dy1HMlZhSHNqRWx4eWFmRFdvZk1pWmxTc1lrX2xPWjBaNzJ3VXVOQWYzMXFzNkk3M2Q1QkNPdmN5VTEwMkNOTzRvUGNFcy1waHpYZjBXQWNpMUFJUi1GVFN4TzRhb3huSUJlVU9wTQ?oc=5",
+      "source": "city.nagoya.jp",
+      "date": "2025-12-23",
+      "cat": "market"
     },
     {
       "title": "市場まつり 令和7年11月23日（日曜日・祝日）開催",
