@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-14T07:10:46+09:00",
+  "updated": "2026-08-15T06:49:16+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -38,6 +38,13 @@
       "cat": "business"
     },
     {
+      "title": "令和8年度 トップセールス・国内外への訪問",
+      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5lT2g2dXo4Z3ZGWDZuNGlKUTk2S042RDdJNzdQcFV0V0FHM2U3ei0teGw5VWxqUGJaSWxxVG0taDF6TEhlX3Y1Zmp1YmlVUjZjWThMbDdyaXM3YjJvQXpmeDR2dklQMW0zX0lJ?oc=5",
+      "source": "福島県ホームページ",
+      "date": "2026-07-31",
+      "cat": "toyosu"
+    },
+    {
       "title": "【夏休み2026】豊洲千客万来「親子で学ぶ中央卸売市場」8/21-22",
       "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFBERmVqZ0x5ZjA5S0drZXpvc1Y5RmpYNldOb3NLTG4xaGxSZDhrN3lmbUozR2prTjFYWG9yNmV3T0VuOFpNWk5QS0IyazY5TnIyR2JjWXJfLVB6Zmtz?oc=5",
       "source": "リセマム",
@@ -68,7 +75,7 @@
     {
       "title": "決算:長野の青果卸R&CHD、純利益38％減 26年3月期",
       "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9FZ2Qwak5sY1VXM2tzWU1MTDNaS3pfZ2tQZkRpcWEyc3BFM3RiOHc1eU5nNU5CeXJ4R19VV3hWRVM3djZmWnFNQlo4dXo1eG5yWGwwUG5ldlI4QkVsRnkyTk1KV1VhMDk0SmQwMw?oc=5",
-      "source": "日本経済新聞",
+      "source": "nikkei.com",
       "date": "2026-06-22",
       "cat": "business"
     },
@@ -87,18 +94,18 @@
       "cat": "business"
     },
     {
+      "title": "三菱食品 伊藤社長インタビュー　新たな経営体制で「食品卸」の価値を最大化する",
+      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBwcUl2UXF5OTA3Sjc2b19LSzVZQTNWeklNcklKeFc0bW9NNUpZeDQ4UkVRZ1Z1Rmt4VUg5SWl3M0l1MXhyWTJ2SVYySVA4b1pXWXQ0eHNrZlpISmdRMXFJQktyd0LSAWpBVV95cUxQdnBuenZXVUhIR3NMaTYzVDJYNnJoeG9IZS1aSHVUU0lNVmtBQko1ZFhlYVBISjkwdGxXdHFuV3RYUmpRQ1hoTEZCVHh0eTVRbURJaENDY3NhdzNSbVZJUldDb2VqVnJoMWVn?oc=5",
+      "source": "ダイヤモンド・チェーンストアオンライン",
+      "date": "2026-06-15",
+      "cat": "business"
+    },
+    {
       "title": "２６２０ 資金ショートは２０５６年度に８年前倒し 東京都中央卸売市場会計、２０２６年経営レポート どらったら！！",
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1Xb0xLYTJ6eDV1WkxhbzgzTnFqVWRNcmxMMGc1OUVEMDZoZHJzQU1oaXlFdV9GYjNQbmxER0tmR1BnOGg0MGpEWmlOWVFhR25MS1hxZ084bFJpdUFIaU1xSERBWGVwT0E5dkE?oc=5",
       "source": "どらったら！！",
       "date": "2026-06-07",
       "cat": "toyosu"
-    },
-    {
-      "title": "物流アップデート＞中部圏物流共同化へ 青果卸、産地など１９組織 「２４年問題」対策で協議会設立",
-      "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE12bEo1OG1NN2RfSnZvRjltcVhzanE4TTBVRHNhYnlEMTFjMVBWYUJRT1diN0xqY014UE1wZHBiNllJT09ncFdnVDhwU3pXTGN3LVNwU3V1Zw?oc=5",
-      "source": "日本農業新聞",
-      "date": "2026-05-24",
-      "cat": "business"
     },
     {
       "title": "卸売市場 市民感謝デー（5月）を開催しました！",
@@ -143,13 +150,6 @@
       "cat": "toyosu"
     },
     {
-      "title": "東京都中央卸売市場取扱高 茨城県青果22年連続1位",
-      "link": "https://news.google.com/rss/articles/CBMic0FVX3lxTE9YLUhRU19OaGk4bFpPUU9DOWVkMFE3SXU4NVdVV2U0V01NdWUxTHl5UDNkN0dPakpqTVRtSG5xNTlOYVZfR1V6YUNpTmstU3FzUkRFWU0wajhRVlFQMi1LVTBRUVV2LVZxWGJOZ2VfczVpOHM?oc=5",
-      "source": "茨城新聞クロスアイ",
-      "date": "2026-02-11",
-      "cat": "toyosu"
-    },
-    {
       "title": "インターネット都政モニターアンケート結果 生鮮食料品等の購買意識 〉 Q16 東京都中央卸売市場の認知|1月",
       "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE4wNEFBMThJRExadlJ6WDQ2d25pVXhNck1ldHBrcG1KVXhndDdkcWNfU2tlSW9lM0EzTGZMN2pSQlRTQjliU2JLVG1ZMlVSa3ljOWpxcTBaNmNzdUlEWFlrTXZTWmNDVzlLYmEtaGxTWWRGM3FQ?oc=5",
       "source": "metro.tokyo.lg.jp",
@@ -159,14 +159,14 @@
     {
       "title": "東京都中央卸売市場・豊洲市場／東京の観光公式サイトGO TOKYO",
       "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9abnUyLWI2TWtuY0tKa1FoZlMwRUtHeDVsejhNTmwwck1sZi1iZ2ZhWlQ2OHgyU2xsQUdnM05mdzdpY1hNZGhGMzZoZTlFOWxQMHBiRVFwZmM3enM?oc=5",
-      "source": "gotokyo.org",
+      "source": "GO TOKYO, The Official Tokyo Travel Guide",
       "date": "2025-12-25",
       "cat": "toyosu"
     },
     {
       "title": "SANKO、大田市場の青果仲卸と業務提携 販路拡大へ",
       "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTFBRcDRxc25POTNNM19JcDRlR2ZFSnI0a2pHYmJfOTEyTW5hclM2SWVmbVN0S2lZMTg2S3Axb2ZEeW1jWk5iUTFzMkNJNnNuWkpXVG9EY1BXT3JiVGd1VkgtaW9nVHZBeEVzZ2dkbg?oc=5",
-      "source": "日本経済新聞",
+      "source": "nikkei.com",
       "date": "2025-12-25",
       "cat": "toyosu"
     },
