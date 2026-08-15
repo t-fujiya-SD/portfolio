@@ -109,6 +109,14 @@ h2.sec{font-size:15px;margin:20px 0 6px;color:var(--sub);font-weight:700;letter-
 .costbox td{padding:2px 0}
 .costbox td:first-child{color:var(--sub);width:5.5em;font-size:13px}
 .costbox b{font-size:17px}
+/* ★値上がりのときだけ枠ごと赤に振る。値下がりは悪い報せではないので枠は変えない */
+.costbox.up{background:#fef2f2;border-color:#fecaca}
+.dpill{display:inline-block;border-radius:7px;padding:1px 8px;font-size:12.5px;font-weight:700;white-space:nowrap}
+.dpill.up-hi{background:#fef2f2;color:var(--red)}
+.dpill.up{background:#fef3c7;color:var(--amber)}
+.dpill.down{background:#dbeafe;color:var(--blue)}
+.dpill.flat,.dpill.first{background:#f3f4f6;color:var(--sub)}
+.lnbubble{background:#e8f5e9;border:1px solid #c8e6c9;border-radius:12px;padding:10px 12px;margin:6px 0}
 
 /* ---- forms ---- */
 .f{margin:8px 0}
@@ -143,6 +151,8 @@ nav button.on{color:var(--g);font-weight:700}
 nav .bn{position:absolute;top:4px;left:50%;margin-left:6px;background:var(--red);color:#fff;
   font-size:10px;border-radius:999px;padding:0 5px;font-weight:700;min-width:16px}
 nav .bn.soft{background:#9ca3af}
+/* ★アイコンの右＝未読（人）、左＝価格（金）。重ならないので未読の数字が隠れない */
+nav .bn.cost{background:var(--amber);margin-left:-26px}
 
 /* ---- misc ---- */
 #toast{position:fixed;left:50%;transform:translateX(-50%);bottom:96px;background:#111827;color:#fff;
@@ -198,11 +208,29 @@ nav .bn.soft{background:#9ca3af}
    1点に絞ったほうが結果が読める。①が定着してから入れる。 */
 const SHOW_ROUTME = false;
 
+/* ★LINE公式アカウントへの通知には送信サーバーが要る（トークンをブラウザに置けない）。
+   公開デモは端末内だけで動くので「送られる内容」を出すところまでにしてある。
+   本文を作るのは lineText() 一本で、サーバー実装が乗ったらそれをそのまま移植する。
+   ＝デモと本番が文字通り同じことを言う。 */
+const SHOW_LINE_PREVIEW = true;
+
+/* ★仕入値の前日比を品名だけで束ねる。仕入先ごとに分けると「仕入先を替えたから動いた」
+   という一番知りたいケースが毎回「初回・比較なし」になって消える。仕入先は比較に併記する。
+   仕入先ごとに系列を分けたくなったら true。 */
+const COST_KEY_BY_SUPPLIER = false;
+
+/* ★閾値。%だけだと単価の安い品目で暴れる（¥80→¥95 は +18.75%）ので、
+   「%」と「円」の両方の門を通ったものだけをアラートにする。 */
+const CA_PRESETS = [{k:'loose',pct:10,yen:200},{k:'mid',pct:5,yen:100},{k:'tight',pct:3,yen:50}];
+const CA_HI = 15;   /* これ以上の値上がりは「要注意」 */
+
 const APP_NAME = { ja:'ハシリ板', en:'HASHIRIBAN', zh:'ハシリ板', vi:'HASHIRIBAN' };
 const APP_TAG  = { ja:'申し送り｜卸の朝を、全員に', en:'Handoff — the morning, shared with everyone',
                    zh:'交接｜把清晨传达给每个人', vi:'Bàn giao — buổi sáng, cho tất cả mọi người' };
 
-const LS_KEY = 'hsr_demo_v1';
+/* ★v2＝前日比アラートのシードを足したとき。load() は保存済みがあれば seed() を呼ばないので、
+   ここを上げないと「再訪した人にだけ新機能が一生見えない」ことになる */
+const LS_KEY = 'hsr_demo_v2';
 const TODAY  = '2026-08-06';        /* デモは日付固定 */
 const YEST   = '2026-08-05';
 
@@ -226,6 +254,14 @@ const I18N = {
    promoted:'RoutMeに登録済み', reply:'返信', replyPh:'返信を書く…',
    streak:'🔥 {0}日連続', streakBest:'自己ベスト{0}日', streakLeft:'あと{1}件で {0}日連続 🔥',
    toAll:'全員', today:'今日', yest:'昨日', shareCat:'種類', noItems:'まだありません',
+   caTitle:'仕入値の前日比', caNone:'前日比、大きな動きはありません', caFirst:'前日データなし（初回）',
+   caPrev:'前日', caDiff:'前日比', caUpHi:'要注意', caUp:'注意', caDown:'値下がり', caFlat:'前日並み',
+   caSup:'仕入先が変わりました（{0} → {1}）', caDup:'本日{0}件目（新しい方を使用）',
+   caThr:'しきい値', caThrLoose:'ゆるめ', caThrMid:'ふつう', caThrTight:'きびしめ',
+   caThrHint:'この端末だけの設定です', caFilter:'仕入値だけ見る',
+   lnTitle:'LINEに送られる内容', lnNote:'デモでは実際には送信しません', lnTo:'送信先', lnCopy:'コピー',
+   lnNeed:'実際の送信には LINE公式アカウントとサーバーが必要です。このデモは端末内だけで動きます。',
+   lnCopied:'コピーしました',
    quick:'ワンタップ返信', dummy:'デモ用のダミーデータです。実在の会社・人・卸ではありません。' },
  en:{ home:'Home',hand:'Handoff',board:'Board',share:'Shared',
    catch:'{0} handoff(s) not checked yet', done:'All handoffs checked 🎉', doneSub:'No unread, nothing to reply',
@@ -244,6 +280,14 @@ const I18N = {
    promoted:'Saved to RoutMe', reply:'Reply', replyPh:'Write a reply…',
    streak:'🔥 {0}-day streak', streakBest:'best {0} days', streakLeft:'{1} more for a {0}-day streak 🔥',
    toAll:'Everyone', today:'Today', yest:'Yesterday', shareCat:'Category', noItems:'Nothing yet',
+   caTitle:'Cost vs yesterday', caNone:'No significant change vs yesterday', caFirst:'No data for yesterday (first post)',
+   caPrev:'Yesterday', caDiff:'vs yesterday', caUpHi:'Alert', caUp:'Watch', caDown:'Down', caFlat:'Flat',
+   caSup:'Supplier changed ({0} → {1})', caDup:'{0} posts today (latest used)',
+   caThr:'Threshold', caThrLoose:'Loose', caThrMid:'Normal', caThrTight:'Tight',
+   caThrHint:'Saved on this device only', caFilter:'Cost only',
+   lnTitle:'What gets sent to LINE', lnNote:'Nothing is actually sent in this demo', lnTo:'To', lnCopy:'Copy',
+   lnNeed:'Real delivery needs a LINE Official Account and a server. This demo runs entirely on your device.',
+   lnCopied:'Copied',
    quick:'One-tap reply', dummy:'Demo data. No real company, person or supplier.' },
  zh:{ home:'首页',hand:'交接',board:'讨论',share:'共享',
    catch:'未确认的交接 {0} 条', done:'交接已全部确认 🎉', doneSub:'没有未读，也没有待回复',
@@ -262,6 +306,14 @@ const I18N = {
    promoted:'已保存到 RoutMe', reply:'回复', replyPh:'写回复…',
    streak:'🔥 连续 {0} 天', streakBest:'最佳 {0} 天', streakLeft:'再 {1} 条即可连续 {0} 天 🔥',
    toAll:'全员', today:'今天', yest:'昨天', shareCat:'类别', noItems:'暂无',
+   caTitle:'进价日环比', caNone:'与前日相比无明显变化', caFirst:'无前日数据（首次）',
+   caPrev:'前日', caDiff:'日环比', caUpHi:'需注意', caUp:'注意', caDown:'下跌', caFlat:'与前日持平',
+   caSup:'供应商已更换（{0} → {1}）', caDup:'今天第{0}条（采用最新）',
+   caThr:'阈值', caThrLoose:'宽松', caThrMid:'普通', caThrTight:'严格',
+   caThrHint:'仅保存在此设备', caFilter:'只看进价',
+   lnTitle:'将发送到 LINE 的内容', lnNote:'演示中不会实际发送', lnTo:'发送对象', lnCopy:'复制',
+   lnNeed:'实际发送需要 LINE 官方账号和服务器。本演示仅在本机运行。',
+   lnCopied:'已复制',
    quick:'一键回复', dummy:'演示数据。并非真实的公司、人员或供应商。' },
  vi:{ home:'Trang chủ',hand:'Bàn giao',board:'Thảo luận',share:'Chia sẻ',
    catch:'{0} mục bàn giao chưa kiểm tra', done:'Đã kiểm tra hết bàn giao 🎉', doneSub:'Không có mục chưa đọc hay cần trả lời',
@@ -280,6 +332,14 @@ const I18N = {
    promoted:'Đã lưu vào RoutMe', reply:'Trả lời', replyPh:'Viết trả lời…',
    streak:'🔥 {0} ngày liên tiếp', streakBest:'kỷ lục {0} ngày', streakLeft:'Thêm {1} nữa là {0} ngày liên tiếp 🔥',
    toAll:'Mọi người', today:'Hôm nay', yest:'Hôm qua', shareCat:'Loại', noItems:'Chưa có gì',
+   caTitle:'Giá nhập so với hôm qua', caNone:'Không thay đổi đáng kể so với hôm qua', caFirst:'Chưa có dữ liệu hôm qua (lần đầu)',
+   caPrev:'Hôm qua', caDiff:'So với hôm qua', caUpHi:'Cần chú ý', caUp:'Chú ý', caDown:'Giảm giá', caFlat:'Ngang hôm qua',
+   caSup:'Đã đổi nhà cung cấp ({0} → {1})', caDup:'Bài thứ {0} hôm nay (dùng bản mới nhất)',
+   caThr:'Ngưỡng', caThrLoose:'Lỏng', caThrMid:'Vừa', caThrTight:'Chặt',
+   caThrHint:'Chỉ lưu trên thiết bị này', caFilter:'Chỉ xem giá nhập',
+   lnTitle:'Nội dung sẽ gửi lên LINE', lnNote:'Bản demo không gửi thật', lnTo:'Gửi tới', lnCopy:'Sao chép',
+   lnNeed:'Để gửi thật cần tài khoản LINE chính thức và máy chủ. Bản demo chỉ chạy trên thiết bị của bạn.',
+   lnCopied:'Đã sao chép',
    quick:'Trả lời một chạm', dummy:'Dữ liệu demo. Không phải công ty, người hay nhà cung cấp có thật.' }
 };
 let LANG = localStorage.getItem('hsr_lang') || 'ja';
@@ -340,7 +400,10 @@ function seed(){
     {id:'m7',name:'三宅',   dept:'sales',    role:'staff'}
   ];
   const h=[];
-  const add=o=>{h.push(Object.assign({id:'h'+(h.length+1),date:TODAY,photos:[],to:['office','picking','delivery'],rm:'pending'},o));};
+  /* ★seq＝出た順の序数。配列の順番はアテにできない（ここは push で古い順、
+     submitHand は unshift で新しい順）。同じ品目が同じ日に2回出たとき、
+     どちらが新しいかを決められるのはこの数字だけ。 */
+  const add=o=>{h.push(Object.assign({id:'h'+(h.length+1),seq:h.length,date:TODAY,photos:[],to:['office','picking','delivery'],rm:'pending'},o));};
 
   add({kind:'no_order', by:'m2', to:['picking','delivery'],
     title:'マルシェ相模原は今日はお休み',
@@ -374,6 +437,80 @@ function seed(){
     i18n:{en:{title:'This morning’s cost (shiso)',body:'Up from last week. 85 yen retail is thin — sales, please note.'},
           zh:{title:'今晨进价（紫苏）',body:'比上周涨了。零售85日元利润很薄，销售请注意。'},
           vi:{title:'Giá nhập sáng nay (tía tô)',body:'Tăng so với tuần trước. Bán 85 yên là mỏng, bộ phận bán hàng lưu ý.'}},
+    rm:'none'});
+
+  /* ---- 前日比の比較材料。8/5 が基準、8/6 が今朝。
+     値上がり大／値上がり中／横ばい／値下がり＋仕入先変更／初回 の5通りが1画面に出る ---- */
+  add({kind:'cost', by:'m1', to:['office','sales'], date:YEST,
+    title:'昨日の仕入値（大葉）',
+    body:'相場は落ち着いていました。',
+    cost:{item:'大葉',qty:'1ケース',price:3400,supplier:'みどり青果（デモ）'},
+    i18n:{en:{title:'Yesterday’s cost (shiso)',body:'The market was calm.'},
+          zh:{title:'昨日进价（紫苏）',body:'行情平稳。'},
+          vi:{title:'Giá nhập hôm qua (tía tô)',body:'Thị trường ổn định.'}},
+    rm:'none'});
+
+  add({kind:'cost', by:'m1', to:['office','sales'], date:YEST,
+    title:'昨日の仕入値（マッシュルーム）',
+    body:'いつもの値段です。',
+    cost:{item:'マッシュルーム',qty:'1ケース',price:2800,supplier:'こうよう食品（デモ）'},
+    i18n:{en:{title:'Yesterday’s cost (mushrooms)',body:'The usual price.'},
+          zh:{title:'昨日进价（蘑菇）',body:'和平时一样。'},
+          vi:{title:'Giá nhập hôm qua (nấm)',body:'Giá như mọi khi.'}},
+    rm:'none'});
+
+  add({kind:'cost', by:'m1', to:['office','sales'], date:YEST,
+    title:'昨日の仕入値（トマト）',
+    body:'大玉は安定しています。',
+    cost:{item:'トマト（大玉）',qty:'1ケース',price:5600,supplier:'東光物産（デモ）'},
+    i18n:{en:{title:'Yesterday’s cost (tomatoes)',body:'Large-size tomatoes are steady.'},
+          zh:{title:'昨日进价（番茄）',body:'大果价格稳定。'},
+          vi:{title:'Giá nhập hôm qua (cà chua)',body:'Cà chua quả to giá ổn định.'}},
+    rm:'none'});
+
+  add({kind:'cost', by:'m2', to:['office','sales'], date:YEST,
+    title:'昨日の仕入値（アスパラ）',
+    body:'はまかぜさんから。少し高めでした。',
+    cost:{item:'アスパラ（L）',qty:'1ケース',price:6200,supplier:'はまかぜ青果（デモ）'},
+    i18n:{en:{title:'Yesterday’s cost (asparagus)',body:'From Hamakaze. A little on the high side.'},
+          zh:{title:'昨日进价（芦笋）',body:'来自滨风。价格略高。'},
+          vi:{title:'Giá nhập hôm qua (măng tây)',body:'Từ Hamakaze. Hơi cao một chút.'}},
+    rm:'none'});
+
+  add({kind:'cost', by:'m1', to:['office','sales'],
+    title:'今朝の仕入値（マッシュルーム）',
+    body:'少しずつ上がってきています。',
+    cost:{item:'マッシュルーム',qty:'1ケース',price:3050,supplier:'こうよう食品（デモ）'},
+    i18n:{en:{title:'This morning’s cost (mushrooms)',body:'Creeping up little by little.'},
+          zh:{title:'今晨进价（蘑菇）',body:'正在一点点上涨。'},
+          vi:{title:'Giá nhập sáng nay (nấm)',body:'Đang tăng dần từng chút.'}},
+    rm:'none'});
+
+  add({kind:'cost', by:'m1', to:['office','sales'],
+    title:'今朝の仕入値（トマト）',
+    body:'ほぼ前日並みです。',
+    cost:{item:'トマト（大玉）',qty:'1ケース',price:5780,supplier:'東光物産（デモ）'},
+    i18n:{en:{title:'This morning’s cost (tomatoes)',body:'About the same as yesterday.'},
+          zh:{title:'今晨进价（番茄）',body:'与前日基本持平。'},
+          vi:{title:'Giá nhập sáng nay (cà chua)',body:'Gần như bằng hôm qua.'}},
+    rm:'none'});
+
+  add({kind:'cost', by:'m2', to:['office','sales'],
+    title:'今朝の仕入値（アスパラ）',
+    body:'仕入先を東光物産に替えたら下がりました。特売に出せます。',
+    cost:{item:'アスパラ（L）',qty:'1ケース',price:5100,supplier:'東光物産（デモ）'},
+    i18n:{en:{title:'This morning’s cost (asparagus)',body:'Switched to Toko Bussan and the price came down. We can run it as a special.'},
+          zh:{title:'今晨进价（芦笋）',body:'换成东光物产后价格下来了。可以做特卖。'},
+          vi:{title:'Giá nhập sáng nay (măng tây)',body:'Đổi sang Toko Bussan thì giá giảm. Có thể làm hàng khuyến mãi.'}},
+    rm:'none'});
+
+  add({kind:'cost', by:'m1', to:['office','sales'],
+    title:'今朝の仕入値（苺）',
+    body:'今季はじめての入荷です。前日の値がないので比較はできません。',
+    cost:{item:'苺（あまおう）',qty:'1パック箱',price:8400,supplier:'みどり青果（デモ）'},
+    i18n:{en:{title:'This morning’s cost (strawberries)',body:'First delivery of the season. No prior price to compare against.'},
+          zh:{title:'今晨进价（草莓）',body:'本季首次到货。没有前日价格可比较。'},
+          vi:{title:'Giá nhập sáng nay (dâu)',body:'Lô đầu tiên của mùa. Chưa có giá hôm trước để so.'}},
     rm:'none'});
 
   add({kind:'add_stop', by:'m7', to:['picking','delivery'],
@@ -437,7 +574,8 @@ function seed(){
   return { members:M, handoffs:h, reads:{}, board, boardReads:{},
            shares, streaks:{m1:{days:12,best:14},m3:{days:4,best:9}},
            suppliers:['みどり青果（デモ）','東光物産（デモ）','こうよう食品（デモ）','はまかぜ青果（デモ）'],
-           items:['大葉','アスパラ','ルッコラ','わさび菜','トマト','マッシュルーム','苺','だいこん'] };
+           items:['大葉','アスパラ（L）','ルッコラ','わさび菜','トマト（大玉）','マッシュルーム','苺（あまおう）','だいこん'],
+           costAlert:{pct:5,yen:100} };
 }
 
 /* ---------- state ---------- */
@@ -497,10 +635,111 @@ function sendToRoutMe(h){
   render();
 }
 
+/* ---------- 仕入値の前日比 ---------- */
+/* 品名は自由入力（datalist付き）なので、正規化しないと「トマト」「ﾄﾏﾄ」「トマト 」で
+   系列が黙って割れて、アラートが出ないという一番たちの悪い壊れ方をする。
+   NFKC が揃えるのは全角半角と余分な空白まで。カナ↔漢字（オオバ／大葉）は別物のまま。 */
+function costKey(c){
+  const it = String(c&&c.item||'').normalize('NFKC').trim();
+  return COST_KEY_BY_SUPPLIER ? it+' '+String(c&&c.supplier||'').normalize('NFKC').trim() : it;
+}
+function caCfg(){ return Object.assign({pct:5,yen:100}, S.costAlert||{}); }
+
+function costPosts(){
+  return S.handoffs.filter(x=>x.kind==='cost' && x.cost && Number(x.cost.price)>0)
+    .map(x=>({h:x, key:costKey(x.cost), date:x.date, price:Number(x.cost.price),
+              sup:x.cost.supplier||'', seq:(x.seq||0)}));
+}
+const costDupCount = (key,date) => costPosts().filter(p=>p.key===key && p.date===date).length;
+
+/* その日より前で「データがある一番新しい日」を基準にする。literal な YEST を見に行くと、
+   市場の休市日（日曜・祝日）の翌日が全品目「初回」になって黙る */
+function costPrev(key,date){
+  const e=costPosts().filter(p=>p.key===key && p.date<date);
+  if(!e.length) return null;
+  const d=e.reduce((m,p)=>p.date>m?p.date:m,'');
+  return e.filter(p=>p.date===d).sort((a,b)=>b.seq-a.seq)[0];
+}
+
+function costDelta(x){
+  if(!x || !x.cost) return null;
+  const key=costKey(x.cost), cur=Number(x.cost.price);
+  const pv=costPrev(key,x.date);
+  const dup=costDupCount(key,x.date);
+  if(!pv || !(pv.price>0)) return {tier:'first', key, cur, dup};   /* 0除算で Infinity% にしない */
+  const diff=cur-pv.price, pct=diff/pv.price*100, c=caCfg();
+  /* ★%と円の両方を通ったものだけ。%だけだと ¥80→¥95 が +18.75% で赤く叫ぶ */
+  const pass = Math.abs(pct)>=c.pct && Math.abs(diff)>=c.yen;
+  let tier='flat';
+  if(pass) tier = diff>0 ? (pct>=CA_HI?'up-hi':'up') : 'down';
+  return {tier, key, cur, prev:pv.price, prevSup:pv.sup, curSup:x.cost.supplier||'',
+          prevDate:pv.date, diff, pct, supChanged:(pv.sup||'')!==(x.cost.supplier||''), dup};
+}
+
+/* 表示中の日付の仕入値を、品目ごとに1件（seq が最大＝一番新しい投稿）へ畳む */
+function costAlerts(){
+  const seen={}, out=[], rank={'up-hi':0,'up':1,'down':2,'first':3,'flat':4};
+  costPosts().filter(p=>p.date===DATE).sort((a,b)=>b.seq-a.seq).forEach(p=>{
+    if(seen[p.key]) return; seen[p.key]=1;
+    const d=costDelta(p.h); if(d) out.push({h:p.h, d});
+  });
+  return out.sort((a,b)=>rank[a.d.tier]-rank[b.d.tier]);
+}
+/* ★数えるのは値上がりだけ。値下がりは画面には出すが、バッジには入れない。
+   バッジは「誰かが判断しないといけない数」であるべきで、好機を混ぜると意味が薄まる */
+const caCount = () => costAlerts().filter(a=>a.d.tier==='up'||a.d.tier==='up-hi').length;
+/* 画面にもLINE文面にも出す行＝動きがあったもの。横ばいと初回は並べない */
+const lineRows = () => costAlerts().filter(a=>a.d.tier==='up'||a.d.tier==='up-hi'||a.d.tier==='down');
+
+const yen = n => '¥'+Number(n).toLocaleString();
+function deltaPill(d){
+  if(!d) return '';
+  const lb={'up-hi':'▲ '+L('caUpHi'),'up':'▲ '+L('caUp'),'down':'▼ '+L('caDown'),
+            'flat':L('caFlat'),'first':L('caFirst')}[d.tier];
+  return `<span class="dpill ${d.tier}">${esc(lb)}</span>`;
+}
+function deltaLine(d){
+  if(!d || d.tier==='first') return '';
+  const sign=d.diff>0?'+':'−';
+  return `${esc(L('caPrev'))} ${yen(d.prev)} ・ ${sign}${yen(Math.abs(d.diff))}（${
+    sign}${Math.abs(d.pct).toFixed(1)}%）`;
+}
+
+/* ★LINEに送る本文は、この関数ひとつだけが作る。送信サーバーを立てたら
+   これをそのまま移植する＝デモの見本と本番の通知が食い違わない。
+   通信は一切しない。日本語のままにしてあるのは、実際に飛ぶ文面がそれだから。 */
+function lineText(rows,date){
+  const dd=new Date(date+'T00:00:00');
+  const W=['日','月','火','水','木','金','土'][dd.getDay()];
+  const head=`【ハシリ板】仕入値アラート ${dd.getMonth()+1}/${dd.getDate()}(${W})`;
+  const body=rows.map(a=>{
+    const d=a.d, ar=d.diff>0?'▲':'▼', sg=d.diff>0?'+':'−';
+    let t=`${ar} ${a.h.cost.item}  ${yen(d.cur)} （前日 ${yen(d.prev)} / ${sg}${yen(Math.abs(d.diff))}・${sg}${Math.abs(d.pct).toFixed(1)}%）`;
+    if(d.supChanged) t+=`\n   仕入先が ${d.prevSup||'—'} → ${d.curSup||'—'}`;
+    else if(d.curSup) t+=`\n   ${d.curSup}`;
+    return t;
+  }).join('\n');
+  return `${head}\n\n${body}\n\n売価の見直しが要るものは事務所へ。\n▶ ボードで見る https://spicy-device.com/hashiri-ban/`;
+}
+
+function linePreview(rows){
+  return `<div class="lnbubble">
+    <div class="hd-top"><b>📱 ${esc(L('lnTitle'))}</b><span class="tag">${esc(L('lnNote'))}</span></div>
+    <div class="reach"><span class="tiny" style="align-self:center">${esc(L('lnTo'))}:</span>
+      <span class="rpill">${dept('office').ic} ${esc(deptName('office'))}</span>
+      <span class="rpill">${dept('sales').ic} ${esc(deptName('sales'))}</span></div>
+    <div class="hd-body">${esc(lineText(rows,DATE))}</div>
+    <button class="btn sm gray" data-lncopy="1">📋 ${esc(L('lnCopy'))}</button>
+  </div>
+  <div class="demo">${esc(L('lnNeed'))}</div>`;
+}
+
 /* ---------- キャッチアップ ---------- */
 function counts(){
-  const u=unreadFor().length, r=toReplyList().length, p=rmPending().length;
-  return {u,r,p,total:u+r};
+  const u=unreadFor().length, r=toReplyList().length, p=rmPending().length, ca=caCount();
+  /* ★ca は total に入れない。total===0 が 🎉 と紙吹雪のトリガー（viewHome / checkClear / render）で、
+     価格アラートは「読んで消す」ことができない。混ぜると board が永久にゼロにならない。 */
+  return {u,r,p,ca,total:u+r};
 }
 
 /* =========================== 描画 =========================== */
@@ -529,7 +768,8 @@ function nav(){
                ['board','💬',L('board'),c.r],['share','📚',L('share'),0]];
   document.getElementById('nav').innerHTML=items.map(([k,i,lb,n])=>
     `<button data-tab="${k}" class="${TAB===k?'on':''}"><span class="i">${i}</span>${esc(lb)}${
-      n?`<span class="bn">${n}</span>`:''}</button>`).join('');
+      n?`<span class="bn">${n}</span>`:''}${
+      k==='hand'&&c.ca?`<span class="bn cost">${c.ca}</span>`:''}</button>`).join('');
 }
 
 /* ---------- ホーム ---------- */
@@ -544,6 +784,30 @@ function viewHome(){
     h+=`<div class="hero"><p class="n">${esc(L('catch',c.total))}</p>
         <p class="p">${esc(L('unread'))} ${c.u} ・ ${esc(L('toReply'))} ${c.r}</p>`;
     if(st.days) h+=`<div class="streak">${esc(L('streakLeft',st.days+1,c.total))}</div>`;
+    h+='</div>';
+  }
+
+  /* ★仕入値の前日比。その日に仕入値の投稿が1件でもあればカードごと出す。
+     「アラート0件なら丸ごと消す」にすると、しきい値を「ゆるめ」にした人が
+     チップごと画面から失って戻せなくなる。0件のときは空の文言で受ける。 */
+  const ca=costAlerts();
+  if(ca.length){
+    const cfg=caCfg(), shown=lineRows();
+    h+=`<h2 class="sec">💴 ${esc(L('caTitle'))}</h2><div class="card${caCount()?' tome':''}">`;
+    h+= shown.length ? shown.map(a=>`<div class="row jump" data-go="hand" data-hi="${a.h.id}">
+        <span class="ic">${a.d.tier==='down'?'🔻':'🔺'}</span>
+        <span class="tx"><b>${esc(a.h.cost.item)} ${yen(a.d.cur)}</b>
+        <span class="tiny">${deltaLine(a.d)}${a.d.curSup?' ・ '+esc(a.d.curSup):''}</span></span>
+        ${deltaPill(a.d)}</div>`).join('')
+      : `<div class="empty">${esc(L('caNone'))}</div>`;
+    h+=`<div class="tiny" style="margin-top:10px">${esc(L('caThr'))}</div><div class="kinds">`;
+    CA_PRESETS.forEach(p=>{
+      const lb=p.k==='loose'?'caThrLoose':(p.k==='mid'?'caThrMid':'caThrTight');
+      h+=`<button class="kchip ${cfg.pct===p.pct&&cfg.yen===p.yen?'on':''}" data-cthr="${p.k}">${
+        esc(L(lb))} ${p.pct}%・¥${p.yen}</button>`; });
+    h+=`</div><div class="tiny">${esc(L('caThrHint'))}</div>
+        <div style="margin-top:9px"><button class="btn sm gray" data-gokf="cost">💴 ${esc(L('caFilter'))}</button></div>`;
+    if(SHOW_LINE_PREVIEW && shown.length) h+=linePreview(shown);
     h+='</div>';
   }
 
@@ -584,13 +848,19 @@ function viewHome(){
 }
 
 /* ---------- 申し送り ---------- */
-function costBox(c){
-  return `<div class="costbox"><table>
+function costBox(c,d){
+  let h=`<div class="costbox${d&&/^up/.test(d.tier)?' up':''}"><table>
     <tr><td>${esc(L('item'))}</td><td><b>${esc(c.item)}</b></td></tr>
     <tr><td>${esc(L('qty'))}</td><td>${esc(c.qty)}</td></tr>
     <tr><td>${esc(L('price'))}</td><td><b>¥${Number(c.price).toLocaleString()}</b></td></tr>
-    <tr><td>${esc(L('supplier'))}</td><td>${esc(c.supplier)}</td></tr>
-  </table></div>`;
+    <tr><td>${esc(L('supplier'))}</td><td>${esc(c.supplier)}</td></tr>`;
+  if(d) h+=`<tr><td>${esc(L('caDiff'))}</td><td>${deltaPill(d)} ${deltaLine(d)}</td></tr>`;
+  h+='</table>';
+  /* 仕入先が変わったなら、それが値が動いた理由。黙って数字だけ出さない */
+  if(d&&d.tier!=='first'&&d.supChanged)
+    h+=`<div class="tiny">${esc(L('caSup',d.prevSup||'—',d.curSup||'—'))}</div>`;
+  if(d&&d.dup>1) h+=`<div class="tiny">${esc(L('caDup',d.dup))}</div>`;
+  return h+'</div>';
 }
 
 function handoffCard(x){
@@ -603,7 +873,7 @@ function handoffCard(x){
     </div>
     <div class="hd-title">${esc(tx(x,'title'))}</div>
     <div class="hd-body">${esc(tx(x,'body'))}</div>`;
-  if(x.cost) h+=costBox(x.cost);
+  if(x.cost) h+=costBox(x.cost, costDelta(x));
   h+=photoGrid(x.photos);
 
   h+=`<div class="reach"><span class="tiny" style="align-self:center">${esc(L('reach'))}:</span>`;
@@ -808,6 +1078,19 @@ function bind(){
   app.querySelectorAll('[data-date]').forEach(el=>el.onclick=()=>{ DATE=el.dataset.date; HILITE=null; render(); });
   /* 種別フィルタとRoutMeフィルタは排他（両方かかると0件で迷子になる） */
   app.querySelectorAll('[data-kf]').forEach(el=>el.onclick=()=>{ KFILT=el.dataset.kf; RMF=''; render(); });
+
+  app.querySelectorAll('[data-cthr]').forEach(el=>el.onclick=()=>{
+    const p=CA_PRESETS.find(x=>x.k===el.dataset.cthr)||CA_PRESETS[1];
+    S.costAlert={pct:p.pct,yen:p.yen}; save(); render(); });
+  /* data-go は KFILT をクリアするので、種別で絞ったまま飛ぶ用に別口を立てる */
+  app.querySelectorAll('[data-gokf]').forEach(el=>el.onclick=()=>{
+    TAB='hand'; KFILT=el.dataset.gokf; RMF=''; SHOWFORM=false; HILITE=null; render(); });
+  app.querySelectorAll('[data-lncopy]').forEach(el=>el.onclick=()=>{
+    const t=lineText(lineRows(),DATE);
+    if(navigator.clipboard&&navigator.clipboard.writeText)
+      navigator.clipboard.writeText(t).then(()=>toast(L('lnCopied')),()=>toast(L('lnCopied')));
+    else toast(L('lnCopied')); });
+
   app.querySelectorAll('[data-rmf]').forEach(el=>el.onclick=()=>{
     RMF=el.dataset.rmf; KFILT=''; SHOWFORM=false; HILITE=null; TAB='hand'; render(); });
   app.querySelectorAll('[data-nk]').forEach(el=>el.onclick=()=>{ NEWK=el.dataset.nk; render(); });
@@ -849,7 +1132,7 @@ function submitHand(){
   if(!t.trim()){ toast('ひとことを入れてください'); return; }
   if(!NEWTO.length){ toast('誰に届けるか選んでください'); return; }
   const k=kind(NEWK);
-  const o={ id:'h'+(S.handoffs.length+1+Date.now()%1000), date:DATE, kind:NEWK, by:ME,
+  const o={ id:'h'+(S.handoffs.length+1+Date.now()%1000), seq:Date.now(), date:DATE, kind:NEWK, by:ME,
             to:NEWTO.slice(), title:t.trim(),
             body:((document.getElementById('nBody')||{}).value||'').trim(),
             photos:NEWPH.slice(), rm:k.rm?'pending':'none' };
