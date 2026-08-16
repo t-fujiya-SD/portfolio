@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-16T06:44:54+09:00",
+  "updated": "2026-08-17T06:44:12+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -21,6 +21,13 @@
       "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBlSG5sYzR6N3RleDRPcUlHYWE2U3VFUXU3SjNkejlKOUpVck5RaE9uNHFoRWpDVWFYdVAtOUdUVzN3T1I3emFtNUxaM2ttak40XzJ0U1dJZ0M?oc=5",
       "source": "myfuna.net",
       "date": "2026-08-15",
+      "cat": "market"
+    },
+    {
+      "title": "京都の“じゃないほう市場”？「京都市中央市場」の早朝せり見学に行ってみた(1/2)",
+      "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9GSjJ5Z0Nwbmg1UlM4ZDJNVFE3ZUZma3ZmUFFwRzQyV2FCcHlxTW5qOU9ReHdNdFA3Mko1RFEwRkVvcTVIV2dRbjM3UTc0NjVFS08ydnRR0gFbQVVfeXFMTndWSm5nVjlRTzRBdkpOeHZ5Vnlvb1VlRXY2X2NoWlJJd1JyMi02YjZPM0dqWmFjOUd5Q25Yc1pEeE1CMjZJNkVkRnYyS0JwN1FrdlJsUnNDTkRZVQ?oc=5",
+      "source": "ウォーカープラス",
+      "date": "2026-08-13",
       "cat": "market"
     },
     {
@@ -54,7 +61,7 @@
     {
       "title": "【夏休み2026】豊洲千客万来「親子で学ぶ中央卸売市場」8/21-22",
       "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFBERmVqZ0x5ZjA5S0drZXpvc1Y5RmpYNldOb3NLTG4xaGxSZDhrN3lmbUozR2prTjFYWG9yNmV3T0VuOFpNWk5QS0IyazY5TnIyR2JjWXJfLVB6Zmtz?oc=5",
-      "source": "resemom.jp",
+      "source": "リセマム",
       "date": "2026-07-30",
       "cat": "toyosu"
     },
@@ -103,7 +110,7 @@
     {
       "title": "中部圏の青果卸12社／共同物流会社を設立、2027年6月以降稼働へ",
       "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFBsVjNZdlNydVJjdUpPWXIwbW92M2ZCX21FNkYtNHVPOFNvTWtneUJmeElOMU5zT0NraDdZNTBmV09DSmdIUF9JWFBqSU5xRnVtZl95QQ?oc=5",
-      "source": "lnews.jp",
+      "source": "物流ニュースのLNEWS",
       "date": "2026-06-16",
       "cat": "business"
     },
@@ -126,13 +133,6 @@
       "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBPYXNocjRhUndROUxFMG53SXU5N3pPd0FFbE1NdkdLR2pLamtFY2tuR2VSRVJLMlNaTEZqTWhDMXBkQzRGZktzb2d4U29nRVBRNFJHSU0xWTNXR3JUemJ1RHI3akE?oc=5",
       "source": "city.oita.oita.jp",
       "date": "2026-05-09",
-      "cat": "market"
-    },
-    {
-      "title": "【中央卸売市場】5月イベント情報",
-      "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE5JT0ktcHJFSHZxYy00cl9TZ2hmZ1g1UjNWTHdpdlZLQ2xwV2JGWWNhV2pkTmk2MkJvaUp4YXBwVzdsQzk2Z2ZtUjZ4MTN0ektiZjlnNEVKU3Z5ck5NbXV5dE1GbG42N19n?oc=5",
-      "source": "my.metro.tokyo.lg.jp",
-      "date": "2026-05-07",
       "cat": "market"
     },
     {
