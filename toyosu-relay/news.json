@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-17T06:44:12+09:00",
+  "updated": "2026-08-18T06:50:21+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -40,13 +40,13 @@
     {
       "title": "郡仙台市長が仙台市中央卸売市場を視察 ウナギが安く野菜果物は入荷減",
       "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9GRmdZYksyZlNFU2xLTjVzdjJQaXJ1dF9QNnBzeHM4c08yRmlkMWhZS1h6eEtUQ3VRd1A4WlNfMWNISkpKREhDc2JoU3BCY2M?oc=5",
-      "source": "khb東日本放送",
+      "source": "khb-tv.co.jp",
       "date": "2026-07-31",
       "cat": "market"
     },
     {
-      "title": "特集「食品卸 商社系VS民族系頂上決戦の幕開け」⑤ 三井物産流通グループ／領域拡大と既存強化を掲げる新会社として初の中計が始動",
-      "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE1iU2dzNkNqNDVHZE9OcHByT1hMYm01NHhUdS05Q1hrZlp1Y0xkTnBGdm5vMFRFMlhQamQ4RVRJaUlKRjlyYWxoMzE4MEZ3MVJsNWc?oc=5",
+      "title": "特集「食品卸 商社系VS民族系頂上決戦の幕開け」④ 三菱食品／完全子会社化でじわり加速する新事業領域拡大戦略",
+      "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE5Ra3FPLXJJdDA5U1ZsbDZlT01Fc3JUcVNJVGRPX09QSVdPZGdZODByNXVXQy1rNjhQNFVod0ZCTmVNOUR0M1pwclRURWxoTndjZ2c?oc=5",
       "source": "激流オンライン",
       "date": "2026-07-31",
       "cat": "business"
@@ -54,7 +54,7 @@
     {
       "title": "令和8年度 トップセールス・国内外への訪問",
       "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5lT2g2dXo4Z3ZGWDZuNGlKUTk2S042RDdJNzdQcFV0V0FHM2U3ei0teGw5VWxqUGJaSWxxVG0taDF6TEhlX3Y1Zmp1YmlVUjZjWThMbDdyaXM3YjJvQXpmeDR2dklQMW0zX0lJ?oc=5",
-      "source": "福島県ホームページ",
+      "source": "pref.fukushima.lg.jp",
       "date": "2026-07-31",
       "cat": "toyosu"
     },
@@ -94,6 +94,13 @@
       "cat": "market"
     },
     {
+      "title": "中部の青果卸１２社、共同物流で新会社",
+      "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE1fMk5qVDdFLWc1SEJOSWxJVW5RMXhXQXpmZ0ZUT1RXeWpMUGxwMHhvNjgtU050RXg0d0NVNFMwek5HOXcyNlNlUWRGNlFfaEZ6emxCamFkTQ?oc=5",
+      "source": "日本農業新聞",
+      "date": "2026-06-28",
+      "cat": "business"
+    },
+    {
       "title": "決算:長野の青果卸R&CHD、純利益38％減 26年3月期",
       "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9FZ2Qwak5sY1VXM2tzWU1MTDNaS3pfZ2tQZkRpcWEyc3BFM3RiOHc1eU5nNU5CeXJ4R19VV3hWRVM3djZmWnFNQlo4dXo1eG5yWGwwUG5ldlI4QkVsRnkyTk1KV1VhMDk0SmQwMw?oc=5",
       "source": "日本経済新聞",
@@ -115,20 +122,6 @@
       "cat": "business"
     },
     {
-      "title": "三菱食品 伊藤社長インタビュー　新たな経営体制で「食品卸」の価値を最大化する",
-      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBwcUl2UXF5OTA3Sjc2b19LSzVZQTNWeklNcklKeFc0bW9NNUpZeDQ4UkVRZ1Z1Rmt4VUg5SWl3M0l1MXhyWTJ2SVYySVA4b1pXWXQ0eHNrZlpISmdRMXFJQktyd0LSAWpBVV95cUxQdnBuenZXVUhIR3NMaTYzVDJYNnJoeG9IZS1aSHVUU0lNVmtBQko1ZFhlYVBISjkwdGxXdHFuV3RYUmpRQ1hoTEZCVHh0eTVRbURJaENDY3NhdzNSbVZJUldDb2VqVnJoMWVn?oc=5",
-      "source": "ダイヤモンド・チェーンストアオンライン",
-      "date": "2026-06-15",
-      "cat": "business"
-    },
-    {
-      "title": "物流アップデート＞中部圏物流共同化へ 青果卸、産地など１９組織 「２４年問題」対策で協議会設立",
-      "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE12bEo1OG1NN2RfSnZvRjltcVhzanE4TTBVRHNhYnlEMTFjMVBWYUJRT1diN0xqY014UE1wZHBiNllJT09ncFdnVDhwU3pXTGN3LVNwU3V1Zw?oc=5",
-      "source": "日本農業新聞",
-      "date": "2026-05-24",
-      "cat": "business"
-    },
-    {
       "title": "卸売市場 市民感謝デー（5月）を開催しました！",
       "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBPYXNocjRhUndROUxFMG53SXU5N3pPd0FFbE1NdkdLR2pLamtFY2tuR2VSRVJLMlNaTEZqTWhDMXBkQzRGZktzb2d4U29nRVBRNFJHSU0xWTNXR3JUemJ1RHI3akE?oc=5",
       "source": "city.oita.oita.jp",
@@ -141,6 +134,13 @@
       "source": "maff.go.jp",
       "date": "2026-04-30",
       "cat": "market"
+    },
+    {
+      "title": "物流2026年問題（改正物流効率化法）で生じる3つの義務と食品卸の生存戦略",
+      "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE5Xbmx4M01mQW5Bd3VPX0h3eFllQzR2U1g2Y254UWc0bnNJR1NiQjk1NS1DakZJc1U0eDEycjhxbzBNa1h3MjZjc3p6d3ZuM0tzNXBXN2FNMTZGQm9D?oc=5",
+      "source": "フーズチャネル",
+      "date": "2026-04-21",
+      "cat": "business"
     },
     {
       "title": "「大田市場に届いた果物・野菜を、一つも無駄にしない」 | 株式会社野富のプレスリリース",
@@ -166,7 +166,7 @@
     {
       "title": "東京都中央卸売市場・豊洲市場／東京の観光公式サイトGO TOKYO",
       "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9abnUyLWI2TWtuY0tKa1FoZlMwRUtHeDVsejhNTmwwck1sZi1iZ2ZhWlQ2OHgyU2xsQUdnM05mdzdpY1hNZGhGMzZoZTlFOWxQMHBiRVFwZmM3enM?oc=5",
-      "source": "GO TOKYO, The Official Tokyo Travel Guide",
+      "source": "gotokyo.org",
       "date": "2025-12-25",
       "cat": "toyosu"
     },
