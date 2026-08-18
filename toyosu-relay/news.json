@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-18T06:50:21+09:00",
+  "updated": "2026-08-19T06:47:51+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -16,6 +16,34 @@
     }
   ],
   "items": [
+    {
+      "title": "秋の味覚サンマ 仙台市中央卸売市場に入荷 入荷少なく高値で取引",
+      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE91MWV5eXpJay1SYnE5VmFEalJqdFZpcDhEVVVHazFkZjFNWG9wUWRRYVgwaGpxZVJtTDNlempPQzNYY3hDVzV3bTI4ck9iY1k?oc=5",
+      "source": "khb東日本放送",
+      "date": "2026-08-18",
+      "cat": "market"
+    },
+    {
+      "title": "秋の味覚サンマ 仙台市中央卸売市場に入荷 入荷少なく高値で取引（khb東日本放送）",
+      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE9ZUDRlVmdBOV9ITUJ1d3ZES215MWd3cmVjZVJRYmJfa3h5RWhUQjNfM1RuZ2QzSWdWcHVfdVpmbk5fS3JYaTA2bVF2RldZb1FCSW13MDh4RTBJdzBsRW9YVTFWVmlFZGJoSllIUmdwT2J2anRiYVVyMjVYS29iT1k?oc=5",
+      "source": "Yahoo!ニュース",
+      "date": "2026-08-18",
+      "cat": "market"
+    },
+    {
+      "title": "北海道から空輸のサンマ入荷 鮮度良し、仙台市中央卸売市場で競り",
+      "link": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE9PQTRvRlJHX05TV1k2TjkwZGhKSUZUbXRseUJuZ0xHZFQ2Z2MzVENZcl9uV0NxN3pjN1ZkMUZSOXVnMk40V1JMWVBELVlBWkZvcmpOdlVZRHRPREd5eHE3NA?oc=5",
+      "source": "河北新報オンライン",
+      "date": "2026-08-18",
+      "cat": "market"
+    },
+    {
+      "title": "今季初のサンマが仙台市中央卸売市場に入荷 １キロ平均価格は去年の２倍の４０００円から６０００円（仙台放送）",
+      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE5FNjRtTGFQNC1fcUdZMWNvMXp4a1N1MFpFT3N3UmtWX21JcmdmME41NHVrdjJ1WGpsTlR5Tnp0MmhHaU5QYzJuOUhLallvUXZGejZzc0FaVDRtazlieDR3aUd2eWM0aFotcmg4aHVHMzdyOEFmMjJaSmhsckRzTVE?oc=5",
+      "source": "Yahoo!ニュース",
+      "date": "2026-08-18",
+      "cat": "market"
+    },
     {
       "title": "船橋市地方卸売市場「第28回夏祭り」、猛暑対策で今年から9月開催へ",
       "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBlSG5sYzR6N3RleDRPcUlHYWE2U3VFUXU3SjNkejlKOUpVck5RaE9uNHFoRWpDVWFYdVAtOUdUVzN3T1I3emFtNUxaM2ttak40XzJ0U1dJZ0M?oc=5",
@@ -38,15 +66,8 @@
       "cat": "business"
     },
     {
-      "title": "郡仙台市長が仙台市中央卸売市場を視察 ウナギが安く野菜果物は入荷減",
-      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9GRmdZYksyZlNFU2xLTjVzdjJQaXJ1dF9QNnBzeHM4c08yRmlkMWhZS1h6eEtUQ3VRd1A4WlNfMWNISkpKREhDc2JoU3BCY2M?oc=5",
-      "source": "khb-tv.co.jp",
-      "date": "2026-07-31",
-      "cat": "market"
-    },
-    {
-      "title": "特集「食品卸 商社系VS民族系頂上決戦の幕開け」④ 三菱食品／完全子会社化でじわり加速する新事業領域拡大戦略",
-      "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE5Ra3FPLXJJdDA5U1ZsbDZlT01Fc3JUcVNJVGRPX09QSVdPZGdZODByNXVXQy1rNjhQNFVod0ZCTmVNOUR0M1pwclRURWxoTndjZ2c?oc=5",
+      "title": "特集「食品卸 商社系VS民族系頂上決戦の幕開け」③ 国分グループ本社／持続可能な食の付加価値を地域と世界に届ける",
+      "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTFBEUVFKQnhXUHcwelc4TFlLaHVuT3MyMEFOYWRIeWdLdnpaRHJhSUY0MFM0eGU5Mnp2S3RPTEkzZzhoNnY3ZDZyTW54dXd1SFEySWc?oc=5",
       "source": "激流オンライン",
       "date": "2026-07-31",
       "cat": "business"
@@ -54,7 +75,7 @@
     {
       "title": "令和8年度 トップセールス・国内外への訪問",
       "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5lT2g2dXo4Z3ZGWDZuNGlKUTk2S042RDdJNzdQcFV0V0FHM2U3ei0teGw5VWxqUGJaSWxxVG0taDF6TEhlX3Y1Zmp1YmlVUjZjWThMbDdyaXM3YjJvQXpmeDR2dklQMW0zX0lJ?oc=5",
-      "source": "pref.fukushima.lg.jp",
+      "source": "福島県ホームページ",
       "date": "2026-07-31",
       "cat": "toyosu"
     },
@@ -66,16 +87,9 @@
       "cat": "toyosu"
     },
     {
-      "title": "夏休み親子見学会 徳島市中央卸売市場【徳島】（2026年7月29日掲載）｜JRT NEWS NNN",
-      "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxPQTJCVmxoOVlILTY0UEV2ZG1yejJCVjNJR3NsbDBKZHFISTZ6YUtuTllBcVQ0RGNPR204WHlIOVpPNmItMjQyLWsyNTQ4Y0hTcVNZenRXVkpJdDJUODU3UU40NHByeWlnWGdGSTJFbUpwVDM4eDQ0WmxQUWNsZE40Rl9aN0p1VjA?oc=5",
-      "source": "日テレNEWS NNN",
-      "date": "2026-07-29",
-      "cat": "market"
-    },
-    {
       "title": "青果卸に“AI経営参謀”が常駐する時代へ",
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9Hc2xhSWVQc2hwcnN6YUZHQ0l3UnJSRVo4cWJGbXNlUlpSSnpPbXQ0VzQweF9MWEZfNUNMd3NkTFVfdTllQ05tUkg2RHlJQktSVnpJdzNkZlZwQkgyVklOZUZuVkJCV2pibmc?oc=5",
-      "source": "PR TIMES",
+      "source": "prtimes.jp",
       "date": "2026-07-27",
       "cat": "business"
     },
@@ -122,17 +136,10 @@
       "cat": "business"
     },
     {
-      "title": "卸売市場 市民感謝デー（5月）を開催しました！",
-      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBPYXNocjRhUndROUxFMG53SXU5N3pPd0FFbE1NdkdLR2pLamtFY2tuR2VSRVJLMlNaTEZqTWhDMXBkQzRGZktzb2d4U29nRVBRNFJHSU0xWTNXR3JUemJ1RHI3akE?oc=5",
-      "source": "city.oita.oita.jp",
-      "date": "2026-05-09",
-      "cat": "market"
-    },
-    {
-      "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年5月、東京都中央卸売市場）：関東農政局",
-      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9nczFHbFoyclptZmt4YmZocHR2MFpLcERHY2ZMYkJETmtOa2JoLWktY1AyNTlHVWpZWmZHM0RzUHFJLVhVb20zM3dkVS1xQzJ1b0xac2VMZEE2U042SlROQWFKekR5U2dwYjBn?oc=5",
+      "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年6月、東京都中央卸売市場）：関東農政局",
+      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE54NGtjb0xmUzNCTHdta2RsQjY4UVF6WTNFYmJYZ3BEUktGNDdYbGUzSmFqOEFzX2E4Yk1lS3VIZHdnYWZTRlR6Z0tfeUxxS09QRmFRdWZaMTBoWThqLXVjTUVmQ1I5azU4Uzkw?oc=5",
       "source": "maff.go.jp",
-      "date": "2026-04-30",
+      "date": "2026-05-29",
       "cat": "market"
     },
     {
@@ -145,7 +152,7 @@
     {
       "title": "「大田市場に届いた果物・野菜を、一つも無駄にしない」 | 株式会社野富のプレスリリース",
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTFB4NV9fTk55VjY2X0c1YzVfWWxWU2V6UDJ5SmxMRnE2X2NSZWtFQ1RWQTY1ZjcydVE3YW9mX3FKak1oSkNsX1B2dkJycnB3blB3clluai1XS2RxV19HTnpVN0NFaExjM25UWUE?oc=5",
-      "source": "PR TIMES",
+      "source": "prtimes.jp",
       "date": "2026-04-01",
       "cat": "toyosu"
     },
@@ -166,7 +173,7 @@
     {
       "title": "東京都中央卸売市場・豊洲市場／東京の観光公式サイトGO TOKYO",
       "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9abnUyLWI2TWtuY0tKa1FoZlMwRUtHeDVsejhNTmwwck1sZi1iZ2ZhWlQ2OHgyU2xsQUdnM05mdzdpY1hNZGhGMzZoZTlFOWxQMHBiRVFwZmM3enM?oc=5",
-      "source": "gotokyo.org",
+      "source": "GO TOKYO, The Official Tokyo Travel Guide",
       "date": "2025-12-25",
       "cat": "toyosu"
     },
@@ -176,13 +183,6 @@
       "source": "日本経済新聞",
       "date": "2025-12-25",
       "cat": "toyosu"
-    },
-    {
-      "title": "市場まつり 令和7年11月23日（日曜日・祝日）開催",
-      "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxQWm5Ra2R0eG41aG04S2FrZFhrM2hNY3E4a2dkZGpxTTJMSUtQNEg1TXBib2h0ZGdJanBzN1FQXzE2VDROMzl1Nm5zZGZqbzg1N1NoM01JZm1aZ0o2bTMxb1poX1ZvZ2NvOHUtckZZYmlkMW1rdDFjMGZqODNKS1FZZnZkMnFPVXhYenZwTXRpWFFhZmhjS3lzSg?oc=5",
-      "source": "city.kurume.fukuoka.jp",
-      "date": "2025-11-23",
-      "cat": "market"
     }
   ]
 }
