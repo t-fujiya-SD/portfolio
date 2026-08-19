@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-19T06:47:51+09:00",
+  "updated": "2026-08-20T06:50:31+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -17,16 +17,37 @@
   ],
   "items": [
     {
-      "title": "秋の味覚サンマ 仙台市中央卸売市場に入荷 入荷少なく高値で取引",
-      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE91MWV5eXpJay1SYnE5VmFEalJqdFZpcDhEVVVHazFkZjFNWG9wUWRRYVgwaGpxZVJtTDNlempPQzNYY3hDVzV3bTI4ck9iY1k?oc=5",
-      "source": "khb東日本放送",
-      "date": "2026-08-18",
+      "title": "北海道から空輸のサンマ入荷 鮮度良し、仙台市中央卸売市場で競り（河北新報）",
+      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE1BaXhMWWhpTmtGVW15d2NtdUF3b25PbEJjTkMyOVhmR2dqZWc0STJLemdzS1JuRUxiS1RYZ29UMGNPQTFFbzBHUUFDQWRIWVBUb0ZERHlwdWZGNF9NTjFfWkx2V0tJTU5PRUhYUlgyaGpsNjJzUTVNME1WbmstaGs?oc=5",
+      "source": "Yahoo!ニュース",
+      "date": "2026-08-19",
       "cat": "market"
     },
     {
-      "title": "秋の味覚サンマ 仙台市中央卸売市場に入荷 入荷少なく高値で取引（khb東日本放送）",
-      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE9ZUDRlVmdBOV9ITUJ1d3ZES215MWd3cmVjZVJRYmJfa3h5RWhUQjNfM1RuZ2QzSWdWcHVfdVpmbk5fS3JYaTA2bVF2RldZb1FCSW13MDh4RTBJdzBsRW9YVTFWVmlFZGJoSllIUmdwT2J2anRiYVVyMjVYS29iT1k?oc=5",
-      "source": "Yahoo!ニュース",
+      "title": "青果卸５割が減収減益 ２５年度決算 営業利益率１％超はわずか１割 生産費増と節約志向の板挟み",
+      "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE9tdm0yYjlra0puOU0xcnRFZy0wanNicy1CcjF5aFRuNHVuSmJ3c0IwY0VRTUhPVzRvQ1k4X0F1b0F3MVlGRktROFNLeGxKZ3E5TkRybTFPaw?oc=5",
+      "source": "日本農業新聞",
+      "date": "2026-08-19",
+      "cat": "business"
+    },
+    {
+      "title": "荷集め明暗、販売は苦戦 提案型や新規開拓に活路 ２５年度青果卸決算",
+      "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE96eTQ4bDF3TFdjZXJlMk8yS2JJbXdzdkxDOHNkY25nU0F6QkRLWWVmZXlQcjl5ZTF4bFF4cEpWbVFSRGdwb3Y4Qkxwdkx0cUVoV09PYUotR05fNDg?oc=5",
+      "source": "日本農業新聞",
+      "date": "2026-08-19",
+      "cat": "business"
+    },
+    {
+      "title": "韓国、電力卸売市場の「全国単一価格制」を廃止へ…首都圏・非首都圏・済州の3圏域で差別化",
+      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTFBFODZ6am1ibGZ3XzAzbEtxUkgyUFRXS2FndXRWcG1ZWFpKclhnX1VUVUQ1TEFFbFhNVVM1amdPeF9raDBaanBMS1JYb0tUMzNoNllJcWpQd1N3XzJvcVRJYkU1SWR0SHVzdVJnMnQ5WlVjaGh6?oc=5",
+      "source": "BigGo ファイナンス",
+      "date": "2026-08-19",
+      "cat": "toyosu"
+    },
+    {
+      "title": "秋の味覚サンマ 仙台市中央卸売市場に入荷 入荷少なく高値で取引",
+      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE91MWV5eXpJay1SYnE5VmFEalJqdFZpcDhEVVVHazFkZjFNWG9wUWRRYVgwaGpxZVJtTDNlempPQzNYY3hDVzV3bTI4ck9iY1k?oc=5",
+      "source": "khb東日本放送",
       "date": "2026-08-18",
       "cat": "market"
     },
@@ -38,10 +59,10 @@
       "cat": "market"
     },
     {
-      "title": "今季初のサンマが仙台市中央卸売市場に入荷 １キロ平均価格は去年の２倍の４０００円から６０００円（仙台放送）",
-      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE5FNjRtTGFQNC1fcUdZMWNvMXp4a1N1MFpFT3N3UmtWX21JcmdmME41NHVrdjJ1WGpsTlR5Tnp0MmhHaU5QYzJuOUhLallvUXZGejZzc0FaVDRtazlieDR3aUd2eWM0aFotcmg4aHVHMzdyOEFmMjJaSmhsckRzTVE?oc=5",
-      "source": "Yahoo!ニュース",
-      "date": "2026-08-18",
+      "title": "「大人の市場せり見学会」を開催します",
+      "link": "https://news.google.com/rss/articles/CBMiggFBVV95cUxOUEVHTkJnY1EycGJNT3NOWnlUU1lWNzkzUThUZnVHaGJmOHZhTXZFV3FKdTdNell6a0lIaTlTeUIycW5OM2hXMEd5QXFsaTVmSXJsbmhpMEJ2a0pRbHIzbS1nY0o3dG94MXBxSHpCbTlsa2hPZ01yTXhvSG5pR201d0l3?oc=5",
+      "source": "city.niigata.lg.jp",
+      "date": "2026-08-17",
       "cat": "market"
     },
     {
@@ -49,13 +70,6 @@
       "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBlSG5sYzR6N3RleDRPcUlHYWE2U3VFUXU3SjNkejlKOUpVck5RaE9uNHFoRWpDVWFYdVAtOUdUVzN3T1I3emFtNUxaM2ttak40XzJ0U1dJZ0M?oc=5",
       "source": "myfuna.net",
       "date": "2026-08-15",
-      "cat": "market"
-    },
-    {
-      "title": "京都の“じゃないほう市場”？「京都市中央市場」の早朝せり見学に行ってみた(1/2)",
-      "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9GSjJ5Z0Nwbmg1UlM4ZDJNVFE3ZUZma3ZmUFFwRzQyV2FCcHlxTW5qOU9ReHdNdFA3Mko1RFEwRkVvcTVIV2dRbjM3UTc0NjVFS08ydnRR0gFbQVVfeXFMTndWSm5nVjlRTzRBdkpOeHZ5Vnlvb1VlRXY2X2NoWlJJd1JyMi02YjZPM0dqWmFjOUd5Q25Yc1pEeE1CMjZJNkVkRnYyS0JwN1FrdlJsUnNDTkRZVQ?oc=5",
-      "source": "ウォーカープラス",
-      "date": "2026-08-13",
       "cat": "market"
     },
     {
@@ -87,9 +101,16 @@
       "cat": "toyosu"
     },
     {
+      "title": "夏休み親子見学会 徳島市中央卸売市場【徳島】（2026年7月29日掲載）｜JRT NEWS NNN",
+      "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxPQTJCVmxoOVlILTY0UEV2ZG1yejJCVjNJR3NsbDBKZHFISTZ6YUtuTllBcVQ0RGNPR204WHlIOVpPNmItMjQyLWsyNTQ4Y0hTcVNZenRXVkpJdDJUODU3UU40NHByeWlnWGdGSTJFbUpwVDM4eDQ0WmxQUWNsZE40Rl9aN0p1VjA?oc=5",
+      "source": "news.ntv.co.jp",
+      "date": "2026-07-29",
+      "cat": "market"
+    },
+    {
       "title": "青果卸に“AI経営参謀”が常駐する時代へ",
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9Hc2xhSWVQc2hwcnN6YUZHQ0l3UnJSRVo4cWJGbXNlUlpSSnpPbXQ0VzQweF9MWEZfNUNMd3NkTFVfdTllQ05tUkg2RHlJQktSVnpJdzNkZlZwQkgyVklOZUZuVkJCV2pibmc?oc=5",
-      "source": "prtimes.jp",
+      "source": "PR TIMES",
       "date": "2026-07-27",
       "cat": "business"
     },
@@ -101,18 +122,11 @@
       "cat": "toyosu"
     },
     {
-      "title": "【令和8年度】夏休み親子市場せり見学会",
-      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE5xemZuXzdnYzVXUnc2WkI4VnRPSEFYbVZ4a1UzcXJOUkZ4VXVRenhLQUQ0Yzdjb3FZbUs0SVNGTnJLRjF5a1ZTMG90emtmckI0aU5MMlY1TzZpYUkxNDZpa1JYNzhoOEV6U0R5c2o5ZmgyZm5sd1pFalBMcHUxZGM?oc=5",
-      "source": "city.niigata.lg.jp",
-      "date": "2026-07-04",
-      "cat": "market"
-    },
-    {
-      "title": "中部の青果卸１２社、共同物流で新会社",
-      "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE1fMk5qVDdFLWc1SEJOSWxJVW5RMXhXQXpmZ0ZUT1RXeWpMUGxwMHhvNjgtU050RXg0d0NVNFMwek5HOXcyNlNlUWRGNlFfaEZ6emxCamFkTQ?oc=5",
-      "source": "日本農業新聞",
-      "date": "2026-06-28",
-      "cat": "business"
+      "title": "【現地取材・動画】小池都知事、卸売市場に導入の自動立体冷蔵倉庫とAGVを視察",
+      "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1rM1Q1SThjRGRqSElkZUd3aHRFNXB6U1FjdTJvOVF5QmtidHN3elpuX0JfcnRvSFBQY2Y5eFZTeF8xMUVyVnF1R05Rbw?oc=5",
+      "source": "online.logi-biz.com",
+      "date": "2026-07-07",
+      "cat": "toyosu"
     },
     {
       "title": "決算:長野の青果卸R&CHD、純利益38％減 26年3月期",
@@ -124,7 +138,7 @@
     {
       "title": "中部圏の青果卸売会社12社、共同物流インフラ確立へ共同で新会社設立",
       "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5JcVJhUHFvZ0FzVFNDVjVnbS1NZ1ZuVENXUzl1SkJ3bF9XLUEzSTFDcElyRzIzbV8zN0U5YWpfSWZidk93RlZ2UmVjRQ?oc=5",
-      "source": "LOGI-BIZ online",
+      "source": "online.logi-biz.com",
       "date": "2026-06-17",
       "cat": "business"
     },
@@ -141,20 +155,6 @@
       "source": "maff.go.jp",
       "date": "2026-05-29",
       "cat": "market"
-    },
-    {
-      "title": "物流2026年問題（改正物流効率化法）で生じる3つの義務と食品卸の生存戦略",
-      "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE5Xbmx4M01mQW5Bd3VPX0h3eFllQzR2U1g2Y254UWc0bnNJR1NiQjk1NS1DakZJc1U0eDEycjhxbzBNa1h3MjZjc3p6d3ZuM0tzNXBXN2FNMTZGQm9D?oc=5",
-      "source": "フーズチャネル",
-      "date": "2026-04-21",
-      "cat": "business"
-    },
-    {
-      "title": "「大田市場に届いた果物・野菜を、一つも無駄にしない」 | 株式会社野富のプレスリリース",
-      "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTFB4NV9fTk55VjY2X0c1YzVfWWxWU2V6UDJ5SmxMRnE2X2NSZWtFQ1RWQTY1ZjcydVE3YW9mX3FKak1oSkNsX1B2dkJycnB3blB3clluai1XS2RxV19HTnpVN0NFaExjM25UWUE?oc=5",
-      "source": "prtimes.jp",
-      "date": "2026-04-01",
-      "cat": "toyosu"
     },
     {
       "title": "東京都中央卸売市場大田市場で、香川県産青果物のトップセールスを行いました",
@@ -178,11 +178,11 @@
       "cat": "toyosu"
     },
     {
-      "title": "SANKO、大田市場の青果仲卸と業務提携 販路拡大へ",
-      "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTFBRcDRxc25POTNNM19JcDRlR2ZFSnI0a2pHYmJfOTEyTW5hclM2SWVmbVN0S2lZMTg2S3Axb2ZEeW1jWk5iUTFzMkNJNnNuWkpXVG9EY1BXT3JiVGd1VkgtaW9nVHZBeEVzZ2dkbg?oc=5",
-      "source": "日本経済新聞",
-      "date": "2025-12-25",
-      "cat": "toyosu"
+      "title": "市場まつり 令和7年11月23日（日曜日・祝日）開催",
+      "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxQWm5Ra2R0eG41aG04S2FrZFhrM2hNY3E4a2dkZGpxTTJMSUtQNEg1TXBib2h0ZGdJanBzN1FQXzE2VDROMzl1Nm5zZGZqbzg1N1NoM01JZm1aZ0o2bTMxb1poX1ZvZ2NvOHUtckZZYmlkMW1rdDFjMGZqODNKS1FZZnZkMnFPVXhYenZwTXRpWFFhZmhjS3lzSg?oc=5",
+      "source": "city.kurume.fukuoka.jp",
+      "date": "2025-11-23",
+      "cat": "market"
     }
   ]
 }
