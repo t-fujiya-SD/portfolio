@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-22T06:49:27+09:00",
+  "updated": "2026-08-23T06:46:03+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -36,13 +36,6 @@
       "source": "日本農業新聞",
       "date": "2026-08-20",
       "cat": "business"
-    },
-    {
-      "title": "青果、数量減も金額増 八戸市中央卸売市場７月市況概況",
-      "link": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE9FY25ZUkdxSFJ5NU9nTmlwQU4zYTZuMlBKSHdNT25VZ0VQZjRIbDRaQ0NVcUJyaURGc0o4UGdRWk8wWnlzcklXaFRualY5TWtkUXV5WVI5Mno0dVpxSF9mS29kc0l5UFk?oc=5",
-      "source": "デーリー東北",
-      "date": "2026-08-19",
-      "cat": "market"
     },
     {
       "title": "韓国、電力卸売市場の「全国単一価格制」を廃止へ…首都圏・非首都圏・済州の3圏域で差別化",
@@ -87,11 +80,11 @@
       "cat": "market"
     },
     {
-      "title": "食品卸が営業と物流を代行 人手不足に悩む地方メーカーの販路拡大を支える新ビジネス",
-      "link": "https://news.google.com/rss/articles/CBMihgFBVV95cUxPcS1CLW4xaExiSFpIYXI0UndaU3NPUFcyNGJOS1lPRDcwTS12RU5Fa3JxTWg1MDdHX210aFRvTzF2QmVPa1h4ZkQ0TGptam44cmVreXJKLUFKdEJyZ1R4aTloZ0h2N2tPb0Y1dXhFd3NHT1BfTGxVOElTbTRLN002MFU2RVdDQQ?oc=5",
-      "source": "projectdesign.jp",
-      "date": "2026-08-07",
-      "cat": "business"
+      "title": "京都の“じゃないほう市場”？「京都市中央市場」の早朝せり見学に行ってみた(1/2)",
+      "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9GSjJ5Z0Nwbmg1UlM4ZDJNVFE3ZUZma3ZmUFFwRzQyV2FCcHlxTW5qOU9ReHdNdFA3Mko1RFEwRkVvcTVIV2dRbjM3UTc0NjVFS08ydnRR0gFbQVVfeXFMTndWSm5nVjlRTzRBdkpOeHZ5Vnlvb1VlRXY2X2NoWlJJd1JyMi02YjZPM0dqWmFjOUd5Q25Yc1pEeE1CMjZJNkVkRnYyS0JwN1FrdlJsUnNDTkRZVQ?oc=5",
+      "source": "ウォーカープラス",
+      "date": "2026-08-13",
+      "cat": "market"
     },
     {
       "title": "特集「食品卸 商社系VS民族系頂上決戦の幕開け」③ 国分グループ本社／持続可能な食の付加価値を地域と世界に届ける",
@@ -127,6 +120,13 @@
       "source": "LOGI-BIZ online",
       "date": "2026-07-07",
       "cat": "toyosu"
+    },
+    {
+      "title": "食品卸 メーカー支援の新たな形 営業や物流を代行",
+      "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBaaTZ3djlaT0NET2F5b3J6d2h0RG1aNml0b3hnXzRGRDFHYXZ2Yk1oVE5SWC1vSk9WXzdpXzJ5YkVEc1JSWjNLek4tNWE3YXl5V0w3elpuZDZGV3c?oc=5",
+      "source": "食品新聞 WEB版",
+      "date": "2026-07-01",
+      "cat": "business"
     },
     {
       "title": "決算:長野の青果卸R&CHD、純利益38％減 26年3月期",
@@ -171,7 +171,7 @@
       "cat": "toyosu"
     },
     {
-      "title": "東京都中央卸売市場・豊洲市場",
+      "title": "東京都中央卸売市場・豊洲市場／東京の観光公式サイトGO TOKYO",
       "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9abnUyLWI2TWtuY0tKa1FoZlMwRUtHeDVsejhNTmwwck1sZi1iZ2ZhWlQ2OHgyU2xsQUdnM05mdzdpY1hNZGhGMzZoZTlFOWxQMHBiRVFwZmM3enM?oc=5",
       "source": "GO TOKYO, The Official Tokyo Travel Guide",
       "date": "2025-12-25",
