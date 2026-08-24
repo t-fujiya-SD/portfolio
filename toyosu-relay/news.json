@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-24T06:45:28+09:00",
+  "updated": "2026-08-25T06:53:45+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -80,13 +80,6 @@
       "cat": "market"
     },
     {
-      "title": "京都の“じゃないほう市場”？「京都市中央市場」の早朝せり見学に行ってみた(1/2)",
-      "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9GSjJ5Z0Nwbmg1UlM4ZDJNVFE3ZUZma3ZmUFFwRzQyV2FCcHlxTW5qOU9ReHdNdFA3Mko1RFEwRkVvcTVIV2dRbjM3UTc0NjVFS08ydnRR0gFbQVVfeXFMTndWSm5nVjlRTzRBdkpOeHZ5Vnlvb1VlRXY2X2NoWlJJd1JyMi02YjZPM0dqWmFjOUd5Q25Yc1pEeE1CMjZJNkVkRnYyS0JwN1FrdlJsUnNDTkRZVQ?oc=5",
-      "source": "ウォーカープラス",
-      "date": "2026-08-13",
-      "cat": "market"
-    },
-    {
       "title": "特集「食品卸 商社系VS民族系頂上決戦の幕開け」③ 国分グループ本社／持続可能な食の付加価値を地域と世界に届ける",
       "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTFBEUVFKQnhXUHcwelc4TFlLaHVuT3MyMEFOYWRIeWdLdnpaRHJhSUY0MFM0eGU5Mnp2S3RPTEkzZzhoNnY3ZDZyTW54dXd1SFEySWc?oc=5",
       "source": "激流オンライン",
@@ -106,6 +99,13 @@
       "source": "リセマム",
       "date": "2026-07-30",
       "cat": "toyosu"
+    },
+    {
+      "title": "夏休み親子見学会 徳島市中央卸売市場【徳島】（2026年7月29日掲載）｜JRT NEWS NNN",
+      "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxPQTJCVmxoOVlILTY0UEV2ZG1yejJCVjNJR3NsbDBKZHFISTZ6YUtuTllBcVQ0RGNPR204WHlIOVpPNmItMjQyLWsyNTQ4Y0hTcVNZenRXVkpJdDJUODU3UU40NHByeWlnWGdGSTJFbUpwVDM4eDQ0WmxQUWNsZE40Rl9aN0p1VjA?oc=5",
+      "source": "日テレNEWS NNN",
+      "date": "2026-07-29",
+      "cat": "market"
     },
     {
       "title": "青果卸に“AI経営参謀”が常駐する時代へ",
@@ -157,6 +157,13 @@
       "cat": "market"
     },
     {
+      "title": "「大田市場に届いた果物・野菜を、一つも無駄にしない」 | 株式会社野富のプレスリリース",
+      "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTFB4NV9fTk55VjY2X0c1YzVfWWxWU2V6UDJ5SmxMRnE2X2NSZWtFQ1RWQTY1ZjcydVE3YW9mX3FKak1oSkNsX1B2dkJycnB3blB3clluai1XS2RxV19HTnpVN0NFaExjM25UWUE?oc=5",
+      "source": "PR TIMES",
+      "date": "2026-04-01",
+      "cat": "toyosu"
+    },
+    {
       "title": "東京都中央卸売市場大田市場で、香川県産青果物のトップセールスを行いました",
       "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE9Yc2piSXdfZHc0bHZacHBYWnJzR3JwZ1oxcVRUMmRPdm9wYjNwelNjeEViWjBSRTZHS1Y1aGpjV3dRbTY2MGthWXhNRThCTl9kQ3RGMzUwYU5FNHZVT1A4d18wUTZiWkNwZnR6LUtyVmdnRzhBSkRnSU9TZEtEQjA?oc=5",
       "source": "pref.kagawa.lg.jp",
@@ -175,13 +182,6 @@
       "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTFBRcDRxc25POTNNM19JcDRlR2ZFSnI0a2pHYmJfOTEyTW5hclM2SWVmbVN0S2lZMTg2S3Axb2ZEeW1jWk5iUTFzMkNJNnNuWkpXVG9EY1BXT3JiVGd1VkgtaW9nVHZBeEVzZ2dkbg?oc=5",
       "source": "日本経済新聞",
       "date": "2025-12-25",
-      "cat": "toyosu"
-    },
-    {
-      "title": "中央卸売市場足立市場「あだち市場の日感謝祭」を開催|10月",
-      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE9YbjNQZkVLaVdGYkhyaGk4aEtJYVRoeUVEX3FkY3I0aDRpNlJ3SzcwVW82QW50a1JJTFFBMklKSVNjbVdQbDlTNDBERlY0cUwyazBkRmtta21EUHd4cE9UZDdJZjZENjBDSG1idld2aVdad3pO?oc=5",
-      "source": "metro.tokyo.lg.jp",
-      "date": "2025-10-31",
       "cat": "toyosu"
     }
   ]
