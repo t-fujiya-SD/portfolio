@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-26T06:53:17+09:00",
+  "updated": "2026-08-27T09:57:34+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -108,6 +108,13 @@
       "cat": "business"
     },
     {
+      "title": "食品卸の倒産高止まり、物流費も採算圧迫",
+      "link": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE1vV0lVLTFVMWxQVG1OUTFucG5Ybm9zcXhkUk5xZUQ0VS1ObnR1SUh4UHcxRnhOcEZBNkFDLUJVQV83M2ktS3BvbtIBTkFVX3lxTFBydkJKTlMzODJVQmJrcnB2X0x1SnYtNWxmQkVHaVdEVHFVVzFIOElzcUFpLVNlSm96U1dIbG51dF9haFJaVzRyd0QzdTVXdw?oc=5",
+      "source": "LOGISTICS TODAY",
+      "date": "2026-07-08",
+      "cat": "business"
+    },
+    {
       "title": "食品卸 メーカー支援の新たな形 営業や物流を代行",
       "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBaaTZ3djlaT0NET2F5b3J6d2h0RG1aNml0b3hnXzRGRDFHYXZ2Yk1oVE5SWC1vSk9WXzdpXzJ5YkVEc1JSWjNLek4tNWE3YXl5V0w3elpuZDZGV3c?oc=5",
       "source": "食品新聞 WEB版",
@@ -119,13 +126,6 @@
       "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9FZ2Qwak5sY1VXM2tzWU1MTDNaS3pfZ2tQZkRpcWEyc3BFM3RiOHc1eU5nNU5CeXJ4R19VV3hWRVM3djZmWnFNQlo4dXo1eG5yWGwwUG5ldlI4QkVsRnkyTk1KV1VhMDk0SmQwMw?oc=5",
       "source": "日本経済新聞",
       "date": "2026-06-22",
-      "cat": "business"
-    },
-    {
-      "title": "中部圏の青果卸売会社12社、共同物流インフラ確立へ共同で新会社設立",
-      "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5JcVJhUHFvZ0FzVFNDVjVnbS1NZ1ZuVENXUzl1SkJ3bF9XLUEzSTFDcElyRzIzbV8zN0U5YWpfSWZidk93RlZ2UmVjRQ?oc=5",
-      "source": "LOGI-BIZ online",
-      "date": "2026-06-17",
       "cat": "business"
     },
     {
