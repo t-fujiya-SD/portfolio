@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-27T09:57:34+09:00",
+  "updated": "2026-08-28T14:32:05+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -17,6 +17,13 @@
   ],
   "items": [
     {
+      "title": "【ビジナビ】昭和2年創業の米子市にある青果卸売会社 デジタル技術を活用した業務の効率化 2024年問題の物流問題への取り組みも 鳥取県米子市（2026年8月27日掲載）｜日本海テレビNEWS NNN",
+      "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxOOElqSWt2WWhCMWtXeFBoRlhGOXFvemRPVXZ1QjRjQ0xFM1pXYklMQ0xVVjNDLXNsNWxYTEtFWFNTUzA1MzM0eDY2UDlnbUpEektwUzNvYlNNTkFXZlo2TVFYdlBvcTFIQUZYejVBYi1oOW5GN3FFYVJPa1ZVM0VUTWlUYnVSd0E?oc=5",
+      "source": "日テレNEWS NNN",
+      "date": "2026-08-27",
+      "cat": "business"
+    },
+    {
       "title": "青果卸５割が減収減益 ２５年度決算 営業利益率１％超はわずか１割 生産費増と節約志向の板挟み",
       "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE9tdm0yYjlra0puOU0xcnRFZy0wanNicy1CcjF5aFRuNHVuSmJ3c0IwY0VRTUhPVzRvQ1k4X0F1b0F3MVlGRktROFNLeGxKZ3E5TkRybTFPaw?oc=5",
       "source": "日本農業新聞",
@@ -29,13 +36,6 @@
       "source": "さくらんぼテレビ",
       "date": "2026-08-20",
       "cat": "market"
-    },
-    {
-      "title": "荷集め明暗、販売は苦戦 提案型や新規開拓に活路 ２５年度青果卸決算",
-      "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE96eTQ4bDF3TFdjZXJlMk8yS2JJbXdzdkxDOHNkY25nU0F6QkRLWWVmZXlQcjl5ZTF4bFF4cEpWbVFSRGdwb3Y4Qkxwdkx0cUVoV09PYUotR05fNDg?oc=5",
-      "source": "日本農業新聞",
-      "date": "2026-08-20",
-      "cat": "business"
     },
     {
       "title": "韓国、電力卸売市場の「全国単一価格制」を廃止へ…首都圏・非首都圏・済州の3圏域で差別化",
@@ -94,13 +94,6 @@
       "cat": "toyosu"
     },
     {
-      "title": "【夏休み2026】豊洲千客万来「親子で学ぶ中央卸売市場」8/21-22",
-      "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFBERmVqZ0x5ZjA5S0drZXpvc1Y5RmpYNldOb3NLTG4xaGxSZDhrN3lmbUozR2prTjFYWG9yNmV3T0VuOFpNWk5QS0IyazY5TnIyR2JjWXJfLVB6Zmtz?oc=5",
-      "source": "リセマム",
-      "date": "2026-07-30",
-      "cat": "toyosu"
-    },
-    {
       "title": "青果卸に“AI経営参謀”が常駐する時代へ",
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9Hc2xhSWVQc2hwcnN6YUZHQ0l3UnJSRVo4cWJGbXNlUlpSSnpPbXQ0VzQweF9MWEZfNUNMd3NkTFVfdTllQ05tUkg2RHlJQktSVnpJdzNkZlZwQkgyVklOZUZuVkJCV2pibmc?oc=5",
       "source": "PR TIMES",
@@ -113,6 +106,13 @@
       "source": "LOGISTICS TODAY",
       "date": "2026-07-08",
       "cat": "business"
+    },
+    {
+      "title": "「新潟産えだまめ」の出荷最盛期に合わせ東京・大田市場でのトップセールスのほか県内外の消費者に向けたＰＲを実施します。",
+      "link": "https://news.google.com/rss/articles/CBMickFVX3lxTE9nYWZtTTl3azVmNUlmbTBaUU00MVhmR1U1c1pGdUxDSjIydUxzaVhoN01ybzFkNmdBc0JCOEpMQ2tTNnlwbE9uQlV6ZHVUcWFDakdpNkxrZ0U3UW15eDFIMjVNdjNqWG8xLVJtUWNENkZuQQ?oc=5",
+      "source": "pref.niigata.lg.jp",
+      "date": "2026-07-07",
+      "cat": "toyosu"
     },
     {
       "title": "食品卸 メーカー支援の新たな形 営業や物流を代行",
@@ -150,6 +150,13 @@
       "cat": "market"
     },
     {
+      "title": "卸売市場 市民感謝デー（5月）を開催しました！",
+      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBPYXNocjRhUndROUxFMG53SXU5N3pPd0FFbE1NdkdLR2pLamtFY2tuR2VSRVJLMlNaTEZqTWhDMXBkQzRGZktzb2d4U29nRVBRNFJHSU0xWTNXR3JUemJ1RHI3akE?oc=5",
+      "source": "city.oita.oita.jp",
+      "date": "2026-05-09",
+      "cat": "market"
+    },
+    {
       "title": "「大田市場に届いた果物・野菜を、一つも無駄にしない」 | 株式会社野富のプレスリリース",
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTFB4NV9fTk55VjY2X0c1YzVfWWxWU2V6UDJ5SmxMRnE2X2NSZWtFQ1RWQTY1ZjcydVE3YW9mX3FKak1oSkNsX1B2dkJycnB3blB3clluai1XS2RxV19HTnpVN0NFaExjM25UWUE?oc=5",
       "source": "PR TIMES",
@@ -176,13 +183,6 @@
       "source": "日本経済新聞",
       "date": "2025-12-25",
       "cat": "toyosu"
-    },
-    {
-      "title": "市場まつり 令和7年11月23日（日曜日・祝日）開催",
-      "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxQWm5Ra2R0eG41aG04S2FrZFhrM2hNY3E4a2dkZGpxTTJMSUtQNEg1TXBib2h0ZGdJanBzN1FQXzE2VDROMzl1Nm5zZGZqbzg1N1NoM01JZm1aZ0o2bTMxb1poX1ZvZ2NvOHUtckZZYmlkMW1rdDFjMGZqODNKS1FZZnZkMnFPVXhYenZwTXRpWFFhZmhjS3lzSg?oc=5",
-      "source": "city.kurume.fukuoka.jp",
-      "date": "2025-11-23",
-      "cat": "market"
     }
   ]
 }
