@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-29T12:14:42+09:00",
+  "updated": "2026-08-30T08:29:57+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -24,18 +24,18 @@
       "cat": "business"
     },
     {
-      "title": "青果卸５割が減収減益 ２５年度決算 営業利益率１％超はわずか１割 生産費増と節約志向の板挟み",
-      "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE9tdm0yYjlra0puOU0xcnRFZy0wanNicy1CcjF5aFRuNHVuSmJ3c0IwY0VRTUhPVzRvQ1k4X0F1b0F3MVlGRktROFNLeGxKZ3E5TkRybTFPaw?oc=5",
-      "source": "日本農業新聞",
-      "date": "2026-08-21",
-      "cat": "business"
-    },
-    {
       "title": "秋の味覚・サンマ\"初競り\" 最高値1キロ3500円・昨年に比べ入荷量少ない見込み 山形市公設卸売市場",
       "link": "https://news.google.com/rss/articles/CBMic0FVX3lxTFBNS1l6aThzTGJneUFNaTkxeVVvT2RtOG5FZDVfMm9vTUZVbV81WU9yaVozQWd0UHVRMDM1ZHdjTERhckJzYkJaUWxLRC16WnJiVnA1LVloRU43aGwzcW0zRDJCR3hVUFNyYTBwVVRoX2Znb3c?oc=5",
       "source": "さくらんぼテレビ",
       "date": "2026-08-20",
       "cat": "market"
+    },
+    {
+      "title": "青果卸５割が減収減益 ２５年度決算 営業利益率１％超はわずか１割 生産費増と節約志向の板挟み",
+      "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE9tdm0yYjlra0puOU0xcnRFZy0wanNicy1CcjF5aFRuNHVuSmJ3c0IwY0VRTUhPVzRvQ1k4X0F1b0F3MVlGRktROFNLeGxKZ3E5TkRybTFPaw?oc=5",
+      "source": "日本農業新聞",
+      "date": "2026-08-20",
+      "cat": "business"
     },
     {
       "title": "韓国、電力卸売市場の「全国単一価格制」を廃止へ…首都圏・非首都圏・済州の3圏域で差別化",
@@ -59,13 +59,6 @@
       "cat": "market"
     },
     {
-      "title": "今季初のサンマが仙台市中央卸売市場に入荷　１キロ平均価格は去年の２倍の４０００円から６０００円",
-      "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTFBJS2hyd2ZuV3JIU002N0o0MUN2Q00xYmtMNjFIUDBvNjdpRU0tb3JzRHFaaUtjSzBQZHV3THFzZVltSkFhWHBVRWxNRHNLeFRFcURUaDVveHdYNmJHTlJ2U2VmdWFoaFM3ckFJZXlhUdIBdEFVX3lxTFBaeGF5OXpwYUFGajZoekxDaFB3U21vQmFEWDJDQUpSeUNISmp2NGVEelNjM1Z1UEpPcEpKLThJblJBZDlmWHFJbGNULU8ya1RyVFliTkJhWTl1Tk1FTXgzZVBVRUpuSUQ1U0NmRko2al9JNmRD?oc=5",
-      "source": "ｄメニューニュース",
-      "date": "2026-08-18",
-      "cat": "market"
-    },
-    {
       "title": "「大人の市場せり見学会」を開催します",
       "link": "https://news.google.com/rss/articles/CBMiggFBVV95cUxOUEVHTkJnY1EycGJNT3NOWnlUU1lWNzkzUThUZnVHaGJmOHZhTXZFV3FKdTdNell6a0lIaTlTeUIycW5OM2hXMEd5QXFsaTVmSXJsbmhpMEJ2a0pRbHIzbS1nY0o3dG94MXBxSHpCbTlsa2hPZ01yTXhvSG5pR201d0l3?oc=5",
       "source": "city.niigata.lg.jp",
@@ -78,13 +71,6 @@
       "source": "myfuna.net",
       "date": "2026-08-15",
       "cat": "market"
-    },
-    {
-      "title": "特集「食品卸 商社系VS民族系頂上決戦の幕開け」③ 国分グループ本社／持続可能な食の付加価値を地域と世界に届ける",
-      "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTFBEUVFKQnhXUHcwelc4TFlLaHVuT3MyMEFOYWRIeWdLdnpaRHJhSUY0MFM0eGU5Mnp2S3RPTEkzZzhoNnY3ZDZyTW54dXd1SFEySWc?oc=5",
-      "source": "激流オンライン",
-      "date": "2026-07-31",
-      "cat": "business"
     },
     {
       "title": "令和8年度 トップセールス・国内外への訪問",
@@ -136,6 +122,13 @@
       "cat": "business"
     },
     {
+      "title": "三菱食品 伊藤社長インタビュー　新たな経営体制で「食品卸」の価値を最大化する",
+      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBwcUl2UXF5OTA3Sjc2b19LSzVZQTNWeklNcklKeFc0bW9NNUpZeDQ4UkVRZ1Z1Rmt4VUg5SWl3M0l1MXhyWTJ2SVYySVA4b1pXWXQ0eHNrZlpISmdRMXFJQktyd0LSAWpBVV95cUxQdnBuenZXVUhIR3NMaTYzVDJYNnJoeG9IZS1aSHVUU0lNVmtBQko1ZFhlYVBISjkwdGxXdHFuV3RYUmpRQ1hoTEZCVHh0eTVRbURJaENDY3NhdzNSbVZJUldDb2VqVnJoMWVn?oc=5",
+      "source": "ダイヤモンド・チェーンストアオンライン",
+      "date": "2026-06-15",
+      "cat": "business"
+    },
+    {
       "title": "２６２０ 資金ショートは２０５６年度に８年前倒し 東京都中央卸売市場会計、２０２６年経営レポート どらったら！！",
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1Xb0xLYTJ6eDV1WkxhbzgzTnFqVWRNcmxMMGc1OUVEMDZoZHJzQU1oaXlFdV9GYjNQbmxER0tmR1BnOGg0MGpEWmlOWVFhR25MS1hxZ084bFJpdUFIaU1xSERBWGVwT0E5dkE?oc=5",
       "source": "どらったら！！",
@@ -183,6 +176,13 @@
       "source": "日本経済新聞",
       "date": "2025-12-25",
       "cat": "toyosu"
+    },
+    {
+      "title": "市場まつり 令和7年11月23日（日曜日・祝日）開催",
+      "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxQWm5Ra2R0eG41aG04S2FrZFhrM2hNY3E4a2dkZGpxTTJMSUtQNEg1TXBib2h0ZGdJanBzN1FQXzE2VDROMzl1Nm5zZGZqbzg1N1NoM01JZm1aZ0o2bTMxb1poX1ZvZ2NvOHUtckZZYmlkMW1rdDFjMGZqODNKS1FZZnZkMnFPVXhYenZwTXRpWFFhZmhjS3lzSg?oc=5",
+      "source": "city.kurume.fukuoka.jp",
+      "date": "2025-11-23",
+      "cat": "market"
     }
   ]
 }
