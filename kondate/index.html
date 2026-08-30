@@ -199,6 +199,45 @@ label.lb{display:block;font-size:12px;font-weight:800;color:var(--sub);margin:14
 .note{background:var(--p-ll);border:1px solid #f2ddcd;border-radius:11px;padding:11px 13px;font-size:12.5px;
   color:#8a5a34;line-height:1.65;margin:11px 0}
 .note b{color:#6e4526}
+.phase{background:#fff;color:var(--ink)}
+.phase .wrap{display:flex;align-items:center;gap:8px;padding:9px 14px;font-size:12.5px;font-weight:800}
+.phase .dot{width:8px;height:8px;border-radius:99px;flex:none}
+.phase .sub{margin-left:auto;color:var(--sub2);font-size:11px;font-weight:700;letter-spacing:.02em}
+.phase .go{background:var(--p);color:#fff;border-radius:8px;padding:4px 11px;font-size:11.5px;font-weight:800;margin-left:auto}
+
+/* 承認 */
+.day.appr{background:#f5fbf7}
+.day.appr .dcol{background:#e9f6ee}
+.day.other{background:#fafafa}
+.dcol .st{font-size:9px;font-weight:800;margin-top:4px;padding:1px 6px;border-radius:99px;letter-spacing:.02em}
+.appr3{display:flex;border:1.5px solid var(--line);border-radius:9px;overflow:hidden;flex:none}
+.appr3 button{padding:6px 11px;font-size:12px;font-weight:800;color:var(--sub);background:#fff;border-radius:0}
+.appr3 button+button{border-left:1.5px solid var(--line)}
+.appr3 button.on{background:var(--g);color:#fff}
+.appr3 button.rej:active{background:var(--a-l);color:var(--a)}
+.sides{margin-top:5px;display:flex;flex-direction:column;gap:2px}
+.side{display:flex;align-items:center;gap:5px;font-size:12.5px;color:var(--sub);line-height:1.5}
+.side .nm2{font-weight:600;color:#4b5560}
+.side .x{color:var(--sub2);font-size:13px;margin-left:2px}
+.sideadd{font-size:12px;font-weight:700;color:var(--p-d);padding:2px 0;text-align:left;align-self:flex-start}
+.rate{display:flex;gap:6px;margin-top:8px;align-items:center}
+.rate button{border:1.5px solid var(--line);border-radius:9px;padding:4px 10px;font-size:15px;background:#fff;line-height:1.3}
+.rate button.on{border-color:var(--p);background:var(--p-l)}
+.rate .lb3{font-size:11.5px;font-weight:700;color:var(--sub2)}
+.filt{display:flex;gap:6px;margin:12px 0 0}
+.filt button{flex:1;border:1.5px solid var(--line);border-radius:9px;padding:8px;font-size:13px;font-weight:800;color:var(--sub);background:#fff}
+.filt button.on{background:var(--p);color:#fff;border-color:var(--p)}
+.ruleRow{display:flex;align-items:center;gap:10px;padding:12px 13px;border-bottom:1px solid #f0eeea}
+.ruleRow:last-child{border-bottom:none}
+.ruleRow .w2{width:26px;font-size:16px;font-weight:800;flex:none}
+.chk{display:flex;align-items:center;gap:10px;padding:11px 4px;border-bottom:1px solid #f0eeea}
+.chk:last-child{border-bottom:none}
+.chk .cb{width:22px;height:22px}
+.chk .nm3{flex:1;font-size:14.5px;font-weight:600}
+.chk.on .cb{background:var(--g);border-color:var(--g)}
+.chk.on .cb::after{content:"";width:6px;height:11px;border:2.5px solid #fff;border-top:none;border-left:none;transform:rotate(42deg) translateY(-1.5px)}
+.ordn{flex:none;width:22px;height:22px;border-radius:99px;background:var(--p);color:#fff;font-size:11px;font-weight:800;
+  display:flex;align-items:center;justify-content:center}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(88px + var(--sb));background:#2b2f36;color:#fff;
   padding:11px 18px;border-radius:11px;font-size:13.5px;font-weight:700;z-index:200;opacity:0;pointer-events:none;
   transition:.25s;max-width:88vw;text-align:center}
@@ -213,6 +252,7 @@ label.lb{display:block;font-size:12px;font-weight:800;color:var(--sub);margin:14
     <div class="hsp"></div>
     <button class="hbtn" id="btnSet">⚙️</button>
   </div>
+  <div class="phase" id="phaseBar"></div>
   <div class="wkbar"><div class="wrap">
     <span id="wkLabel">—</span>
     <div class="hsp"></div>
@@ -229,7 +269,7 @@ label.lb{display:block;font-size:12px;font-weight:800;color:var(--sub);margin:14
 </main>
 
 <nav class="tabbar">
-  <button data-tab="week" class="on"><span class="ic">🍳</span>今週</button>
+  <button data-tab="week" class="on"><span class="ic">🍳</span>献立<span class="cnt" id="cntWeek" hidden>0</span></button>
   <button data-tab="shop"><span class="ic">🛒</span>買い物<span class="cnt" id="cntShop" hidden>0</span></button>
   <button data-tab="stock"><span class="ic">📦</span>常備品<span class="cnt" id="cntStock" hidden>0</span></button>
   <button data-tab="recipe"><span class="ic">📖</span>レシピ</button>
@@ -272,7 +312,7 @@ const DICT = {
    'キャベツ,春キャベツ,白菜,はくさい,大根,だいこん,長ねぎ,長ネギ,青ねぎ,小ねぎ,万能ねぎ,九条ねぎ,白ねぎ,ねぎ,ネギ,'+
    'にら,ニラ,もやし,モヤシ,豆もやし,ピーマン,パプリカ,ししとう,なす,ナス,茄子,トマト,ミニトマト,プチトマト,'+
    'きゅうり,キュウリ,胡瓜,ブロッコリー,カリフラワー,ほうれん草,ホウレン草,小松菜,こまつな,レタス,サニーレタス,'+
-   'しめじ,シメジ,えのき,エノキ,舞茸,まいたけ,マイタケ,しいたけ,シイタケ,椎茸,エリンギ,マッシュルーム,きのこ,'+
+   'しめじ,シメジ,えのき,エノキ,なめこ,ナメコ,舞茸,まいたけ,マイタケ,しいたけ,シイタケ,椎茸,エリンギ,マッシュルーム,きのこ,'+
    'かぼちゃ,カボチャ,南瓜,ごぼう,ゴボウ,牛蒡,れんこん,レンコン,蓮根,さつまいも,サツマイモ,里芋,さといも,'+
    'アボカド,オクラ,ズッキーニ,セロリ,いんげん,インゲン,枝豆,えだまめ,スナップえんどう,絹さや,水菜,みずな,'+
    'チンゲン菜,チンゲンサイ,春菊,豆苗,かいわれ,スプラウト,ベビーリーフ,生姜,しょうが,ショウガ,にんにく,ニンニク,'+
@@ -287,7 +327,7 @@ const DICT = {
 
   fish:('鮭,さけ,サケ,サーモン,銀鮭,塩鮭,ぶり,ブリ,はまち,ハマチ,さば,サバ,鯖,あじ,アジ,鯵,いわし,イワシ,'+
    'さんま,サンマ,秋刀魚,たら,タラ,鱈,かれい,カレイ,ひらめ,まぐろ,マグロ,鮪,かつお,カツオ,鰹,かじき,カジキ,'+
-   'ほっけ,ホッケ,ししゃも,シシャモ,きんめ,金目鯛,鯛,たい,えび,エビ,海老,むきえび,いか,イカ,烏賊,たこ,タコ,蛸,'+
+   'ほっけ,ホッケ,赤魚,あかうお,アカウオ,めぬけ,ししゃも,シシャモ,きんめ,金目鯛,鯛,たい,えび,エビ,海老,むきえび,いか,イカ,烏賊,たこ,タコ,蛸,'+
    'あさり,アサリ,しじみ,シジミ,ホタテ,ほたて,帆立,牡蠣,かき,カキ,ムール貝,しらす,シラス,ちりめん,ちくわ,'+
    'はんぺん,かまぼこ,さつま揚げ,魚肉ソーセージ,ツナ缶,ツナ,サバ缶,鯖缶,明太子,たらこ,いくら,刺身,切り身,'+
    'あら,うなぎ,ウナギ,鰻,穴子,魚').split(','),
@@ -347,11 +387,54 @@ const STAPLE_PRESET = [
   ['紙オムツ','daily',18],['おしりふき','daily',14],['麦茶パック','dry',14],
 ];
 
-/* ---------- 曜日 ---------- */
+
+/* ---------- 曜日と週の運用タイムライン ---------- */
 const DAYS = [
   {k:'mon',w:'月'},{k:'tue',w:'火'},{k:'wed',w:'水'},{k:'thu',w:'木'},{k:'fri',w:'金'}
 ];
-const MODES = {cook:'作る',out:'外食',left:'残り物'};
+const MODES  = {cook:'作る', out:'外食', left:'残り物'};
+const STATUS = {pending:'未承認', approved:'承認', other:'その他'};
+
+/* 土12:00 提案 → 日08:00 承認締切 → 日09:00 買い物 → 月〜金 調理 */
+const PLAN_DOW = 6, PLAN_HOUR = 12, DEADLINE_DOW = 0, DEADLINE_HOUR = 8, SHOP_HOUR = 9;
+
+/* ---------- 初期レシピ ---------- */
+/* 月曜のローテーションと金曜の定番だけ最初から入れておく。
+   火〜木（気分）のレシピは貼り付けで足していく想定。 */
+const MAIN_SEED = [
+  ['ししゃも',            15, ['ししゃも','大根']],
+  ['赤魚の煮付け',        20, ['赤魚','しょうが']],
+  ['ホッケの塩焼き',      15, ['ホッケ','大根']],
+  ['チキントマト煮',      30, ['鶏もも肉','トマト缶','玉ねぎ','にんにく']],
+  ['ビーフストロガノフ',  35, ['牛こま','玉ねぎ','マッシュルーム','生クリーム']],
+  ['無水チキンカレー',    40, ['鶏もも肉','玉ねぎ','トマト','カレー粉']],
+  ['麻婆春雨',            15, ['豚ひき肉','春雨','にら','長ねぎ']],
+];
+const MON_ROTATION = ['ししゃも','赤魚の煮付け','ホッケの塩焼き'];
+const FRI_POOL     = ['チキントマト煮','ビーフストロガノフ','無水チキンカレー'];
+
+const SIDE_SEED = [
+  ['ほうれん草のおひたし',  8, ['ほうれん草']],
+  ['冷奴',                  3, ['豆腐','小ねぎ']],
+  ['きゅうりの酢の物',      8, ['きゅうり','乾燥わかめ']],
+  ['ポテトサラダ',         20, ['じゃがいも','きゅうり','にんじん']],
+  ['ブロッコリーのごま和え',8, ['ブロッコリー']],
+  ['ひじきの煮物',         20, ['ひじき','にんじん','油揚げ']],
+  ['切り干し大根',         20, ['切干大根','にんじん','油揚げ']],
+  ['キャベツの浅漬け',      5, ['キャベツ']],
+  ['トマトとモッツァレラ',  5, ['トマト','モッツァレラ']],
+  ['豆腐とわかめの味噌汁',  8, ['豆腐','乾燥わかめ']],
+  ['大根と油揚げの味噌汁',  10,['大根','油揚げ']],
+  ['なめこの味噌汁',        6, ['なめこ','豆腐']],
+  ['もやしのナムル',        6, ['もやし']],
+  ['春雨サラダ',           12, ['春雨','きゅうり','ハム']],
+  ['大根サラダ',            8, ['大根','水菜']],
+  ['かぼちゃの煮物',       18, ['かぼちゃ']],
+  ['れんこんのきんぴら',   12, ['れんこん']],
+  ['にんじんしりしり',     12, ['にんじん','卵']],
+  ['卵焼き',                8, ['卵']],
+  ['枝豆',                  5, ['枝豆']],
+];
 
 /* ---------- 汎用 ---------- */
 const $  = s => document.querySelector(s);
@@ -373,63 +456,181 @@ function toast(msg){
   clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('on'),1900);
 }
 
-/* 月曜始まり。土日は「翌週」を見せる（日曜にまとめ買いするため） */
+/* 月曜始まり。土日は「翌週」を見る（土曜に提案 → 日曜に買い物のため） */
 function currentWeekStart(){
-  const t = today(), w = t.getDay();           // 0=日 1=月 ... 6=土
-  if(w===0) return iso(addDays(t,1));          // 日 → 明日の月曜
-  if(w===6) return iso(addDays(t,2));          // 土 → 明後日の月曜
-  return iso(addDays(t,1-w));                  // 平日 → 今週の月曜
+  const t = today(), w = t.getDay();
+  if(w===0) return iso(addDays(t,1));
+  if(w===6) return iso(addDays(t,2));
+  return iso(addDays(t,1-w));
+}
+
+/* 今どのフェーズか */
+function phaseNow(){
+  const n = new Date(), d = n.getDay(), h = n.getHours();
+  if(d===PLAN_DOW)     return h < PLAN_HOUR ? 'pre' : 'review';
+  if(d===DEADLINE_DOW) return h < DEADLINE_HOUR ? 'review' : 'shop';
+  return 'cook';
 }
 
 /* =========================================================================
    State
    ========================================================================= */
 const KEY = 'kondate.v1';
-let S = null;
-let viewWeek = null;   // 表示中の週（月曜のISO）
-let tab = 'week';
+let S = null, viewWeek = null, tab = 'week';
 
+function blankDay(){ return {mode:'cook', status:'pending', mainId:null, sideIds:[], rating:null, cooked:false}; }
 function blankWeek(start){
-  const days = {};
-  DAYS.forEach(d => days[d.k] = {mode:'cook', recipeId:null});
-  return {start, days, checked:{}, extras:[], done:false};
+  const days = {}; DAYS.forEach(d => days[d.k] = blankDay());
+  return {start, days, checked:{}, extras:[], done:false, generatedAt:null};
 }
-
+function defaultSettings(){
+  return {
+    dayRules: {
+      mon:{type:'rotate', ids:[], next:0},
+      tue:{type:'free', ids:[]}, wed:{type:'free', ids:[]}, thu:{type:'free', ids:[]},
+      fri:{type:'pool', ids:[]}
+    },
+    sidesPerDay: 1
+  };
+}
 function defaultState(){
   return {
-    version: 1,
+    version: 2,
     recipes: [],
     staples: STAPLE_PRESET.map(([nm,cat,cyc]) => ({
-      id:uid(), name:nm, cat, cycleDays:cyc, lastBought:null, history:[], snoozeUntil:null, enabled:true
+      id:uid(), name:nm, cat, cycleDays:cyc, lastBought:null, history:[], snoozeUntil:null, enabled:true, needBuy:false
     })),
-    weeks: {},                                   // start(ISO) -> week
-    leftovers: [],                               // 余り食材 [{id,name,cat}]
-    settings: { fixedFish:'mon', easyFri:true }  // 月曜は魚 / 金曜は時短優先
+    weeks: {}, leftovers: [], seeded: {}, settings: defaultSettings()
   };
 }
 
-function load(){
-  try{
-    const raw = localStorage.getItem(KEY);
-    S = raw ? JSON.parse(raw) : defaultState();
-  }catch(e){ S = defaultState(); }
-  if(!S || typeof S!=='object') S = defaultState();
+function mkRecipe(name, kind, minutes, names){
+  const ings = [], seas = [];
+  names.forEach(n=>{
+    const c = classify(n);
+    if(c.seasoning) seas.push(n); else ings.push({name:n, cat:c.cat});
+  });
+  return {id:uid(), name, kind, protein:proteinOf(ings), minutes,
+          ings, seasonings:seas, lastCooked:null, cookCount:0, ratingSum:0, ratingCount:0, archived:false};
+}
+/** 初回だけ、主菜（月曜ローテ・金曜定番）と副菜を入れる */
+function seedRecipes(){
+  S.seeded = S.seeded || {};
+  if(!S.seeded.mains && !S.recipes.some(r=>r.kind!=='side')){
+    MAIN_SEED.forEach(([n,mi,g]) => S.recipes.push(mkRecipe(n,'main',mi,g)));
+    const idOf = n => (S.recipes.find(r=>r.name===n)||{}).id;
+    S.settings.dayRules.mon = {type:'rotate', ids:MON_ROTATION.map(idOf).filter(Boolean), next:0};
+    S.settings.dayRules.fri = {type:'pool',   ids:FRI_POOL.map(idOf).filter(Boolean)};
+    S.seeded.mains = true;
+  }
+  if(!S.seeded.sides && !S.recipes.some(r=>r.kind==='side')){
+    SIDE_SEED.forEach(([n,mi,g]) => S.recipes.push(mkRecipe(n,'side',mi,g)));
+    S.seeded.sides = true;
+  }
+}
+
+/** v1（主菜のみ・承認なし）→ v2 */
+function migrate(o){
+  if(!o || o.version >= 2) return o;
+  (o.recipes||[]).forEach(r=>{
+    r.kind = r.kind || 'main';
+    r.ratingSum = r.ratingSum||0; r.ratingCount = r.ratingCount||0;
+  });
+  Object.values(o.weeks||{}).forEach(w=>{
+    DAYS.forEach(d=>{
+      const day = w.days && w.days[d.k];
+      if(!day) return;
+      day.mainId  = day.mainId || day.recipeId || null;
+      day.sideIds = day.sideIds || [];
+      day.status  = day.status || (day.mode==='cook' ? 'approved' : 'other');
+      if(day.rating===undefined) day.rating = null;
+      if(day.cooked===undefined) day.cooked = false;
+      delete day.recipeId;
+    });
+    if(w.generatedAt===undefined) w.generatedAt = null;
+  });
+  const st = o.settings || {};
+  const ns = defaultSettings();
+  if(st.fixedFish){ ns.dayRules[st.fixedFish] = {type:'rotate', ids:[], next:0}; }
+  o.settings = ns;
+  o.seeded = o.seeded || {};
+  o.version = 2;
+  return o;
+}
+
+function normalize(){
   S.recipes  = S.recipes  || [];
   S.staples  = S.staples  || [];
   S.weeks    = S.weeks    || {};
   S.leftovers= S.leftovers|| [];
-  S.settings = Object.assign({fixedFish:'mon', easyFri:true}, S.settings||{});
+  S.seeded   = S.seeded   || {};
+  S.settings = Object.assign(defaultSettings(), S.settings||{});
+  S.settings.dayRules = Object.assign(defaultSettings().dayRules, S.settings.dayRules||{});
+  S.recipes.forEach(r=>{
+    r.ings = r.ings||[]; r.seasonings = r.seasonings||[];
+    r.kind = r.kind || 'main';
+    r.protein = r.protein || proteinOf(r.ings);
+    r.ratingSum = r.ratingSum||0; r.ratingCount = r.ratingCount||0;
+  });
+  Object.values(S.weeks).forEach(w=>{
+    w.days = w.days || {}; w.checked = w.checked||{}; w.extras = w.extras||[];
+    DAYS.forEach(d=>{ w.days[d.k] = Object.assign(blankDay(), w.days[d.k]||{}); });
+  });
   viewWeek = currentWeekStart();
   getWeek(viewWeek);
+}
+
+function load(){
+  let raw = null;
+  try{ raw = localStorage.getItem(KEY); }catch(e){}
+  try{ S = raw ? migrate(JSON.parse(raw)) : defaultState(); }catch(e){ S = defaultState(); }
+  if(!S || typeof S!=='object') S = defaultState();
+  normalize();
+  seedRecipes();
+  reconcileCooked();
+  autoPlan();
   save();
 }
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){ toast('保存できませんでした'); } }
-function getWeek(start){
-  if(!S.weeks[start]) S.weeks[start] = blankWeek(start);
-  return S.weeks[start];
-}
+function getWeek(start){ if(!S.weeks[start]) S.weeks[start] = blankWeek(start); return S.weeks[start]; }
 const W = () => getWeek(viewWeek);
 const recipeById = id => S.recipes.find(r=>r.id===id) || null;
+const dayRule = k => (S.settings.dayRules||{})[k] || {type:'free', ids:[]};
+const dayDate = (start,k) => addDays(parseISO(start), DAYS.findIndex(d=>d.k===k));
+const avgRating = r => r.ratingCount ? r.ratingSum/r.ratingCount : null;
+
+/** 過ぎた日の「作った」を自動で記録する（ボタンを押させないための処理） */
+function reconcileCooked(){
+  const t = iso(today());
+  Object.values(S.weeks).forEach(w=>{
+    DAYS.forEach(d=>{
+      const day = w.days[d.k];
+      if(day.cooked || day.mode!=='cook' || day.status!=='approved') return;
+      if(iso(dayDate(w.start, d.k)) >= t) return;      // まだ来ていない日は触らない
+      markCooked(w, d.k);
+    });
+  });
+}
+function markCooked(w, dk){
+  const day = w.days[dk], dt = iso(dayDate(w.start, dk));
+  [day.mainId].concat(day.sideIds||[]).filter(Boolean).forEach(id=>{
+    const r = recipeById(id); if(!r) return;
+    if(!r.lastCooked || r.lastCooked < dt){ r.lastCooked = dt; r.cookCount = (r.cookCount||0)+1; }
+  });
+  day.cooked = true;
+}
+
+/** 土日にアプリを開いたら、まだ提案が無ければ自動で作る（＝土曜12時に提案が出る運用） */
+function autoPlan(){
+  const dow = new Date().getDay();
+  if(dow!==PLAN_DOW && dow!==DEADLINE_DOW) return;
+  const wk = getWeek(currentWeekStart());
+  if(wk.generatedAt) return;
+  if(!S.recipes.some(r=>r.kind!=='side' && !r.archived)) return;
+  const keep = viewWeek; viewWeek = currentWeekStart();
+  suggestWeek();
+  viewWeek = keep;
+}
 
 /* =========================================================================
    食材の分類
@@ -566,155 +767,281 @@ function parsePaste(text){
   return out;
 }
 
+
 /* =========================================================================
    献立の自動提案
-   ルール:
+   曜日ごとに3つのルールを持てる:
+     rotate … 決めた順に回す（例：月曜の魚 ししゃも→赤魚→ホッケ）
+     pool   … 決めた候補の中から選ぶ（例：金曜の定番）
+     free   … 気分（全レシピからルールに沿って提案）
+   free の日には次を効かせる:
      ・同じタンパク源を2日連続にしない
-     ・週に魚を最低1回（設定で「月曜は魚」を固定枠に）
-     ・最近作ったものは出さない（間隔が空くほど高スコア）
+     ・傷みやすいもの（魚→肉→その他）を週の前半へ
+     ・最近作ったもの／評価の低いものは出しにくい
      ・余っている食材を使うレシピを優先
-     ・金曜は時短（20分以内）を優先
-     ・傷みやすい順（魚→肉→その他）に週の前半へ配置
    ========================================================================= */
 function scoreRecipe(r, ctx){
   let sc = 0;
   const ds = daysSince(r.lastCooked);
-  sc += ds===null ? 45 : Math.min(ds, 70);            // 久しぶりなほど高い
-  sc -= (r.cookCount||0) * 0.6;                       // 出過ぎ防止
-  const lo = ctx.leftNames;
-  if(lo.size) r.ings.forEach(i=>{ if(lo.has(i.name)) sc += 22; });
-  sc += Math.random()*14;                             // 毎回同じ並びにしない
+  sc += ds===null ? 45 : Math.min(ds, 70);
+  sc -= (r.cookCount||0) * 0.6;
+  const av = avgRating(r);
+  if(av !== null) sc += (av - 2) * 26;                  // 👍で出やすく、👎で出にくく
+  if(ctx.leftNames.size) r.ings.forEach(i=>{ if(ctx.leftNames.has(i.name)) sc += 22; });
+  sc += Math.random()*14;
   return sc;
+}
+const mainPool = () => S.recipes.filter(r=>!r.archived && r.kind!=='side');
+const sidePool = () => S.recipes.filter(r=>!r.archived && r.kind==='side');
+
+function pickRotate(rule, used, exclude){
+  const list = (rule.ids||[]).map(recipeById).filter(r=>r && !r.archived);
+  if(!list.length) return null;
+  const start = ((rule.next||0) % list.length + list.length) % list.length;
+  for(let i=0;i<list.length;i++){
+    const c = list[(start+i)%list.length];
+    if(!used.has(c.id) && c.id!==exclude) return c;
+  }
+  return null;
+}
+function pickPool(rule, used, ctx, exclude){
+  const list = (rule.ids||[]).map(recipeById)
+    .filter(r=>r && !r.archived && !used.has(r.id) && r.id!==exclude);
+  if(!list.length) return null;
+  return list.map(r=>({r,sc:scoreRecipe(r,ctx)})).sort((a,b)=>b.sc-a.sc)[0].r;
 }
 
 function suggestWeek(opts){
   opts = opts || {};
-  const keep = opts.keep || {};                       // {mon:true} 固定したい曜日
-  const wk = W();
-  const pool = S.recipes.filter(r=>!r.archived);
-  if(!pool.length) return false;
+  const wk = W(), mains = mainPool();
+  if(!mains.length) return false;
+  const ctx = { leftNames:new Set(S.leftovers.map(l=>l.name)) };
 
-  const ctx = { leftNames: new Set(S.leftovers.map(l=>l.name)) };
-  const slots = DAYS.filter(d => wk.days[d.k].mode==='cook' && !keep[d.k]);
-  if(!slots.length) return true;
+  // 触ってよい日：「その他」にした日は動かさない。承認済みも既定では動かさない
+  const editable = DAYS.map(d=>d.k).filter(k=>{
+    const day = wk.days[k];
+    if(day.status==='other') return false;
+    if(!opts.redoApproved && day.status==='approved') return false;
+    return true;
+  });
+  if(!editable.length){ save(); return true; }
 
-  // すでに固定済みで使われているレシピは重複させない
   const used = new Set();
-  DAYS.forEach(d=>{ if(keep[d.k] && wk.days[d.k].recipeId) used.add(wk.days[d.k].recipeId); });
+  DAYS.forEach(d=>{ if(editable.indexOf(d.k)<0 && wk.days[d.k].mainId) used.add(wk.days[d.k].mainId); });
 
-  const ranked = pool.map(r=>({r, sc:scoreRecipe(r,ctx)})).sort((a,b)=>b.sc-a.sc);
+  // 1) 曜日ルールで決まる日を先に埋める
+  const fixed = {}, freeDays = [];
+  editable.forEach(k=>{
+    const rule = dayRule(k);
+    let r = null;
+    if(rule.type==='rotate') r = pickRotate(rule, used);
+    else if(rule.type==='pool') r = pickPool(rule, used, ctx);
+    if(r){ fixed[k] = r; used.add(r.id); } else freeDays.push(k);
+  });
 
-  // --- 必要数を選ぶ（週内でタンパク源が偏りすぎないように） ---
-  const need = slots.length;
-  const picked = [];
-  const protCount = {meat:0, fish:0, other:0};
-  DAYS.forEach(d=>{ const id=keep[d.k]&&wk.days[d.k].recipeId; if(id){ const r=recipeById(id); if(r) protCount[r.protein]++; } });
+  // 2) 土台（動かさない日＋ルールで決まった日）
+  const base = {};
+  DAYS.forEach(d=>{
+    const day = wk.days[d.k];
+    if(day.status==='other' || day.mode!=='cook'){ base[d.k] = null; return; }
+    base[d.k] = fixed[d.k] || (editable.indexOf(d.k)<0 ? recipeById(day.mainId) : null);
+  });
 
-  const maxSame = Math.max(2, Math.ceil((need + Object.values(protCount).reduce((a,b)=>a+b,0)) / 2));
-  for(const {r} of ranked){
-    if(picked.length>=need) break;
-    if(used.has(r.id)) continue;
-    if(protCount[r.protein] >= maxSame) continue;
-    picked.push(r); used.add(r.id); protCount[r.protein]++;
-  }
-  // 足りなければ制約を外して埋める
-  if(picked.length < need){
-    for(const {r} of ranked){
-      if(picked.length>=need) break;
-      if(used.has(r.id)) continue;
-      picked.push(r); used.add(r.id);
-    }
-  }
-  // それでも足りない（レシピ数が少ない）→ 重複を許して埋める
-  let gi = 0;
-  while(picked.length < need && ranked.length){ picked.push(ranked[gi++ % ranked.length].r); }
+  // 3) 空いている曜日を、連続を避けながら埋める
+  const filled = fillFreeDays(freeDays, base, mains, ctx, used);
+  Object.keys(filled).forEach(k=>{ base[k] = filled[k]; });
+  ensureFish(base, freeDays, mains, ctx, used);
 
-  // --- 魚を最低1回 ---
-  const hasFish = picked.some(r=>r.protein==='fish') ||
-                  DAYS.some(d=>keep[d.k] && (recipeById(wk.days[d.k].recipeId)||{}).protein==='fish');
-  if(!hasFish){
-    const fish = ranked.map(x=>x.r).find(r=>r.protein==='fish' && !picked.includes(r));
-    if(fish){
-      let idx = picked.findIndex(r=>r.protein==='meat');
-      if(idx<0) idx = 0;
-      picked[idx] = fish;
-    }
-  }
-
-  // --- 配置：空きスロットへの並べ方を全通り試して最良を採用 ---
-  const slotKeys = slots.map(s=>s.k);
-  const arranged = arrangeBest(picked.slice(0, slotKeys.length), slotKeys, wk, keep);
-  slotKeys.forEach((k,i)=>{ wk.days[k].recipeId = arranged[i] ? arranged[i].id : null; });
+  // 4) 書き戻し
+  editable.forEach(k=>{
+    wk.days[k].mainId = base[k] ? base[k].id : null;
+    wk.days[k].mode   = 'cook';
+    wk.days[k].status = 'pending';
+    wk.days[k].sideIds = [];
+  });
+  assignSides(wk, editable, ctx);
+  if(!wk.generatedAt) wk.generatedAt = new Date().toISOString();
   save();
   return true;
 }
 
-/** 並べ方を全通り（最大5!＝120通り）試し、いちばん条件に合う配置を返す */
-function arrangeBest(list, slotKeys, wk, keep){
-  let best = list, bestSc = -Infinity;
-  permute(list, arr=>{
-    const sc = arrangeScore(arr, slotKeys, wk, keep);
-    if(sc > bestSc){ bestSc = sc; best = arr.slice(); }
-  });
-  return best;
-}
-function permute(arr, cb){
-  const n = arr.length;
-  if(!n){ cb([]); return; }
-  const used = new Array(n).fill(false), cur = [];
-  (function go(){
-    if(cur.length===n){ cb(cur.slice()); return; }
-    for(let i=0;i<n;i++){
-      if(used[i]) continue;
-      used[i]=true; cur.push(arr[i]); go(); cur.pop(); used[i]=false;
+/** 空いている曜日を埋める。
+    「同じタンパク源を2日連続にしない」を満たす組み合わせを深さ優先で探す。
+    選んでから並べ替えるのではなく、選ぶ段階で並びを見るのがポイント。
+    （月＝魚固定・金＝肉の定番、のように両端が埋まっていると、
+      スコア順に選んでから並べ替える方式では条件を満たす組み合わせを引けないため） */
+function fillFreeDays(freeDays, base, pool, ctx, used){
+  const order = DAYS.map(d=>d.k);
+  const idxOf = {}; order.forEach((k,i)=>idxOf[k]=i);
+  const slots = freeDays.slice().sort((a,b)=>idxOf[a]-idxOf[b]);
+  const isSlot = {}; slots.forEach(k=>isSlot[k]=true);
+  const cand = pool.filter(r=>!used.has(r.id));
+  if(!slots.length || !cand.length) return {};
+
+  const sc = new Map(); cand.forEach(r=>sc.set(r.id, scoreRecipe(r, ctx)));
+  // 登録レシピが日数より少ないときは使い回しを許す（連続はさせない）
+  const allowRepeat = cand.length < slots.length;
+  const assign = {}, taken = new Set();
+  let budget = 8000;
+
+  const protAt = k => assign[k] ? assign[k].protein : (base[k] ? base[k].protein : null);
+  function ok(k, r){
+    const i = idxOf[k];
+    if(i>0 && protAt(order[i-1])===r.protein) return false;
+    // 次の曜日が固定なら、そこともぶつからないようにする
+    if(i<order.length-1 && !isSlot[order[i+1]] && protAt(order[i+1])===r.protein) return false;
+    return true;
+  }
+  /** その曜日での並び順：スコア＋「傷みやすいものを週の前半へ」 */
+  function sortedFor(k){
+    const w = (DAYS.length-1-idxOf[k]) * 6;
+    return cand.filter(r=>allowRepeat || !taken.has(r.id))
+      .map(r=>({r, s: sc.get(r.id) + perishOf(r)*w}))
+      .sort((a,b)=>b.s-a.s).map(x=>x.r);
+  }
+  function dfs(si){
+    if(si>=slots.length) return true;
+    if(--budget<=0) return false;
+    const k = slots[si];
+    let tried = 0;
+    for(const r of sortedFor(k)){
+      if(!ok(k,r)) continue;
+      assign[k]=r; taken.add(r.id);
+      if(dfs(si+1)) return true;
+      delete assign[k]; taken.delete(r.id);
+      if(++tried>=8) break;              // 各曜日 上位8件まで試す
     }
-  })();
+    return false;
+  }
+  if(!dfs(0)){
+    // 条件を満たす組み合わせが無い（レシピがタンパク源に偏っている）
+    // → 連続を最小限に抑えつつスコア順で埋める
+    slots.forEach(k=>{ delete assign[k]; });
+    taken.clear();
+    slots.forEach(k=>{
+      const list = sortedFor(k);
+      const pick = list.find(r=>ok(k,r)) || list[0];
+      if(pick){ assign[k]=pick; taken.add(pick.id); }
+    });
+  }
+  return assign;
 }
-function arrangeScore(arr, slotKeys, wk, keep){
-  const byDay = {};
-  DAYS.forEach(d=>{
-    byDay[d.k] = (wk.days[d.k].mode!=='cook') ? null
-               : (keep[d.k] ? recipeById(wk.days[d.k].recipeId) : null);
+
+/** 週に魚が1回も無ければ、前半の空き曜日に入れる */
+function ensureFish(base, freeDays, pool, ctx, used){
+  if(DAYS.some(d=>base[d.k] && base[d.k].protein==='fish')) return;
+  const order = DAYS.map(d=>d.k);
+  const idxOf = {}; order.forEach((k,i)=>idxOf[k]=i);
+  const taken = new Set(DAYS.map(d=>base[d.k] && base[d.k].id).filter(Boolean));
+  const fish = pool.filter(r=>r.protein==='fish' && !used.has(r.id) && !taken.has(r.id))
+    .map(r=>({r, s:scoreRecipe(r,ctx)})).sort((a,b)=>b.s-a.s);
+  if(!fish.length) return;
+  const slots = freeDays.slice().sort((a,b)=>idxOf[a]-idxOf[b]);
+  for(const k of slots){
+    const i = idxOf[k];
+    const prev = i>0 ? base[order[i-1]] : null;
+    const next = i<order.length-1 ? base[order[i+1]] : null;
+    if((prev && prev.protein==='fish') || (next && next.protein==='fish')) continue;
+    base[k] = fish[0].r; return;
+  }
+  if(slots.length) base[slots[0]] = fish[0].r;
+}
+
+/** 副菜を割り当てる。主菜と食材がかぶるもの・手間のかかるものは避ける */
+function assignSides(wk, dayKeys, ctx){
+  const n = S.settings.sidesPerDay|0;
+  const sides = sidePool();
+  if(!n || !sides.length){ dayKeys.forEach(k=>{ wk.days[k].sideIds = []; }); return; }
+  const used = new Set();
+  DAYS.forEach(d=>{ if(dayKeys.indexOf(d.k)<0) (wk.days[d.k].sideIds||[]).forEach(id=>used.add(id)); });
+  dayKeys.forEach(k=>{
+    const day = wk.days[k];
+    if(day.mode!=='cook' || !day.mainId){ day.sideIds = []; return; }
+    const main = recipeById(day.mainId);
+    const mainNames = new Set(main ? main.ings.map(i=>i.name) : []);
+    const ranked = sides.filter(r=>!used.has(r.id)).map(r=>{
+      let sc = scoreRecipe(r, ctx);
+      if(r.ings.some(i=>mainNames.has(i.name))) sc -= 30;   // 主菜と食材がかぶると量が読みにくい
+      sc -= (r.minutes||10) * 0.6;                          // 平日なので手早いものを優先
+      return {r, sc};
+    }).sort((a,b)=>b.sc-a.sc);
+    const chosen = ranked.slice(0, n).map(x=>x.r);
+    chosen.forEach(r=>used.add(r.id));
+    day.sideIds = chosen.map(r=>r.id);
   });
-  slotKeys.forEach((k,i)=>{ byDay[k] = arr[i] || null; });
-  const seq = DAYS.map(d=>byDay[d.k]);
-  let sc = 0;
-  for(let i=1;i<seq.length;i++){                       // 同じタンパク源の2日連続は強く避ける
-    if(seq[i] && seq[i-1] && seq[i].protein===seq[i-1].protein) sc -= 1000;
-  }
-  seq.forEach((r,i)=>{ if(r) sc += perishOf(r) * (DAYS.length-1-i) * 6; });   // 傷みやすいものを前半へ
-  if(S.settings.easyFri && seq[4]) sc -= (seq[4].minutes||30) * 1.5;          // 金曜は時短
-  // 魚の固定枠。ユーザーが明示的に設定したものなので「2日連続を避ける」(-1000) より強くし、
-  // 連続1回ぶんまでは妥協して固定枠を優先する。
-  // （肉が週3品あると、連続を避けるには肉が月・水・金に固定され、魚を月曜に置けないため）
-  if(S.settings.fixedFish){
-    const fi = DAYS.findIndex(d=>d.k===S.settings.fixedFish);
-    if(fi>=0 && seq[fi] && seq[fi].protein==='fish') sc += 1200;
-  }
-  return sc;
 }
 
-function shuffleDay(dk){
-  const wk = W();
-  const pool = S.recipes.filter(r=>!r.archived);
-  if(!pool.length){ toast('先にレシピを登録してください'); return; }
+/** 1日ぶん引き直す（曜日ルールを尊重する） */
+function shuffleMain(dk){
+  const wk = W(), day = wk.days[dk], cur = day.mainId;
   const ctx = { leftNames:new Set(S.leftovers.map(l=>l.name)) };
-  const usedIds = new Set(DAYS.filter(d=>d.k!==dk).map(d=>wk.days[d.k].recipeId).filter(Boolean));
-  const idx = DAYS.findIndex(d=>d.k===dk);
-  const prev = idx>0 ? recipeById(wk.days[DAYS[idx-1].k].recipeId) : null;
-  const next = idx<DAYS.length-1 ? recipeById(wk.days[DAYS[idx+1].k].recipeId) : null;
-  const cur  = wk.days[dk].recipeId;
+  const used = new Set(DAYS.filter(d=>d.k!==dk).map(d=>wk.days[d.k].mainId).filter(Boolean));
+  const rule = dayRule(dk);
+  let next = null;
 
-  let cands = pool.filter(r=>!usedIds.has(r.id) && r.id!==cur);
-  const strict = cands.filter(r =>
-    (!prev || r.protein!==prev.protein) && (!next || r.protein!==next.protein));
-  if(strict.length) cands = strict;
-  if(!cands.length) cands = pool.filter(r=>r.id!==cur);
-  if(!cands.length) cands = pool;
+  if(rule.type==='rotate')      next = pickRotate(rule, used, cur);
+  else if(rule.type==='pool')   next = pickPool(rule, used, ctx, cur);
+  if(!next){
+    const idx  = DAYS.findIndex(d=>d.k===dk);
+    const prev = idx>0 ? recipeById(wk.days[DAYS[idx-1].k].mainId) : null;
+    const nxt  = idx<DAYS.length-1 ? recipeById(wk.days[DAYS[idx+1].k].mainId) : null;
+    let cands = mainPool().filter(r=>!used.has(r.id) && r.id!==cur);
+    const strict = cands.filter(r=>(!prev||r.protein!==prev.protein) && (!nxt||r.protein!==nxt.protein));
+    if(strict.length) cands = strict;
+    if(!cands.length) cands = mainPool().filter(r=>r.id!==cur);
+    if(!cands.length) cands = mainPool();
+    if(!cands.length) return false;
+    const ranked = cands.map(r=>({r,sc:scoreRecipe(r,ctx)})).sort((a,b)=>b.sc-a.sc);
+    const top = ranked.slice(0, Math.min(4, ranked.length));
+    next = top[Math.floor(Math.random()*top.length)].r;
+  }
+  day.mainId = next.id;
+  day.mode = 'cook';
+  assignSides(wk, [dk], ctx);
+  return true;
+}
+function shuffleSides(dk){
+  const wk = W();
+  wk.days[dk].sideIds = [];
+  assignSides(wk, [dk], { leftNames:new Set(S.leftovers.map(l=>l.name)) });
+}
 
-  const ranked = cands.map(r=>({r,sc:scoreRecipe(r,ctx)})).sort((a,b)=>b.sc-a.sc);
-  const top = ranked.slice(0, Math.min(4, ranked.length));
-  wk.days[dk].recipeId = top[Math.floor(Math.random()*top.length)].r.id;
+/* ---------- 承認・差戻し・その他 ---------- */
+function approveDay(dk){
+  const wk = W(), day = wk.days[dk];
+  if(!day.mainId){ toast('先に主菜を決めてください'); return; }
+  day.mode = 'cook'; day.status = 'approved';
+  save(); render();
+}
+function rejectDay(dk){
+  const wk = W(), day = wk.days[dk];
+  if(!shuffleMain(dk)){ toast('ほかに出せるレシピがありません'); return; }
+  day.status = 'pending';
+  day.rejects = (day.rejects||0) + 1;
+  save(); render(); toast('別の案に差し替えました');
+}
+function setOther(dk, mode){
+  const wk = W(), day = wk.days[dk];
+  day.mode = mode; day.status = 'other'; day.sideIds = [];
+  save(); render();
+}
+function approveAll(){
+  const wk = W(); let n = 0;
+  DAYS.forEach(d=>{
+    const day = wk.days[d.k];
+    if(day.status==='pending' && day.mainId){ day.status='approved'; day.mode='cook'; n++; }
+  });
+  save(); render();
+  toast(n ? n+'日ぶん承認しました' : '承認できる日がありません');
+}
+function rateDay(dk, val){
+  const wk = W(), day = wk.days[dk], r = recipeById(day.mainId);
+  if(r){
+    if(day.rating){ r.ratingSum -= day.rating; r.ratingCount -= 1; }
+    if(day.rating === val){ day.rating = null; }             // もう一度押したら取り消し
+    else { day.rating = val; r.ratingSum += val; r.ratingCount += 1; }
+  }else{ day.rating = (day.rating===val ? null : val); }
+  if(!day.cooked && day.status==='approved') markCooked(wk, dk);
   save(); render();
 }
 
@@ -768,41 +1095,43 @@ function snoozeStaple(st){
   st.needBuy = false;
 }
 
+
 /* =========================================================================
    買い物リストの生成
+   承認した日の主菜＋副菜の食材だけを載せる（未承認・外食・残り物は載せない）
    ========================================================================= */
 function buildShopping(){
   const wk = W();
-  const map = new Map();   // name -> {name,cat,uses:[{w,recipe}],kind}
+  const map = new Map();
   DAYS.forEach(d=>{
     const day = wk.days[d.k];
-    if(day.mode!=='cook' || !day.recipeId) return;
-    const r = recipeById(day.recipeId);
-    if(!r) return;
-    r.ings.forEach(i=>{
-      const key = 'ing:'+i.name;
-      if(!map.has(key)) map.set(key, {key, name:i.name, cat:i.cat, kind:'ing', uses:[]});
-      map.get(key).uses.push({w:d.w, recipe:r.name});
+    if(day.mode!=='cook' || day.status!=='approved') return;
+    const list = [day.mainId].concat(day.sideIds||[]).filter(Boolean);
+    list.forEach((id,li)=>{
+      const r = recipeById(id); if(!r) return;
+      r.ings.forEach(i=>{
+        const key = 'ing:'+i.name;
+        if(!map.has(key)) map.set(key, {key, name:i.name, cat:i.cat, kind:'ing', uses:[]});
+        map.get(key).uses.push({w:d.w, recipe:r.name, side: li>0});
+      });
     });
   });
   const items = Array.from(map.values());
-  S.leftovers.forEach(l=>{
-    const it = items.find(x=>x.name===l.name);
-    if(it) it.leftover = true;
-  });
+  S.leftovers.forEach(l=>{ const it = items.find(x=>x.name===l.name); if(it) it.leftover = true; });
+
   S.staples.filter(stapleNeeded).forEach(st=>{
     const stt = stapleStatus(st);
     const why = (st.needBuy ? '切らしてる' : (stt.level==='out' ? '切れてるかも' : 'そろそろ')) +
                 (st.lastBought ? '・前回'+daysSince(st.lastBought)+'日前' : '');
     const dup = items.find(x=>x.kind==='ing' && x.name===st.name);
-    if(dup){ dup.staple = st; dup.why = why; return; }   // 献立の食材と重複したら1行にまとめる
+    if(dup){ dup.staple = st; dup.why = why; return; }
     items.push({key:'stp:'+st.id, name:st.name, cat:st.cat, kind:'staple', staple:st, why});
   });
   (wk.extras||[]).forEach(e=>{
     items.push({key:'ext:'+e.id, name:e.name, cat:e.cat, kind:'extra', extra:e});
   });
 
-  const groups = CATS.map(c=>({...c, items:[]}));
+  const groups = CATS.map(c=>({k:c.k, ic:c.ic, nm:c.nm, items:[]}));
   const gmap = {}; groups.forEach(g=>gmap[g.k]=g);
   items.forEach(it=>{ (gmap[it.cat]||gmap.other).items.push(it); });
   groups.forEach(g=>g.items.sort((a,b)=>{
@@ -812,6 +1141,8 @@ function buildShopping(){
   return groups.filter(g=>g.items.length);
 }
 const isChecked = key => !!W().checked[key];
+const pendingCount = () => DAYS.filter(d=>W().days[d.k].status==='pending').length;
+const approvedCount = () => DAYS.filter(d=>W().days[d.k].status==='approved').length;
 
 /* =========================================================================
    描画
@@ -820,114 +1151,207 @@ function render(){
   const ws = parseISO(viewWeek);
   $('#wkLabel').textContent = md(ws)+'(月) 〜 '+md(addDays(ws,4))+'(金)' +
     (viewWeek===currentWeekStart() ? '　今週' : '');
-  renderWeek(); renderShop(); renderStock(); renderRecipes(); renderCounts();
+  renderPhase(); renderWeek(); renderShop(); renderStock(); renderRecipes(); renderCounts();
 }
 function renderCounts(){
-  const groups = buildShopping();
-  let n=0; groups.forEach(g=>g.items.forEach(it=>{ if(!isChecked(it.key)) n++; }));
+  let n=0; buildShopping().forEach(g=>g.items.forEach(it=>{ if(!isChecked(it.key)) n++; }));
   const c1=$('#cntShop'); c1.textContent=n; c1.hidden = n===0;
   const ns = S.staples.filter(stapleNeeded).length;
   const c2=$('#cntStock'); c2.textContent=ns; c2.hidden = ns===0;
+  const np = viewWeek===currentWeekStart() ? pendingCount() : 0;
+  const c3=$('#cntWeek'); c3.textContent=np; c3.hidden = np===0 || phaseNow()==='cook';
 }
 
-/* ---------- 今週 ---------- */
+/* ---------- フェーズ帯 ---------- */
+function renderPhase(){
+  const el = $('#phaseBar');
+  if(viewWeek !== currentWeekStart()){
+    el.innerHTML = '<div class="wrap"><span class="dot" style="background:#c9ccd1"></span>'+
+      '別の週を見ています<button class="go" id="phGo">今週へ</button></div>';
+    $('#phGo').onclick = ()=>{ viewWeek = currentWeekStart(); getWeek(viewWeek); save(); render(); };
+    return;
+  }
+  const ph = phaseNow(), pend = pendingCount(), appr = approvedCount();
+  let dot='var(--p)', txt='', sub='', go='', goTab='';
+  if(ph==='pre'){
+    dot='var(--sub2)'; txt='土曜 — お昼に来週の提案が出ます';
+    sub='いま見ることもできます'; go='提案を見る'; goTab='week';
+  }else if(ph==='review'){
+    dot='var(--a)';
+    txt = pend ? '承認してください（残り'+pend+'日ぶん）' : '全'+appr+'日ぶん承認ずみ';
+    sub = '締切 日曜 '+DEADLINE_HOUR+':00';
+    go  = pend ? '献立へ' : '買い物へ'; goTab = pend ? 'week' : 'shop';
+  }else if(ph==='shop'){
+    dot='var(--g)';
+    txt = pend ? '未承認が'+pend+'日ぶん残っています' : '買い物リストができています';
+    sub = '日曜 '+SHOP_HOUR+':00〜';
+    go='買い物へ'; goTab='shop';
+  }else{
+    const t = today(), idx = Math.round((t - parseISO(viewWeek))/86400000);
+    const day = (idx>=0 && idx<=4) ? W().days[DAYS[idx].k] : null;
+    const r = day && day.mode==='cook' ? recipeById(day.mainId) : null;
+    dot='var(--p)';
+    txt = day ? (day.mode!=='cook' ? '今日は'+MODES[day.mode] : (r ? '今日：'+r.name : '今日の献立は未設定'))
+              : '今週の献立';
+    sub = '月〜金';
+  }
+  el.innerHTML = '<div class="wrap"><span class="dot" style="background:'+dot+'"></span>'+esc(txt)+
+    (go ? '<button class="go" id="phGo">'+go+'</button>' : '<span class="sub">'+esc(sub)+'</span>')+'</div>';
+  const g = $('#phGo'); if(g) g.onclick = ()=>switchTab(goTab);
+}
+
+/* ---------- 献立タブ ---------- */
+const RATE = {3:{ic:'👍',nm:'また作りたい'}, 2:{ic:'😐',nm:'ふつう'}, 1:{ic:'👎',nm:'いまいち'}};
+const ST_STYLE = {
+  pending:  {bg:'#f0eeea', fg:'#7c8189', nm:'未承認'},
+  approved: {bg:'#d9f0e2', fg:'#1f7a4c', nm:'承認'},
+  other:    {bg:'#e6eefa', fg:'#2f63a8', nm:'その他'}
+};
+
 function renderWeek(){
   const wk = W(), el = $('#pane-week');
-  const t = today(), ws = parseISO(viewWeek);
+  const ws = parseISO(viewWeek), t = today();
   const todayIdx = Math.round((t-ws)/86400000);
+  const ph = viewWeek===currentWeekStart() ? phaseNow() : 'cook';
   let h = '';
 
-  // 土日は「今日の献立」ではなく、まとめ買いの段取りを出す
-  const dow = t.getDay();
-  if((dow===0 || dow===6) && viewWeek===currentWeekStart()){
-    const st = S.staples.filter(stapleNeeded).length;
-    const decided = DAYS.filter(d=>wk.days[d.k].mode!=='cook' || wk.days[d.k].recipeId).length;
-    h += '<div class="hero"><div class="lb2">'+(dow===0?'SUNDAY':'SATURDAY')+'</div>'+
-         '<div class="nm">'+md(ws)+'からの1週間を決める</div>'+
-         '<div class="ing">① 献立を組む（'+decided+'/5）　→　② 常備品をチェック（'+st+'件）　→　③ 買い物へ</div></div>';
-  }
-
-  // 今日の献立ヒーロー
-  if(todayIdx>=0 && todayIdx<=4){
-    const dk = DAYS[todayIdx].k, day = wk.days[dk], r = day.mode==='cook' ? recipeById(day.recipeId) : null;
+  // --- ヒーロー ---
+  if(ph==='cook' && todayIdx>=0 && todayIdx<=4){
+    const dk = DAYS[todayIdx].k, day = wk.days[dk], r = day.mode==='cook' ? recipeById(day.mainId) : null;
     if(day.mode!=='cook'){
       h += '<div class="hero rest"><div class="lb2">TODAY</div><div class="nm">'+
            (day.mode==='out'?'🍜 今日は外食':'🍱 今日は残り物')+'</div></div>';
     }else if(r){
+      const sides = (day.sideIds||[]).map(recipeById).filter(Boolean);
       h += '<div class="hero"><div class="lb2">TODAY</div><div class="nm">'+esc(r.name)+'</div>'+
-           '<div class="ing">'+ (r.ings.length ? '🧺 '+r.ings.map(i=>esc(i.name)).join('・') : '食材の登録なし') +
-           (r.seasonings&&r.seasonings.length ? '<br>🧂 '+r.seasonings.map(esc).join('・') : '') + '</div></div>';
+           (sides.length ? '<div class="ing" style="opacity:.95;font-size:13.5px">＋ '+sides.map(x=>esc(x.name)).join('、')+'</div>' : '')+
+           '<div class="ing" style="margin-top:6px">🧺 '+
+             [r].concat(sides).map(x=>x.ings.map(i=>esc(i.name)).join('・')).filter(Boolean).join(' ／ ')+'</div></div>';
     }else{
       h += '<div class="hero rest"><div class="lb2">TODAY</div><div class="nm">まだ決まっていません</div></div>';
     }
+  }else if(ph==='pre' || ph==='review' || ph==='shop'){
+    const pend = pendingCount(), appr = approvedCount();
+    const other = DAYS.filter(d=>wk.days[d.k].status==='other').length;
+    h += '<div class="hero"><div class="lb2">'+(ph==='shop'?'SUNDAY':'SATURDAY')+'</div>'+
+         '<div class="nm">'+md(ws)+'からの1週間</div>'+
+         '<div class="ing">承認 '+appr+'　未承認 '+pend+'　その他 '+other+
+         '　／　'+(ph==='shop' ? '買い物へ' : '締切 日曜'+DEADLINE_HOUR+':00')+'</div></div>';
   }
 
-  // 提案ボタン
+  // --- 操作 ---
+  const canPlan = mainPool().length>0;
   h += '<div style="display:flex;gap:8px;margin:12px 0 4px">'+
-       '<button class="btn" style="flex:1" id="btnSuggest">✨ 1週間ぶん提案</button>'+
-       '<button class="btn sub" id="btnClearWeek" style="flex:none;padding:12px 14px">クリア</button></div>';
-  if(!S.recipes.length){
-    h += '<div class="note">まずは <b>📖 レシピ</b> タブで定番料理を登録してください。レシピサイトやYouTubeの概要欄を<b>貼り付けるだけ</b>で食材まで自動で取り込みます。</div>';
+       '<button class="btn" style="flex:1" id="btnSuggest">✨ 未承認の日を提案</button>'+
+       '<button class="btn gr" id="btnApproveAll" style="flex:none;padding:12px 14px">全部承認</button></div>'+
+       '<div style="display:flex;gap:8px;margin:8px 0 4px">'+
+       '<button class="btn sub sm" style="flex:1" id="btnRedo">承認ずみも含めて組み直す</button>'+
+       '<button class="btn sub sm" id="btnClearWeek" style="flex:none">クリア</button></div>';
+  if(!canPlan){
+    h += '<div class="note">まずは <b>📖 レシピ</b> タブで主菜を登録してください。'+
+         'レシピサイトやYouTubeの概要欄を<b>貼り付けるだけ</b>で食材まで取り込めます。</div>';
+  }else if(mainPool().length < 8){
+    h += '<div class="note">主菜が<b>'+mainPool().length+'品</b>しかないため、同じ料理が何度も出ます。'+
+         '15品くらいまで増えると提案が効きはじめます。</div>';
   }
 
-  // 曜日カード
+  // --- 曜日カード ---
   h += '<div class="card">';
   DAYS.forEach((d,i)=>{
-    const day = wk.days[d.k], r = recipeById(day.recipeId);
-    const isToday = i===todayIdx;
+    const day = wk.days[d.k], r = recipeById(day.mainId);
     const date = addDays(ws,i);
-    h += '<div class="day'+(isToday?' today':'')+'">'+
-         '<div class="dcol"><div class="w">'+d.w+'</div><div class="d">'+md(date)+'</div></div>'+
+    const isToday = i===todayIdx;
+    const isPast  = iso(date) < iso(t);
+    const stl = ST_STYLE[day.status] || ST_STYLE.pending;
+    const rule = dayRule(d.k);
+    h += '<div class="day'+(isToday?' today':'')+(day.status==='approved'?' appr':'')+(day.status==='other'?' other':'')+'">'+
+         '<div class="dcol"><div class="w">'+d.w+'</div><div class="d">'+md(date)+'</div>'+
+         '<div class="st" style="background:'+stl.bg+';color:'+stl.fg+'">'+stl.nm+'</div></div>'+
          '<div class="dbody">';
+
     if(day.mode==='cook'){
       if(r){
         h += '<div class="dname" data-pick="'+d.k+'">'+esc(r.name)+
-             ' <span class="pill '+r.protein+'">'+PROT[r.protein].ic+' '+PROT[r.protein].nm+'</span>'+
-             (r.minutes?' <span class="pill min">'+r.minutes+'分</span>':'')+'</div>';
-        h += '<div class="ding" data-pick="'+d.k+'">'+ (r.ings.length ? r.ings.map(i=>esc(i.name)).join('・') : '<span style="color:#b9bec5">食材なし</span>') +'</div>';
+             ' <span class="pill '+r.protein+'">'+PROT[r.protein].ic+'</span>'+
+             (r.minutes?' <span class="pill min">'+r.minutes+'分</span>':'')+
+             (rule.type==='rotate'?' <span class="pill b">ローテ</span>':'')+
+             (rule.type==='pool'?' <span class="pill b">定番</span>':'')+'</div>';
+        const sides = (day.sideIds||[]).map(recipeById).filter(Boolean);
+        h += '<div class="sides">';
+        sides.forEach((sr,si)=>{
+          h += '<div class="side"><span>＋</span><span class="nm2" data-pickside="'+d.k+':'+si+'">'+esc(sr.name)+'</span>'+
+               '<button class="x" data-delside="'+d.k+':'+si+'">✕</button></div>';
+        });
+        h += '<button class="sideadd" data-addside="'+d.k+'">＋ 副菜を'+(sides.length?'追加':'決める')+'</button></div>';
+        h += '<div class="ding" data-pick="'+d.k+'">'+
+             [r].concat(sides).map(x=>x.ings.map(i=>esc(i.name)).join('・')).filter(Boolean).join(' ／ ')+'</div>';
       }else{
-        h += '<div class="dname none" data-pick="'+d.k+'">＋ タップして選ぶ</div>';
+        h += '<div class="dname none" data-pick="'+d.k+'">＋ タップして主菜を選ぶ</div>';
       }
     }else{
       h += '<div class="dname none">'+(day.mode==='out'?'🍜 外食':'🍱 残り物')+'（買い物リストに出ません）</div>';
     }
-    h += '<div class="dacts">'+
-         '<div class="mode3">'+
-           ['cook','out','left'].map(m=>'<button class="'+(day.mode===m?'on '+m:'')+'" data-mode="'+m+'" data-day="'+d.k+'">'+MODES[m]+'</button>').join('')+
-         '</div>';
-    if(day.mode==='cook'){
-      h += '<button data-shuf="'+d.k+'" title="引き直す">🎲</button>';
+
+    // 承認・差戻し・その他
+    if(!isPast){
+      h += '<div class="dacts">'+
+           '<div class="appr3">'+
+             '<button class="'+(day.status==='approved'?'on':'')+'" data-appr="'+d.k+'">承認</button>'+
+             '<button class="rej" data-rej="'+d.k+'">差戻し</button>'+
+             '<button class="'+(day.status==='other'?'on':'')+'" data-oth="'+d.k+'">その他</button>'+
+           '</div></div>';
     }
-    h += '</div></div></div>';
+    // 評価（当日以降に表示。任意）
+    if(day.mode==='cook' && day.mainId && iso(date) <= iso(t)){
+      h += '<div class="rate"><span class="lb3">評価</span>'+
+           [3,2,1].map(v=>'<button class="'+(day.rating===v?'on':'')+'" data-rate="'+d.k+':'+v+'" title="'+RATE[v].nm+'">'+RATE[v].ic+'</button>').join('')+
+           '</div>';
+    }
+    h += '</div></div>';
   });
   h += '</div>';
 
-  // 余り食材
+  // --- 余り食材 ---
   h += '<div class="sec">🥕 余っている食材<span class="line"></span></div>'+
        '<div class="card"><div class="tiny" style="padding:11px 13px 4px">'+
-       'ここに入れておくと、次の献立提案でこの食材を使うレシピが優先されます。</div>'+
-       '<div style="padding:0 13px 12px"><div class="chips" id="leftChips">'+
+       'ここに入れておくと、次の提案でこの食材を使うレシピが優先されます。</div>'+
+       '<div style="padding:0 13px 12px"><div class="chips">'+
        (S.leftovers.length ? S.leftovers.map(l=>'<span class="chip"><span class="cat">'+catIc(l.cat)+'</span>'+esc(l.name)+
-          '<button class="x" data-delleft="'+l.id+'">✕</button></span>').join('')
-        : '<span class="tiny">なし</span>')+'</div></div>'+
+          '<button class="x" data-delleft="'+l.id+'">✕</button></span>').join('') : '<span class="tiny">なし</span>')+'</div></div>'+
        '<div class="addrow"><input id="leftInput" placeholder="例）キャベツ 半玉" enterkeyhint="done">'+
        '<button class="btn sm" id="btnAddLeft">追加</button></div></div>';
 
   el.innerHTML = h;
 
   $('#btnSuggest').onclick = ()=>{
-    if(!S.recipes.length){ toast('先にレシピを登録してください'); switchTab('recipe'); return; }
-    if(suggestWeek()){ render(); toast('1週間ぶんを提案しました'); }
+    if(!canPlan){ toast('先にレシピを登録してください'); switchTab('recipe'); return; }
+    if(suggestWeek()){ render(); toast('未承認の日を提案しました'); }
   };
+  $('#btnRedo').onclick = ()=>{
+    if(!canPlan){ toast('先にレシピを登録してください'); switchTab('recipe'); return; }
+    if(!confirm('承認ずみの日も含めて組み直します。よろしいですか？')) return;
+    if(suggestWeek({redoApproved:true})){ render(); toast('1週間ぶん組み直しました'); }
+  };
+  $('#btnApproveAll').onclick = approveAll;
   $('#btnClearWeek').onclick = ()=>{
-    DAYS.forEach(d=>{ wk.days[d.k].recipeId=null; });
-    save(); render();
+    DAYS.forEach(d=>{ wk.days[d.k] = blankDay(); });
+    wk.generatedAt = null; save(); render();
   };
-  el.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{
-    wk.days[b.dataset.day].mode = b.dataset.mode; save(); render();
+  el.querySelectorAll('[data-appr]').forEach(b=>b.onclick=()=>approveDay(b.dataset.appr));
+  el.querySelectorAll('[data-rej]').forEach(b=>b.onclick=()=>rejectDay(b.dataset.rej));
+  el.querySelectorAll('[data-oth]').forEach(b=>b.onclick=()=>openOther(b.dataset.oth));
+  el.querySelectorAll('[data-pick]').forEach(b=>b.onclick=()=>openPicker(b.dataset.pick,'main'));
+  el.querySelectorAll('[data-addside]').forEach(b=>b.onclick=()=>openPicker(b.dataset.addside,'side',-1));
+  el.querySelectorAll('[data-pickside]').forEach(b=>b.onclick=()=>{
+    const [dk,si] = b.dataset.pickside.split(':'); openPicker(dk,'side',+si);
   });
-  el.querySelectorAll('[data-pick]').forEach(b=>b.onclick=()=>openPicker(b.dataset.pick));
-  el.querySelectorAll('[data-shuf]').forEach(b=>b.onclick=()=>shuffleDay(b.dataset.shuf));
+  el.querySelectorAll('[data-delside]').forEach(b=>b.onclick=()=>{
+    const [dk,si] = b.dataset.delside.split(':');
+    wk.days[dk].sideIds.splice(+si,1); save(); render();
+  });
+  el.querySelectorAll('[data-rate]').forEach(b=>b.onclick=()=>{
+    const [dk,v] = b.dataset.rate.split(':'); rateDay(dk, +v);
+  });
   el.querySelectorAll('[data-delleft]').forEach(b=>b.onclick=()=>{
     S.leftovers = S.leftovers.filter(l=>l.id!==b.dataset.delleft); save(); render();
   });
@@ -941,19 +1365,25 @@ function renderWeek(){
   li.onkeydown = e => { if(e.key==='Enter'){ e.preventDefault(); addLeft(); } };
 }
 
-/* ---------- 買い物 ---------- */
+/* ---------- 買い物タブ ---------- */
 function renderShop(){
   const el = $('#pane-shop'), wk = W(), groups = buildShopping();
   let total=0, done=0;
   groups.forEach(g=>g.items.forEach(it=>{ total++; if(isChecked(it.key)) done++; }));
+  const pend = pendingCount();
 
   let h = '<div class="card" style="padding:13px;display:flex;align-items:center;gap:12px">'+
     '<div style="flex:1"><div style="font-size:15px;font-weight:800">買い物リスト '+done+' / '+total+'</div>'+
-    '<div class="tiny">献立の食材＋そろそろ切れる常備品＋手動追加</div></div>'+
+    '<div class="tiny">承認した'+approvedCount()+'日ぶんの食材＋常備品＋手動追加</div></div>'+
     '<button class="btn sub sm" id="btnCopy">📋 コピー</button></div>';
 
+  if(pend){
+    h += '<div class="note" style="background:var(--a-l);border-color:#f0e0b8;color:#7a5c14">'+
+         '未承認の日が<b>'+pend+'日ぶん</b>あります。承認するとその食材がここに並びます。'+
+         '<button class="btn sm" id="btnToWeek" style="margin-top:8px;background:var(--a);color:#fff">献立へ</button></div>';
+  }
   if(!total){
-    h += '<div class="empty"><span class="big">🛒</span>まだ何もありません<br>献立を決めると食材が自動で並びます</div>';
+    h += '<div class="empty"><span class="big">🛒</span>まだ何もありません<br>献立を承認すると食材が自動で並びます</div>';
   }
   groups.forEach(g=>{
     const rest = g.items.filter(it=>!isChecked(it.key)).length;
@@ -962,7 +1392,7 @@ function renderShop(){
       const ck = isChecked(it.key);
       let why = '';
       if(it.kind==='ing'){
-        why = it.uses.map(u=>'<span class="pill b">'+u.w+'</span>'+esc(u.recipe)).join(' ');
+        why = it.uses.map(u=>'<span class="pill b">'+u.w+'</span>'+(u.side?'<span style="opacity:.6">副菜 </span>':'')+esc(u.recipe)).join(' ');
         if(it.leftover) why += ' <span class="pill a">余りあり</span>';
         if(it.staple)   why += ' <span class="pill a">常備品</span>'+esc(it.why);
       }else if(it.kind==='staple'){
@@ -982,7 +1412,6 @@ function renderShop(){
   h += '<div class="card" style="margin-top:14px"><div class="addrow" style="background:#fff;border-top:none">'+
        '<input id="extInput" placeholder="リストに追加（例）電池、ビール" enterkeyhint="done">'+
        '<button class="btn sm" id="btnAddExt">追加</button></div></div>';
-
   if(total){
     h += '<button class="btn gr full" style="margin:14px 0 6px" id="btnDoneShop">🎉 買い物おわり（常備品を更新）</button>'+
          '<div class="tiny" style="text-align:center;padding-bottom:8px">'+
@@ -1011,19 +1440,21 @@ function renderShop(){
   $('#btnAddExt').onclick = addExt;
   ei.onkeydown = e => { if(e.key==='Enter'){ e.preventDefault(); addExt(); } };
   $('#btnCopy').onclick = copyList;
+  const bw = $('#btnToWeek'); if(bw) bw.onclick = ()=>switchTab('week');
   const bd = $('#btnDoneShop'); if(bd) bd.onclick = finishShopping;
 }
 
 function listAsText(){
   const ws = parseISO(viewWeek), wk = W();
-  let out = '🛒 買い物リスト '+md(ws)+'〜'+md(addDays(ws,4))+'\n';
-  const menu = DAYS.map(d=>{
+  let out = '🛒 買い物リスト '+md(ws)+'〜'+md(addDays(ws,4))+'\n\n【今週の献立】\n';
+  DAYS.forEach(d=>{
     const day = wk.days[d.k];
-    if(day.mode!=='cook') return d.w+'：'+MODES[day.mode];
-    const r = recipeById(day.recipeId);
-    return d.w+'：'+(r?r.name:'未定');
-  }).join('\n');
-  out += '\n【今週の献立】\n'+menu+'\n';
+    if(day.mode!=='cook'){ out += d.w+'：'+MODES[day.mode]+'\n'; return; }
+    const r = recipeById(day.mainId);
+    const sides = (day.sideIds||[]).map(recipeById).filter(Boolean);
+    out += d.w+'：'+(r?r.name:'未定')+(sides.length?'（＋'+sides.map(x=>x.name).join('、')+'）':'')+
+           (day.status==='pending'?' ※未承認':'')+'\n';
+  });
   buildShopping().forEach(g=>{
     const items = g.items.filter(it=>!isChecked(it.key));
     if(!items.length) return;
@@ -1047,19 +1478,17 @@ function fallbackCopy(txt){
 }
 function finishShopping(){
   const wk = W();
+  const bought = new Set();
+  buildShopping().forEach(g=>g.items.forEach(it=>{ if(it.staple && wk.checked[it.key]) bought.add(it.staple.id); }));
   let n = 0;
-  const groups = buildShopping();
-  const boughtIds = new Set();
-  groups.forEach(g=>g.items.forEach(it=>{ if(it.staple && wk.checked[it.key]) boughtIds.add(it.staple.id); }));
-  S.staples.forEach(st=>{ if(boughtIds.has(st.id)){ buyStaple(st); n++; } });
-  // 献立に入れたレシピを「作った」扱いにする（押させない設計）
-  const ws = parseISO(viewWeek);
-  DAYS.forEach((d,i)=>{
-    const day = wk.days[d.k];
-    if(day.mode!=='cook' || !day.recipeId) return;
-    const r = recipeById(day.recipeId); if(!r) return;
-    const dt = iso(addDays(ws,i));
-    if(!r.lastCooked || r.lastCooked < dt){ r.lastCooked = dt; r.cookCount = (r.cookCount||0)+1; }
+  S.staples.forEach(st=>{ if(bought.has(st.id)){ buyStaple(st); n++; } });
+  // 月曜ローテーションを1つ進める
+  DAYS.forEach(d=>{
+    const rule = dayRule(d.k), day = wk.days[d.k];
+    if(rule.type!=='rotate' || !rule.ids || !rule.ids.length) return;
+    if(day.status!=='approved' || !day.mainId) return;
+    const i = rule.ids.indexOf(day.mainId);
+    if(i>=0) rule.next = (i+1) % rule.ids.length;
   });
   wk.done = true;
   save(); render();
@@ -1140,31 +1569,47 @@ function stapleRow(st){
     '</div></div>';
 }
 
-/* ---------- レシピ ---------- */
+
+/* ---------- レシピタブ ---------- */
+let recipeFilter = 'main';
 function renderRecipes(){
   const el = $('#pane-recipe');
-  const list = S.recipes.slice().sort((a,b)=>{
+  const all = S.recipes.filter(r=>recipeFilter==='all' ? true
+    : (recipeFilter==='side' ? r.kind==='side' : r.kind!=='side'));
+  const list = all.slice().sort((a,b)=>{
     const da = daysSince(a.lastCooked), db = daysSince(b.lastCooked);
     return (db===null?9999:db) - (da===null?9999:da);
   });
+  const nMain = S.recipes.filter(r=>r.kind!=='side').length;
+  const nSide = S.recipes.filter(r=>r.kind==='side').length;
+
   let h = '<div style="display:flex;gap:8px;margin:12px 0 2px">'+
     '<button class="btn" style="flex:1" id="btnPaste">📋 貼り付けて取り込む</button>'+
     '<button class="btn sub" id="btnNewRecipe" style="flex:none;padding:12px 15px">＋ 手入力</button></div>'+
-    '<div class="tiny" style="margin:0 2px 8px">レシピサイトの材料欄やYouTubeの概要欄をコピーして貼るだけ。分量と調味料は自動で落とし、食材だけ取り込みます。</div>';
+    '<div class="tiny" style="margin:0 2px 4px">レシピサイトの材料欄やYouTubeの概要欄をコピーして貼るだけ。分量と調味料は自動で落とし、食材だけ取り込みます。</div>'+
+    '<div class="filt">'+
+      '<button data-f="main" class="'+(recipeFilter==='main'?'on':'')+'">主菜 '+nMain+'</button>'+
+      '<button data-f="side" class="'+(recipeFilter==='side'?'on':'')+'">副菜 '+nSide+'</button>'+
+      '<button data-f="all"  class="'+(recipeFilter==='all'?'on':'')+'">すべて</button>'+
+    '</div>';
 
   if(!list.length){
-    h += '<div class="empty"><span class="big">📖</span>まだレシピがありません<br>うちの定番を20〜30品いれると提案が効きはじめます</div>';
+    h += '<div class="empty"><span class="big">📖</span>まだありません<br>'+
+         (recipeFilter==='side'?'副菜を足すと献立と一緒に提案されます':'うちの定番を20〜30品いれると提案が効きはじめます')+'</div>';
   }else{
-    h += '<div class="sec">定番レシピ（'+list.length+'）<span class="line"></span></div><div class="card">';
+    h += '<div class="sec">最後に作った順<span class="line"></span></div><div class="card">';
     list.forEach(r=>{
-      const ds = daysSince(r.lastCooked);
+      const ds = daysSince(r.lastCooked), av = avgRating(r);
       h += '<div class="rc" data-edrec="'+r.id+'"><div class="rcm">'+
         '<div class="rcn">'+esc(r.name)+
-          ' <span class="pill '+r.protein+'">'+PROT[r.protein].ic+'</span>'+
+          (r.kind==='side'?' <span class="pill">副菜</span>':' <span class="pill '+r.protein+'">'+PROT[r.protein].ic+'</span>')+
           (r.minutes?' <span class="pill min">'+r.minutes+'分</span>':'')+
-          (ds===null?' <span class="pill g">未調理</span>':(ds<0?' <span class="pill b">今週</span>':' <span class="pill">'+ds+'日前</span>'))+
+          (av!==null?' <span class="pill '+(av>=2.5?'g':(av<1.7?'r':'a'))+'">'+
+            (av>=2.5?'👍':(av<1.7?'👎':'😐'))+' '+av.toFixed(1)+'</span>':'')+
+          (ds===null?' <span class="pill">未調理</span>':(ds<0?' <span class="pill b">今週</span>':' <span class="pill">'+ds+'日前</span>'))+
         '</div>'+
-        '<div class="rci">'+(r.ings.length?r.ings.map(i=>esc(i.name)).join('・'):'食材の登録なし')+'</div>'+
+        '<div class="rci">'+(r.ings.length?r.ings.map(i=>esc(i.name)).join('・'):'食材の登録なし')+
+          (r.cookCount?'　／　通算'+r.cookCount+'回':'')+'</div>'+
       '</div><div style="color:#c3c7cd;font-size:18px">›</div></div>';
     });
     h += '</div>';
@@ -1172,11 +1617,12 @@ function renderRecipes(){
   el.innerHTML = h;
   $('#btnPaste').onclick = openPaste;
   $('#btnNewRecipe').onclick = ()=>openRecipeEdit(null);
+  el.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{ recipeFilter=b.dataset.f; renderRecipes(); });
   el.querySelectorAll('[data-edrec]').forEach(b=>b.onclick=()=>openRecipeEdit(b.dataset.edrec));
 }
 
 /* =========================================================================
-   シート（モーダル）
+   シート
    ========================================================================= */
 function sheet(title, bodyHTML, footHTML){
   $('#shTitle').textContent = title;
@@ -1189,22 +1635,66 @@ function closeSheet(){ $('#ov').classList.remove('on'); }
 $('#shClose').onclick = closeSheet;
 $('#ov').onclick = e => { if(e.target.id==='ov') closeSheet(); };
 
-/* ---------- レシピを選ぶ ---------- */
-function openPicker(dk){
-  if(!S.recipes.length){ toast('先にレシピを登録してください'); closeSheet(); switchTab('recipe'); return; }
-  const wk = W(), cur = wk.days[dk].recipeId;
-  const list = S.recipes.slice().sort((a,b)=>a.name.localeCompare(b.name,'ja'));
-  const body = '<div class="tiny" style="margin:12px 0 2px">'+DAYS.find(d=>d.k===dk).w+'曜日に作るものを選んでください。</div>'+
-    '<div class="pickgrid">'+ list.map(r=>
-      '<button data-r="'+r.id+'" class="'+(r.id===cur?'on':'')+'"><div class="pn">'+esc(r.name)+'</div>'+
-      '<div class="pi">'+PROT[r.protein].ic+(r.minutes?' '+r.minutes+'分':'')+'</div></button>').join('') +'</div>';
-  sheet('レシピを選ぶ', body,
-    '<button class="btn sub" id="pkClear">未設定にする</button><button class="btn" id="pkClose">閉じる</button>');
+/* ---------- 主菜／副菜を選ぶ ---------- */
+function openPicker(dk, kind, sideIdx){
+  const pool = kind==='side' ? sidePool() : mainPool();
+  if(!pool.length){
+    toast(kind==='side'?'副菜が登録されていません':'先にレシピを登録してください');
+    closeSheet(); switchTab('recipe'); return;
+  }
+  const wk = W(), day = wk.days[dk];
+  const cur = kind==='side' ? (sideIdx>=0 ? day.sideIds[sideIdx] : null) : day.mainId;
+  const list = pool.slice().sort((a,b)=>a.name.localeCompare(b.name,'ja'));
+  const w = DAYS.find(d=>d.k===dk).w;
+  const body = '<div class="tiny" style="margin:12px 0 2px">'+w+'曜日の'+(kind==='side'?'副菜':'主菜')+'を選んでください。</div>'+
+    '<div class="pickgrid">'+ list.map(r=>{
+      const ds = daysSince(r.lastCooked);
+      return '<button data-r="'+r.id+'" class="'+(r.id===cur?'on':'')+'"><div class="pn">'+esc(r.name)+'</div>'+
+      '<div class="pi">'+(r.kind==='side'?'副菜':PROT[r.protein].ic)+(r.minutes?' '+r.minutes+'分':'')+
+      (ds===null?'':' ・'+ds+'日前')+'</div></button>';
+    }).join('') +'</div>';
+  sheet((kind==='side'?'副菜':'主菜')+'を選ぶ', body,
+    '<button class="btn sub" id="pkClear">'+(kind==='side'?'副菜なし':'未設定にする')+'</button>'+
+    '<button class="btn" id="pkClose">閉じる</button>');
   $('#shBody').querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{
-    wk.days[dk].recipeId = b.dataset.r; save(); closeSheet(); render();
+    if(kind==='side'){
+      day.sideIds = day.sideIds||[];
+      if(sideIdx>=0) day.sideIds[sideIdx] = b.dataset.r;
+      else if(day.sideIds.indexOf(b.dataset.r)<0) day.sideIds.push(b.dataset.r);
+    }else{
+      day.mainId = b.dataset.r; day.mode='cook';
+      if(day.status==='other') day.status='pending';
+    }
+    save(); closeSheet(); render();
   });
-  $('#pkClear').onclick = ()=>{ wk.days[dk].recipeId=null; save(); closeSheet(); render(); };
+  $('#pkClear').onclick = ()=>{
+    if(kind==='side'){ if(sideIdx>=0) day.sideIds.splice(sideIdx,1); else day.sideIds=[]; }
+    else day.mainId = null;
+    save(); closeSheet(); render();
+  };
   $('#pkClose').onclick = closeSheet;
+}
+
+/* ---------- 「その他」 ---------- */
+function openOther(dk){
+  const w = DAYS.find(d=>d.k===dk).w;
+  const body = '<div class="tiny" style="margin:12px 0 10px">'+w+'曜日をどうしますか。'+
+    '外食・残り物にすると、その日の食材は買い物リストから外れます。</div>'+
+    '<button class="btn sub full" style="margin-bottom:9px" id="otOut">🍜 外食にする</button>'+
+    '<button class="btn sub full" style="margin-bottom:9px" id="otLeft">🍱 残り物にする</button>'+
+    '<button class="btn sub full" style="margin-bottom:9px" id="otPick">📖 自分で主菜を選ぶ</button>'+
+    '<button class="btn sub full" id="otBack">↩︎ 提案に戻す（未承認）</button><div style="height:10px"></div>';
+  sheet('その他', body, '<button class="btn" id="otClose">閉じる</button>');
+  $('#otOut').onclick  = ()=>{ setOther(dk,'out');  closeSheet(); };
+  $('#otLeft').onclick = ()=>{ setOther(dk,'left'); closeSheet(); };
+  $('#otPick').onclick = ()=>openPicker(dk,'main');
+  $('#otBack').onclick = ()=>{
+    const day = W().days[dk];
+    day.mode='cook'; day.status='pending';
+    if(!day.mainId) shuffleMain(dk);
+    save(); closeSheet(); render();
+  };
+  $('#otClose').onclick = closeSheet;
 }
 
 /* ---------- 貼り付けて取り込む ---------- */
@@ -1225,7 +1715,7 @@ function openPaste(){
     if(p.urlOnly){ toast('URLだけでは取り込めません。本文をコピーしてください'); return; }
     if(!p.ings.length && !p.seasonings.length){ toast('食材が見つかりませんでした。材料欄を含めて貼ってください'); return; }
     draft = {
-      id:null, title:p.title, minutes:p.minutes,
+      id:null, kind:'main', title:p.title, minutes:p.minutes,
       ings: p.ings.map(i=>({name:i.name, cat:i.cat})),
       seasonings: p.seasonings.slice()
     };
@@ -1239,9 +1729,10 @@ function openPaste(){
 function openRecipeEdit(id){
   const r = id ? recipeById(id) : null;
   draft = r ? {
-    id:r.id, title:r.name, minutes:r.minutes, protein:r.protein,
+    id:r.id, kind:r.kind||'main', title:r.name, minutes:r.minutes, protein:r.protein,
     ings:r.ings.map(i=>({name:i.name,cat:i.cat})), seasonings:(r.seasonings||[]).slice()
-  } : { id:null, title:'', minutes:null, protein:'other', ings:[], seasonings:[] };
+  } : { id:null, kind:(recipeFilter==='side'?'side':'main'), title:'', minutes:null,
+        protein:'other', ings:[], seasonings:[] };
   openRecipeForm(r ? 'レシピを編集' : 'レシピを追加', false);
 }
 
@@ -1252,6 +1743,11 @@ function openRecipeForm(title, fromPaste){
       (draft.seasonings.length?'（調味料 '+draft.seasonings.length+'件は除外）':'')+
       '。間違いがあればタップで直してください。</div>' : '')+
     '<label class="lb">料理名</label><input class="f" id="rfName" value="'+esc(draft.title)+'" placeholder="例）麻婆春雨">'+
+    '<label class="lb">種類</label>'+
+    '<div class="seg" id="rfKind">'+
+      '<button data-k="main" class="'+(draft.kind!=='side'?'on':'')+'">🍖 主菜</button>'+
+      '<button data-k="side" class="'+(draft.kind==='side'?'on':'')+'">🥗 副菜</button>'+
+    '</div>'+
     '<label class="lb">タンパク源（献立の並べ方に使います）</label>'+
     '<div class="seg" id="rfProt">'+
       ['meat','fish','other'].map(p=>'<button data-p="'+p+'" class="'+(draft.protein===p?'on':'')+'">'+PROT[p].ic+' '+PROT[p].nm+'</button>').join('')+
@@ -1271,6 +1767,10 @@ function openRecipeForm(title, fromPaste){
     '<button class="btn" id="rfSave">保存</button>');
   drawChips();
 
+  $('#shBody').querySelectorAll('#rfKind button').forEach(b=>b.onclick=()=>{
+    draft.kind = b.dataset.k;
+    $('#shBody').querySelectorAll('#rfKind button').forEach(x=>x.classList.toggle('on', x.dataset.k===draft.kind));
+  });
   $('#shBody').querySelectorAll('#rfProt button').forEach(b=>b.onclick=()=>{
     draft.protein = b.dataset.p;
     $('#shBody').querySelectorAll('#rfProt button').forEach(x=>x.classList.toggle('on', x.dataset.p===draft.protein));
@@ -1289,7 +1789,13 @@ function openRecipeForm(title, fromPaste){
   if(dl) dl.onclick = ()=>{
     if(!confirm('このレシピを削除しますか？')) return;
     S.recipes = S.recipes.filter(r=>r.id!==draft.id);
-    Object.values(S.weeks).forEach(w=>DAYS.forEach(d=>{ if(w.days[d.k].recipeId===draft.id) w.days[d.k].recipeId=null; }));
+    Object.values(S.weeks).forEach(w=>DAYS.forEach(d=>{
+      if(w.days[d.k].mainId===draft.id) w.days[d.k].mainId=null;
+      w.days[d.k].sideIds = (w.days[d.k].sideIds||[]).filter(id=>id!==draft.id);
+    }));
+    Object.values(S.settings.dayRules||{}).forEach(rule=>{
+      if(rule.ids) rule.ids = rule.ids.filter(id=>id!==draft.id);
+    });
     save(); closeSheet(); render(); toast('削除しました');
   };
 }
@@ -1326,6 +1832,7 @@ function saveRecipeDraft(){
   const minRaw = parseInt($('#rfMin').value,10);
   const payload = {
     name:nm,
+    kind:draft.kind||'main',
     protein:draft.protein,
     minutes: (minRaw>0 && minRaw<600) ? minRaw : null,
     ings: draft.ings.map(i=>({name:i.name, cat:i.cat})),
@@ -1334,7 +1841,8 @@ function saveRecipeDraft(){
   if(draft.id){
     Object.assign(recipeById(draft.id), payload);
   }else{
-    S.recipes.push(Object.assign({id:uid(), lastCooked:null, cookCount:0, archived:false}, payload));
+    S.recipes.push(Object.assign({id:uid(), lastCooked:null, cookCount:0,
+      ratingSum:0, ratingCount:0, archived:false}, payload));
   }
   save(); closeSheet(); render(); toast('保存しました');
 }
@@ -1386,30 +1894,109 @@ function openStapleEdit(id){
   };
 }
 
+
+/* ---------- 曜日ルールの編集 ---------- */
+const RULE_NM = {free:'気分（自動で提案）', rotate:'ローテーション', pool:'定番から選ぶ'};
+function ruleSummary(k){
+  const rule = dayRule(k);
+  if(rule.type==='free') return RULE_NM.free;
+  const names = (rule.ids||[]).map(id=>(recipeById(id)||{}).name).filter(Boolean);
+  if(!names.length) return RULE_NM[rule.type]+'（未設定 → 気分）';
+  return RULE_NM[rule.type]+'：'+names.join(' → ');
+}
+function openDayRule(dk){
+  const w = DAYS.find(d=>d.k===dk).w;
+  const rule = dayRule(dk);
+  const draftRule = {type:rule.type, ids:(rule.ids||[]).slice(), next:rule.next||0};
+
+  function body(){
+    const list = mainPool().slice().sort((a,b)=>a.name.localeCompare(b.name,'ja'));
+    let b = '<label class="lb">'+w+'曜日の決め方</label>'+
+      '<div class="seg" id="drType">'+
+        ['free','rotate','pool'].map(t=>'<button data-t="'+t+'" class="'+(draftRule.type===t?'on':'')+'">'+
+          (t==='free'?'気分':(t==='rotate'?'ローテ':'定番'))+'</button>').join('')+
+      '</div>'+
+      '<div class="tiny" style="margin-top:7px">'+
+        (draftRule.type==='free'  ? '全レシピから、連続や傷みやすさを考えて自動で選びます。'
+        :draftRule.type==='rotate'? '選んだ順にぐるぐる回します（例：ししゃも → 赤魚 → ホッケ）。買い物を終えるたびに次へ進みます。'
+        :                           '選んだ候補の中から、最近作っていないものを選びます。')+'</div>';
+    if(draftRule.type!=='free'){
+      b += '<label class="lb">対象のレシピ（'+draftRule.ids.length+'件選択中）</label>'+
+           '<div class="card" style="margin:0;padding:2px 13px">'+
+           (list.length ? list.map(r=>{
+             const i = draftRule.ids.indexOf(r.id);
+             return '<div class="chk'+(i>=0?' on':'')+'" data-rid="'+r.id+'"><div class="cb"></div>'+
+               '<div class="nm3">'+esc(r.name)+'</div>'+
+               (i>=0 && draftRule.type==='rotate' ? '<div class="ordn">'+(i+1)+'</div>' : '')+'</div>';
+           }).join('') : '<div class="tiny" style="padding:14px 0">主菜がありません</div>')+
+           '</div>';
+      if(draftRule.type==='rotate' && draftRule.ids.length){
+        const nx = recipeById(draftRule.ids[draftRule.next % draftRule.ids.length]);
+        b += '<div class="tiny" style="margin-top:8px">次に出るのは <b>'+esc(nx?nx.name:'—')+'</b>'+
+             ' <button class="sideadd" id="drNext" style="margin-left:6px">1つ進める</button></div>';
+      }
+    }
+    return b + '<div style="height:12px"></div>';
+  }
+  function bind(){
+    $('#shBody').querySelectorAll('#drType button').forEach(b=>b.onclick=()=>{
+      draftRule.type = b.dataset.t; redraw();
+    });
+    $('#shBody').querySelectorAll('[data-rid]').forEach(b=>{
+      b.onclick = ()=>{
+        const id = b.dataset.rid, i = draftRule.ids.indexOf(id);
+        if(i>=0) draftRule.ids.splice(i,1); else draftRule.ids.push(id);
+        if(draftRule.next >= draftRule.ids.length) draftRule.next = 0;
+        redraw();
+      };
+    });
+    const nb = $('#drNext');
+    if(nb) nb.onclick = ()=>{ draftRule.next = (draftRule.next+1) % draftRule.ids.length; redraw(); };
+  }
+  function redraw(){ $('#shBody').innerHTML = body(); bind(); }
+
+  sheet(w+'曜日のルール', body(),
+    '<button class="btn sub" id="drCancel">やめる</button><button class="btn" id="drSave">保存</button>');
+  bind();
+  $('#drCancel').onclick = openSettings;
+  $('#drSave').onclick = ()=>{
+    S.settings.dayRules[dk] = draftRule.type==='free'
+      ? {type:'free', ids:[]}
+      : {type:draftRule.type, ids:draftRule.ids, next:draftRule.next};
+    save(); render(); openSettings(); toast(w+'曜日のルールを保存しました');
+  };
+}
+
 /* ---------- 設定 ---------- */
 function openSettings(){
   const body =
-    '<label class="lb">献立の組み立てルール</label>'+
+    '<label class="lb">曜日ごとの決め方</label>'+
     '<div class="card" style="margin:0">'+
-      '<div class="stp"><div class="stpm"><div class="stpn">🐟 魚の固定枠</div>'+
-        '<div class="tiny">この曜日に魚を優先。肉が週3品ある週は、同じ食材が2日続くことがあります</div></div>'+
-        '<select class="f" id="cfFish" style="width:110px;padding:8px">'+
-          '<option value="">なし</option>'+
-          DAYS.map(d=>'<option value="'+d.k+'"'+(S.settings.fixedFish===d.k?' selected':'')+'>'+d.w+'曜</option>').join('')+
-        '</select></div>'+
-      '<div class="stp"><div class="stpm"><div class="stpn">⏱ 金曜は時短優先</div>'+
-        '<div class="tiny">週の最後は一番短く作れるものを回します</div></div>'+
-        '<div class="seg" style="width:120px"><button data-fri="1" class="'+(S.settings.easyFri?'on':'')+'">ON</button>'+
-        '<button data-fri="0" class="'+(!S.settings.easyFri?'on':'')+'">OFF</button></div></div>'+
+      DAYS.map(d=>'<div class="ruleRow" data-rule="'+d.k+'"><div class="w2">'+d.w+'</div>'+
+        '<div style="flex:1;min-width:0"><div style="font-size:13.5px;font-weight:700;line-height:1.4">'+
+        esc(ruleSummary(d.k))+'</div></div><div style="color:#c3c7cd;font-size:18px">›</div></div>').join('')+
     '</div>'+
+    '<label class="lb">副菜</label>'+
+    '<div class="seg" id="cfSides">'+
+      [0,1,2].map(n=>'<button data-n="'+n+'" class="'+((S.settings.sidesPerDay|0)===n?'on':'')+'">'+
+        (n===0?'提案しない':n+'品')+'</button>').join('')+
+    '</div>'+
+    '<div class="tiny" style="margin-top:7px">主菜と食材がかぶらないもの、手早くできるものを優先して選びます。'+
+    '副菜は「📖 レシピ → 副菜」で足せます。</div>'+
+    '<label class="lb">1週間の流れ</label>'+
+    '<div class="tiny" style="line-height:2">'+
+      '土曜 '+PLAN_HOUR+':00　来週の献立が提案される（アプリを開いた時点で生成）<br>'+
+      '日曜 '+DEADLINE_HOUR+':00　承認の締切<br>'+
+      '日曜 '+SHOP_HOUR+':00　買い物リストを見ながら買い物<br>'+
+      '月〜金　作って、任意で評価（👍😐👎）</div>'+
     '<label class="lb">データ</label>'+
-    '<div class="tiny" style="margin-bottom:9px">データはこの端末のブラウザ内だけに保存されます（外部に送信しません）。'+
+    '<div class="tiny" style="margin-bottom:9px">この端末のブラウザ内だけに保存されます（外部に送信しません）。'+
       '別の端末に移すときは書き出し → 読み込みしてください。</div>'+
     '<div style="display:flex;gap:8px">'+
       '<button class="btn sub" style="flex:1" id="cfExp">⬇︎ 書き出し</button>'+
       '<button class="btn sub" style="flex:1" id="cfImp">⬆︎ 読み込み</button></div>'+
     '<input type="file" id="cfFile" accept="application/json,.json" style="display:none">'+
-    '<label class="lb">今週の献立を共有</label>'+
+    '<label class="lb">共有</label>'+
     '<button class="btn sub full" id="cfShare">📤 献立＋買い物リストをコピー</button>'+
     '<label class="lb" style="color:var(--r)">リセット</label>'+
     '<button class="btn sub full" id="cfReset" style="color:var(--r)">すべてのデータを消去</button>'+
@@ -1419,10 +2006,11 @@ function openSettings(){
   sheet('設定', body, '<button class="btn" id="cfClose">閉じる</button>');
 
   $('#cfClose').onclick = closeSheet;
-  $('#cfFish').onchange = e => { S.settings.fixedFish = e.target.value || null; save(); };
-  $('#shBody').querySelectorAll('[data-fri]').forEach(b=>b.onclick=()=>{
-    S.settings.easyFri = b.dataset.fri==='1'; save();
-    $('#shBody').querySelectorAll('[data-fri]').forEach(x=>x.classList.toggle('on',(x.dataset.fri==='1')===S.settings.easyFri));
+  $('#shBody').querySelectorAll('[data-rule]').forEach(b=>b.onclick=()=>openDayRule(b.dataset.rule));
+  $('#shBody').querySelectorAll('#cfSides button').forEach(b=>b.onclick=()=>{
+    S.settings.sidesPerDay = +b.dataset.n; save();
+    $('#shBody').querySelectorAll('#cfSides button').forEach(x=>x.classList.toggle('on', +x.dataset.n===S.settings.sidesPerDay));
+    render();
   });
   $('#cfExp').onclick = ()=>{
     const blob = new Blob([JSON.stringify(S,null,1)], {type:'application/json'});
@@ -1441,28 +2029,20 @@ function openSettings(){
         const o = JSON.parse(fr.result);
         if(!o || !Array.isArray(o.recipes)) throw 0;
         if(!confirm('読み込むと今のデータは置き換わります。よろしいですか？')) return;
-        S = o; load2(); closeSheet(); render(); toast('読み込みました');
+        S = migrate(o); normalize(); save(); closeSheet(); render(); toast('読み込みました');
       }catch(err){ toast('読み込めませんでした'); }
     };
     fr.readAsText(f);
     e.target.value='';
   };
-  $('#cfShare').onclick = ()=>{ copyList(); };
+  $('#cfShare').onclick = copyList;
   $('#cfReset').onclick = ()=>{
     if(!confirm('レシピ・常備品・献立をすべて消します。よろしいですか？')) return;
     if(!confirm('本当に消してよいですか？この操作は取り消せません。')) return;
-    localStorage.removeItem(KEY); load(); closeSheet(); render(); toast('初期化しました');
+    try{ localStorage.removeItem(KEY); }catch(e){}
+    S = defaultState(); normalize(); seedRecipes(); save();
+    closeSheet(); render(); toast('初期化しました');
   };
-}
-/* インポート後の正規化（Sを差し替えたあとに呼ぶ） */
-function load2(){
-  S.recipes  = S.recipes  || [];
-  S.staples  = S.staples  || [];
-  S.weeks    = S.weeks    || {};
-  S.leftovers= S.leftovers|| [];
-  S.settings = Object.assign({fixedFish:'mon', easyFri:true}, S.settings||{});
-  S.recipes.forEach(r=>{ r.ings = r.ings||[]; r.seasonings = r.seasonings||[]; r.protein = r.protein||proteinOf(r.ings); });
-  viewWeek = currentWeekStart(); getWeek(viewWeek); save();
 }
 
 /* =========================================================================
@@ -1479,19 +2059,19 @@ $('#btnSet').onclick = openSettings;
 $('#btnPrevWk').onclick = ()=>{ viewWeek = iso(addDays(parseISO(viewWeek),-7)); getWeek(viewWeek); save(); render(); };
 $('#btnNextWk').onclick = ()=>{ viewWeek = iso(addDays(parseISO(viewWeek), 7)); getWeek(viewWeek); save(); render(); };
 
-/* 日付が変わったら（アプリを開きっぱなしのケース）表示を更新 */
-let lastDay = iso(today());
-setInterval(()=>{
-  const now = iso(today());
-  if(now !== lastDay){ lastDay = now; viewWeek = currentWeekStart(); getWeek(viewWeek); save(); render(); }
-}, 60000);
-document.addEventListener('visibilitychange', ()=>{
-  if(document.visibilityState==='visible'){
-    const now = iso(today());
-    if(now !== lastDay){ lastDay = now; viewWeek = currentWeekStart(); getWeek(viewWeek); save(); }
-    render();
+/* 日付・時刻が変わったらフェーズを追従させる */
+let lastStamp = iso(today())+':'+phaseNow();
+function tick(){
+  const now = iso(today())+':'+phaseNow();
+  if(now !== lastStamp){
+    lastStamp = now;
+    const wasCurrent = (viewWeek === currentWeekStart());
+    if(wasCurrent) viewWeek = currentWeekStart();
+    getWeek(viewWeek); reconcileCooked(); autoPlan(); save(); render();
   }
-});
+}
+setInterval(tick, 60000);
+document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='visible'){ tick(); render(); } });
 
 load();
 render();
