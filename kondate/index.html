@@ -1058,6 +1058,23 @@ function scoreRecipe(r, ctx){
   return sc;
 }
 const mainPool = () => S.recipes.filter(r=>!r.archived && r.kind!=='side');
+/** ローテーション・定番ルールに割り当てられたレシピの id。
+    これらはその曜日の専用枠として扱い、「気分」の日の候補には出さない。
+    （出すと「月曜の魚が水曜に来る」「金曜の定番が火曜に来る」が起きる） */
+function reservedMainIds(){
+  const set = new Set();
+  Object.values(S.settings.dayRules||{}).forEach(rule=>{
+    if(rule && (rule.type==='rotate' || rule.type==='pool'))
+      (rule.ids||[]).forEach(id=>set.add(id));
+  });
+  return set;
+}
+/** 気分の日に出せる主菜（＝ルール未割り当てのもの）。1品も無ければ全体にフォールバック */
+function freeMainPool(){
+  const reserved = reservedMainIds();
+  const free = mainPool().filter(r=>!reserved.has(r.id));
+  return free.length ? free : mainPool();
+}
 const sidePool = () => S.recipes.filter(r=>!r.archived && r.kind==='side');
 
 function pickRotate(rule, used, exclude){
@@ -1114,9 +1131,10 @@ function suggestWeek(opts){
   });
 
   // 3) 空いている曜日を、連続を避けながら埋める
-  const filled = fillFreeDays(freeDays, base, mains, ctx, used);
+  const freePool = freeMainPool();
+  const filled = fillFreeDays(freeDays, base, freePool, ctx, used);
   Object.keys(filled).forEach(k=>{ base[k] = filled[k]; });
-  ensureFish(base, freeDays, mains, ctx, used);
+  ensureFish(base, freeDays, freePool, ctx, used);
 
   // 4) 書き戻し
   editable.forEach(k=>{
@@ -1251,11 +1269,12 @@ function shuffleMain(dk){
     const idx  = DAYS.findIndex(d=>d.k===dk);
     const prev = idx>0 ? recipeById(wk.days[DAYS[idx-1].k].mainId) : null;
     const nxt  = idx<DAYS.length-1 ? recipeById(wk.days[DAYS[idx+1].k].mainId) : null;
-    let cands = mainPool().filter(r=>!used.has(r.id) && r.id!==cur);
+    const fp = freeMainPool();
+    let cands = fp.filter(r=>!used.has(r.id) && r.id!==cur);
     const strict = cands.filter(r=>(!prev||r.protein!==prev.protein) && (!nxt||r.protein!==nxt.protein));
     if(strict.length) cands = strict;
-    if(!cands.length) cands = mainPool().filter(r=>r.id!==cur);
-    if(!cands.length) cands = mainPool();
+    if(!cands.length) cands = fp.filter(r=>r.id!==cur);
+    if(!cands.length) cands = fp;
     if(!cands.length) return false;
     const ranked = cands.map(r=>({r,sc:scoreRecipe(r,ctx)})).sort((a,b)=>b.sc-a.sc);
     const top = ranked.slice(0, Math.min(4, ranked.length));
@@ -1516,9 +1535,14 @@ function renderWeek(){
   if(!canPlan){
     h += '<div class="note">まずは <b>📖 レシピ</b> タブで主菜を登録してください。'+
          'レシピサイトやYouTubeの概要欄を<b>貼り付けるだけ</b>で食材まで取り込めます。</div>';
-  }else if(mainPool().length < 8){
-    h += '<div class="note">主菜が<b>'+mainPool().length+'品</b>しかないため、同じ料理が何度も出ます。'+
-         '15品くらいまで増えると提案が効きはじめます。</div>';
+  }else{
+    const reserved = reservedMainIds();
+    const nFree = mainPool().filter(r=>!reserved.has(r.id)).length;
+    if(nFree < 8){
+      h += '<div class="note">火〜木（気分）に出せる主菜が<b>'+nFree+'品</b>しかありません。'+
+           'ローテーションや定番に割り当てたレシピは、その曜日以外には出しません。'+
+           '📖 レシピの貼り付けで火〜木用の定番を増やしてください。</div>';
+    }
   }
 
   // --- 曜日カード ---
@@ -1870,12 +1894,19 @@ function renderRecipes(){
          (recipeFilter==='side'?'副菜を足すと献立と一緒に提案されます':'うちの定番を20〜30品いれると提案が効きはじめます')+'</div>';
   }else{
     h += '<div class="sec">最後に作った順<span class="line"></span></div><div class="card">';
+    const ruleBadge = {};
+    DAYS.forEach(d=>{
+      const rule = dayRule(d.k);
+      if(rule.type==='rotate' || rule.type==='pool')
+        (rule.ids||[]).forEach(id=>{ ruleBadge[id] = d.w + (rule.type==='rotate'?'ローテ':'定番'); });
+    });
     list.forEach(r=>{
       const ds = daysSince(r.lastCooked), av = avgRating(r);
       h += '<div class="rc" data-edrec="'+r.id+'"><div class="rcm">'+
         '<div class="rcn">'+esc(r.name)+
           (r.kind==='side'?' <span class="pill">副菜</span>':' <span class="pill '+r.protein+'">'+PROT[r.protein].ic+'</span>')+
           (r.minutes?' <span class="pill min">'+r.minutes+'分</span>':'')+
+          (ruleBadge[r.id]?' <span class="pill b">'+ruleBadge[r.id]+'</span>':'')+
           (av!==null?' <span class="pill '+(av>=2.5?'g':(av<1.7?'r':'a'))+'">'+
             (av>=2.5?'👍':(av<1.7?'👎':'😐'))+' '+av.toFixed(1)+'</span>':'')+
           (ds===null?' <span class="pill">未調理</span>':(ds<0?' <span class="pill b">今週</span>':' <span class="pill">'+ds+'日前</span>'))+
