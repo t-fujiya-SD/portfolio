@@ -198,7 +198,8 @@ label.lb{display:block;font-size:12px;font-weight:800;color:var(--sub);margin:14
 .pickgrid .pn{font-size:14px;font-weight:700;line-height:1.3}
 .pickgrid .pi{font-size:11px;color:var(--sub2);margin-top:3px}
 .seg{display:flex;border:1.5px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
-.seg button{flex:1;padding:10px 6px;font-size:13.5px;font-weight:800;color:var(--sub)}
+.seg button{flex:1;padding:10px 4px;font-size:13.5px;font-weight:800;color:var(--sub);white-space:nowrap;min-width:0}
+#rfDay button:first-child{flex:1.8;font-size:12.5px}
 .seg button+button{border-left:1.5px solid var(--line)}
 .seg button.on{background:var(--p);color:#fff}
 .note{background:var(--p-ll);border:1px solid #f2ddcd;border-radius:11px;padding:11px 13px;font-size:12.5px;
@@ -1069,6 +1070,30 @@ function reservedMainIds(){
   });
   return set;
 }
+/** このレシピが割り当てられている曜日（無ければ null） */
+function assignedDayOf(rid){
+  for(const d of DAYS){
+    const rule = dayRule(d.k);
+    if((rule.type==='rotate' || rule.type==='pool') && (rule.ids||[]).indexOf(rid)>=0) return d.k;
+  }
+  return null;
+}
+/** レシピの曜日割り当てを付け替える。dayK=null なら「おまかせ（気分）」に戻す。
+    割り当て先の曜日が「気分」ルールだった場合は「定番から選ぶ」に切り替える */
+function assignRecipeToDay(rid, dayK){
+  DAYS.forEach(d=>{
+    const rule = S.settings.dayRules[d.k];
+    if(rule && rule.ids){
+      rule.ids = rule.ids.filter(id=>id!==rid);
+      if(rule.type==='rotate' && (rule.next||0) >= rule.ids.length) rule.next = 0;
+    }
+  });
+  if(!dayK) return;
+  const rule = S.settings.dayRules[dayK];
+  if(!rule || rule.type==='free') S.settings.dayRules[dayK] = {type:'pool', ids:[rid]};
+  else if(rule.ids.indexOf(rid)<0) rule.ids.push(rid);
+}
+
 /** 気分の日に出せる主菜（＝ルール未割り当てのもの）。1品も無ければ全体にフォールバック */
 function freeMainPool(){
   const reserved = reservedMainIds();
@@ -2053,7 +2078,7 @@ function openPaste(){
     if(p.urlOnly){ toast('URLだけでは取り込めません。本文をコピーしてください'); return; }
     if(!p.ings.length && !p.seasonings.length){ toast('食材が見つかりませんでした。材料欄を含めて貼ってください'); return; }
     draft = {
-      id:null, kind:'main', title:p.title, minutes:p.minutes,
+      id:null, kind:'main', day:null, title:p.title, minutes:p.minutes,
       ings: p.ings.map(i=>({name:i.name, cat:i.cat})),
       seasonings: p.seasonings.slice()
     };
@@ -2068,9 +2093,10 @@ function openRecipeEdit(id){
   const r = id ? recipeById(id) : null;
   draft = r ? {
     id:r.id, kind:r.kind||'main', title:r.name, minutes:r.minutes, protein:r.protein,
+    day:assignedDayOf(r.id),
     ings:r.ings.map(i=>({name:i.name,cat:i.cat})), seasonings:(r.seasonings||[]).slice()
   } : { id:null, kind:(recipeFilter==='side'?'side':'main'), title:'', minutes:null,
-        protein:'other', ings:[], seasonings:[] };
+        protein:'other', day:null, ings:[], seasonings:[] };
   openRecipeForm(r ? 'レシピを編集' : 'レシピを追加', false);
 }
 
@@ -2085,6 +2111,14 @@ function openRecipeForm(title, fromPaste){
     '<div class="seg" id="rfKind">'+
       '<button data-k="main" class="'+(draft.kind!=='side'?'on':'')+'">🍖 主菜</button>'+
       '<button data-k="side" class="'+(draft.kind==='side'?'on':'')+'">🥗 副菜</button>'+
+    '</div>'+
+    '<div id="rfDayWrap"'+(draft.kind==='side'?' hidden':'')+'>'+
+      '<label class="lb">出す曜日</label>'+
+      '<div class="seg" id="rfDay">'+
+        '<button data-d="" class="'+(!draft.day?'on':'')+'">おまかせ</button>'+
+        DAYS.map(d=>'<button data-d="'+d.k+'" class="'+(draft.day===d.k?'on':'')+'">'+d.w+'</button>').join('')+
+      '</div>'+
+      '<div class="tiny" style="margin-top:6px" id="rfDayHint"></div>'+
     '</div>'+
     '<label class="lb">タンパク源（献立の並べ方に使います）</label>'+
     '<div class="seg" id="rfProt">'+
@@ -2108,6 +2142,23 @@ function openRecipeForm(title, fromPaste){
   $('#shBody').querySelectorAll('#rfKind button').forEach(b=>b.onclick=()=>{
     draft.kind = b.dataset.k;
     $('#shBody').querySelectorAll('#rfKind button').forEach(x=>x.classList.toggle('on', x.dataset.k===draft.kind));
+    $('#rfDayWrap').hidden = draft.kind==='side';
+  });
+  function dayHint(){
+    const el = $('#rfDayHint'); if(!el) return;
+    if(!draft.day){ el.textContent = '「気分」の日（ルールのない曜日）の候補になります。'; return; }
+    const w = DAYS.find(d=>d.k===draft.day).w;
+    const rule = dayRule(draft.day);
+    const already = (rule.ids||[]).filter(id=>id!==draft.id).map(id=>(recipeById(id)||{}).name).filter(Boolean);
+    el.textContent = w+'曜日の専用枠に入ります（他の曜日には出ません）。'+
+      (rule.type==='rotate' ? 'ローテーションの最後に追加：'+already.concat(['これ']).join(' → ')
+       : already.length ? '定番の仲間：'+already.join('、') : 'この曜日の定番になります。');
+  }
+  dayHint();
+  $('#shBody').querySelectorAll('#rfDay button').forEach(b=>b.onclick=()=>{
+    draft.day = b.dataset.d || null;
+    $('#shBody').querySelectorAll('#rfDay button').forEach(x=>x.classList.toggle('on', (x.dataset.d||null)===draft.day));
+    dayHint();
   });
   $('#shBody').querySelectorAll('#rfProt button').forEach(b=>b.onclick=()=>{
     draft.protein = b.dataset.p;
@@ -2176,12 +2227,15 @@ function saveRecipeDraft(){
     ings: draft.ings.map(i=>({name:i.name, cat:i.cat})),
     seasonings: draft.seasonings.slice()
   };
-  if(draft.id){
-    Object.assign(recipeById(draft.id), payload);
+  let rid = draft.id;
+  if(rid){
+    Object.assign(recipeById(rid), payload);
   }else{
-    S.recipes.push(Object.assign({id:uid(), lastCooked:null, cookCount:0,
+    rid = uid();
+    S.recipes.push(Object.assign({id:rid, lastCooked:null, cookCount:0,
       ratingSum:0, ratingCount:0, archived:false}, payload));
   }
+  assignRecipeToDay(rid, payload.kind==='side' ? null : (draft.day||null));
   save(); closeSheet(); render(); toast('保存しました');
 }
 
