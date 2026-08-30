@@ -199,6 +199,12 @@ label.lb{display:block;font-size:12px;font-weight:800;color:var(--sub);margin:14
 .note{background:var(--p-ll);border:1px solid #f2ddcd;border-radius:11px;padding:11px 13px;font-size:12.5px;
   color:#8a5a34;line-height:1.65;margin:11px 0}
 .note b{color:#6e4526}
+#btnSync{font-size:14px;padding:7px 9px;transition:.2s}
+#btnSync.syncing{opacity:.55}
+#btnSync.err{background:rgba(255,255,255,.35)}
+.synced{font-size:11.5px;color:var(--sub2);font-weight:700}
+.pairbox{background:#f4f2ee;border:1px solid var(--line);border-radius:10px;padding:10px 12px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;word-break:break-all;line-height:1.6}
 .phase{background:#fff;color:var(--ink)}
 .phase .wrap{display:flex;align-items:center;gap:8px;padding:9px 14px;font-size:12.5px;font-weight:800}
 .phase .dot{width:8px;height:8px;border-radius:99px;flex:none}
@@ -250,6 +256,7 @@ label.lb{display:block;font-size:12px;font-weight:800;color:var(--sub);margin:14
   <div class="hrow">
     <div class="logo">コンダテ<small>WEEKLY MEAL &amp; SHOPPING</small></div>
     <div class="hsp"></div>
+    <button class="hbtn" id="btnSync" hidden>☁️</button>
     <button class="hbtn" id="btnSet">⚙️</button>
   </div>
   <div class="phase" id="phaseBar"></div>
@@ -576,6 +583,9 @@ function normalize(){
     w.days = w.days || {}; w.checked = w.checked||{}; w.extras = w.extras||[];
     DAYS.forEach(d=>{ w.days[d.k] = Object.assign(blankDay(), w.days[d.k]||{}); });
   });
+  // 古い週は落とす（共有するデータを小さく保つ。両端末で同じ基準になるよう日付で切る）
+  const cutoff = iso(addDays(today(), -70));
+  Object.keys(S.weeks).forEach(k=>{ if(k < cutoff) delete S.weeks[k]; });
   viewWeek = currentWeekStart();
   getWeek(viewWeek);
 }
@@ -591,7 +601,10 @@ function load(){
   autoPlan();
   save();
 }
-function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){ toast('保存できませんでした'); } }
+function save(){
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){ toast('保存できませんでした'); }
+  schedulePush();
+}
 function getWeek(start){ if(!S.weeks[start]) S.weeks[start] = blankWeek(start); return S.weeks[start]; }
 const W = () => getWeek(viewWeek);
 const recipeById = id => S.recipes.find(r=>r.id===id) || null;
@@ -630,6 +643,232 @@ function autoPlan(){
   const keep = viewWeek; viewWeek = currentWeekStart();
   suggestWeek();
   viewWeek = keep;
+}
+
+/* =========================================================================
+   共有（GitHub Gist 同期）
+   奥さんの端末と同じデータを見るための同期。サーバーは持たず、
+   非公開Gist 1ファイルを共有の置き場所として使う。
+
+   同期の肝は「3方向マージ」。前回同期した時点のスナップショット（base）を
+   残しておき、base / 自分 / 相手 の3つを比べる。
+     ・自分が触っていない → 相手の変更を採用
+     ・相手が触っていない → 自分の変更を採用
+     ・両方が別々に変更   → 相手を採用（相手の変更を消さない）
+   こうすると「平日に奥さんが入れた『シャンプー切らしてる』を、
+   数日前の画面を開いたままのこちらが上書きして消す」事故が起きない。
+   ========================================================================= */
+const SYNC_KEY = 'kondate.sync';    // {token, gistId, lastSyncAt} ※本体とは別に保存（Gistに載せないため）
+const BASE_KEY = 'kondate.base';    // 前回同期時のスナップショット
+const GIST_FILE = 'kondate.json';
+const PAIR_PREFIX = 'kondate1';
+
+let syncCfg = null, syncState = 'off', pushTimer = null, syncing = false;
+
+function loadSyncCfg(){
+  try{ syncCfg = JSON.parse(localStorage.getItem(SYNC_KEY) || 'null'); }catch(e){ syncCfg = null; }
+  if(!syncCfg || !syncCfg.token || !syncCfg.gistId) syncCfg = null;
+  return syncCfg;
+}
+function saveSyncCfg(c){
+  syncCfg = c;
+  try{ c ? localStorage.setItem(SYNC_KEY, JSON.stringify(c)) : localStorage.removeItem(SYNC_KEY); }catch(e){}
+}
+function loadBase(){
+  try{ return JSON.parse(localStorage.getItem(BASE_KEY) || 'null'); }catch(e){ return null; }
+}
+function saveBase(o){
+  try{ localStorage.setItem(BASE_KEY, JSON.stringify(o)); }catch(e){}
+}
+
+/* ---------- 3方向マージ ---------- */
+function deepEq(a,b){
+  if(a===b) return true;
+  if(a===null || b===null || a===undefined || b===undefined) return false;
+  if(typeof a!=='object' || typeof b!=='object') return false;
+  if(Array.isArray(a)!==Array.isArray(b)) return false;
+  if(Array.isArray(a)){
+    if(a.length!==b.length) return false;
+    for(let i=0;i<a.length;i++) if(!deepEq(a[i],b[i])) return false;
+    return true;
+  }
+  const ka=Object.keys(a), kb=Object.keys(b);
+  if(ka.length!==kb.length) return false;
+  for(const k of ka){ if(!(k in b) || !deepEq(a[k],b[k])) return false; }
+  return true;
+}
+const isPlainObj = v => v && typeof v==='object' && !Array.isArray(v);
+const isIdArray  = v => Array.isArray(v) && v.every(x=>x && typeof x==='object' && typeof x.id==='string');
+function byId(a){ const m={}; (a||[]).forEach(x=>{ m[x.id]=x; }); return m; }
+
+function mergeObj(base, local, remote){
+  const out = {};
+  const keys = {};
+  [base, local, remote].forEach(o=>{ if(isPlainObj(o)) Object.keys(o).forEach(k=>{ keys[k]=1; }); });
+  Object.keys(keys).forEach(k=>{
+    const b = isPlainObj(base)   ? base[k]   : undefined;
+    const l = isPlainObj(local)  ? local[k]  : undefined;
+    const r = isPlainObj(remote) ? remote[k] : undefined;
+    const inB = b!==undefined, inL = l!==undefined, inR = r!==undefined;
+    if(inB && !inL) return;                  // 自分が消した
+    if(inB && !inR) return;                  // 相手が消した
+    if(!inL){ out[k] = r; return; }          // 相手が追加した
+    if(!inR){ out[k] = l; return; }          // 自分が追加した
+    out[k] = merge3(b, l, r);
+  });
+  return out;
+}
+function mergeIdArray(base, local, remote){
+  const m = mergeObj(byId(base), byId(local), byId(remote));
+  const order = [], seen = {};
+  [local, remote].forEach(arr=>(arr||[]).forEach(x=>{
+    if(m[x.id] && !seen[x.id]){ seen[x.id]=1; order.push(x.id); }
+  }));
+  return order.map(id=>m[id]);
+}
+function merge3(base, local, remote){
+  if(deepEq(local, remote)) return local;
+  if(deepEq(base, local))   return remote;   // 自分は触っていない
+  if(deepEq(base, remote))  return local;    // 相手は触っていない
+  if(isIdArray(local) && isIdArray(remote)) return mergeIdArray(base, local, remote);
+  if(isPlainObj(local) && isPlainObj(remote)) return mergeObj(base, local, remote);
+  return remote;                             // 衝突したスカラー／並び順は相手を優先
+}
+
+/* ---------- Gist API ---------- */
+async function gistCall(cfg, path, method, body){
+  const h = {
+    'Authorization':'Bearer '+cfg.token,
+    'Accept':'application/vnd.github+json',
+    'X-GitHub-Api-Version':'2022-11-28'
+  };
+  if(body) h['Content-Type'] = 'application/json';
+  const res = await fetch('https://api.github.com'+path,
+    {method:method||'GET', headers:h, body: body ? JSON.stringify(body) : undefined});
+  if(!res.ok){ const e = new Error('HTTP '+res.status); e.status = res.status; throw e; }
+  return res.json();
+}
+async function gistRead(cfg){
+  const g = await gistCall(cfg, '/gists/'+cfg.gistId);
+  const f = g.files && g.files[GIST_FILE];
+  if(!f) return null;
+  if(f.truncated && f.raw_url){ const r = await fetch(f.raw_url); return JSON.parse(await r.text()); }
+  return JSON.parse(f.content);
+}
+async function gistWrite(cfg, data){
+  const files = {}; files[GIST_FILE] = {content: JSON.stringify(data)};
+  await gistCall(cfg, '/gists/'+cfg.gistId, 'PATCH', {files});
+}
+async function gistCreate(cfg, data){
+  const files = {}; files[GIST_FILE] = {content: JSON.stringify(data)};
+  const g = await gistCall(cfg, '/gists', 'POST',
+    {description:'コンダテ 共有データ', public:false, files});
+  return g.id;
+}
+
+/* ---------- 同期の実行 ---------- */
+function snapshot(){ return JSON.parse(JSON.stringify(S)); }
+
+function setSyncState(st, msg){
+  syncState = st;
+  const b = $('#btnSync');
+  if(!b) return;
+  b.hidden = !syncCfg;
+  b.classList.toggle('syncing', st==='syncing');
+  b.classList.toggle('err', st==='error');
+  b.textContent = st==='syncing' ? '⏳' : (st==='error' ? '⚠️' : '☁️');
+  b.title = msg || '';
+}
+function syncErrMsg(e){
+  if(e && e.status===401) return 'トークンが無効です。設定から入れ直してください';
+  if(e && e.status===403) return 'GitHubへのアクセスが拒否されました（トークンの権限を確認）';
+  if(e && e.status===404) return '共有データが見つかりません（Gist IDを確認）';
+  return 'つながりませんでした。あとで自動で再試行します';
+}
+
+/** 入力中・シート表示中に裏で同期して画面を描き直すと、書きかけが消える */
+function busyEditing(){
+  if($('#ov').classList.contains('on')) return true;      // シートを開いている
+  const a = document.activeElement;
+  if(!a || (a.tagName!=='INPUT' && a.tagName!=='TEXTAREA')) return false;
+  return !!(a.value && a.value.trim());                   // 書きかけがあるときだけ止める
+}
+
+async function syncNow(opts){
+  opts = opts || {};
+  if(!loadSyncCfg() || syncing) return false;
+  if(!opts.loud && busyEditing()) return false;
+  syncing = true; setSyncState('syncing');
+  try{
+    const remote = await gistRead(syncCfg);
+    const base   = loadBase();
+    let changed = false;
+    if(remote){
+      const before = JSON.stringify(S);
+      const merged = merge3(base || {}, snapshot(), remote);
+      const keepWeek = viewWeek;
+      S = merged; normalize();
+      if(!Array.isArray(S.recipes)) S.recipes = [];
+      // 別の週を見ている最中に裏で同期しても、表示中の週は動かさない
+      if(keepWeek && S.weeks[keepWeek]) viewWeek = keepWeek;
+      changed = JSON.stringify(S) !== before;
+    }
+    await gistWrite(syncCfg, S);
+    saveBase(snapshot());
+    syncCfg.lastSyncAt = Date.now(); saveSyncCfg(syncCfg);
+    try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+    setSyncState('ok', '最終同期 '+new Date().toLocaleTimeString('ja-JP'));
+    if(changed || opts.loud) render();
+    if(opts.loud) toast('同期しました');
+    return true;
+  }catch(e){
+    setSyncState('error', syncErrMsg(e));
+    if(opts.loud) toast(syncErrMsg(e));
+    return false;
+  }finally{ syncing = false; }
+}
+
+/* 保存のたびに呼ばれる。まとめて数秒後に1回だけ送る */
+function schedulePush(){
+  if(!syncCfg) return;
+  clearTimeout(pushTimer);
+  pushTimer = setTimeout(()=>{ syncNow(); }, 3000);
+}
+
+/* ---------- ペアリング ---------- */
+const pairString = () => syncCfg ? PAIR_PREFIX+'.'+syncCfg.gistId+'.'+syncCfg.token : '';
+function parsePair(str){
+  const t = String(str||'').trim();
+  const m = t.match(/^kondate1\.([0-9a-zA-Z]+)\.(\S+)$/);
+  if(m) return {gistId:m[1], token:m[2]};
+  return null;
+}
+
+/** 1台目：新しい共有データを作る */
+async function pairCreate(token){
+  const cfg = {token:token.trim(), gistId:null};
+  const id = await gistCreate(cfg, S);
+  cfg.gistId = id; cfg.lastSyncAt = Date.now();
+  saveSyncCfg(cfg); saveBase(snapshot());
+  setSyncState('ok');
+  return id;
+}
+/** 2台目：既にある共有データに参加する。この端末の中身は置き換わる */
+async function pairJoin(token, gistId){
+  const cfg = {token:token.trim(), gistId:String(gistId).trim()};
+  const remote = await gistRead(cfg);
+  if(!remote) throw new Error('共有データが空です');
+  cfg.lastSyncAt = Date.now();
+  saveSyncCfg(cfg);
+  S = migrate(remote); normalize();
+  saveBase(snapshot());
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+  setSyncState('ok');
+}
+function unpair(){
+  saveSyncCfg(null);
+  try{ localStorage.removeItem(BASE_KEY); }catch(e){}
+  setSyncState('off');
 }
 
 /* =========================================================================
@@ -1989,9 +2228,12 @@ function openSettings(){
       '日曜 '+DEADLINE_HOUR+':00　承認の締切<br>'+
       '日曜 '+SHOP_HOUR+':00　買い物リストを見ながら買い物<br>'+
       '月〜金　作って、任意で評価（👍😐👎）</div>'+
+    '<label class="lb">共有（奥さんの端末と同期）</label>'+ shareSectionHTML() +
     '<label class="lb">データ</label>'+
-    '<div class="tiny" style="margin-bottom:9px">この端末のブラウザ内だけに保存されます（外部に送信しません）。'+
-      '別の端末に移すときは書き出し → 読み込みしてください。</div>'+
+    '<div class="tiny" style="margin-bottom:9px">保存先はこの端末のブラウザ内です。'+
+      (syncCfg ? '共有をつないでいるので、GitHubの<b>非公開Gist</b>にも同じ内容が保存されています。'
+               : '共有をつながないかぎり、外部には一切送信しません。')+
+      'まるごと持ち出すときは書き出し → 読み込みしてください。</div>'+
     '<div style="display:flex;gap:8px">'+
       '<button class="btn sub" style="flex:1" id="cfExp">⬇︎ 書き出し</button>'+
       '<button class="btn sub" style="flex:1" id="cfImp">⬆︎ 読み込み</button></div>'+
@@ -2001,7 +2243,8 @@ function openSettings(){
     '<label class="lb" style="color:var(--r)">リセット</label>'+
     '<button class="btn sub full" id="cfReset" style="color:var(--r)">すべてのデータを消去</button>'+
     '<div style="height:14px"></div>'+
-    '<div class="tiny">コンダテ / 端末内保存（localStorage）・オフライン動作・外部通信なし</div>'+
+    '<div class="tiny">コンダテ / 端末内保存（localStorage）'+
+      (syncCfg ? '＋GitHub Gist 同期' : '・外部通信なし')+'</div>'+
     '<div style="height:8px"></div>';
   sheet('設定', body, '<button class="btn" id="cfClose">閉じる</button>');
 
@@ -2035,6 +2278,7 @@ function openSettings(){
     fr.readAsText(f);
     e.target.value='';
   };
+  bindShareSection();
   $('#cfShare').onclick = copyList;
   $('#cfReset').onclick = ()=>{
     if(!confirm('レシピ・常備品・献立をすべて消します。よろしいですか？')) return;
@@ -2042,6 +2286,76 @@ function openSettings(){
     try{ localStorage.removeItem(KEY); }catch(e){}
     S = defaultState(); normalize(); seedRecipes(); save();
     closeSheet(); render(); toast('初期化しました');
+  };
+}
+
+/* ---------- 設定：共有セクション ---------- */
+function shareSectionHTML(){
+  if(syncCfg){
+    const ago = syncCfg.lastSyncAt
+      ? Math.max(0, Math.round((Date.now()-syncCfg.lastSyncAt)/60000))+'分前' : '—';
+    return '<div class="card" style="margin:0;padding:13px">'+
+      '<div style="font-size:14px;font-weight:800;color:var(--g-d)">☁️ 接続済み</div>'+
+      '<div class="tiny" style="margin-top:4px">最終同期 '+ago+'　／　Gist '+esc(syncCfg.gistId.slice(0,8))+'…</div>'+
+      '<div style="display:flex;gap:8px;margin-top:11px">'+
+        '<button class="btn sub sm" style="flex:1" id="shSync">今すぐ同期</button>'+
+        '<button class="btn sub sm" style="flex:1" id="shCopyPair">ペア設定をコピー</button></div>'+
+      '<div class="tiny" style="margin-top:9px">もう1台に貼り付けると同じデータが見えます。'+
+        '<b>この文字列にはトークンが入っています</b>ので、送り先に気をつけてください。</div>'+
+      '<button class="btn sub sm full" style="margin-top:11px;color:var(--r)" id="shUnpair">接続を解除</button>'+
+    '</div>';
+  }
+  return '<div class="card" style="margin:0;padding:13px">'+
+    '<div class="tiny" style="line-height:1.9">'+
+      'サーバーは使わず、GitHubの<b>非公開Gist</b>を置き場所にして2台で同じデータを見ます。'+
+      '平日に「切らしてる」を入れたり、土日に献立を承認したりが、どちらの端末からでもできます。</div>'+
+    '<div class="tiny" style="margin-top:10px;font-weight:800;color:var(--ink)">1台目（この端末のデータを共有する）</div>'+
+    '<div class="tiny" style="margin:4px 0 7px">'+
+      '<a href="https://github.com/settings/tokens/new?scopes=gist&amp;description=kondate" target="_blank" rel="noopener" '+
+      'style="color:var(--p-d);font-weight:800">こちらでトークンを発行</a>'+
+      '（scope は <b>gist</b> だけ。有効期限は No expiration が楽です）して貼り付けてください。</div>'+
+    '<input class="f" id="shToken" placeholder="ghp_..." autocapitalize="off" autocorrect="off" spellcheck="false">'+
+    '<button class="btn full sm" style="margin-top:8px" id="shCreate">共有をはじめる</button>'+
+    '<div class="tiny" style="margin-top:14px;font-weight:800;color:var(--ink)">2台目（すでにある共有に参加する）</div>'+
+    '<div class="tiny" style="margin:4px 0 7px">1台目で「ペア設定をコピー」した文字列を貼り付けてください。'+
+      '<b>この端末の献立・レシピ・常備品は置き換わります。</b></div>'+
+    '<input class="f" id="shPair" placeholder="kondate1...." autocapitalize="off" autocorrect="off" spellcheck="false">'+
+    '<button class="btn sub full sm" style="margin-top:8px" id="shJoin">参加する</button>'+
+  '</div>';
+}
+function bindShareSection(){
+  const sy = $('#shSync');
+  if(sy){
+    sy.onclick = async ()=>{ sy.textContent='同期中…'; await syncNow({loud:true}); openSettings(); };
+    $('#shCopyPair').onclick = ()=>{
+      const t = pairString();
+      if(navigator.clipboard && navigator.clipboard.writeText)
+        navigator.clipboard.writeText(t).then(()=>toast('コピーしました'),()=>fallbackCopy(t));
+      else fallbackCopy(t);
+    };
+    $('#shUnpair').onclick = ()=>{
+      if(!confirm('接続を解除します。この端末のデータは残りますが、以後は同期されません。')) return;
+      unpair(); openSettings(); toast('接続を解除しました');
+    };
+    return;
+  }
+  const cb = $('#shCreate');
+  if(!cb) return;
+  cb.onclick = async ()=>{
+    const tk = $('#shToken').value.trim();
+    if(!tk){ toast('トークンを貼り付けてください'); return; }
+    cb.textContent = '接続中…'; cb.disabled = true;
+    try{ await pairCreate(tk); openSettings(); toast('共有をはじめました'); }
+    catch(e){ cb.textContent='共有をはじめる'; cb.disabled=false; toast(syncErrMsg(e)); }
+  };
+  const jb = $('#shJoin');
+  jb.onclick = async ()=>{
+    const pr = parsePair($('#shPair').value);
+    if(!pr){ toast('ペア設定の文字列が正しくありません'); return; }
+    if(!confirm('この端末の献立・レシピ・常備品は、共有側の内容に置き換わります。よろしいですか？')) return;
+    jb.textContent = '参加中…'; jb.disabled = true;
+    try{ await pairJoin(pr.token, pr.gistId); render(); openSettings(); toast('共有に参加しました'); }
+    catch(e){ jb.textContent='参加する'; jb.disabled=false; toast(syncErrMsg(e)); }
   };
 }
 
@@ -2056,6 +2370,7 @@ function switchTab(t){
 }
 $$('.tabbar button').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
 $('#btnSet').onclick = openSettings;
+$('#btnSync').onclick = ()=>syncNow({loud:true});
 $('#btnPrevWk').onclick = ()=>{ viewWeek = iso(addDays(parseISO(viewWeek),-7)); getWeek(viewWeek); save(); render(); };
 $('#btnNextWk').onclick = ()=>{ viewWeek = iso(addDays(parseISO(viewWeek), 7)); getWeek(viewWeek); save(); render(); };
 
@@ -2071,10 +2386,16 @@ function tick(){
   }
 }
 setInterval(tick, 60000);
-document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='visible'){ tick(); render(); } });
+document.addEventListener('visibilitychange', ()=>{
+  if(document.visibilityState==='visible'){ tick(); render(); syncNow(); }
+});
 
 load();
+loadSyncCfg();
+setSyncState(syncCfg ? 'ok' : 'off',
+  syncCfg && syncCfg.lastSyncAt ? '最終同期 '+new Date(syncCfg.lastSyncAt).toLocaleTimeString('ja-JP') : '');
 render();
+if(syncCfg){ syncNow(); setInterval(()=>{ if(document.visibilityState==='visible') syncNow(); }, 60000); }
 </script>
 </body>
 </html>
