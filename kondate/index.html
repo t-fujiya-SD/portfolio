@@ -142,6 +142,11 @@ label.lb{display:block;font-size:12px;font-weight:800;color:var(--sub);margin:14
 .rwhy{font-size:11.5px;color:var(--sub);margin-top:2px;line-height:1.5;display:flex;gap:5px;flex-wrap:wrap;align-items:center}
 .row.ck .rwhy{opacity:.45}
 .rdel{flex:none;color:var(--sub2);font-size:17px;padding:0 2px;align-self:center}
+.rnote{flex:none;color:var(--sub2);font-size:14px;padding:2px 4px;align-self:center;opacity:.5}
+.rnote.has{opacity:1;color:var(--p-d)}
+.qty{display:inline-block;font-size:12.5px;font-weight:800;color:var(--p-d);background:var(--p-l);
+  border-radius:6px;padding:1px 7px;margin-left:7px;vertical-align:1px}
+.row.ck .qty{background:#f0eeea;color:var(--sub2)}
 .addrow{display:flex;gap:7px;padding:10px 12px;background:#fbfaf8;border-top:1px solid var(--line)}
 .addrow input{flex:1;border:1.5px solid var(--line);border-radius:9px;padding:9px 11px;font-size:14.5px;background:#fff}
 
@@ -507,7 +512,7 @@ function defaultState(){
     staples: STAPLE_PRESET.map(([nm,cat,cyc]) => ({
       id:uid(), name:nm, cat, cycleDays:cyc, lastBought:null, history:[], snoozeUntil:null, enabled:true, needBuy:false
     })),
-    weeks: {}, leftovers: [], seeded: {}, settings: defaultSettings()
+    weeks: {}, leftovers: [], ingNotes: {}, seeded: {}, settings: defaultSettings()
   };
 }
 
@@ -570,6 +575,7 @@ function normalize(){
   S.staples  = S.staples  || [];
   S.weeks    = S.weeks    || {};
   S.leftovers= S.leftovers|| [];
+  S.ingNotes = S.ingNotes || {};
   S.seeded   = S.seeded   || {};
   S.settings = Object.assign(defaultSettings(), S.settings||{});
   S.settings.dayRules = Object.assign(defaultSettings().dayRules, S.settings.dayRules||{});
@@ -794,6 +800,16 @@ function busyEditing(){
   return !!(a.value && a.value.trim());                   // 書きかけがあるときだけ止める
 }
 
+/** 今週の買い物リストに載っている品名（表示中の週に関係なく今週で見る） */
+function shoppingNames(){
+  const keep = viewWeek;
+  viewWeek = currentWeekStart();
+  const out = {};
+  try{ buildShopping().forEach(g=>g.items.forEach(it=>{ out[it.name]=1; })); }catch(e){}
+  viewWeek = keep;
+  return out;
+}
+
 async function syncNow(opts){
   opts = opts || {};
   if(!loadSyncCfg() || syncing) return false;
@@ -803,6 +819,8 @@ async function syncNow(opts){
     const remote = await gistRead(syncCfg);
     const base   = loadBase();
     let changed = false;
+    // 買い物中に相手が足した品を見落とさないよう、増えたぶんを知らせる
+    const namesBefore = (remote && base) ? shoppingNames() : null;
     if(remote){
       const before = JSON.stringify(S);
       const merged = merge3(base || {}, snapshot(), remote);
@@ -819,7 +837,16 @@ async function syncNow(opts){
     try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
     setSyncState('ok', '最終同期 '+new Date().toLocaleTimeString('ja-JP'));
     if(changed || opts.loud) render();
-    if(opts.loud) toast('同期しました');
+    let told = false;
+    if(namesBefore){
+      const after = shoppingNames();
+      const added = Object.keys(after).filter(n=>!namesBefore[n]);
+      if(added.length){
+        toast('相手が追加：'+added.slice(0,3).join('、')+(added.length>3 ? ' ほか'+(added.length-3)+'件' : ''));
+        told = true;
+      }
+    }
+    if(opts.loud && !told) toast('同期しました');
     return true;
   }catch(e){
     setSyncState('error', syncErrMsg(e));
@@ -1639,9 +1666,12 @@ function renderShop(){
       }else{
         why = '<span class="pill g">手動追加</span>';
       }
+      const note = (S.ingNotes||{})[it.name] || '';
       h += '<div class="row'+(ck?' ck':'')+'" data-key="'+esc(it.key)+'">'+
-           '<div class="cb"></div><div class="rmain"><div class="rname">'+esc(it.name)+'</div>'+
+           '<div class="cb"></div><div class="rmain"><div class="rname">'+esc(it.name)+
+             (note ? '<span class="qty">'+esc(note)+'</span>' : '')+'</div>'+
            '<div class="rwhy">'+why+'</div></div>'+
+           '<button class="rnote'+(note?' has':'')+'" data-note="'+esc(it.name)+'">✎</button>'+
            (it.kind==='extra' ? '<button class="rdel" data-delext="'+it.extra.id+'">✕</button>' : '')+
            '</div>';
     });
@@ -1658,8 +1688,11 @@ function renderShop(){
   }
   el.innerHTML = h;
 
+  el.querySelectorAll('[data-note]').forEach(b=>b.onclick=e=>{
+    e.stopPropagation(); openIngNote(b.dataset.note);
+  });
   el.querySelectorAll('.row').forEach(r=>r.onclick=e=>{
-    if(e.target.closest('[data-delext]')) return;
+    if(e.target.closest('[data-delext]') || e.target.closest('[data-note]')) return;
     const k = r.dataset.key;
     if(wk.checked[k]) delete wk.checked[k]; else wk.checked[k]=true;
     save(); renderShop(); renderCounts();
@@ -1912,6 +1945,41 @@ function openPicker(dk, kind, sideIdx){
     save(); closeSheet(); render();
   };
   $('#pkClose').onclick = closeSheet;
+}
+
+/* ---------- 食材の買う量メモ ----------
+   分量はレシピ側で管理しない方針だが、一人で買いに行くと「玉ねぎ何個？」で迷う。
+   そこで、迷った食材だけその場でメモを残せるようにする。
+   メモは食材名に紐づけて覚えるので、次の週からはずっと表示される。 */
+function openIngNote(name){
+  const cur = (S.ingNotes||{})[name] || '';
+  const body =
+    '<div class="tiny" style="margin:12px 0 10px">'+
+      '<b>'+esc(name)+'</b> を買うときの目安を書いておくと、次の週からもここに出ます。'+
+      '一人で買いに行くときに迷わなくなります。</div>'+
+    '<input class="f" id="inNote" value="'+esc(cur)+'" placeholder="例）3個入りネット / 大きめ1本 / 2パック" enterkeyhint="done">'+
+    '<div class="chips" style="margin-top:10px">'+
+      ['1袋','1パック','2パック','1本','2本','1個','3個','1玉','半玉','1束','大きめ','少なめ']
+        .map(x=>'<button class="chip" data-q="'+x+'">'+x+'</button>').join('')+
+    '</div><div style="height:10px"></div>';
+  sheet('買う量のメモ', body,
+    (cur ? '<button class="btn sub" id="inDel" style="flex:none;padding:12px 15px;color:var(--r)">消す</button>' : '')+
+    '<button class="btn" id="inSave">保存</button>');
+  const inp = $('#inNote');
+  $('#shBody').querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{
+    inp.value = (inp.value.trim() ? inp.value.trim()+' ' : '') + b.dataset.q;
+  });
+  const commit = ()=>{
+    const v = inp.value.trim();
+    S.ingNotes = S.ingNotes || {};
+    if(v) S.ingNotes[name] = v; else delete S.ingNotes[name];
+    save(); closeSheet(); renderShop();
+  };
+  $('#inSave').onclick = commit;
+  inp.onkeydown = e => { if(e.key==='Enter'){ e.preventDefault(); commit(); } };
+  const d = $('#inDel');
+  if(d) d.onclick = ()=>{ delete S.ingNotes[name]; save(); closeSheet(); renderShop(); };
+  setTimeout(()=>{ if($('#inNote')) $('#inNote').focus(); }, 150);
 }
 
 /* ---------- 「その他」 ---------- */
