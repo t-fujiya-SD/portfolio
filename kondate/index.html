@@ -1036,6 +1036,128 @@ function parsePaste(text){
 
 
 /* =========================================================================
+   URLからの取り込み
+   ブラウザは他サイトを直接読めない（CORS）ため、公開の読み取り中継
+   サービスを順に試す。取れたHTMLからは、まず schema.org/Recipe の
+   JSON-LD（クックパッド・クラシル・ナディアなど大半のレシピサイトが
+   埋めている）を探し、無ければ YouTube の概要欄、最後に本文テキストを
+   既存のパーサーに通す。全滅したら従来どおりコピペ案内に落とす。
+   ========================================================================= */
+const FETCH_RELAYS = [
+  {name:'allorigins', kind:'html', mk:u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u)},
+  {name:'jina',       kind:'text', mk:u=>'https://r.jina.ai/'+u},
+  {name:'corsproxy',  kind:'html', mk:u=>'https://corsproxy.io/?url='+encodeURIComponent(u)},
+];
+
+function isoMinutes(v){
+  const m = String(v||'').match(/PT(?:(\d+)H)?(?:(\d+)M)?/i);
+  if(!m) return null;
+  const n = (parseInt(m[1]||0,10)*60 + parseInt(m[2]||0,10)) || 0;
+  return (n>=3 && n<=180) ? n : null;
+}
+function tidyTitle(t){
+  if(!t) return '';
+  t = zen2han(String(t));
+  t = t.replace(/^([【\[（(][^】\]）)]{0,20}[】\]）)])+/,'');
+  t = t.replace(/[｜\|].*$/,'').replace(/\s*-\s*(YouTube|cookpad|クックパッド|クラシル|Nadia).*$/i,'');
+  t = t.replace(/(の作り方|の作りかた|レシピ|【簡単】|超簡単|絶品|プロが教える|人気|殿堂入り)/g,'').trim();
+  return t.slice(0,24);
+}
+function stripTags(html){
+  let t = String(html)
+    .replace(/<script[\s\S]*?<\/script>/gi,' ')
+    .replace(/<style[\s\S]*?<\/style>/gi,' ')
+    .replace(/<br\s*\/?>/gi,'\n')
+    .replace(/<\/(p|div|li|tr|dd|dt|h[1-6]|section|span)>/gi,'\n')
+    .replace(/<[^>]+>/g,' ');
+  return t.replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<')
+          .replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#0?39;/g,"'");
+}
+/** schema.org/Recipe の JSON-LD から材料を取り出す */
+function jsonLdRecipe(html){
+  const re = /<script[^>]*type=["']?application\/ld\+json["']?[^>]*>([\s\S]*?)<\/script>/gi;
+  let m, found = null;
+  const visit = o => {
+    if(!o || typeof o!=='object' || found) return;
+    if(Array.isArray(o)){ o.forEach(visit); return; }
+    const t = o['@type'], types = Array.isArray(t) ? t : [t];
+    if(types.indexOf('Recipe')>=0 && Array.isArray(o.recipeIngredient) && o.recipeIngredient.length){
+      found = o; return;
+    }
+    if(o['@graph']) visit(o['@graph']);
+    if(o.mainEntity) visit(o.mainEntity);
+    if(o.mainEntityOfPage && typeof o.mainEntityOfPage==='object') visit(o.mainEntityOfPage);
+  };
+  while((m = re.exec(html))){
+    try{ visit(JSON.parse(m[1].trim())); }catch(e){ /* 壊れたJSON-LDは無視 */ }
+    if(found) break;
+  }
+  if(!found) return null;
+  const out = {title:tidyTitle(found.name), minutes:isoMinutes(found.totalTime)||isoMinutes(found.cookTime),
+               ings:[], seasonings:[], matched:true, urlOnly:false};
+  const seen = new Set();
+  found.recipeIngredient.forEach(line=>{
+    // 「☆醤油」「A 砂糖」のようなグループ記号も cleanLine が落とす
+    const nm = cleanLine(String(line).replace(/^[☆★◎●○◇◆],?\s*/,''));
+    if(!nm || seen.has(nm)) return;
+    seen.add(nm);
+    const c = classify(nm);
+    if(c.seasoning) out.seasonings.push(nm); else out.ings.push({name:nm, cat:c.cat});
+  });
+  return (out.ings.length || out.seasonings.length) ? out : null;
+}
+/** YouTube のページHTMLから概要欄を取り出す */
+function ytDescription(html){
+  const m = String(html).match(/"shortDescription":"((?:[^"\\]|\\.)*)"/);
+  if(!m) return null;
+  try{ return JSON.parse('"'+m[1]+'"'); }catch(e){ return null; }
+}
+function ogTitle(html){
+  const m = String(html).match(/og:title["'][^>]*content=["']([^"']{2,80})["']/) ||
+            String(html).match(/content=["']([^"']{2,80})["'][^>]*og:title/) ||
+            String(html).match(/<title[^>]*>([^<]{2,80})</i);
+  return m ? m[1] : '';
+}
+const hasIngs = p => p && (p.ings.length || p.seasonings.length);
+
+async function importFromUrl(url){
+  let lastErr = null;
+  for(const relay of FETCH_RELAYS){
+    let txt = null;
+    try{
+      const ctl = new AbortController();
+      const timer = setTimeout(()=>ctl.abort(), 12000);
+      const res = await fetch(relay.mk(url), {signal:ctl.signal});
+      clearTimeout(timer);
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      txt = await res.text();
+    }catch(e){ lastErr = e; continue; }
+    if(!txt || txt.trim().length < 40){ lastErr = new Error('empty'); continue; }
+
+    let p = null;
+    if(relay.kind==='html'){
+      p = jsonLdRecipe(txt);
+      if(!hasIngs(p)){
+        const yd = ytDescription(txt);
+        if(yd){
+          p = parsePaste(yd);
+          // 概要欄の1行目は挨拶のことが多いので、動画タイトルを優先する
+          if(p){ p.title = tidyTitle(ogTitle(txt)) || p.title; }
+        }
+      }
+      if(!hasIngs(p)) p = parsePaste(stripTags(txt));
+      if(p && !p.title) p.title = tidyTitle(ogTitle(txt));
+    }else{
+      const body = String(txt).replace(/^Title:\s*(.*)$/m, '$1');
+      p = parsePaste(body);
+    }
+    if(hasIngs(p)) return p;
+    lastErr = new Error('no-ingredients');
+  }
+  throw lastErr || new Error('fetch-failed');
+}
+
+/* =========================================================================
    献立の自動提案
    曜日ごとに3つのルールを持てる:
      rotate … 決めた順に回す（例：月曜の魚 ししゃも→赤魚→ホッケ）
@@ -2064,19 +2186,16 @@ function openOther(dk){
 let draft = null;
 function openPaste(){
   const body =
-    '<div class="note">レシピサイトの<b>材料欄</b>や、YouTubeの<b>概要欄</b>をまるごとコピーして貼り付けてください。'+
-    '分量・調味料は自動で取り除き、<b>食材名だけ</b>を取り込みます。<br>'+
-    '<span style="opacity:.8">※ URLだけでは取り込めません（ブラウザから他サイトの中身を読めないため）。ページを開いて本文をコピーしてください。</span></div>'+
+    '<div class="note"><b>URLを貼るだけ</b>でも、<b>材料欄・概要欄のコピペ</b>でも取り込めます。'+
+    '分量・調味料は自動で取り除き、<b>食材名だけ</b>にします。<br>'+
+    '<span style="opacity:.8">※ URLの場合は公開の読み取りサービス経由でページを取得します（数秒かかります）。'+
+    '取得できないサイトのときは、材料欄をコピーして貼ってください。</span></div>'+
     '<label class="lb">貼り付け</label>'+
-    '<textarea class="f" id="pasteTA" placeholder="【材料】2人分&#10;・豚ひき肉…200g&#10;・春雨…100g&#10;・にら…1束&#10;・醤油…大さじ2&#10;&#10;【作り方】&#10;..."></textarea>';
+    '<textarea class="f" id="pasteTA" placeholder="https://cookpad.com/recipe/... のようなURL、または&#10;&#10;【材料】2人分&#10;・豚ひき肉…200g&#10;・春雨…100g&#10;・にら…1束&#10;・醤油…大さじ2&#10;&#10;【作り方】&#10;..."></textarea>';
   sheet('貼り付けて取り込む', body,
     '<button class="btn sub" id="pxCancel">やめる</button><button class="btn" id="pxGo">解析する</button>');
   $('#pxCancel').onclick = closeSheet;
-  $('#pxGo').onclick = ()=>{
-    const txt = $('#pasteTA').value;
-    const p = parsePaste(txt);
-    if(p.urlOnly){ toast('URLだけでは取り込めません。本文をコピーしてください'); return; }
-    if(!p.ings.length && !p.seasonings.length){ toast('食材が見つかりませんでした。材料欄を含めて貼ってください'); return; }
+  const applyParsed = p => {
     draft = {
       id:null, kind:'main', day:null, title:p.title, minutes:p.minutes,
       ings: p.ings.map(i=>({name:i.name, cat:i.cat})),
@@ -2084,6 +2203,25 @@ function openPaste(){
     };
     draft.protein = proteinOf(draft.ings);
     openRecipeForm('取り込みの確認', true);
+  };
+  $('#pxGo').onclick = async ()=>{
+    const txt = $('#pasteTA').value;
+    const p = parsePaste(txt);
+    // URLだけ貼られた／テキストから食材が取れずURLが含まれる → ページを取りに行く
+    const um = String(txt).match(/https?:\/\/\S+/);
+    if(p.urlOnly || (!hasIngs(p) && um)){
+      const btn = $('#pxGo');
+      btn.textContent = '取得中…'; btn.disabled = true;
+      try{
+        applyParsed(await importFromUrl(p.urlOnly ? txt.trim() : um[0]));
+      }catch(e){
+        btn.textContent = '解析する'; btn.disabled = false;
+        toast('ページを取得できませんでした。材料欄をコピーして貼ってください');
+      }
+      return;
+    }
+    if(!hasIngs(p)){ toast('食材が見つかりませんでした。材料欄を含めて貼ってください'); return; }
+    applyParsed(p);
   };
   setTimeout(()=>{ const t=$('#pasteTA'); if(t) t.focus(); },120);
 }
