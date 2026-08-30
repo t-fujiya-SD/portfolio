@@ -950,6 +950,8 @@ function cleanLine(raw){
   let s = zen2han(raw);
   s = s.replace(/^[\s　]+|[\s　]+$/g,'');
   if(!s) return '';
+  if(/https?:\/\/|www\./i.test(s)) return '';   // URLを含む行は「:」で切ると https だけ残るので先に捨てる
+  if(/。/.test(s)) return '';                     // 句点がある＝文章。あとの整形で句点が消える前にここで捨てる
   // 箇条書き記号・番号
   s = s.replace(/^[・･\-‐−ー–—*＊#■□◆◇●○▲△▼▽☆★→>＞\|｜\s　]+/,'');
   s = s.replace(/^(\d{1,2}[\.\):、]|[①-⑳])[\s　]*/,'');
@@ -967,6 +969,7 @@ function cleanLine(raw){
   if(s.length>14) return '';                              // 説明文っぽい行は捨てる
   if(/^(材料|以上|など|その他|調味料|合わせ調味料|トッピング|仕上げ|下味|タレ|たれ|ソース類|作り方|手順)$/.test(s)) return '';
   if(/[。！？!?]/.test(s)) return '';
+  if(/(です|ます|ました|ません|でした|ましょう|ください|下さい)$/.test(s)) return '';   // 文末表現で終わる行は文章
   if(!/[ぁ-んァ-ヶ一-龯a-zA-Z]/.test(s)) return '';
   return s;
 }
@@ -1046,9 +1049,23 @@ function parsePaste(text){
    ========================================================================= */
 const FETCH_RELAYS = [
   {name:'allorigins', kind:'html', mk:u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u)},
+  {name:'codetabs',   kind:'html', mk:u=>'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(u)},
   {name:'jina',       kind:'text', mk:u=>'https://r.jina.ai/'+u},
   {name:'corsproxy',  kind:'html', mk:u=>'https://corsproxy.io/?url='+encodeURIComponent(u)},
 ];
+
+/** youtu.be / shorts / si= 付きURLを標準の watch URL に正規化する。
+    短縮リンクのまま中継に投げるとリダイレクトを挟むぶん失敗しやすい */
+function normalizeRecipeUrl(u){
+  u = String(u).trim();
+  let m = u.match(/^https?:\/\/youtu\.be\/([\w-]{6,})/i);
+  if(m) return 'https://www.youtube.com/watch?v='+m[1];
+  m = u.match(/^https?:\/\/(?:www\.|m\.)?youtube\.com\/shorts\/([\w-]{6,})/i);
+  if(m) return 'https://www.youtube.com/watch?v='+m[1];
+  m = u.match(/^https?:\/\/(?:www\.|m\.)?youtube\.com\/watch\?[^#]*?v=([\w-]{6,})/i);
+  if(m) return 'https://www.youtube.com/watch?v='+m[1];
+  return u;
+}
 
 function isoMinutes(v){
   const m = String(v||'').match(/PT(?:(\d+)H)?(?:(\d+)M)?/i);
@@ -1109,9 +1126,15 @@ function jsonLdRecipe(html){
 }
 /** YouTube のページHTMLから概要欄を取り出す */
 function ytDescription(html){
-  const m = String(html).match(/"shortDescription":"((?:[^"\\]|\\.)*)"/);
-  if(!m) return null;
-  try{ return JSON.parse('"'+m[1]+'"'); }catch(e){ return null; }
+  const h = String(html);
+  const m = h.match(/"shortDescription":"((?:[^"\\]|\\.)*)"/) ||
+            h.match(/"attributedDescription":\{"content":"((?:[^"\\]|\\.)*)"/) ||
+            h.match(/"description":\{"simpleText":"((?:[^"\\]|\\.)*)"\}/);
+  if(m){ try{ return JSON.parse('"'+m[1]+'"'); }catch(e){} }
+  // 最後の手段：metaタグの説明文（先頭部分だけだが、冒頭に材料を書く動画は拾える）
+  const md = h.match(/<meta\s+name=["']description["']\s+content=["']([^"']{40,})["']/i);
+  if(md) return md[1].replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#0?39;/g,"'");
+  return null;
 }
 function ogTitle(html){
   const m = String(html).match(/og:title["'][^>]*content=["']([^"']{2,80})["']/) ||
@@ -1122,7 +1145,8 @@ function ogTitle(html){
 const hasIngs = p => p && (p.ings.length || p.seasonings.length);
 
 async function importFromUrl(url){
-  let lastErr = null;
+  url = normalizeRecipeUrl(url);
+  let lastErr = null, gotDescription = false;
   for(const relay of FETCH_RELAYS){
     let txt = null;
     try{
@@ -1141,6 +1165,7 @@ async function importFromUrl(url){
       if(!hasIngs(p)){
         const yd = ytDescription(txt);
         if(yd){
+          gotDescription = true;
           p = parsePaste(yd);
           // 概要欄の1行目は挨拶のことが多いので、動画タイトルを優先する
           if(p){ p.title = tidyTitle(ogTitle(txt)) || p.title; }
@@ -1155,7 +1180,9 @@ async function importFromUrl(url){
     if(hasIngs(p)) return p;
     lastErr = new Error('no-ingredients');
   }
-  throw lastErr || new Error('fetch-failed');
+  const err = lastErr || new Error('fetch-failed');
+  if(gotDescription) err.descOnly = true;   // ページは読めたが、概要欄に材料の記載が無い
+  throw err;
 }
 
 /* =========================================================================
@@ -2217,7 +2244,9 @@ function openPaste(){
         applyParsed(await importFromUrl(p.urlOnly ? txt.trim() : um[0]));
       }catch(e){
         btn.textContent = '解析する'; btn.disabled = false;
-        toast('ページを取得できませんでした。材料欄をコピーして貼ってください');
+        toast(e && e.descOnly
+          ? 'この動画の概要欄に材料の記載が見つかりませんでした。概要欄に材料がある動画なら本文コピペで取り込めます'
+          : 'ページを取得できませんでした。材料欄をコピーして貼ってください');
       }
       return;
     }
