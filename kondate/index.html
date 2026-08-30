@@ -1,0 +1,1500 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>コンダテ — 平日5日の献立・買い物・常備品</title>
+<meta name="theme-color" content="#c25a28">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍳</text></svg>">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="コンダテ">
+<style>
+:root{
+  --p:#e2703a; --p-d:#c25a28; --p-l:#fdf1e9; --p-ll:#fff8f4;
+  --g:#2f9e5f; --g-l:#e7f6ed; --g-d:#237a48;
+  --r:#d64545; --r-l:#fdeceb;
+  --a:#c98a12; --a-l:#fdf5e2;
+  --b:#3a72c2; --b-l:#eaf1fb;
+  --ink:#20242b; --sub:#6f7580; --sub2:#9aa0aa;
+  --line:#e7e5e0; --bg:#f7f6f3; --card:#fff;
+  --rad:14px; --sb:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",Meiryo,sans-serif;
+  background:var(--bg);color:var(--ink);font-size:15px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;padding-bottom:calc(74px + var(--sb));overflow-x:hidden;
+}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:none;background:none}
+input,textarea,select{outline:none}
+.wrap{max-width:660px;margin:0 auto;padding:0 14px}
+
+/* header */
+header{background:linear-gradient(135deg,var(--p),var(--p-d));color:#fff;position:sticky;top:0;z-index:40;
+  box-shadow:0 1px 10px rgba(0,0,0,.10);padding-top:env(safe-area-inset-top,0px)}
+.hrow{display:flex;align-items:center;gap:9px;padding:11px 14px;max-width:660px;margin:0 auto}
+.logo{font-weight:800;font-size:17px;letter-spacing:.04em;line-height:1.15}
+.logo small{display:block;font-size:10px;font-weight:500;opacity:.85;letter-spacing:.08em}
+.hsp{flex:1}
+.hbtn{background:rgba(255,255,255,.17);color:#fff;border-radius:9px;padding:7px 10px;font-size:13px;font-weight:600}
+.hbtn:active{background:rgba(255,255,255,.33)}
+.wkbar{background:rgba(0,0,0,.13);color:#fff;font-size:12.5px;font-weight:600}
+.wkbar .wrap{display:flex;align-items:center;gap:8px;padding:6px 14px}
+.wkbar .nav{background:rgba(255,255,255,.18);border-radius:7px;padding:2px 9px;font-size:12px;font-weight:700}
+
+/* tabs */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:50;background:#fff;border-top:1px solid var(--line);
+  display:flex;padding-bottom:var(--sb);box-shadow:0 -2px 12px rgba(0,0,0,.05)}
+.tabbar button{flex:1;padding:9px 2px 8px;font-size:10.5px;font-weight:700;color:var(--sub2);
+  display:flex;flex-direction:column;align-items:center;gap:2px;position:relative}
+.tabbar button .ic{font-size:20px;line-height:1}
+.tabbar button.on{color:var(--p-d)}
+.tabbar .cnt{position:absolute;top:4px;right:calc(50% - 22px);background:var(--r);color:#fff;
+  border-radius:999px;min-width:17px;height:17px;line-height:17px;font-size:10px;font-weight:800;padding:0 4px}
+.pane{display:none}
+.pane.on{display:block}
+
+/* generic */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);margin:11px 0;overflow:hidden}
+.sec{font-size:12.5px;font-weight:800;color:var(--sub);letter-spacing:.05em;margin:20px 2px 6px;
+  display:flex;align-items:center;gap:7px}
+.sec .line{flex:1;height:1px;background:var(--line)}
+.muted{color:var(--sub);font-size:13px}
+.tiny{color:var(--sub2);font-size:11.5px;line-height:1.5}
+.btn{background:var(--p);color:#fff;border-radius:11px;padding:12px 16px;font-size:14.5px;font-weight:800;
+  display:inline-flex;align-items:center;justify-content:center;gap:7px}
+.btn:active{background:var(--p-d)}
+.btn.full{display:flex;width:100%}
+.btn.sub{background:#fff;color:var(--ink);border:1.5px solid var(--line);font-weight:700}
+.btn.sub:active{background:#f1efeb}
+.btn.gr{background:var(--g)} .btn.gr:active{background:var(--g-d)}
+.btn.sm{padding:8px 12px;font-size:13px;border-radius:9px}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.pill{display:inline-block;font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.pill.meat{background:#fbeaea;color:#b03a3a}
+.pill.fish{background:#e6f0fa;color:#2f63a8}
+.pill.other{background:#eef1ec;color:#5b6b5f}
+.pill.min{background:#f2efe9;color:#7a6a52}
+.pill.g{background:var(--g-l);color:var(--g-d)}
+.pill.a{background:var(--a-l);color:var(--a)}
+.pill.r{background:var(--r-l);color:var(--r)}
+.pill.b{background:var(--b-l);color:var(--b)}
+.empty{text-align:center;padding:34px 18px;color:var(--sub2);font-size:13.5px;line-height:1.9}
+.empty .big{font-size:34px;display:block;margin-bottom:6px}
+input.f,textarea.f,select.f{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px 12px;
+  font-size:15px;background:#fff}
+input.f:focus,textarea.f:focus,select.f:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(226,112,58,.13)}
+textarea.f{min-height:160px;line-height:1.7;resize:vertical;font-size:14px}
+label.lb{display:block;font-size:12px;font-weight:800;color:var(--sub);margin:14px 0 5px;letter-spacing:.03em}
+
+/* today hero */
+.hero{background:linear-gradient(135deg,#3b3f46,#22262c);color:#fff;border-radius:var(--rad);padding:16px;margin:13px 0}
+.hero .lb2{font-size:11px;font-weight:700;opacity:.7;letter-spacing:.1em}
+.hero .nm{font-size:24px;font-weight:800;line-height:1.3;margin:3px 0 7px}
+.hero .ing{font-size:12.5px;opacity:.82;line-height:1.7}
+.hero.rest .nm{font-size:19px;opacity:.85}
+
+/* day cards */
+.day{display:flex;align-items:stretch;border-bottom:1px solid var(--line)}
+.day:last-child{border-bottom:none}
+.day.today{background:var(--p-ll)}
+.dcol{flex:none;width:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:12px 0;border-right:1px solid var(--line);background:#fbfaf8}
+.day.today .dcol{background:var(--p-l)}
+.dcol .w{font-size:17px;font-weight:800;line-height:1.1}
+.dcol .d{font-size:10.5px;color:var(--sub2);font-weight:600}
+.day.today .dcol .w{color:var(--p-d)}
+.dbody{flex:1;padding:10px 12px;min-width:0}
+.dname{font-size:16px;font-weight:700;line-height:1.35;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.dname.none{color:var(--sub2);font-weight:600;font-size:14.5px}
+.ding{font-size:12px;color:var(--sub);margin-top:3px;line-height:1.55}
+.dacts{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap}
+.dacts button{border:1.5px solid var(--line);border-radius:8px;padding:5px 10px;font-size:12px;font-weight:700;color:var(--sub);background:#fff}
+.dname[data-pick],.ding[data-pick]{cursor:pointer}
+.dacts button:active{background:#f3f1ee}
+.mode3{display:flex;gap:0;border:1.5px solid var(--line);border-radius:9px;overflow:hidden;flex:none}
+.mode3 button{padding:5px 8px;font-size:11.5px;font-weight:800;color:var(--sub2);border:none;border-radius:0;background:#fff}
+.mode3 button+button{border-left:1.5px solid var(--line)}
+.mode3 button.on{background:var(--p);color:#fff}
+.mode3 button.on.out{background:var(--b)}
+.mode3 button.on.left{background:var(--a)}
+
+/* shopping */
+.shopsec{margin:14px 0 0}
+.shophd{display:flex;align-items:center;gap:8px;padding:9px 13px;background:#f1efeb;border-radius:11px 11px 0 0;
+  border:1px solid var(--line);border-bottom:none;font-size:13px;font-weight:800}
+.shophd .n{margin-left:auto;font-size:11.5px;color:var(--sub);font-weight:700}
+.shopbody{background:#fff;border:1px solid var(--line);border-radius:0 0 11px 11px;overflow:hidden}
+.row{display:flex;align-items:flex-start;gap:11px;padding:11px 13px;border-bottom:1px solid #f0eeea}
+.row:last-child{border-bottom:none}
+.row:active{background:#fbfaf8}
+.cb{width:24px;height:24px;border:2px solid #cfd3d8;border-radius:7px;flex:none;margin-top:1px;
+  display:flex;align-items:center;justify-content:center;transition:.13s}
+.row.ck .cb{background:var(--g);border-color:var(--g)}
+.row.ck .cb::after{content:"";width:6px;height:11px;border:2.5px solid #fff;border-top:none;border-left:none;
+  transform:rotate(42deg) translateY(-1.5px)}
+.rmain{flex:1;min-width:0}
+.rname{font-size:15px;font-weight:700;line-height:1.35}
+.row.ck .rname{color:var(--sub2);text-decoration:line-through}
+.rwhy{font-size:11.5px;color:var(--sub);margin-top:2px;line-height:1.5;display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+.row.ck .rwhy{opacity:.45}
+.rdel{flex:none;color:var(--sub2);font-size:17px;padding:0 2px;align-self:center}
+.addrow{display:flex;gap:7px;padding:10px 12px;background:#fbfaf8;border-top:1px solid var(--line)}
+.addrow input{flex:1;border:1.5px solid var(--line);border-radius:9px;padding:9px 11px;font-size:14.5px;background:#fff}
+
+/* staples */
+.stp{display:flex;align-items:center;gap:11px;padding:11px 13px;border-bottom:1px solid #f0eeea}
+.stp:last-child{border-bottom:none}
+.stpm{flex:1;min-width:0}
+.stpn{font-size:14.5px;font-weight:700;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.bar{height:5px;background:#eeece8;border-radius:99px;margin-top:6px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px;transition:width .3s}
+.stpa{display:flex;gap:5px;flex:none}
+.stpa button{border:1.5px solid var(--line);border-radius:8px;padding:6px 9px;font-size:11.5px;font-weight:800;color:var(--sub);background:#fff}
+.stpa button.buy{background:var(--g);color:#fff;border-color:var(--g)}
+
+/* recipes */
+.rc{display:flex;align-items:center;gap:10px;padding:12px 13px;border-bottom:1px solid #f0eeea}
+.rc:last-child{border-bottom:none}
+.rcm{flex:1;min-width:0}
+.rcn{font-size:15px;font-weight:700;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.rci{font-size:11.5px;color:var(--sub);margin-top:3px;line-height:1.5;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* sheet / modal */
+.ov{position:fixed;inset:0;background:rgba(20,22,26,.5);z-index:100;display:none;align-items:flex-end;
+  justify-content:center;backdrop-filter:blur(2px)}
+.ov.on{display:flex}
+.sheet{background:var(--bg);width:100%;max-width:660px;max-height:92vh;border-radius:20px 20px 0 0;
+  display:flex;flex-direction:column;animation:up .22s ease}
+@keyframes up{from{transform:translateY(24px);opacity:.4}to{transform:none;opacity:1}}
+.shhd{display:flex;align-items:center;gap:10px;padding:14px 16px 12px;border-bottom:1px solid var(--line);background:#fff;
+  border-radius:20px 20px 0 0}
+.shhd h3{font-size:16px;font-weight:800;flex:1}
+.shhd .x{font-size:22px;color:var(--sub2);line-height:1;padding:0 3px}
+.shbd{overflow-y:auto;padding:4px 16px 18px;-webkit-overflow-scrolling:touch}
+.shft{padding:12px 16px calc(14px + var(--sb));background:#fff;border-top:1px solid var(--line);display:flex;gap:9px}
+.shft .btn{flex:1}
+
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px}
+.chip{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1.5px solid var(--line);
+  border-radius:999px;padding:6px 10px;font-size:13px;font-weight:700}
+.chip .cat{font-size:14px}
+.chip .x{color:var(--sub2);font-size:15px;line-height:1;margin-left:1px}
+.chip.off{opacity:.45;text-decoration:line-through}
+.chip.seas{background:#f2f0ec;border-style:dashed;color:var(--sub);font-weight:600;font-size:12.5px}
+.pickgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:8px}
+.pickgrid button{background:#fff;border:1.5px solid var(--line);border-radius:11px;padding:10px 11px;text-align:left}
+.pickgrid button.on{border-color:var(--p);background:var(--p-ll)}
+.pickgrid .pn{font-size:14px;font-weight:700;line-height:1.3}
+.pickgrid .pi{font-size:11px;color:var(--sub2);margin-top:3px}
+.seg{display:flex;border:1.5px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
+.seg button{flex:1;padding:10px 6px;font-size:13.5px;font-weight:800;color:var(--sub)}
+.seg button+button{border-left:1.5px solid var(--line)}
+.seg button.on{background:var(--p);color:#fff}
+.note{background:var(--p-ll);border:1px solid #f2ddcd;border-radius:11px;padding:11px 13px;font-size:12.5px;
+  color:#8a5a34;line-height:1.65;margin:11px 0}
+.note b{color:#6e4526}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(88px + var(--sb));background:#2b2f36;color:#fff;
+  padding:11px 18px;border-radius:11px;font-size:13.5px;font-weight:700;z-index:200;opacity:0;pointer-events:none;
+  transition:.25s;max-width:88vw;text-align:center}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(-5px)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hrow">
+    <div class="logo">コンダテ<small>WEEKLY MEAL &amp; SHOPPING</small></div>
+    <div class="hsp"></div>
+    <button class="hbtn" id="btnSet">⚙️</button>
+  </div>
+  <div class="wkbar"><div class="wrap">
+    <span id="wkLabel">—</span>
+    <div class="hsp"></div>
+    <button class="nav" id="btnPrevWk">前の週</button>
+    <button class="nav" id="btnNextWk">次の週</button>
+  </div></div>
+</header>
+
+<main class="wrap">
+  <section class="pane on" id="pane-week"></section>
+  <section class="pane" id="pane-shop"></section>
+  <section class="pane" id="pane-stock"></section>
+  <section class="pane" id="pane-recipe"></section>
+</main>
+
+<nav class="tabbar">
+  <button data-tab="week" class="on"><span class="ic">🍳</span>今週</button>
+  <button data-tab="shop"><span class="ic">🛒</span>買い物<span class="cnt" id="cntShop" hidden>0</span></button>
+  <button data-tab="stock"><span class="ic">📦</span>常備品<span class="cnt" id="cntStock" hidden>0</span></button>
+  <button data-tab="recipe"><span class="ic">📖</span>レシピ</button>
+</nav>
+
+<div class="ov" id="ov"><div class="sheet">
+  <div class="shhd"><h3 id="shTitle">—</h3><button class="x" id="shClose">✕</button></div>
+  <div class="shbd" id="shBody"></div>
+  <div class="shft" id="shFoot"></div>
+</div></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+/* =========================================================================
+   コンダテ — 平日5日の献立 → 買い物リスト → 常備品 を一直線につなぐ
+   単一HTML / localStorage / 外部通信なし
+   ========================================================================= */
+
+/* ---------- カテゴリ定義（＝スーパーの売り場順） ---------- */
+const CATS = [
+  {k:'veg',   ic:'🥬', nm:'野菜'},
+  {k:'meat',  ic:'🥩', nm:'肉'},
+  {k:'fish',  ic:'🐟', nm:'魚'},
+  {k:'dairy', ic:'🥚', nm:'豆腐・卵・乳製品'},
+  {k:'dry',   ic:'🍜', nm:'乾物・麺・缶詰'},
+  {k:'seas',  ic:'🧂', nm:'調味料'},
+  {k:'frozen',ic:'❄️', nm:'冷凍'},
+  {k:'daily', ic:'🧴', nm:'日用品'},
+  {k:'other', ic:'🧺', nm:'その他'},
+];
+const CAT = {}; CATS.forEach(c=>CAT[c.k]=c);
+const catIc = k => (CAT[k]||CAT.other).ic;
+const catNm = k => (CAT[k]||CAT.other).nm;
+
+/* ---------- 食材辞書（カテゴリ自動判定用） ---------- */
+const DICT = {
+  veg:('玉ねぎ,たまねぎ,タマネギ,新玉ねぎ,にんじん,人参,ニンジン,じゃがいも,ジャガイモ,馬鈴薯,'+
+   'キャベツ,春キャベツ,白菜,はくさい,大根,だいこん,長ねぎ,長ネギ,青ねぎ,小ねぎ,万能ねぎ,九条ねぎ,白ねぎ,ねぎ,ネギ,'+
+   'にら,ニラ,もやし,モヤシ,豆もやし,ピーマン,パプリカ,ししとう,なす,ナス,茄子,トマト,ミニトマト,プチトマト,'+
+   'きゅうり,キュウリ,胡瓜,ブロッコリー,カリフラワー,ほうれん草,ホウレン草,小松菜,こまつな,レタス,サニーレタス,'+
+   'しめじ,シメジ,えのき,エノキ,舞茸,まいたけ,マイタケ,しいたけ,シイタケ,椎茸,エリンギ,マッシュルーム,きのこ,'+
+   'かぼちゃ,カボチャ,南瓜,ごぼう,ゴボウ,牛蒡,れんこん,レンコン,蓮根,さつまいも,サツマイモ,里芋,さといも,'+
+   'アボカド,オクラ,ズッキーニ,セロリ,いんげん,インゲン,枝豆,えだまめ,スナップえんどう,絹さや,水菜,みずな,'+
+   'チンゲン菜,チンゲンサイ,春菊,豆苗,かいわれ,スプラウト,ベビーリーフ,生姜,しょうが,ショウガ,にんにく,ニンニク,'+
+   '長芋,ながいも,山芋,やまいも,とうもろこし,コーン,アスパラ,みょうが,大葉,青じそ,しそ,パセリ,パクチー,バジル葉,'+
+   '三つ葉,みつば,クレソン,ルッコラ,つるむらさき,モロヘイヤ,ゆず,レモン,すだち,かぶ,カブ,たけのこ,タケノコ,筍,ミックスベジタブル,カット野菜,サラダ野菜,きざみねぎ').split(','),
+
+  meat:('豚バラ,豚こま,豚コマ,豚小間,豚ロース,豚ひき肉,豚挽き肉,豚肉,豚,'+
+   '鶏もも,鶏もも肉,鶏むね,鶏ムネ,鶏胸,ささみ,ササミ,手羽先,手羽元,手羽中,鶏ひき肉,鶏挽き肉,鶏肉,鶏,とり肉,若鶏,'+
+   '牛こま,牛切り落とし,牛バラ,牛ロース,牛ひき肉,牛肉,牛,合いびき肉,合い挽き,合挽,あいびき,ひき肉,挽き肉,ミンチ,'+
+   'ベーコン,ハム,生ハム,ソーセージ,ウインナー,ウィンナー,チャーシュー,焼き豚,ラム,スペアリブ,'+
+   'サラダチキン,鶏皮,砂肝,レバー,肉').split(','),
+
+  fish:('鮭,さけ,サケ,サーモン,銀鮭,塩鮭,ぶり,ブリ,はまち,ハマチ,さば,サバ,鯖,あじ,アジ,鯵,いわし,イワシ,'+
+   'さんま,サンマ,秋刀魚,たら,タラ,鱈,かれい,カレイ,ひらめ,まぐろ,マグロ,鮪,かつお,カツオ,鰹,かじき,カジキ,'+
+   'ほっけ,ホッケ,ししゃも,シシャモ,きんめ,金目鯛,鯛,たい,えび,エビ,海老,むきえび,いか,イカ,烏賊,たこ,タコ,蛸,'+
+   'あさり,アサリ,しじみ,シジミ,ホタテ,ほたて,帆立,牡蠣,かき,カキ,ムール貝,しらす,シラス,ちりめん,ちくわ,'+
+   'はんぺん,かまぼこ,さつま揚げ,魚肉ソーセージ,ツナ缶,ツナ,サバ缶,鯖缶,明太子,たらこ,いくら,刺身,切り身,'+
+   'あら,うなぎ,ウナギ,鰻,穴子,魚').split(','),
+
+  dairy:('豆腐,とうふ,絹ごし,木綿,厚揚げ,油揚げ,あぶらあげ,がんもどき,納豆,豆乳,おから,'+
+   '牛乳,ぎゅうにゅう,ミルク,卵,たまご,タマゴ,鶏卵,うずら卵,'+
+   'チーズ,ピザ用チーズ,とろけるチーズ,粉チーズ,クリームチーズ,モッツァレラ,'+
+   'ヨーグルト,バター,生クリーム,ホイップ,サワークリーム,マーガリン').split(','),
+
+  dry:('春雨,はるさめ,ビーフン,乾燥わかめ,わかめ,ワカメ,ひじき,切干大根,切り干し大根,高野豆腐,麩,ふ,'+
+   'パスタ,スパゲッティ,マカロニ,うどん,そば,蕎麦,そうめん,素麺,中華麺,焼きそば麺,焼きそば,ラーメン,ちゃんぽん麺,'+
+   '米,お米,ごはん,ご飯,白米,無洗米,パン,食パン,バゲット,ロールパン,ナン,トルティーヤ,'+
+   '餃子の皮,春巻きの皮,ワンタンの皮,シュウマイの皮,のり,海苔,焼き海苔,ごま,白ごま,黒ごま,すりごま,'+
+   'かつお節,鰹節,かつおぶし,昆布,こんぶ,煮干し,大豆,ミックスビーンズ,ひよこ豆,'+
+   'トマト缶,カットトマト,ホールトマト,コーン缶,ミックスベジタブル缶,鯖の水煮,'+
+   'カレールー,カレールウ,ルー,シチュールー,シチュールウ,ハヤシルー,麻婆豆腐の素,中華の素,パン粉,こんにゃく,'+
+   '糸こんにゃく,しらたき,白滝,春巻き,ナッツ,くるみ,アーモンド,ドライフルーツ,寒天,ゼラチン').split(','),
+
+  frozen:('冷凍うどん,冷凍餃子,冷凍ブロッコリー,冷凍からあげ,冷凍唐揚げ,冷凍ミックスベジタブル,'+
+   '冷凍コロッケ,冷凍えび,冷凍いか,冷凍ほうれん草,冷凍枝豆,冷凍ポテト,冷凍チャーハン,'+
+   'アイス,冷凍').split(','),
+
+  daily:('トイレットペーパー,トイレペーパー,ティッシュ,ボックスティッシュ,キッチンペーパー,ペーパータオル,'+
+   'ゴミ袋,ごみ袋,食器用洗剤,洗剤,洗濯洗剤,柔軟剤,漂白剤,ハイター,'+
+   'シャンプー,リンス,コンディショナー,ボディソープ,ハンドソープ,石鹸,せっけん,'+
+   '歯磨き粉,ハミガキ,歯ブラシ,ラップ,アルミホイル,クッキングシート,ジップロック,保存袋,'+
+   'スポンジ,綿棒,絆創膏,マスク,オムツ,おむつ,紙オムツ,おしりふき,おしり拭き,'+
+   'ウェットティッシュ,除菌シート,電池,乾電池,芳香剤,消臭剤,虫除け,日焼け止め').split(','),
+};
+
+/* ---------- 常備調味料（買い物リストに出さない） ---------- */
+const SEAS = ('醤油,しょうゆ,しょう油,濃口醤油,薄口醤油,みりん,味醂,料理酒,酒,日本酒,砂糖,きび砂糖,三温糖,'+
+ '塩,あら塩,こしょう,胡椒,黒こしょう,ブラックペッパー,白こしょう,サラダ油,油,ごま油,ゴマ油,オリーブオイル,'+
+ 'オリーブ油,片栗粉,かたくり粉,小麦粉,薄力粉,強力粉,天ぷら粉,'+
+ '味噌,みそ,合わせ味噌,赤味噌,白味噌,酢,米酢,穀物酢,黒酢,ポン酢,すし酢,'+
+ 'マヨネーズ,ケチャップ,ソース,ウスターソース,中濃ソース,とんかつソース,お好みソース,'+
+ 'オイスターソース,豆板醤,甜麺醤,テンメンジャン,コチュジャン,XO醤,ナンプラー,スイートチリ,'+
+ '鶏がらスープ,鶏ガラ,鶏がらスープの素,ガラスープ,コンソメ,ブイヨン,'+
+ 'だし,出汁,和風だし,顆粒だし,ほんだし,白だし,めんつゆ,つゆ,だしの素,'+
+ 'カレー粉,ガラムマサラ,クミン,チリパウダー,パプリカパウダー,ローリエ,オレガノ,バジル,'+
+ 'こしょう少々,一味,七味,唐辛子,鷹の爪,ラー油,山椒,花椒,粉山椒,わさび,からし,'+
+ 'はちみつ,蜂蜜,メープルシロップ,みそだれ,焼肉のタレ,焼肉たれ,ドレッシング,'+
+ '水,お湯,湯,氷,酒粕,重曹,ベーキングパウダー,バニラエッセンス,'+
+ 'ウェイパー,創味シャンタン,味の素,うま味調味料,顆粒コンソメ').split(',');
+
+/* ---------- 常備品プリセット ---------- */
+const STAPLE_PRESET = [
+  ['卵','dairy',10],['牛乳','dairy',5],['ヨーグルト','dairy',7],['豆腐','dairy',5],['納豆','dairy',7],
+  ['食パン','dry',5],['お米','dry',30],['チーズ','dairy',21],['バター','dairy',45],
+  ['ミニトマト','veg',7],['きゅうり','veg',7],['レタス','veg',7],['味噌汁の具','veg',7],
+  ['冷凍うどん','frozen',14],['冷凍餃子','frozen',21],['冷凍ブロッコリー','frozen',21],['冷凍からあげ','frozen',21],
+  ['醤油','seas',60],['みりん','seas',90],['味噌','seas',45],['サラダ油','seas',60],['マヨネーズ','seas',60],
+  ['トイレットペーパー','daily',30],['ティッシュ','daily',30],['キッチンペーパー','daily',21],
+  ['ゴミ袋','daily',45],['食器用洗剤','daily',45],['洗濯洗剤','daily',40],['柔軟剤','daily',45],
+  ['シャンプー','daily',60],['ボディソープ','daily',60],['ハンドソープ','daily',60],
+  ['ラップ','daily',60],['アルミホイル','daily',90],['ジップロック','daily',45],['スポンジ','daily',30],
+  ['紙オムツ','daily',18],['おしりふき','daily',14],['麦茶パック','dry',14],
+];
+
+/* ---------- 曜日 ---------- */
+const DAYS = [
+  {k:'mon',w:'月'},{k:'tue',w:'火'},{k:'wed',w:'水'},{k:'thu',w:'木'},{k:'fri',w:'金'}
+];
+const MODES = {cook:'作る',out:'外食',left:'残り物'};
+
+/* ---------- 汎用 ---------- */
+const $  = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const uid = () => Math.random().toString(36).slice(2,10);
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad = n => String(n).padStart(2,'0');
+const iso = d => d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const parseISO = s => { const [y,m,d]=String(s).split('-').map(Number); return new Date(y,m-1,d); };
+const today = () => { const d=new Date(); d.setHours(0,0,0,0); return d; };
+const addDays = (d,n) => { const x=new Date(d); x.setDate(x.getDate()+n); return x; };
+const diffDays = (a,b) => Math.round((parseISO(a)-parseISO(b))/86400000);
+const daysSince = s => s ? Math.round((today()-parseISO(s))/86400000) : null;
+const md = d => (d.getMonth()+1)+'/'+d.getDate();
+
+let toastT;
+function toast(msg){
+  const t=$('#toast'); t.textContent=msg; t.classList.add('on');
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('on'),1900);
+}
+
+/* 月曜始まり。土日は「翌週」を見せる（日曜にまとめ買いするため） */
+function currentWeekStart(){
+  const t = today(), w = t.getDay();           // 0=日 1=月 ... 6=土
+  if(w===0) return iso(addDays(t,1));          // 日 → 明日の月曜
+  if(w===6) return iso(addDays(t,2));          // 土 → 明後日の月曜
+  return iso(addDays(t,1-w));                  // 平日 → 今週の月曜
+}
+
+/* =========================================================================
+   State
+   ========================================================================= */
+const KEY = 'kondate.v1';
+let S = null;
+let viewWeek = null;   // 表示中の週（月曜のISO）
+let tab = 'week';
+
+function blankWeek(start){
+  const days = {};
+  DAYS.forEach(d => days[d.k] = {mode:'cook', recipeId:null});
+  return {start, days, checked:{}, extras:[], done:false};
+}
+
+function defaultState(){
+  return {
+    version: 1,
+    recipes: [],
+    staples: STAPLE_PRESET.map(([nm,cat,cyc]) => ({
+      id:uid(), name:nm, cat, cycleDays:cyc, lastBought:null, history:[], snoozeUntil:null, enabled:true
+    })),
+    weeks: {},                                   // start(ISO) -> week
+    leftovers: [],                               // 余り食材 [{id,name,cat}]
+    settings: { fixedFish:'mon', easyFri:true }  // 月曜は魚 / 金曜は時短優先
+  };
+}
+
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    S = raw ? JSON.parse(raw) : defaultState();
+  }catch(e){ S = defaultState(); }
+  if(!S || typeof S!=='object') S = defaultState();
+  S.recipes  = S.recipes  || [];
+  S.staples  = S.staples  || [];
+  S.weeks    = S.weeks    || {};
+  S.leftovers= S.leftovers|| [];
+  S.settings = Object.assign({fixedFish:'mon', easyFri:true}, S.settings||{});
+  viewWeek = currentWeekStart();
+  getWeek(viewWeek);
+  save();
+}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){ toast('保存できませんでした'); } }
+function getWeek(start){
+  if(!S.weeks[start]) S.weeks[start] = blankWeek(start);
+  return S.weeks[start];
+}
+const W = () => getWeek(viewWeek);
+const recipeById = id => S.recipes.find(r=>r.id===id) || null;
+
+/* =========================================================================
+   食材の分類
+   ========================================================================= */
+function longestHit(name, list){
+  let best='';
+  for(const w of list){ if(w && name.indexOf(w)>=0 && w.length>best.length) best=w; }
+  return best;
+}
+/** 食材名 → {cat:'veg'|..., seasoning:bool} */
+function classify(name){
+  const n = String(name).trim();
+  if(!n) return {cat:'other', seasoning:false};
+  let bestCat='', bestLen=0;
+  for(const k of Object.keys(DICT)){
+    const hit = longestHit(n, DICT[k]);
+    if(hit.length > bestLen){ bestLen = hit.length; bestCat = k; }
+  }
+  const sHit = longestHit(n, SEAS);
+  // 「ごま油」(調味料3) > 「ごま」(乾物2) のように、長く一致したほうを採用
+  if(sHit.length > bestLen) return {cat:'seas', seasoning:true};
+  return {cat: bestCat || 'other', seasoning:false};
+}
+/** 食材リスト → タンパク源タグ */
+function proteinOf(ings){
+  if(ings.some(i=>i.cat==='fish')) return 'fish';
+  if(ings.some(i=>i.cat==='meat')) return 'meat';
+  return 'other';
+}
+const PROT = {meat:{nm:'肉',ic:'🥩'}, fish:{nm:'魚',ic:'🐟'}, other:{nm:'その他',ic:'🍚'}};
+/** 傷みやすさ（大きいほど早く使いたい） */
+const perishOf = r => r.protein==='fish' ? 2 : (r.protein==='meat' ? 1 : 0);
+
+/* =========================================================================
+   貼り付けパーサー（レシピサイト / YouTube概要欄）
+   ========================================================================= */
+const RE_MAT_START = /(材\s*料|ざいりょう|ingredients)/i;
+const RE_MAT_END   = /(作\s*り\s*方|つくり方|手\s*順|下ごしらえ|下準備|調理法|ポイント|コツ|使用した|チャンネル登録|登録はこちら|twitter|instagram|tiktok|x\.com|https?:\/\/|【?レシピ動画|楽曲|BGM|音楽|提供|関連動画)/i;
+const RE_URLONLY   = /^\s*https?:\/\/\S+\s*$/i;
+
+function zen2han(s){
+  return s.replace(/[０-９]/g, c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0))
+          .replace(/[Ａ-Ｚａ-ｚ]/g, c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0))
+          .replace(/／/g,'/').replace(/～/g,'~');
+}
+
+/** 1行 → 食材名（取れなければ ''） */
+function cleanLine(raw){
+  let s = zen2han(raw);
+  s = s.replace(/^[\s　]+|[\s　]+$/g,'');
+  if(!s) return '';
+  // 箇条書き記号・番号
+  s = s.replace(/^[・･\-‐−ー–—*＊#■□◆◇●○▲△▼▽☆★→>＞\|｜\s　]+/,'');
+  s = s.replace(/^(\d{1,2}[\.\):、]|[①-⑳])[\s　]*/,'');
+  s = s.replace(/^[ABCＡ][\s　:：\.]+/,'');          // 「A 醤油」のグループ記号
+  // 区切りで前半だけ取る（… ： タブ 連続スペース）
+  const parts = s.split(/[…‥]+|\.{3,}|[:：]|\t|[\s　]{2,}/);
+  if(parts.length>1 && parts[0].trim()) s = parts[0];
+  // カッコ内・分量・単位
+  s = s.replace(/[（(\[【][^）)\]】]*[）)\]】]/g,' ');
+  s = s.replace(/(大さじ|小さじ|カップ|適量|適宜|少々|少量|ひとつまみ|ひとかけ|お好み|好みで|各適量|各少々).*$/,'');
+  s = s.replace(/[\s　]*[約]?[0-9½¼¾⅓⅔].*$/,'');    // 数字が出たら以降を切る
+  s = s.replace(/[\s　]*[〜~\-]+$/,'');            // ※「ー」は長音符なので削らない
+  s = s.replace(/^[\s　]+|[\s　、,\.。]+$/g,'');
+  if(!s) return '';
+  if(s.length>14) return '';                              // 説明文っぽい行は捨てる
+  if(/^(材料|以上|など|その他|調味料|合わせ調味料|トッピング|仕上げ|下味|タレ|たれ|ソース類|作り方|手順)$/.test(s)) return '';
+  if(/[。！？!?]/.test(s)) return '';
+  if(!/[ぁ-んァ-ヶ一-龯a-zA-Z]/.test(s)) return '';
+  return s;
+}
+
+/** 貼り付けテキスト → {title, minutes, ings:[{name,cat}], seasonings:[name], matched} */
+function parsePaste(text){
+  const out = {title:'', minutes:null, ings:[], seasonings:[], urlOnly:false, matched:false};
+  if(!text || !text.trim()) return out;
+  if(RE_URLONLY.test(text)){ out.urlOnly = true; return out; }
+
+  const lines = text.replace(/\r\n?/g,'\n').split('\n');
+
+  // --- 材料ブロックの範囲 ---
+  let from = -1, to = lines.length;
+  for(let i=0;i<lines.length;i++){
+    const l = lines[i];
+    if(RE_MAT_START.test(l) && l.replace(/\s/g,'').length <= 24){ from = i+1; break; }
+  }
+  if(from >= 0){
+    out.matched = true;
+    let blank = 0;
+    for(let i=from;i<lines.length;i++){
+      const l = lines[i].trim();
+      if(!l){ if(++blank>=2 && i-from>2){ to=i; break; } continue; }
+      blank = 0;
+      if(RE_MAT_END.test(l)){ to = i; break; }
+    }
+  }else{
+    from = 0;   // 「材料」見出しが無い＝食材の羅列を貼られたとみなす
+  }
+
+  // --- タイトル推測（材料ブロックより前の行から） ---
+  for(let i=0;i<Math.max(from-1,0) && i<12;i++){
+    let l = lines[i].trim();
+    if(!l || /^https?:/i.test(l)) continue;
+    l = l.replace(/^[\s#＃]+/,'');
+    l = l.replace(/^([【\[（(][^】\]）)]{0,20}[】\]）)])+/,'');   // 先頭の【15分レシピ】などは中身ごと除去
+    l = l.replace(/[【】「」『』\[\]]/g,'').trim();
+    l = l.replace(/(の作り方|の作りかた|レシピ|作り方|【簡単】|超簡単|絶品|プロが教える|人気|殿堂入り)/g,'').trim();
+    l = l.replace(/[｜\|].*$/,'').trim();
+    if(l.length>=2 && l.length<=22 && !RE_MAT_START.test(l)){ out.title = l; break; }
+  }
+
+  // --- 所要時間 ---
+  const mm = text.match(/(\d{1,3})\s*分/g);
+  if(mm){
+    const nums = mm.map(x=>parseInt(x,10)).filter(n=>n>=3 && n<=120);
+    if(nums.length) out.minutes = Math.min.apply(null, nums);
+  }
+
+  // --- 食材抽出 ---
+  const seen = new Set();
+  for(let i=from;i<to;i++){
+    // 1行に「・A ・B」と並ぶケースを分割
+    const chunks = lines[i].split(/[、,]/).length>1 && lines[i].length<40
+      ? lines[i].split(/[、,]/) : [lines[i]];
+    for(const ch of chunks){
+      const nm = cleanLine(ch);
+      if(!nm || seen.has(nm)) continue;
+      seen.add(nm);
+      const c = classify(nm);
+      if(c.seasoning) out.seasonings.push(nm);
+      else out.ings.push({name:nm, cat:c.cat});
+    }
+  }
+  return out;
+}
+
+/* =========================================================================
+   献立の自動提案
+   ルール:
+     ・同じタンパク源を2日連続にしない
+     ・週に魚を最低1回（設定で「月曜は魚」を固定枠に）
+     ・最近作ったものは出さない（間隔が空くほど高スコア）
+     ・余っている食材を使うレシピを優先
+     ・金曜は時短（20分以内）を優先
+     ・傷みやすい順（魚→肉→その他）に週の前半へ配置
+   ========================================================================= */
+function scoreRecipe(r, ctx){
+  let sc = 0;
+  const ds = daysSince(r.lastCooked);
+  sc += ds===null ? 45 : Math.min(ds, 70);            // 久しぶりなほど高い
+  sc -= (r.cookCount||0) * 0.6;                       // 出過ぎ防止
+  const lo = ctx.leftNames;
+  if(lo.size) r.ings.forEach(i=>{ if(lo.has(i.name)) sc += 22; });
+  sc += Math.random()*14;                             // 毎回同じ並びにしない
+  return sc;
+}
+
+function suggestWeek(opts){
+  opts = opts || {};
+  const keep = opts.keep || {};                       // {mon:true} 固定したい曜日
+  const wk = W();
+  const pool = S.recipes.filter(r=>!r.archived);
+  if(!pool.length) return false;
+
+  const ctx = { leftNames: new Set(S.leftovers.map(l=>l.name)) };
+  const slots = DAYS.filter(d => wk.days[d.k].mode==='cook' && !keep[d.k]);
+  if(!slots.length) return true;
+
+  // すでに固定済みで使われているレシピは重複させない
+  const used = new Set();
+  DAYS.forEach(d=>{ if(keep[d.k] && wk.days[d.k].recipeId) used.add(wk.days[d.k].recipeId); });
+
+  const ranked = pool.map(r=>({r, sc:scoreRecipe(r,ctx)})).sort((a,b)=>b.sc-a.sc);
+
+  // --- 必要数を選ぶ（週内でタンパク源が偏りすぎないように） ---
+  const need = slots.length;
+  const picked = [];
+  const protCount = {meat:0, fish:0, other:0};
+  DAYS.forEach(d=>{ const id=keep[d.k]&&wk.days[d.k].recipeId; if(id){ const r=recipeById(id); if(r) protCount[r.protein]++; } });
+
+  const maxSame = Math.max(2, Math.ceil((need + Object.values(protCount).reduce((a,b)=>a+b,0)) / 2));
+  for(const {r} of ranked){
+    if(picked.length>=need) break;
+    if(used.has(r.id)) continue;
+    if(protCount[r.protein] >= maxSame) continue;
+    picked.push(r); used.add(r.id); protCount[r.protein]++;
+  }
+  // 足りなければ制約を外して埋める
+  if(picked.length < need){
+    for(const {r} of ranked){
+      if(picked.length>=need) break;
+      if(used.has(r.id)) continue;
+      picked.push(r); used.add(r.id);
+    }
+  }
+  // それでも足りない（レシピ数が少ない）→ 重複を許して埋める
+  let gi = 0;
+  while(picked.length < need && ranked.length){ picked.push(ranked[gi++ % ranked.length].r); }
+
+  // --- 魚を最低1回 ---
+  const hasFish = picked.some(r=>r.protein==='fish') ||
+                  DAYS.some(d=>keep[d.k] && (recipeById(wk.days[d.k].recipeId)||{}).protein==='fish');
+  if(!hasFish){
+    const fish = ranked.map(x=>x.r).find(r=>r.protein==='fish' && !picked.includes(r));
+    if(fish){
+      let idx = picked.findIndex(r=>r.protein==='meat');
+      if(idx<0) idx = 0;
+      picked[idx] = fish;
+    }
+  }
+
+  // --- 配置：空きスロットへの並べ方を全通り試して最良を採用 ---
+  const slotKeys = slots.map(s=>s.k);
+  const arranged = arrangeBest(picked.slice(0, slotKeys.length), slotKeys, wk, keep);
+  slotKeys.forEach((k,i)=>{ wk.days[k].recipeId = arranged[i] ? arranged[i].id : null; });
+  save();
+  return true;
+}
+
+/** 並べ方を全通り（最大5!＝120通り）試し、いちばん条件に合う配置を返す */
+function arrangeBest(list, slotKeys, wk, keep){
+  let best = list, bestSc = -Infinity;
+  permute(list, arr=>{
+    const sc = arrangeScore(arr, slotKeys, wk, keep);
+    if(sc > bestSc){ bestSc = sc; best = arr.slice(); }
+  });
+  return best;
+}
+function permute(arr, cb){
+  const n = arr.length;
+  if(!n){ cb([]); return; }
+  const used = new Array(n).fill(false), cur = [];
+  (function go(){
+    if(cur.length===n){ cb(cur.slice()); return; }
+    for(let i=0;i<n;i++){
+      if(used[i]) continue;
+      used[i]=true; cur.push(arr[i]); go(); cur.pop(); used[i]=false;
+    }
+  })();
+}
+function arrangeScore(arr, slotKeys, wk, keep){
+  const byDay = {};
+  DAYS.forEach(d=>{
+    byDay[d.k] = (wk.days[d.k].mode!=='cook') ? null
+               : (keep[d.k] ? recipeById(wk.days[d.k].recipeId) : null);
+  });
+  slotKeys.forEach((k,i)=>{ byDay[k] = arr[i] || null; });
+  const seq = DAYS.map(d=>byDay[d.k]);
+  let sc = 0;
+  for(let i=1;i<seq.length;i++){                       // 同じタンパク源の2日連続は強く避ける
+    if(seq[i] && seq[i-1] && seq[i].protein===seq[i-1].protein) sc -= 1000;
+  }
+  seq.forEach((r,i)=>{ if(r) sc += perishOf(r) * (DAYS.length-1-i) * 6; });   // 傷みやすいものを前半へ
+  if(S.settings.easyFri && seq[4]) sc -= (seq[4].minutes||30) * 1.5;          // 金曜は時短
+  // 魚の固定枠。ユーザーが明示的に設定したものなので「2日連続を避ける」(-1000) より強くし、
+  // 連続1回ぶんまでは妥協して固定枠を優先する。
+  // （肉が週3品あると、連続を避けるには肉が月・水・金に固定され、魚を月曜に置けないため）
+  if(S.settings.fixedFish){
+    const fi = DAYS.findIndex(d=>d.k===S.settings.fixedFish);
+    if(fi>=0 && seq[fi] && seq[fi].protein==='fish') sc += 1200;
+  }
+  return sc;
+}
+
+function shuffleDay(dk){
+  const wk = W();
+  const pool = S.recipes.filter(r=>!r.archived);
+  if(!pool.length){ toast('先にレシピを登録してください'); return; }
+  const ctx = { leftNames:new Set(S.leftovers.map(l=>l.name)) };
+  const usedIds = new Set(DAYS.filter(d=>d.k!==dk).map(d=>wk.days[d.k].recipeId).filter(Boolean));
+  const idx = DAYS.findIndex(d=>d.k===dk);
+  const prev = idx>0 ? recipeById(wk.days[DAYS[idx-1].k].recipeId) : null;
+  const next = idx<DAYS.length-1 ? recipeById(wk.days[DAYS[idx+1].k].recipeId) : null;
+  const cur  = wk.days[dk].recipeId;
+
+  let cands = pool.filter(r=>!usedIds.has(r.id) && r.id!==cur);
+  const strict = cands.filter(r =>
+    (!prev || r.protein!==prev.protein) && (!next || r.protein!==next.protein));
+  if(strict.length) cands = strict;
+  if(!cands.length) cands = pool.filter(r=>r.id!==cur);
+  if(!cands.length) cands = pool;
+
+  const ranked = cands.map(r=>({r,sc:scoreRecipe(r,ctx)})).sort((a,b)=>b.sc-a.sc);
+  const top = ranked.slice(0, Math.min(4, ranked.length));
+  wk.days[dk].recipeId = top[Math.floor(Math.random()*top.length)].r.id;
+  save(); render();
+}
+
+/* =========================================================================
+   常備品：サイクルからの残日数推定
+   ========================================================================= */
+function stapleStatus(st){
+  const cyc = Math.max(1, st.cycleDays||14);
+  if(st.needBuy) return {left:0, ratio:0, level:'out', text:'切らしてる'};
+  if(!st.lastBought) return {left:0, ratio:0, level:'unknown', text:'未設定'};
+  let used = daysSince(st.lastBought);
+  let left = cyc - used;
+  if(st.snoozeUntil){
+    const sl = -daysSince(st.snoozeUntil);   // snoozeUntil までの残り日数
+    if(sl > left) left = sl;
+  }
+  const ratio = Math.max(0, Math.min(1, left/cyc));
+  let level = 'ok';
+  if(left <= 0) level = 'out';
+  else if(left <= 2) level = 'soon';
+  else if(left <= Math.max(3, cyc*0.25)) level = 'near';
+  return {left, ratio, level, text: left<=0 ? '切れてるかも' : 'あと約'+left+'日'};
+}
+/* 買い物リストに載る条件：「切らしてる」印か、サイクル的にもうすぐ切れる。
+   購入日が未設定のものは推定できないので載せない（常備品タブで初期設定する） */
+const stapleNeeded = st => st.enabled!==false &&
+  (st.needBuy === true ||
+   (!!st.lastBought && ['out','soon'].indexOf(stapleStatus(st).level)>=0));
+const stapleUnset = st => st.enabled!==false && !st.lastBought && !st.needBuy;
+
+function buyStaple(st){
+  const d = iso(today());
+  if(st.lastBought){
+    st.history = (st.history||[]).concat([st.lastBought]).slice(-6);
+    const gap = diffDays(d, st.lastBought);
+    if(gap>=1 && gap<=400){
+      // 実績の間隔でサイクルを補正（直近を重めに）
+      st.cycleDays = Math.max(1, Math.round(st.cycleDays*0.5 + gap*0.5));
+    }
+  }
+  st.lastBought = d;
+  st.snoozeUntil = null;
+  st.needBuy = false;
+}
+function markOut(st){ st.needBuy = true; st.snoozeUntil = null; }
+function snoozeStaple(st){
+  // 「まだある」→ サイクルを少し長めに学習しつつ先送り
+  const cyc = Math.max(1, st.cycleDays||14);
+  st.cycleDays = Math.round(cyc * 1.12);
+  st.snoozeUntil = iso(addDays(today(), Math.max(2, Math.round(cyc*0.3))));
+  st.needBuy = false;
+}
+
+/* =========================================================================
+   買い物リストの生成
+   ========================================================================= */
+function buildShopping(){
+  const wk = W();
+  const map = new Map();   // name -> {name,cat,uses:[{w,recipe}],kind}
+  DAYS.forEach(d=>{
+    const day = wk.days[d.k];
+    if(day.mode!=='cook' || !day.recipeId) return;
+    const r = recipeById(day.recipeId);
+    if(!r) return;
+    r.ings.forEach(i=>{
+      const key = 'ing:'+i.name;
+      if(!map.has(key)) map.set(key, {key, name:i.name, cat:i.cat, kind:'ing', uses:[]});
+      map.get(key).uses.push({w:d.w, recipe:r.name});
+    });
+  });
+  const items = Array.from(map.values());
+  S.leftovers.forEach(l=>{
+    const it = items.find(x=>x.name===l.name);
+    if(it) it.leftover = true;
+  });
+  S.staples.filter(stapleNeeded).forEach(st=>{
+    const stt = stapleStatus(st);
+    const why = (st.needBuy ? '切らしてる' : (stt.level==='out' ? '切れてるかも' : 'そろそろ')) +
+                (st.lastBought ? '・前回'+daysSince(st.lastBought)+'日前' : '');
+    const dup = items.find(x=>x.kind==='ing' && x.name===st.name);
+    if(dup){ dup.staple = st; dup.why = why; return; }   // 献立の食材と重複したら1行にまとめる
+    items.push({key:'stp:'+st.id, name:st.name, cat:st.cat, kind:'staple', staple:st, why});
+  });
+  (wk.extras||[]).forEach(e=>{
+    items.push({key:'ext:'+e.id, name:e.name, cat:e.cat, kind:'extra', extra:e});
+  });
+
+  const groups = CATS.map(c=>({...c, items:[]}));
+  const gmap = {}; groups.forEach(g=>gmap[g.k]=g);
+  items.forEach(it=>{ (gmap[it.cat]||gmap.other).items.push(it); });
+  groups.forEach(g=>g.items.sort((a,b)=>{
+    const ka = a.kind==='ing'?0:(a.kind==='staple'?1:2), kb = b.kind==='ing'?0:(b.kind==='staple'?1:2);
+    return ka-kb || a.name.localeCompare(b.name,'ja');
+  }));
+  return groups.filter(g=>g.items.length);
+}
+const isChecked = key => !!W().checked[key];
+
+/* =========================================================================
+   描画
+   ========================================================================= */
+function render(){
+  const ws = parseISO(viewWeek);
+  $('#wkLabel').textContent = md(ws)+'(月) 〜 '+md(addDays(ws,4))+'(金)' +
+    (viewWeek===currentWeekStart() ? '　今週' : '');
+  renderWeek(); renderShop(); renderStock(); renderRecipes(); renderCounts();
+}
+function renderCounts(){
+  const groups = buildShopping();
+  let n=0; groups.forEach(g=>g.items.forEach(it=>{ if(!isChecked(it.key)) n++; }));
+  const c1=$('#cntShop'); c1.textContent=n; c1.hidden = n===0;
+  const ns = S.staples.filter(stapleNeeded).length;
+  const c2=$('#cntStock'); c2.textContent=ns; c2.hidden = ns===0;
+}
+
+/* ---------- 今週 ---------- */
+function renderWeek(){
+  const wk = W(), el = $('#pane-week');
+  const t = today(), ws = parseISO(viewWeek);
+  const todayIdx = Math.round((t-ws)/86400000);
+  let h = '';
+
+  // 土日は「今日の献立」ではなく、まとめ買いの段取りを出す
+  const dow = t.getDay();
+  if((dow===0 || dow===6) && viewWeek===currentWeekStart()){
+    const st = S.staples.filter(stapleNeeded).length;
+    const decided = DAYS.filter(d=>wk.days[d.k].mode!=='cook' || wk.days[d.k].recipeId).length;
+    h += '<div class="hero"><div class="lb2">'+(dow===0?'SUNDAY':'SATURDAY')+'</div>'+
+         '<div class="nm">'+md(ws)+'からの1週間を決める</div>'+
+         '<div class="ing">① 献立を組む（'+decided+'/5）　→　② 常備品をチェック（'+st+'件）　→　③ 買い物へ</div></div>';
+  }
+
+  // 今日の献立ヒーロー
+  if(todayIdx>=0 && todayIdx<=4){
+    const dk = DAYS[todayIdx].k, day = wk.days[dk], r = day.mode==='cook' ? recipeById(day.recipeId) : null;
+    if(day.mode!=='cook'){
+      h += '<div class="hero rest"><div class="lb2">TODAY</div><div class="nm">'+
+           (day.mode==='out'?'🍜 今日は外食':'🍱 今日は残り物')+'</div></div>';
+    }else if(r){
+      h += '<div class="hero"><div class="lb2">TODAY</div><div class="nm">'+esc(r.name)+'</div>'+
+           '<div class="ing">'+ (r.ings.length ? '🧺 '+r.ings.map(i=>esc(i.name)).join('・') : '食材の登録なし') +
+           (r.seasonings&&r.seasonings.length ? '<br>🧂 '+r.seasonings.map(esc).join('・') : '') + '</div></div>';
+    }else{
+      h += '<div class="hero rest"><div class="lb2">TODAY</div><div class="nm">まだ決まっていません</div></div>';
+    }
+  }
+
+  // 提案ボタン
+  h += '<div style="display:flex;gap:8px;margin:12px 0 4px">'+
+       '<button class="btn" style="flex:1" id="btnSuggest">✨ 1週間ぶん提案</button>'+
+       '<button class="btn sub" id="btnClearWeek" style="flex:none;padding:12px 14px">クリア</button></div>';
+  if(!S.recipes.length){
+    h += '<div class="note">まずは <b>📖 レシピ</b> タブで定番料理を登録してください。レシピサイトやYouTubeの概要欄を<b>貼り付けるだけ</b>で食材まで自動で取り込みます。</div>';
+  }
+
+  // 曜日カード
+  h += '<div class="card">';
+  DAYS.forEach((d,i)=>{
+    const day = wk.days[d.k], r = recipeById(day.recipeId);
+    const isToday = i===todayIdx;
+    const date = addDays(ws,i);
+    h += '<div class="day'+(isToday?' today':'')+'">'+
+         '<div class="dcol"><div class="w">'+d.w+'</div><div class="d">'+md(date)+'</div></div>'+
+         '<div class="dbody">';
+    if(day.mode==='cook'){
+      if(r){
+        h += '<div class="dname" data-pick="'+d.k+'">'+esc(r.name)+
+             ' <span class="pill '+r.protein+'">'+PROT[r.protein].ic+' '+PROT[r.protein].nm+'</span>'+
+             (r.minutes?' <span class="pill min">'+r.minutes+'分</span>':'')+'</div>';
+        h += '<div class="ding" data-pick="'+d.k+'">'+ (r.ings.length ? r.ings.map(i=>esc(i.name)).join('・') : '<span style="color:#b9bec5">食材なし</span>') +'</div>';
+      }else{
+        h += '<div class="dname none" data-pick="'+d.k+'">＋ タップして選ぶ</div>';
+      }
+    }else{
+      h += '<div class="dname none">'+(day.mode==='out'?'🍜 外食':'🍱 残り物')+'（買い物リストに出ません）</div>';
+    }
+    h += '<div class="dacts">'+
+         '<div class="mode3">'+
+           ['cook','out','left'].map(m=>'<button class="'+(day.mode===m?'on '+m:'')+'" data-mode="'+m+'" data-day="'+d.k+'">'+MODES[m]+'</button>').join('')+
+         '</div>';
+    if(day.mode==='cook'){
+      h += '<button data-shuf="'+d.k+'" title="引き直す">🎲</button>';
+    }
+    h += '</div></div></div>';
+  });
+  h += '</div>';
+
+  // 余り食材
+  h += '<div class="sec">🥕 余っている食材<span class="line"></span></div>'+
+       '<div class="card"><div class="tiny" style="padding:11px 13px 4px">'+
+       'ここに入れておくと、次の献立提案でこの食材を使うレシピが優先されます。</div>'+
+       '<div style="padding:0 13px 12px"><div class="chips" id="leftChips">'+
+       (S.leftovers.length ? S.leftovers.map(l=>'<span class="chip"><span class="cat">'+catIc(l.cat)+'</span>'+esc(l.name)+
+          '<button class="x" data-delleft="'+l.id+'">✕</button></span>').join('')
+        : '<span class="tiny">なし</span>')+'</div></div>'+
+       '<div class="addrow"><input id="leftInput" placeholder="例）キャベツ 半玉" enterkeyhint="done">'+
+       '<button class="btn sm" id="btnAddLeft">追加</button></div></div>';
+
+  el.innerHTML = h;
+
+  $('#btnSuggest').onclick = ()=>{
+    if(!S.recipes.length){ toast('先にレシピを登録してください'); switchTab('recipe'); return; }
+    if(suggestWeek()){ render(); toast('1週間ぶんを提案しました'); }
+  };
+  $('#btnClearWeek').onclick = ()=>{
+    DAYS.forEach(d=>{ wk.days[d.k].recipeId=null; });
+    save(); render();
+  };
+  el.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{
+    wk.days[b.dataset.day].mode = b.dataset.mode; save(); render();
+  });
+  el.querySelectorAll('[data-pick]').forEach(b=>b.onclick=()=>openPicker(b.dataset.pick));
+  el.querySelectorAll('[data-shuf]').forEach(b=>b.onclick=()=>shuffleDay(b.dataset.shuf));
+  el.querySelectorAll('[data-delleft]').forEach(b=>b.onclick=()=>{
+    S.leftovers = S.leftovers.filter(l=>l.id!==b.dataset.delleft); save(); render();
+  });
+  const li = $('#leftInput');
+  const addLeft = ()=>{
+    const v = li.value.trim(); if(!v) return;
+    S.leftovers.push({id:uid(), name:v, cat:classify(v).cat});
+    li.value=''; save(); render();
+  };
+  $('#btnAddLeft').onclick = addLeft;
+  li.onkeydown = e => { if(e.key==='Enter'){ e.preventDefault(); addLeft(); } };
+}
+
+/* ---------- 買い物 ---------- */
+function renderShop(){
+  const el = $('#pane-shop'), wk = W(), groups = buildShopping();
+  let total=0, done=0;
+  groups.forEach(g=>g.items.forEach(it=>{ total++; if(isChecked(it.key)) done++; }));
+
+  let h = '<div class="card" style="padding:13px;display:flex;align-items:center;gap:12px">'+
+    '<div style="flex:1"><div style="font-size:15px;font-weight:800">買い物リスト '+done+' / '+total+'</div>'+
+    '<div class="tiny">献立の食材＋そろそろ切れる常備品＋手動追加</div></div>'+
+    '<button class="btn sub sm" id="btnCopy">📋 コピー</button></div>';
+
+  if(!total){
+    h += '<div class="empty"><span class="big">🛒</span>まだ何もありません<br>献立を決めると食材が自動で並びます</div>';
+  }
+  groups.forEach(g=>{
+    const rest = g.items.filter(it=>!isChecked(it.key)).length;
+    h += '<div class="shopsec"><div class="shophd">'+g.ic+' '+g.nm+'<span class="n">残り '+rest+'</span></div><div class="shopbody">';
+    g.items.forEach(it=>{
+      const ck = isChecked(it.key);
+      let why = '';
+      if(it.kind==='ing'){
+        why = it.uses.map(u=>'<span class="pill b">'+u.w+'</span>'+esc(u.recipe)).join(' ');
+        if(it.leftover) why += ' <span class="pill a">余りあり</span>';
+        if(it.staple)   why += ' <span class="pill a">常備品</span>'+esc(it.why);
+      }else if(it.kind==='staple'){
+        why = '<span class="pill '+(stapleStatus(it.staple).level==='out'?'r':'a')+'">常備品</span>'+esc(it.why);
+      }else{
+        why = '<span class="pill g">手動追加</span>';
+      }
+      h += '<div class="row'+(ck?' ck':'')+'" data-key="'+esc(it.key)+'">'+
+           '<div class="cb"></div><div class="rmain"><div class="rname">'+esc(it.name)+'</div>'+
+           '<div class="rwhy">'+why+'</div></div>'+
+           (it.kind==='extra' ? '<button class="rdel" data-delext="'+it.extra.id+'">✕</button>' : '')+
+           '</div>';
+    });
+    h += '</div></div>';
+  });
+
+  h += '<div class="card" style="margin-top:14px"><div class="addrow" style="background:#fff;border-top:none">'+
+       '<input id="extInput" placeholder="リストに追加（例）電池、ビール" enterkeyhint="done">'+
+       '<button class="btn sm" id="btnAddExt">追加</button></div></div>';
+
+  if(total){
+    h += '<button class="btn gr full" style="margin:14px 0 6px" id="btnDoneShop">🎉 買い物おわり（常備品を更新）</button>'+
+         '<div class="tiny" style="text-align:center;padding-bottom:8px">'+
+         'チェックした常備品の「購入日」を今日に更新し、次のサイクルを実績から学習します。</div>';
+  }
+  el.innerHTML = h;
+
+  el.querySelectorAll('.row').forEach(r=>r.onclick=e=>{
+    if(e.target.closest('[data-delext]')) return;
+    const k = r.dataset.key;
+    if(wk.checked[k]) delete wk.checked[k]; else wk.checked[k]=true;
+    save(); renderShop(); renderCounts();
+  });
+  el.querySelectorAll('[data-delext]').forEach(b=>b.onclick=e=>{
+    e.stopPropagation();
+    wk.extras = wk.extras.filter(x=>x.id!==b.dataset.delext);
+    save(); renderShop(); renderCounts();
+  });
+  const ei = $('#extInput');
+  const addExt = ()=>{
+    const v = ei.value.trim(); if(!v) return;
+    wk.extras = wk.extras||[];
+    wk.extras.push({id:uid(), name:v, cat:classify(v).cat});
+    ei.value=''; save(); renderShop(); renderCounts();
+  };
+  $('#btnAddExt').onclick = addExt;
+  ei.onkeydown = e => { if(e.key==='Enter'){ e.preventDefault(); addExt(); } };
+  $('#btnCopy').onclick = copyList;
+  const bd = $('#btnDoneShop'); if(bd) bd.onclick = finishShopping;
+}
+
+function listAsText(){
+  const ws = parseISO(viewWeek), wk = W();
+  let out = '🛒 買い物リスト '+md(ws)+'〜'+md(addDays(ws,4))+'\n';
+  const menu = DAYS.map(d=>{
+    const day = wk.days[d.k];
+    if(day.mode!=='cook') return d.w+'：'+MODES[day.mode];
+    const r = recipeById(day.recipeId);
+    return d.w+'：'+(r?r.name:'未定');
+  }).join('\n');
+  out += '\n【今週の献立】\n'+menu+'\n';
+  buildShopping().forEach(g=>{
+    const items = g.items.filter(it=>!isChecked(it.key));
+    if(!items.length) return;
+    out += '\n'+g.ic+' '+g.nm+'\n'+items.map(it=>'□ '+it.name).join('\n')+'\n';
+  });
+  return out;
+}
+function copyList(){
+  const txt = listAsText();
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(()=>toast('コピーしました'),()=>fallbackCopy(txt));
+  }else fallbackCopy(txt);
+}
+function fallbackCopy(txt){
+  const ta = document.createElement('textarea');
+  ta.value = txt; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); toast('コピーしました'); }
+  catch(e){ toast('コピーできませんでした'); }
+  document.body.removeChild(ta);
+}
+function finishShopping(){
+  const wk = W();
+  let n = 0;
+  const groups = buildShopping();
+  const boughtIds = new Set();
+  groups.forEach(g=>g.items.forEach(it=>{ if(it.staple && wk.checked[it.key]) boughtIds.add(it.staple.id); }));
+  S.staples.forEach(st=>{ if(boughtIds.has(st.id)){ buyStaple(st); n++; } });
+  // 献立に入れたレシピを「作った」扱いにする（押させない設計）
+  const ws = parseISO(viewWeek);
+  DAYS.forEach((d,i)=>{
+    const day = wk.days[d.k];
+    if(day.mode!=='cook' || !day.recipeId) return;
+    const r = recipeById(day.recipeId); if(!r) return;
+    const dt = iso(addDays(ws,i));
+    if(!r.lastCooked || r.lastCooked < dt){ r.lastCooked = dt; r.cookCount = (r.cookCount||0)+1; }
+  });
+  wk.done = true;
+  save(); render();
+  toast(n ? '常備品を'+n+'件 更新しました' : '買い物おつかれさまでした');
+}
+
+/* ---------- 常備品 ---------- */
+const LEVEL_COLOR = {out:'var(--r)', soon:'var(--a)', near:'var(--a)', ok:'var(--g)', unknown:'#c9ccd1'};
+function renderStock(){
+  const el = $('#pane-stock');
+  const list = S.staples.slice().sort((a,b)=>{
+    const la = a.needBuy ? -999 : (a.lastBought ? stapleStatus(a).left : 9999);
+    const lb = b.needBuy ? -999 : (b.lastBought ? stapleStatus(b).left : 9999);
+    return la-lb || a.name.localeCompare(b.name,'ja');
+  });
+  const need  = list.filter(stapleNeeded);
+  const unset = list.filter(stapleUnset);
+  const rest  = list.filter(st=>!stapleNeeded(st) && !stapleUnset(st));
+
+  let h = '<div class="note">在庫は<b>数えません</b>。「買った日 ＋ 目安サイクル」から切れそうな時期を推定し、'+
+          '買い物リストに自動で載せます。実際に見て残っていたら <b>まだある</b> を押すだけ。'+
+          'その実績からサイクルを自動で補正していきます。</div>';
+
+  h += '<div class="sec">⚠️ 買い物リストに載っているもの（'+need.length+'）<span class="line"></span></div>';
+  h += '<div class="card">' + (need.length ? need.map(stapleRow).join('') :
+        '<div class="empty" style="padding:22px"><span class="big">👍</span>いま切れそうなものはありません</div>') + '</div>';
+
+  if(unset.length){
+    h += '<div class="sec">🔰 最初に設定するもの（'+unset.length+'）<span class="line"></span></div>'+
+         '<div class="card"><div class="tiny" style="padding:11px 13px 2px">'+
+         '冷蔵庫や棚を見て、<b>今ある</b>か<b>切らしてる</b>かを押してください。押した時点からサイクルの推定が始まります。'+
+         '使わないものは行をタップして「停止」にできます。</div>'+
+         unset.map(stapleRow).join('')+'</div>';
+  }
+
+  h += '<div class="sec">📦 在庫あり（'+rest.length+'）<span class="line"></span></div>';
+  h += '<div class="card">' + (rest.length ? rest.map(stapleRow).join('') :
+        '<div class="empty" style="padding:20px">—</div>') + '</div>';
+
+  h += '<button class="btn sub full" style="margin:14px 0" id="btnAddStaple">＋ 常備品を追加</button>';
+  el.innerHTML = h;
+
+  el.querySelectorAll('[data-buy]').forEach(b=>b.onclick=e=>{
+    e.stopPropagation();
+    const st = S.staples.find(x=>x.id===b.dataset.buy); if(!st) return;
+    const first = !st.lastBought;
+    buyStaple(st); save(); render();
+    toast(first ? st.name+' のサイクル推定を開始しました' : st.name+' の購入日を今日に更新しました');
+  });
+  el.querySelectorAll('[data-out]').forEach(b=>b.onclick=e=>{
+    e.stopPropagation();
+    const st = S.staples.find(x=>x.id===b.dataset.out); if(!st) return;
+    markOut(st); save(); render(); toast(st.name+' を買い物リストに追加しました');
+  });
+  el.querySelectorAll('[data-snz]').forEach(b=>b.onclick=e=>{
+    e.stopPropagation();
+    const st = S.staples.find(x=>x.id===b.dataset.snz); if(!st) return;
+    snoozeStaple(st); save(); render(); toast('まだあるので先送りしました');
+  });
+  el.querySelectorAll('[data-edstp]').forEach(b=>b.onclick=()=>openStapleEdit(b.dataset.edstp));
+  $('#btnAddStaple').onclick = ()=>openStapleEdit(null);
+}
+function stapleRow(st){
+  const s = stapleStatus(st);
+  const col = LEVEL_COLOR[s.level];
+  return '<div class="stp"><div class="stpm" data-edstp="'+st.id+'" style="cursor:pointer">'+
+    '<div class="stpn">'+catIc(st.cat)+' '+esc(st.name)+
+      (st.enabled===false?' <span class="pill">停止中</span>':'')+
+      ' <span class="pill" style="background:'+(s.level==='ok'?'var(--g-l)':s.level==='out'?'var(--r-l)':s.level==='unknown'?'#eeecea':'var(--a-l)')+
+      ';color:'+col+'">'+s.text+'</span></div>'+
+    (s.level==='unknown' ? '' : '<div class="bar"><i style="width:'+Math.round(s.ratio*100)+'%;background:'+col+'"></i></div>')+
+    '<div class="tiny" style="margin-top:4px">サイクル約'+st.cycleDays+'日'+
+      (st.lastBought ? '・前回 '+md(parseISO(st.lastBought))+'（'+daysSince(st.lastBought)+'日前）' : '・購入日 未設定')+'</div>'+
+    '</div><div class="stpa">'+
+      (st.lastBought || st.needBuy
+        ? '<button data-snz="'+st.id+'">まだある</button><button class="buy" data-buy="'+st.id+'">買った</button>'
+        : '<button data-out="'+st.id+'">切らしてる</button><button class="buy" data-buy="'+st.id+'">今ある</button>')+
+    '</div></div>';
+}
+
+/* ---------- レシピ ---------- */
+function renderRecipes(){
+  const el = $('#pane-recipe');
+  const list = S.recipes.slice().sort((a,b)=>{
+    const da = daysSince(a.lastCooked), db = daysSince(b.lastCooked);
+    return (db===null?9999:db) - (da===null?9999:da);
+  });
+  let h = '<div style="display:flex;gap:8px;margin:12px 0 2px">'+
+    '<button class="btn" style="flex:1" id="btnPaste">📋 貼り付けて取り込む</button>'+
+    '<button class="btn sub" id="btnNewRecipe" style="flex:none;padding:12px 15px">＋ 手入力</button></div>'+
+    '<div class="tiny" style="margin:0 2px 8px">レシピサイトの材料欄やYouTubeの概要欄をコピーして貼るだけ。分量と調味料は自動で落とし、食材だけ取り込みます。</div>';
+
+  if(!list.length){
+    h += '<div class="empty"><span class="big">📖</span>まだレシピがありません<br>うちの定番を20〜30品いれると提案が効きはじめます</div>';
+  }else{
+    h += '<div class="sec">定番レシピ（'+list.length+'）<span class="line"></span></div><div class="card">';
+    list.forEach(r=>{
+      const ds = daysSince(r.lastCooked);
+      h += '<div class="rc" data-edrec="'+r.id+'"><div class="rcm">'+
+        '<div class="rcn">'+esc(r.name)+
+          ' <span class="pill '+r.protein+'">'+PROT[r.protein].ic+'</span>'+
+          (r.minutes?' <span class="pill min">'+r.minutes+'分</span>':'')+
+          (ds===null?' <span class="pill g">未調理</span>':(ds<0?' <span class="pill b">今週</span>':' <span class="pill">'+ds+'日前</span>'))+
+        '</div>'+
+        '<div class="rci">'+(r.ings.length?r.ings.map(i=>esc(i.name)).join('・'):'食材の登録なし')+'</div>'+
+      '</div><div style="color:#c3c7cd;font-size:18px">›</div></div>';
+    });
+    h += '</div>';
+  }
+  el.innerHTML = h;
+  $('#btnPaste').onclick = openPaste;
+  $('#btnNewRecipe').onclick = ()=>openRecipeEdit(null);
+  el.querySelectorAll('[data-edrec]').forEach(b=>b.onclick=()=>openRecipeEdit(b.dataset.edrec));
+}
+
+/* =========================================================================
+   シート（モーダル）
+   ========================================================================= */
+function sheet(title, bodyHTML, footHTML){
+  $('#shTitle').textContent = title;
+  $('#shBody').innerHTML = bodyHTML;
+  $('#shFoot').innerHTML = footHTML || '';
+  $('#ov').classList.add('on');
+  $('#shBody').scrollTop = 0;
+}
+function closeSheet(){ $('#ov').classList.remove('on'); }
+$('#shClose').onclick = closeSheet;
+$('#ov').onclick = e => { if(e.target.id==='ov') closeSheet(); };
+
+/* ---------- レシピを選ぶ ---------- */
+function openPicker(dk){
+  if(!S.recipes.length){ toast('先にレシピを登録してください'); closeSheet(); switchTab('recipe'); return; }
+  const wk = W(), cur = wk.days[dk].recipeId;
+  const list = S.recipes.slice().sort((a,b)=>a.name.localeCompare(b.name,'ja'));
+  const body = '<div class="tiny" style="margin:12px 0 2px">'+DAYS.find(d=>d.k===dk).w+'曜日に作るものを選んでください。</div>'+
+    '<div class="pickgrid">'+ list.map(r=>
+      '<button data-r="'+r.id+'" class="'+(r.id===cur?'on':'')+'"><div class="pn">'+esc(r.name)+'</div>'+
+      '<div class="pi">'+PROT[r.protein].ic+(r.minutes?' '+r.minutes+'分':'')+'</div></button>').join('') +'</div>';
+  sheet('レシピを選ぶ', body,
+    '<button class="btn sub" id="pkClear">未設定にする</button><button class="btn" id="pkClose">閉じる</button>');
+  $('#shBody').querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{
+    wk.days[dk].recipeId = b.dataset.r; save(); closeSheet(); render();
+  });
+  $('#pkClear').onclick = ()=>{ wk.days[dk].recipeId=null; save(); closeSheet(); render(); };
+  $('#pkClose').onclick = closeSheet;
+}
+
+/* ---------- 貼り付けて取り込む ---------- */
+let draft = null;
+function openPaste(){
+  const body =
+    '<div class="note">レシピサイトの<b>材料欄</b>や、YouTubeの<b>概要欄</b>をまるごとコピーして貼り付けてください。'+
+    '分量・調味料は自動で取り除き、<b>食材名だけ</b>を取り込みます。<br>'+
+    '<span style="opacity:.8">※ URLだけでは取り込めません（ブラウザから他サイトの中身を読めないため）。ページを開いて本文をコピーしてください。</span></div>'+
+    '<label class="lb">貼り付け</label>'+
+    '<textarea class="f" id="pasteTA" placeholder="【材料】2人分&#10;・豚ひき肉…200g&#10;・春雨…100g&#10;・にら…1束&#10;・醤油…大さじ2&#10;&#10;【作り方】&#10;..."></textarea>';
+  sheet('貼り付けて取り込む', body,
+    '<button class="btn sub" id="pxCancel">やめる</button><button class="btn" id="pxGo">解析する</button>');
+  $('#pxCancel').onclick = closeSheet;
+  $('#pxGo').onclick = ()=>{
+    const txt = $('#pasteTA').value;
+    const p = parsePaste(txt);
+    if(p.urlOnly){ toast('URLだけでは取り込めません。本文をコピーしてください'); return; }
+    if(!p.ings.length && !p.seasonings.length){ toast('食材が見つかりませんでした。材料欄を含めて貼ってください'); return; }
+    draft = {
+      id:null, title:p.title, minutes:p.minutes,
+      ings: p.ings.map(i=>({name:i.name, cat:i.cat})),
+      seasonings: p.seasonings.slice()
+    };
+    draft.protein = proteinOf(draft.ings);
+    openRecipeForm('取り込みの確認', true);
+  };
+  setTimeout(()=>{ const t=$('#pasteTA'); if(t) t.focus(); },120);
+}
+
+/* ---------- レシピ編集フォーム（新規／取り込み確認／編集 共通） ---------- */
+function openRecipeEdit(id){
+  const r = id ? recipeById(id) : null;
+  draft = r ? {
+    id:r.id, title:r.name, minutes:r.minutes, protein:r.protein,
+    ings:r.ings.map(i=>({name:i.name,cat:i.cat})), seasonings:(r.seasonings||[]).slice()
+  } : { id:null, title:'', minutes:null, protein:'other', ings:[], seasonings:[] };
+  openRecipeForm(r ? 'レシピを編集' : 'レシピを追加', false);
+}
+
+function openRecipeForm(title, fromPaste){
+  const body =
+    (fromPaste ? '<div class="note" style="background:var(--g-l);border-color:#c9e8d6;color:#1f6b43">'+
+      '<b>'+draft.ings.length+'品目</b>の食材を取り込みました'+
+      (draft.seasonings.length?'（調味料 '+draft.seasonings.length+'件は除外）':'')+
+      '。間違いがあればタップで直してください。</div>' : '')+
+    '<label class="lb">料理名</label><input class="f" id="rfName" value="'+esc(draft.title)+'" placeholder="例）麻婆春雨">'+
+    '<label class="lb">タンパク源（献立の並べ方に使います）</label>'+
+    '<div class="seg" id="rfProt">'+
+      ['meat','fish','other'].map(p=>'<button data-p="'+p+'" class="'+(draft.protein===p?'on':'')+'">'+PROT[p].ic+' '+PROT[p].nm+'</button>').join('')+
+    '</div>'+
+    '<label class="lb">だいたいの所要時間（分）</label>'+
+    '<input class="f" id="rfMin" type="number" inputmode="numeric" min="3" max="180" value="'+(draft.minutes||'')+'" placeholder="例）15">'+
+    '<label class="lb">買う食材　<span style="font-weight:600;color:var(--sub2)">絵文字タップでカテゴリ変更 / ✕ で削除</span></label>'+
+    '<div class="chips" id="rfIngs"></div>'+
+    '<div class="addrow" style="background:transparent;border:none;padding:9px 0 0">'+
+      '<input id="rfAdd" placeholder="食材を追加" enterkeyhint="done"><button class="btn sm" id="rfAddBtn">追加</button></div>'+
+    '<label class="lb">調味料（買い物リストには出しません）</label>'+
+    '<div class="chips" id="rfSeas"></div>'+
+    '<div class="tiny" style="margin-top:6px">タップすると「買う食材」に移せます。切らしているときは常備品タブで管理してください。</div>'+
+    '<div style="height:10px"></div>';
+  sheet(title, body,
+    (draft.id ? '<button class="btn sub" id="rfDel" style="flex:none;padding:12px 15px;color:var(--r)">削除</button>' : '')+
+    '<button class="btn" id="rfSave">保存</button>');
+  drawChips();
+
+  $('#shBody').querySelectorAll('#rfProt button').forEach(b=>b.onclick=()=>{
+    draft.protein = b.dataset.p;
+    $('#shBody').querySelectorAll('#rfProt button').forEach(x=>x.classList.toggle('on', x.dataset.p===draft.protein));
+  });
+  const ai = $('#rfAdd');
+  const addIng = ()=>{
+    const v = ai.value.trim(); if(!v) return;
+    if(!draft.ings.some(i=>i.name===v)) draft.ings.push({name:v, cat:classify(v).cat});
+    ai.value=''; drawChips();
+  };
+  $('#rfAddBtn').onclick = addIng;
+  ai.onkeydown = e => { if(e.key==='Enter'){ e.preventDefault(); addIng(); } };
+
+  $('#rfSave').onclick = saveRecipeDraft;
+  const dl = $('#rfDel');
+  if(dl) dl.onclick = ()=>{
+    if(!confirm('このレシピを削除しますか？')) return;
+    S.recipes = S.recipes.filter(r=>r.id!==draft.id);
+    Object.values(S.weeks).forEach(w=>DAYS.forEach(d=>{ if(w.days[d.k].recipeId===draft.id) w.days[d.k].recipeId=null; }));
+    save(); closeSheet(); render(); toast('削除しました');
+  };
+}
+
+function drawChips(){
+  const ig = $('#rfIngs'), sg = $('#rfSeas');
+  ig.innerHTML = draft.ings.length ? draft.ings.map((i,idx)=>
+    '<span class="chip"><button class="cat" data-cyc="'+idx+'">'+catIc(i.cat)+'</button>'+esc(i.name)+
+    '<button class="x" data-rm="'+idx+'">✕</button></span>').join('')
+    : '<span class="tiny">なし</span>';
+  sg.innerHTML = draft.seasonings.length ? draft.seasonings.map((s,idx)=>
+    '<button class="chip seas" data-toing="'+idx+'">🧂 '+esc(s)+'</button>').join('')
+    : '<span class="tiny">なし</span>';
+
+  ig.querySelectorAll('[data-cyc]').forEach(b=>b.onclick=()=>{
+    const i = draft.ings[+b.dataset.cyc];
+    const ks = CATS.map(c=>c.k);
+    i.cat = ks[(ks.indexOf(i.cat)+1) % ks.length];
+    drawChips(); toast(catNm(i.cat));
+  });
+  ig.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{
+    draft.ings.splice(+b.dataset.rm,1); drawChips();
+  });
+  sg.querySelectorAll('[data-toing]').forEach(b=>b.onclick=()=>{
+    const nm = draft.seasonings.splice(+b.dataset.toing,1)[0];
+    if(!draft.ings.some(i=>i.name===nm)) draft.ings.push({name:nm, cat:classify(nm).cat==='other'?'other':classify(nm).cat});
+    drawChips();
+  });
+}
+
+function saveRecipeDraft(){
+  const nm = $('#rfName').value.trim();
+  if(!nm){ toast('料理名を入れてください'); $('#rfName').focus(); return; }
+  const minRaw = parseInt($('#rfMin').value,10);
+  const payload = {
+    name:nm,
+    protein:draft.protein,
+    minutes: (minRaw>0 && minRaw<600) ? minRaw : null,
+    ings: draft.ings.map(i=>({name:i.name, cat:i.cat})),
+    seasonings: draft.seasonings.slice()
+  };
+  if(draft.id){
+    Object.assign(recipeById(draft.id), payload);
+  }else{
+    S.recipes.push(Object.assign({id:uid(), lastCooked:null, cookCount:0, archived:false}, payload));
+  }
+  save(); closeSheet(); render(); toast('保存しました');
+}
+
+/* ---------- 常備品の編集 ---------- */
+function openStapleEdit(id){
+  const st = id ? S.staples.find(x=>x.id===id) : null;
+  const d = st || {name:'', cat:'daily', cycleDays:14, lastBought:null, enabled:true};
+  const body =
+    '<label class="lb">名前</label><input class="f" id="sfName" value="'+esc(d.name)+'" placeholder="例）紙オムツ">'+
+    '<label class="lb">売り場カテゴリ</label><select class="f" id="sfCat">'+
+      CATS.map(c=>'<option value="'+c.k+'"'+(d.cat===c.k?' selected':'')+'>'+c.ic+' '+c.nm+'</option>').join('')+'</select>'+
+    '<label class="lb">目安サイクル（何日でなくなるか）</label>'+
+    '<input class="f" id="sfCyc" type="number" inputmode="numeric" min="1" max="365" value="'+(d.cycleDays||14)+'">'+
+    '<div class="tiny" style="margin-top:5px">正確でなくて大丈夫です。「買った」を2〜3回押すと、実際の間隔から自動で補正されます。</div>'+
+    '<label class="lb">最後に買った日</label>'+
+    '<input class="f" id="sfDate" type="date" value="'+(d.lastBought||'')+'">'+
+    '<label class="lb" style="margin-bottom:8px">この品目を使う</label>'+
+    '<div class="seg" id="sfEn">'+
+      '<button data-en="1" class="'+(d.enabled!==false?'on':'')+'">有効</button>'+
+      '<button data-en="0" class="'+(d.enabled===false?'on':'')+'">停止（リストに出さない）</button></div>'+
+    (st && st.history && st.history.length ? '<div class="tiny" style="margin-top:12px">購入履歴：'+
+      st.history.concat([st.lastBought]).filter(Boolean).map(x=>md(parseISO(x))).join(' → ')+'</div>' : '')+
+    '<div style="height:10px"></div>';
+  sheet(st?'常備品を編集':'常備品を追加', body,
+    (st?'<button class="btn sub" id="sfDel" style="flex:none;padding:12px 15px;color:var(--r)">削除</button>':'')+
+    '<button class="btn" id="sfSave">保存</button>');
+
+  let en = d.enabled!==false;
+  $('#shBody').querySelectorAll('#sfEn button').forEach(b=>b.onclick=()=>{
+    en = b.dataset.en==='1';
+    $('#shBody').querySelectorAll('#sfEn button').forEach(x=>x.classList.toggle('on',(x.dataset.en==='1')===en));
+  });
+  $('#sfSave').onclick = ()=>{
+    const nm = $('#sfName').value.trim();
+    if(!nm){ toast('名前を入れてください'); return; }
+    const cyc = Math.max(1, Math.min(365, parseInt($('#sfCyc').value,10)||14));
+    const dt  = $('#sfDate').value || null;
+    if(st){ Object.assign(st,{name:nm, cat:$('#sfCat').value, cycleDays:cyc, lastBought:dt, enabled:en, snoozeUntil:null}); }
+    else { S.staples.push({id:uid(), name:nm, cat:$('#sfCat').value, cycleDays:cyc, lastBought:dt,
+                           history:[], snoozeUntil:null, enabled:en}); }
+    save(); closeSheet(); render(); toast('保存しました');
+  };
+  const sd = $('#sfDel');
+  if(sd) sd.onclick = ()=>{
+    if(!confirm('「'+st.name+'」を削除しますか？')) return;
+    S.staples = S.staples.filter(x=>x.id!==st.id);
+    save(); closeSheet(); render(); toast('削除しました');
+  };
+}
+
+/* ---------- 設定 ---------- */
+function openSettings(){
+  const body =
+    '<label class="lb">献立の組み立てルール</label>'+
+    '<div class="card" style="margin:0">'+
+      '<div class="stp"><div class="stpm"><div class="stpn">🐟 魚の固定枠</div>'+
+        '<div class="tiny">この曜日に魚を優先。肉が週3品ある週は、同じ食材が2日続くことがあります</div></div>'+
+        '<select class="f" id="cfFish" style="width:110px;padding:8px">'+
+          '<option value="">なし</option>'+
+          DAYS.map(d=>'<option value="'+d.k+'"'+(S.settings.fixedFish===d.k?' selected':'')+'>'+d.w+'曜</option>').join('')+
+        '</select></div>'+
+      '<div class="stp"><div class="stpm"><div class="stpn">⏱ 金曜は時短優先</div>'+
+        '<div class="tiny">週の最後は一番短く作れるものを回します</div></div>'+
+        '<div class="seg" style="width:120px"><button data-fri="1" class="'+(S.settings.easyFri?'on':'')+'">ON</button>'+
+        '<button data-fri="0" class="'+(!S.settings.easyFri?'on':'')+'">OFF</button></div></div>'+
+    '</div>'+
+    '<label class="lb">データ</label>'+
+    '<div class="tiny" style="margin-bottom:9px">データはこの端末のブラウザ内だけに保存されます（外部に送信しません）。'+
+      '別の端末に移すときは書き出し → 読み込みしてください。</div>'+
+    '<div style="display:flex;gap:8px">'+
+      '<button class="btn sub" style="flex:1" id="cfExp">⬇︎ 書き出し</button>'+
+      '<button class="btn sub" style="flex:1" id="cfImp">⬆︎ 読み込み</button></div>'+
+    '<input type="file" id="cfFile" accept="application/json,.json" style="display:none">'+
+    '<label class="lb">今週の献立を共有</label>'+
+    '<button class="btn sub full" id="cfShare">📤 献立＋買い物リストをコピー</button>'+
+    '<label class="lb" style="color:var(--r)">リセット</label>'+
+    '<button class="btn sub full" id="cfReset" style="color:var(--r)">すべてのデータを消去</button>'+
+    '<div style="height:14px"></div>'+
+    '<div class="tiny">コンダテ / 端末内保存（localStorage）・オフライン動作・外部通信なし</div>'+
+    '<div style="height:8px"></div>';
+  sheet('設定', body, '<button class="btn" id="cfClose">閉じる</button>');
+
+  $('#cfClose').onclick = closeSheet;
+  $('#cfFish').onchange = e => { S.settings.fixedFish = e.target.value || null; save(); };
+  $('#shBody').querySelectorAll('[data-fri]').forEach(b=>b.onclick=()=>{
+    S.settings.easyFri = b.dataset.fri==='1'; save();
+    $('#shBody').querySelectorAll('[data-fri]').forEach(x=>x.classList.toggle('on',(x.dataset.fri==='1')===S.settings.easyFri));
+  });
+  $('#cfExp').onclick = ()=>{
+    const blob = new Blob([JSON.stringify(S,null,1)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'kondate-'+iso(today())+'.json';
+    document.body.appendChild(a); a.click();
+    setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  };
+  $('#cfImp').onclick = ()=>$('#cfFile').click();
+  $('#cfFile').onchange = e => {
+    const f = e.target.files && e.target.files[0]; if(!f) return;
+    const fr = new FileReader();
+    fr.onload = ()=>{
+      try{
+        const o = JSON.parse(fr.result);
+        if(!o || !Array.isArray(o.recipes)) throw 0;
+        if(!confirm('読み込むと今のデータは置き換わります。よろしいですか？')) return;
+        S = o; load2(); closeSheet(); render(); toast('読み込みました');
+      }catch(err){ toast('読み込めませんでした'); }
+    };
+    fr.readAsText(f);
+    e.target.value='';
+  };
+  $('#cfShare').onclick = ()=>{ copyList(); };
+  $('#cfReset').onclick = ()=>{
+    if(!confirm('レシピ・常備品・献立をすべて消します。よろしいですか？')) return;
+    if(!confirm('本当に消してよいですか？この操作は取り消せません。')) return;
+    localStorage.removeItem(KEY); load(); closeSheet(); render(); toast('初期化しました');
+  };
+}
+/* インポート後の正規化（Sを差し替えたあとに呼ぶ） */
+function load2(){
+  S.recipes  = S.recipes  || [];
+  S.staples  = S.staples  || [];
+  S.weeks    = S.weeks    || {};
+  S.leftovers= S.leftovers|| [];
+  S.settings = Object.assign({fixedFish:'mon', easyFri:true}, S.settings||{});
+  S.recipes.forEach(r=>{ r.ings = r.ings||[]; r.seasonings = r.seasonings||[]; r.protein = r.protein||proteinOf(r.ings); });
+  viewWeek = currentWeekStart(); getWeek(viewWeek); save();
+}
+
+/* =========================================================================
+   タブ・週移動・起動
+   ========================================================================= */
+function switchTab(t){
+  tab = t;
+  $$('.tabbar button').forEach(b=>b.classList.toggle('on', b.dataset.tab===t));
+  $$('.pane').forEach(p=>p.classList.toggle('on', p.id==='pane-'+t));
+  window.scrollTo(0,0);
+}
+$$('.tabbar button').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
+$('#btnSet').onclick = openSettings;
+$('#btnPrevWk').onclick = ()=>{ viewWeek = iso(addDays(parseISO(viewWeek),-7)); getWeek(viewWeek); save(); render(); };
+$('#btnNextWk').onclick = ()=>{ viewWeek = iso(addDays(parseISO(viewWeek), 7)); getWeek(viewWeek); save(); render(); };
+
+/* 日付が変わったら（アプリを開きっぱなしのケース）表示を更新 */
+let lastDay = iso(today());
+setInterval(()=>{
+  const now = iso(today());
+  if(now !== lastDay){ lastDay = now; viewWeek = currentWeekStart(); getWeek(viewWeek); save(); render(); }
+}, 60000);
+document.addEventListener('visibilitychange', ()=>{
+  if(document.visibilityState==='visible'){
+    const now = iso(today());
+    if(now !== lastDay){ lastDay = now; viewWeek = currentWeekStart(); getWeek(viewWeek); save(); }
+    render();
+  }
+});
+
+load();
+render();
+</script>
+</body>
+</html>
