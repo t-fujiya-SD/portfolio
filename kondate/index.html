@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>コンダテ — 平日5日の献立・買い物・常備品</title>
+<title>チャワン — 平日5日の献立・買い物・常備品</title>
 <meta name="theme-color" content="#c25a28">
 <link rel="icon" type="image/png" sizes="180x180" href="/kondate/icon-180.png">
 <link rel="apple-touch-icon" href="/kondate/icon-180.png">
 <link rel="icon" type="image/png" sizes="512x512" href="/kondate/icon-512.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="コンダテ">
+<meta name="apple-mobile-web-app-title" content="チャワン">
 <style>
 :root{
   --p:#e2703a; --p-d:#c25a28; --p-l:#fdf1e9; --p-ll:#fff8f4;
@@ -261,7 +261,7 @@ label.lb{display:block;font-size:12px;font-weight:800;color:var(--sub);margin:14
 
 <header>
   <div class="hrow">
-    <div class="logo">コンダテ<small>WEEKLY MEAL &amp; SHOPPING</small></div>
+    <div class="logo">チャワン<small>WEEKLY MEAL &amp; SHOPPING</small></div>
     <div class="hsp"></div>
     <button class="hbtn" id="btnSync" hidden>☁️</button>
     <button class="hbtn" id="btnSet">⚙️</button>
@@ -300,7 +300,7 @@ label.lb{display:block;font-size:12px;font-weight:800;color:var(--sub);margin:14
 <script>
 "use strict";
 /* =========================================================================
-   コンダテ — 平日5日の献立 → 買い物リスト → 常備品 を一直線につなぐ
+   チャワン — 平日5日の献立 → 買い物リスト → 常備品 を一直線につなぐ
    単一HTML / localStorage / 外部通信なし
    ========================================================================= */
 
@@ -770,7 +770,7 @@ async function gistWrite(cfg, data){
 async function gistCreate(cfg, data){
   const files = {}; files[GIST_FILE] = {content: JSON.stringify(data)};
   const g = await gistCall(cfg, '/gists', 'POST',
-    {description:'コンダテ 共有データ', public:false, files});
+    {description:'チャワン 共有データ', public:false, files});
   return g.id;
 }
 
@@ -2535,7 +2535,7 @@ function openSettings(){
     '<label class="lb" style="color:var(--r)">リセット</label>'+
     '<button class="btn sub full" id="cfReset" style="color:var(--r)">すべてのデータを消去</button>'+
     '<div style="height:14px"></div>'+
-    '<div class="tiny">コンダテ / 端末内保存（localStorage）'+
+    '<div class="tiny">チャワン / 端末内保存（localStorage）'+
       (syncCfg ? '＋GitHub Gist 同期' : '・外部通信なし')+'</div>'+
     '<div style="height:8px"></div>';
   sheet('設定', body, '<button class="btn" id="cfClose">閉じる</button>');
