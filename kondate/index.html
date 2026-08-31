@@ -2302,7 +2302,19 @@ function openPaste(){
       seasonings: p.seasonings.slice()
     };
     draft.protein = proteinOf(draft.ings);
-    openRecipeForm('取り込みの確認', true);
+    // 同じURL・同じ料理名のレシピが既にあれば、新規ではなく上書き更新にする。
+    // （作り方を取り直すために同じURLを貼り直す使い方を、削除なしでできるように）
+    const ex = (draft.url && S.recipes.find(r=>!r.archived && r.url && r.url===draft.url)) ||
+               (draft.title && S.recipes.find(r=>!r.archived && r.name===draft.title)) || null;
+    if(ex){
+      draft.id = ex.id;
+      draft.kind = ex.kind || 'main';
+      draft.day = assignedDayOf(ex.id);
+      if(!draft.steps && ex.steps) draft.steps = ex.steps;
+      if(!draft.url && ex.url) draft.url = ex.url;
+      if(!draft.minutes && ex.minutes) draft.minutes = ex.minutes;
+    }
+    openRecipeForm(ex ? '取り込み（既存を更新）' : '取り込みの確認', true);
   };
   $('#pxGo').onclick = async ()=>{
     const txt = $('#pasteTA').value;
@@ -2345,7 +2357,9 @@ function openRecipeForm(title, fromPaste){
     (fromPaste ? '<div class="note" style="background:var(--g-l);border-color:#c9e8d6;color:#1f6b43">'+
       '<b>'+draft.ings.length+'品目</b>の食材を取り込みました'+
       (draft.seasonings.length?'（調味料 '+draft.seasonings.length+'件は除外）':'')+
-      '。間違いがあればタップで直してください。</div>' : '')+
+      '。間違いがあればタップで直してください。'+
+      (draft.id ? '<br><b>既存の「'+esc(draft.title)+'」を上書き更新します。</b>評価・作った回数・曜日の割り当てはそのまま引き継がれます。' : '')+
+      '</div>' : '')+
     '<label class="lb">料理名</label><input class="f" id="rfName" value="'+esc(draft.title)+'" placeholder="例）麻婆春雨">'+
     '<label class="lb">種類</label>'+
     '<div class="seg" id="rfKind">'+
