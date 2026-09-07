@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-07T07:58:23+09:00",
+  "updated": "2026-09-08T08:39:04+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -24,13 +24,6 @@
       "cat": "toyosu"
     },
     {
-      "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年9月、東京都中央卸売市場）：関東農政局",
-      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE91M1djVjVFSUZnekYweWhpUGUyWDhkeDlYejlZOEtidGdZOWNUNlVHdkt5cHpFZVMwSmlZMzdUeXloVHloNTlySl92SkNqVlVZd2h3b3NwRVowN1ppMjZRWmRWaDk5R2I4VldV?oc=5",
-      "source": "maff.go.jp",
-      "date": "2026-08-31",
-      "cat": "market"
-    },
-    {
       "title": "【ビジナビ】昭和2年創業の米子市にある青果卸売会社 デジタル技術を活用した業務の効率化 2024年問題の物流問題への取り組みも 鳥取県米子市（2026年8月27日掲載）｜日本海テレビNEWS NNN",
       "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxOOElqSWt2WWhCMWtXeFBoRlhGOXFvemRPVXZ1QjRjQ0xFM1pXYklMQ0xVVjNDLXNsNWxYTEtFWFNTUzA1MzM0eDY2UDlnbUpEektwUzNvYlNNTkFXZlo2TVFYdlBvcTFIQUZYejVBYi1oOW5GN3FFYVJPa1ZVM0VUTWlUYnVSd0E?oc=5",
       "source": "日テレNEWS NNN",
@@ -40,7 +33,7 @@
     {
       "title": "京都の“じゃないほう市場”？「京都市中央市場」の早朝せり見学に行ってみた(1/2)",
       "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9GSjJ5Z0Nwbmg1UlM4ZDJNVFE3ZUZma3ZmUFFwRzQyV2FCcHlxTW5qOU9ReHdNdFA3Mko1RFEwRkVvcTVIV2dRbjM3UTc0NjVFS08ydnRR0gFbQVVfeXFMTndWSm5nVjlRTzRBdkpOeHZ5Vnlvb1VlRXY2X2NoWlJJd1JyMi02YjZPM0dqWmFjOUd5Q25Yc1pEeE1CMjZJNkVkRnYyS0JwN1FrdlJsUnNDTkRZVQ?oc=5",
-      "source": "ウォーカープラス",
+      "source": "walkerplus.com",
       "date": "2026-08-26",
       "cat": "market"
     },
@@ -61,7 +54,7 @@
     {
       "title": "韓国、電力卸売市場の「全国単一価格制」を廃止へ…首都圏・非首都圏・済州の3圏域で差別化",
       "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTFBFODZ6am1ibGZ3XzAzbEtxUkgyUFRXS2FndXRWcG1ZWFpKclhnX1VUVUQ1TEFFbFhNVVM1amdPeF9raDBaanBMS1JYb0tUMzNoNllJcWpQd1N3XzJvcVRJYkU1SWR0SHVzdVJnMnQ5WlVjaGh6?oc=5",
-      "source": "BigGo ファイナンス",
+      "source": "finance.biggo.jp",
       "date": "2026-08-19",
       "cat": "toyosu"
     },
@@ -78,6 +71,13 @@
       "source": "myfuna.net",
       "date": "2026-08-15",
       "cat": "market"
+    },
+    {
+      "title": "特集「食品卸 商社系VS民族系頂上決戦の幕開け」③ 国分グループ本社／持続可能な食の付加価値を地域と世界に届ける",
+      "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTFBEUVFKQnhXUHcwelc4TFlLaHVuT3MyMEFOYWRIeWdLdnpaRHJhSUY0MFM0eGU5Mnp2S3RPTEkzZzhoNnY3ZDZyTW54dXd1SFEySWc?oc=5",
+      "source": "激流オンライン",
+      "date": "2026-07-31",
+      "cat": "business"
     },
     {
       "title": "令和8年度 トップセールス・国内外への訪問",
@@ -103,7 +103,7 @@
     {
       "title": "食品卸 メーカー支援の新たな形 営業や物流を代行",
       "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBaaTZ3djlaT0NET2F5b3J6d2h0RG1aNml0b3hnXzRGRDFHYXZ2Yk1oVE5SWC1vSk9WXzdpXzJ5YkVEc1JSWjNLek4tNWE3YXl5V0w3elpuZDZGV3c?oc=5",
-      "source": "食品新聞 WEB版",
+      "source": "shokuhin.net",
       "date": "2026-07-01",
       "cat": "business"
     },
@@ -136,18 +136,25 @@
       "cat": "business"
     },
     {
-      "title": "三菱食品 伊藤社長インタビュー　新たな経営体制で「食品卸」の価値を最大化する",
-      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBwcUl2UXF5OTA3Sjc2b19LSzVZQTNWeklNcklKeFc0bW9NNUpZeDQ4UkVRZ1Z1Rmt4VUg5SWl3M0l1MXhyWTJ2SVYySVA4b1pXWXQ0eHNrZlpISmdRMXFJQktyd0LSAWpBVV95cUxQdnBuenZXVUhIR3NMaTYzVDJYNnJoeG9IZS1aSHVUU0lNVmtBQko1ZFhlYVBISjkwdGxXdHFuV3RYUmpRQ1hoTEZCVHh0eTVRbURJaENDY3NhdzNSbVZJUldDb2VqVnJoMWVn?oc=5",
-      "source": "ダイヤモンド・チェーンストアオンライン",
-      "date": "2026-06-15",
-      "cat": "business"
-    },
-    {
       "title": "２６２０ 資金ショートは２０５６年度に８年前倒し 東京都中央卸売市場会計、２０２６年経営レポート どらったら！！",
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1Xb0xLYTJ6eDV1WkxhbzgzTnFqVWRNcmxMMGc1OUVEMDZoZHJzQU1oaXlFdV9GYjNQbmxER0tmR1BnOGg0MGpEWmlOWVFhR25MS1hxZ084bFJpdUFIaU1xSERBWGVwT0E5dkE?oc=5",
       "source": "どらったら！！",
       "date": "2026-06-07",
       "cat": "toyosu"
+    },
+    {
+      "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年6月、東京都中央卸売市場）：関東農政局",
+      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE54NGtjb0xmUzNCTHdta2RsQjY4UVF6WTNFYmJYZ3BEUktGNDdYbGUzSmFqOEFzX2E4Yk1lS3VIZHdnYWZTRlR6Z0tfeUxxS09QRmFRdWZaMTBoWThqLXVjTUVmQ1I5azU4Uzkw?oc=5",
+      "source": "maff.go.jp",
+      "date": "2026-05-29",
+      "cat": "market"
+    },
+    {
+      "title": "卸売市場 市民感謝デー（5月）を開催しました！",
+      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBPYXNocjRhUndROUxFMG53SXU5N3pPd0FFbE1NdkdLR2pLamtFY2tuR2VSRVJLMlNaTEZqTWhDMXBkQzRGZktzb2d4U29nRVBRNFJHSU0xWTNXR3JUemJ1RHI3akE?oc=5",
+      "source": "city.oita.oita.jp",
+      "date": "2026-05-09",
+      "cat": "market"
     },
     {
       "title": "【中央卸売市場】5月イベント情報",
@@ -169,13 +176,6 @@
       "source": "metro.tokyo.lg.jp",
       "date": "2026-01-21",
       "cat": "toyosu"
-    },
-    {
-      "title": "飯田市地方卸売市場のご紹介",
-      "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1Lb09aeEMwLUx5ZVQ0T01kTThhenA3a0RhY3hvNDNrS0pmbHFQYW1WaFVGNlE0bXBSN2FSWTVOUlpRbnpCcVIyX1A4bWdsczhpaklpRGFuV3Z0LS1menFnVXdHUjBRWjZ0UVE?oc=5",
-      "source": "city.iida.lg.jp",
-      "date": "2026-01-01",
-      "cat": "market"
     },
     {
       "title": "東京都中央卸売市場・豊洲市場",
