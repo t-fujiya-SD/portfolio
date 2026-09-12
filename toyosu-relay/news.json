@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-12T08:28:25+09:00",
+  "updated": "2026-09-13T08:09:29+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -20,14 +20,7 @@
       "title": "今週のお手頃野菜(令和8年9月11日更新)",
       "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9CY19tYXVQRUJ5RXhiZldSUjk4SFBSbXQ0OFBicmNYSnVXeC1LWWMzc1c1Z1JqR0tOb3RkVmJ0Zjh6bGFYNW1VRUc5cU9iMVNja3p3UTBkRjVITEN4Zk5KLVZ1VUpjV0dCbm9N?oc=5",
       "source": "maff.go.jp",
-      "date": "2026-09-11",
-      "cat": "market"
-    },
-    {
-      "title": "未経験から『中央卸売市場』でせり人に！魚愛が炸裂？！『山津水産株式会社』のせり人として働く大羽賀さんにお話聞いてみた。【PR】",
-      "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE1NU1g0amFxZkVtd2J5VlRQX0VpRkJzQ1FwdFI3SDQ3b2ttRDJiXzF2QlVyajdXM3pFTHB2NS1vSEVYUFRUb2taZE54cU96Zjg4WEE?oc=5",
-      "source": "gata21.jp",
-      "date": "2026-09-11",
+      "date": "2026-09-12",
       "cat": "market"
     },
     {
@@ -35,6 +28,13 @@
       "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE5iNzhsSERxem9jajROMTNUd2xpTzJtQlZNTVJsZUtPdVFpQzhnLTZIdEtUZ1N5RnBNRjUtNHFqck5LdlRkWnBacXdJbXEwTW1oRFE?oc=5",
       "source": "船橋つうしん",
       "date": "2026-09-11",
+      "cat": "market"
+    },
+    {
+      "title": "未経験から『中央卸売市場』でせり人に！魚愛が炸裂？！『山津水産株式会社』のせり人として働く大羽賀さんにお話聞いてみた。【PR】",
+      "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE1NU1g0amFxZkVtd2J5VlRQX0VpRkJzQ1FwdFI3SDQ3b2ttRDJiXzF2QlVyajdXM3pFTHB2NS1vSEVYUFRUb2taZE54cU96Zjg4WEE?oc=5",
+      "source": "にいがた速報",
+      "date": "2026-09-10",
       "cat": "market"
     },
     {
@@ -145,7 +145,7 @@
     {
       "title": "中部圏の青果卸売会社12社、共同物流インフラ確立へ共同で新会社設立",
       "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5JcVJhUHFvZ0FzVFNDVjVnbS1NZ1ZuVENXUzl1SkJ3bF9XLUEzSTFDcElyRzIzbV8zN0U5YWpfSWZidk93RlZ2UmVjRQ?oc=5",
-      "source": "LOGI-BIZ online",
+      "source": "online.logi-biz.com",
       "date": "2026-06-17",
       "cat": "business"
     },
