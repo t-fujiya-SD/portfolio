@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-13T08:09:29+09:00",
+  "updated": "2026-09-14T08:19:37+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -20,7 +20,7 @@
       "title": "今週のお手頃野菜(令和8年9月11日更新)",
       "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9CY19tYXVQRUJ5RXhiZldSUjk4SFBSbXQ0OFBicmNYSnVXeC1LWWMzc1c1Z1JqR0tOb3RkVmJ0Zjh6bGFYNW1VRUc5cU9iMVNja3p3UTBkRjVITEN4Zk5KLVZ1VUpjV0dCbm9N?oc=5",
       "source": "maff.go.jp",
-      "date": "2026-09-12",
+      "date": "2026-09-11",
       "cat": "market"
     },
     {
@@ -40,7 +40,7 @@
     {
       "title": "神明HD子会社、県内最大青果卸の神果を買収へ 物流効率化、全国でM&A加速|経済ニュース",
       "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTFB4SGxSenhzMF8wQjIyTG1Iak5EOHpDTko0Y1lHemJtWXppNHkzMFU0X3laWjAxb0hwM01KQXpJRnhCUlc5dExWaHlYdEVWbFJXX0R5T3V2RExUMzJTZXBTQnlZellLRElNNTVWamxaSQ?oc=5",
-      "source": "神戸新聞",
+      "source": "kobe-np.co.jp",
       "date": "2026-09-10",
       "cat": "business"
     },
@@ -56,6 +56,13 @@
       "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE91YTZGRFkwUUQ5RkhHdVhrWGZYcDU4QXFacmdtYlNjSzR2cnp6SW1RZWItVm94V21UYWJhODJpcVJ0TnFhM2VmS0s4bw?oc=5",
       "source": "TVer",
       "date": "2026-09-08",
+      "cat": "toyosu"
+    },
+    {
+      "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年9月、東京都中央卸売市場）：関東農政局",
+      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE91M1djVjVFSUZnekYweWhpUGUyWDhkeDlYejlZOEtidGdZOWNUNlVHdkt5cHpFZVMwSmlZMzdUeXloVHloNTlySl92SkNqVlVZd2h3b3NwRVowN1ppMjZRWmRWaDk5R2I4VldV?oc=5",
+      "source": "maff.go.jp",
+      "date": "2026-08-31",
       "cat": "toyosu"
     },
     {
@@ -85,6 +92,13 @@
       "source": "日本農業新聞",
       "date": "2026-08-20",
       "cat": "business"
+    },
+    {
+      "title": "韓国、電力卸売市場の「全国単一価格制」を廃止へ…首都圏・非首都圏・済州の3圏域で差別化",
+      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTFBFODZ6am1ibGZ3XzAzbEtxUkgyUFRXS2FndXRWcG1ZWFpKclhnX1VUVUQ1TEFFbFhNVVM1amdPeF9raDBaanBMS1JYb0tUMzNoNllJcWpQd1N3XzJvcVRJYkU1SWR0SHVzdVJnMnQ5WlVjaGh6?oc=5",
+      "source": "BigGo ファイナンス",
+      "date": "2026-08-19",
+      "cat": "toyosu"
     },
     {
       "title": "秋の味覚サンマ 仙台市中央卸売市場に入荷 入荷少なく高値で取引",
@@ -145,14 +159,14 @@
     {
       "title": "中部圏の青果卸売会社12社、共同物流インフラ確立へ共同で新会社設立",
       "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5JcVJhUHFvZ0FzVFNDVjVnbS1NZ1ZuVENXUzl1SkJ3bF9XLUEzSTFDcElyRzIzbV8zN0U5YWpfSWZidk93RlZ2UmVjRQ?oc=5",
-      "source": "online.logi-biz.com",
+      "source": "LOGI-BIZ online",
       "date": "2026-06-17",
       "cat": "business"
     },
     {
       "title": "【新会社設立のお知らせ】中部圏の青果卸売会社12社が結束し、「チームフレッシュロジ中部株式会社（TFL中部）」を設立",
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTFA2UDZNNXY1S0tKTm9nYzNhYzJFM1EwVFVVS0s1RzQ2cGdYRzNCRHF3VmdLTUdEUzcwYWdxaVVyNVFYR2x0ZHNnN3dtR0F4TWZtMGYxNHVFd2tJbnRFVHlzOFVsb3EzX2dkV1E?oc=5",
-      "source": "PR TIMES",
+      "source": "prtimes.jp",
       "date": "2026-06-16",
       "cat": "business"
     },
@@ -168,20 +182,6 @@
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1Xb0xLYTJ6eDV1WkxhbzgzTnFqVWRNcmxMMGc1OUVEMDZoZHJzQU1oaXlFdV9GYjNQbmxER0tmR1BnOGg0MGpEWmlOWVFhR25MS1hxZ084bFJpdUFIaU1xSERBWGVwT0E5dkE?oc=5",
       "source": "どらったら！！",
       "date": "2026-06-07",
-      "cat": "toyosu"
-    },
-    {
-      "title": "東京都中央卸売市場大田市場で、香川県産青果物のトップセールスを行いました",
-      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE9Yc2piSXdfZHc0bHZacHBYWnJzR3JwZ1oxcVRUMmRPdm9wYjNwelNjeEViWjBSRTZHS1Y1aGpjV3dRbTY2MGthWXhNRThCTl9kQ3RGMzUwYU5FNHZVT1A4d18wUTZiWkNwZnR6LUtyVmdnRzhBSkRnSU9TZEtEQjA?oc=5",
-      "source": "pref.kagawa.lg.jp",
-      "date": "2026-02-13",
-      "cat": "toyosu"
-    },
-    {
-      "title": "東京都中央卸売市場・豊洲市場",
-      "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9abnUyLWI2TWtuY0tKa1FoZlMwRUtHeDVsejhNTmwwck1sZi1iZ2ZhWlQ2OHgyU2xsQUdnM05mdzdpY1hNZGhGMzZoZTlFOWxQMHBiRVFwZmM3enM?oc=5",
-      "source": "GO TOKYO, The Official Tokyo Travel Guide",
-      "date": "2025-12-25",
       "cat": "toyosu"
     }
   ]
