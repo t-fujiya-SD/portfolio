@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-15T08:56:37+09:00",
+  "updated": "2026-09-16T08:35:19+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -16,6 +16,13 @@
     }
   ],
   "items": [
+    {
+      "title": "NHN KCP、青果卸売市場向けカード決済を展開 11市場で運用",
+      "link": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxOLWlmc19RbnBCSGxHMlNGWEhkcGxoWVNrQVNGQ3FUZWMzZmNZd2g1SmpoM3NOcXNTamc4b19ITGIxN2x3eHFwOTk0YWU3YWtzTERRZzBSLXN0R05nblJmMTVLd0dwZUdCcjBNQU9iUHB4TFVULV8xbmdyUmVOdVRtVklxMi1sQ1pZVVU2ZlF2S0lXNVJkbThzdDMxZGNMSGlpcTg3TGhMa3dCcUgxZnRFMVZWNENLYlRHYnU3cDlMWDdzc0E0QklXaQ?oc=5",
+      "source": "디지털투데이",
+      "date": "2026-09-15",
+      "cat": "market"
+    },
     {
       "title": "青果卸に“AI経営参謀”が常駐する時代へ。DXONEが新機能を正式リリースPDF・Excelを読み取り、自社データへ自動変換。入力から経営分析まで生成AIが支援 - 問い合わせ急増中！ | DXONE株式会社のプレスリリース",
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9XcUpyZXJEUFpEMk9wenF1emszVjRtc1ZlcGRsNHF0eUhuZFQzVFJHakFYZTVTS0E2SkhSUS11LVdOUXZ0UENsd0FEZmZtV1paV01hMGVoaGEtQm9LTFBrZFlLNHZKZmRxVHc?oc=5",
@@ -38,17 +45,17 @@
       "cat": "market"
     },
     {
-      "title": "9/12（土）船橋市地方卸売市場にて「船橋市場 夏祭り」が開催！盆踊りや模擬せり、福引抽選会も！",
-      "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE5iNzhsSERxem9jajROMTNUd2xpTzJtQlZNTVJsZUtPdVFpQzhnLTZIdEtUZ1N5RnBNRjUtNHFqck5LdlRkWnBacXdJbXEwTW1oRFE?oc=5",
-      "source": "船橋つうしん",
+      "title": "未経験から『中央卸売市場』でせり人に！魚愛が炸裂？！『山津水産株式会社』のせり人として働く大羽賀さんにお話聞いてみた。【PR】",
+      "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE1NU1g0amFxZkVtd2J5VlRQX0VpRkJzQ1FwdFI3SDQ3b2ttRDJiXzF2QlVyajdXM3pFTHB2NS1vSEVYUFRUb2taZE54cU96Zjg4WEE?oc=5",
+      "source": "gata21.jp",
       "date": "2026-09-11",
       "cat": "market"
     },
     {
-      "title": "未経験から『中央卸売市場』でせり人に！魚愛が炸裂？！『山津水産株式会社』のせり人として働く大羽賀さんにお話聞いてみた。【PR】",
-      "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE1NU1g0amFxZkVtd2J5VlRQX0VpRkJzQ1FwdFI3SDQ3b2ttRDJiXzF2QlVyajdXM3pFTHB2NS1vSEVYUFRUb2taZE54cU96Zjg4WEE?oc=5",
-      "source": "にいがた速報",
-      "date": "2026-09-10",
+      "title": "9/12（土）船橋市地方卸売市場にて「船橋市場 夏祭り」が開催！盆踊りや模擬せり、福引抽選会も！",
+      "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE5iNzhsSERxem9jajROMTNUd2xpTzJtQlZNTVJsZUtPdVFpQzhnLTZIdEtUZ1N5RnBNRjUtNHFqck5LdlRkWnBacXdJbXEwTW1oRFE?oc=5",
+      "source": "funabashi-tsushin.com",
+      "date": "2026-09-11",
       "cat": "market"
     },
     {
@@ -60,8 +67,8 @@
     },
     {
       "title": "「しっかりと発信していくことが大変重要」 首都圏で人気高い長野県産のブドウやリンゴ 都内の卸売市場でトップセールス",
-      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE9XZXcxS040VTc4V21SSkZtVWp3aEctRWFVWmlfLTlzRHdLQXl4YUdaV1liRnhlZm5pT2daYVRMWlRpT0lCd1JodkMzdC1MMFR1MkVvcWgzcHBlODB1V2VGalV2NVd6cXhfcWd1NXEwOWZwMzJrczBlT1ZiSjNIcU0?oc=5",
-      "source": "Yahoo!ニュース",
+      "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE91YTZGRFkwUUQ5RkhHdVhrWGZYcDU4QXFacmdtYlNjSzR2cnp6SW1RZWItVm94V21UYWJhODJpcVJ0TnFhM2VmS0s4bw?oc=5",
+      "source": "TVer",
       "date": "2026-09-08",
       "cat": "toyosu"
     },
@@ -80,13 +87,6 @@
       "cat": "market"
     },
     {
-      "title": "秋の味覚・サンマ\"初競り\" 最高値1キロ3500円・昨年に比べ入荷量少ない見込み 山形市公設卸売市場",
-      "link": "https://news.google.com/rss/articles/CBMic0FVX3lxTFBNS1l6aThzTGJneUFNaTkxeVVvT2RtOG5FZDVfMm9vTUZVbV81WU9yaVozQWd0UHVRMDM1ZHdjTERhckJzYkJaUWxLRC16WnJiVnA1LVloRU43aGwzcW0zRDJCR3hVUFNyYTBwVVRoX2Znb3c?oc=5",
-      "source": "さくらんぼテレビ",
-      "date": "2026-08-20",
-      "cat": "market"
-    },
-    {
       "title": "青果卸５割が減収減益 ２５年度決算 営業利益率１％超はわずか１割 生産費増と節約志向の板挟み",
       "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE9tdm0yYjlra0puOU0xcnRFZy0wanNicy1CcjF5aFRuNHVuSmJ3c0IwY0VRTUhPVzRvQ1k4X0F1b0F3MVlGRktROFNLeGxKZ3E5TkRybTFPaw?oc=5",
       "source": "日本農業新聞",
@@ -101,13 +101,6 @@
       "cat": "toyosu"
     },
     {
-      "title": "郡仙台市長が仙台市中央卸売市場を視察 ウナギが安く野菜果物は入荷減",
-      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9GRmdZYksyZlNFU2xLTjVzdjJQaXJ1dF9QNnBzeHM4c08yRmlkMWhZS1h6eEtUQ3VRd1A4WlNfMWNISkpKREhDc2JoU3BCY2M?oc=5",
-      "source": "khb東日本放送",
-      "date": "2026-07-31",
-      "cat": "market"
-    },
-    {
       "title": "特集「食品卸 商社系VS民族系頂上決戦の幕開け」③ 国分グループ本社／持続可能な食の付加価値を地域と世界に届ける",
       "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTFBEUVFKQnhXUHcwelc4TFlLaHVuT3MyMEFOYWRIeWdLdnpaRHJhSUY0MFM0eGU5Mnp2S3RPTEkzZzhoNnY3ZDZyTW54dXd1SFEySWc?oc=5",
       "source": "激流オンライン",
@@ -115,17 +108,17 @@
       "cat": "business"
     },
     {
-      "title": "令和8年度 トップセールス・国内外への訪問",
-      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5lT2g2dXo4Z3ZGWDZuNGlKUTk2S042RDdJNzdQcFV0V0FHM2U3ei0teGw5VWxqUGJaSWxxVG0taDF6TEhlX3Y1Zmp1YmlVUjZjWThMbDdyaXM3YjJvQXpmeDR2dklQMW0zX0lJ?oc=5",
-      "source": "福島県ホームページ",
-      "date": "2026-07-31",
-      "cat": "toyosu"
-    },
-    {
       "title": "市場からのお知らせ",
       "link": "https://news.google.com/rss/articles/CBMihgFBVV95cUxNVURMNWVJVk81M3IxU0ZRUkQtV290VE9oN3JnQ0lpbW4xNTVVTFREUHM4TnplV3d2QlJKUzFJc0l5XzViOFBneHN2Qk1WSDJ5TC1HZTdTSGhjSC1ScmUxYlV3czNwcjNGWTRuY0M3SEJOMzVBWDZ6cjVwUS1WdGVYTThpd2c5Zw?oc=5",
       "source": "city.kisarazu.lg.jp",
       "date": "2026-07-08",
+      "cat": "toyosu"
+    },
+    {
+      "title": "【現地取材・動画】小池都知事、卸売市場に導入の自動立体冷蔵倉庫とAGVを視察",
+      "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1rM1Q1SThjRGRqSElkZUd3aHRFNXB6U1FjdTJvOVF5QmtidHN3elpuX0JfcnRvSFBQY2Y5eFZTeF8xMUVyVnF1R05Rbw?oc=5",
+      "source": "LOGI-BIZ online",
+      "date": "2026-07-07",
       "cat": "toyosu"
     },
     {
@@ -155,6 +148,13 @@
       "source": "LOGI-BIZ online",
       "date": "2026-06-17",
       "cat": "business"
+    },
+    {
+      "title": "ナガスクジラが仙台市中央卸売市場に初入荷",
+      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBldTVPSjVRVVAxRmFuWkZTUlduWHhyR0QwemxxaWhSWDFkbXhFR0g2cnQ4YXUzamhhRm9MclhCcTZhcXA1Q1FkV2lvd3FWdWM?oc=5",
+      "source": "khb東日本放送",
+      "date": "2026-06-09",
+      "cat": "market"
     },
     {
       "title": "２６２０ 資金ショートは２０５６年度に８年前倒し 東京都中央卸売市場会計、２０２６年経営レポート どらったら！！",
