@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-19T08:28:57+09:00",
+  "updated": "2026-09-20T08:20:25+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -26,16 +26,9 @@
     {
       "title": "東京都中央卸売市場の生き残りポイントは「品質管理」と「市場ブランド」 中間まとめで存続に強い危機感 人手不足に物流問題",
       "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE9zZjlseVlmMjNPM0hCaElLNVlNN2EyNl9rNUZ6YUR2bm9MVDBCWkpSb0Fqc0dHNnlvSGN1UVNjRktjXzlEalo2ZjV6NVFVTTdlRTBjS3VDaVVCYTZoTjZzTWFGSDlhYWpSc05tYi1vQW9QTWREQ2NOUTQtRkRtZlk?oc=5",
-      "source": "news.yahoo.co.jp",
+      "source": "Yahoo!ニュース",
       "date": "2026-09-17",
       "cat": "toyosu"
-    },
-    {
-      "title": "NHN KCP、青果卸売市場向けカード決済を展開 11市場で運用",
-      "link": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxOLWlmc19RbnBCSGxHMlNGWEhkcGxoWVNrQVNGQ3FUZWMzZmNZd2g1SmpoM3NOcXNTamc4b19ITGIxN2x3eHFwOTk0YWU3YWtzTERRZzBSLXN0R05nblJmMTVLd0dwZUdCcjBNQU9iUHB4TFVULV8xbmdyUmVOdVRtVklxMi1sQ1pZVVU2ZlF2S0lXNVJkbThzdDMxZGNMSGlpcTg3TGhMa3dCcUgxZnRFMVZWNENLYlRHYnU3cDlMWDdzc0E0QklXaQ?oc=5",
-      "source": "디지털투데이",
-      "date": "2026-09-15",
-      "cat": "market"
     },
     {
       "title": "青果卸に“AI経営参謀”が常駐する時代へ。DXONEが新機能を正式リリースPDF・Excelを読み取り、自社データへ自動変換。入力から経営分析まで生成AIが支援 - 問い合わせ急増中！",
@@ -47,23 +40,16 @@
     {
       "title": "DXONEが青果卸向けに“AI経営参謀”を正式リリースし業務を革新する時代到来",
       "link": "https://news.google.com/rss/articles/CBMidkFVX3lxTFBQMGZQd01CZWZDb0VKbFRISm1mU1NDOExEY3ZTTUF4WmNUUjNIVnZtMHRiZU54VlVrNkJKNnZtdl9tWTFXOVIwdE5oWDE2elBMQWFyWm05NndtUGlQRVdvdWQxV0NIZnpJYzNZRnU0MDZlRW5ITVE?oc=5",
-      "source": "voix.jp",
+      "source": "ニュースメディアVOIX",
       "date": "2026-09-14",
       "cat": "business"
     },
     {
       "title": "未経験から『中央卸売市場』でせり人に！魚愛が炸裂？！『山津水産株式会社』のせり人として働く大羽賀さんにお話聞いてみた。【PR】",
       "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE1NU1g0amFxZkVtd2J5VlRQX0VpRkJzQ1FwdFI3SDQ3b2ttRDJiXzF2QlVyajdXM3pFTHB2NS1vSEVYUFRUb2taZE54cU96Zjg4WEE?oc=5",
-      "source": "にいがた速報",
+      "source": "gata21.jp",
       "date": "2026-09-11",
       "cat": "market"
-    },
-    {
-      "title": "神明HD子会社、県内最大青果卸の神果を買収へ 物流効率化、全国でM&A加速|経済ニュース",
-      "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTFBiYXdhUm43SUt0eEg1MWItNGEyZkxvTHdBNUdOU2c2Y0NaMUR3N1FaNGptUGhlczRkdndLUlpFVkQxRlZ4c1FpMFQ1MUlRY1NQN01aOVlJR1VhTjU0aTl0LXlkWWJaX2N0R1EtdUVR?oc=5",
-      "source": "神戸新聞",
-      "date": "2026-09-10",
-      "cat": "business"
     },
     {
       "title": "首都圏で人気の高いブドウやリンゴ 県とJA全農長野が都内の卸売市場でトップセールス 阿部知事「しっかりと発信していくことが大変重要」",
@@ -89,16 +75,9 @@
     {
       "title": "青果卸５割が減収減益 ２５年度決算 営業利益率１％超はわずか１割 生産費増と節約志向の板挟み",
       "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE9tdm0yYjlra0puOU0xcnRFZy0wanNicy1CcjF5aFRuNHVuSmJ3c0IwY0VRTUhPVzRvQ1k4X0F1b0F3MVlGRktROFNLeGxKZ3E5TkRybTFPaw?oc=5",
-      "source": "日本農業新聞",
+      "source": "agrinews.co.jp",
       "date": "2026-08-20",
       "cat": "business"
-    },
-    {
-      "title": "秋の味覚サンマ 仙台市中央卸売市場に入荷 入荷少なく高値で取引",
-      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE91MWV5eXpJay1SYnE5VmFEalJqdFZpcDhEVVVHazFkZjFNWG9wUWRRYVgwaGpxZVJtTDNlempPQzNYY3hDVzV3bTI4ck9iY1k?oc=5",
-      "source": "khb東日本放送",
-      "date": "2026-08-18",
-      "cat": "market"
     },
     {
       "title": "【中央卸売市場】夏休みに親子でいちばを体験できる「親子で学ぶ中央卸売市場」を開催します！8月イベント情報",
@@ -108,9 +87,16 @@
       "cat": "toyosu"
     },
     {
+      "title": "郡仙台市長が仙台市中央卸売市場を視察 ウナギが安く野菜果物は入荷減",
+      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9GRmdZYksyZlNFU2xLTjVzdjJQaXJ1dF9QNnBzeHM4c08yRmlkMWhZS1h6eEtUQ3VRd1A4WlNfMWNISkpKREhDc2JoU3BCY2M?oc=5",
+      "source": "khb東日本放送",
+      "date": "2026-07-31",
+      "cat": "market"
+    },
+    {
       "title": "令和8年度 トップセールス・国内外への訪問",
       "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5lT2g2dXo4Z3ZGWDZuNGlKUTk2S042RDdJNzdQcFV0V0FHM2U3ei0teGw5VWxqUGJaSWxxVG0taDF6TEhlX3Y1Zmp1YmlVUjZjWThMbDdyaXM3YjJvQXpmeDR2dklQMW0zX0lJ?oc=5",
-      "source": "福島県ホームページ",
+      "source": "pref.fukushima.lg.jp",
       "date": "2026-07-31",
       "cat": "toyosu"
     },
@@ -143,6 +129,13 @@
       "cat": "business"
     },
     {
+      "title": "中部圏の青果卸売会社12社、共同物流インフラ確立へ共同で新会社設立",
+      "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5JcVJhUHFvZ0FzVFNDVjVnbS1NZ1ZuVENXUzl1SkJ3bF9XLUEzSTFDcElyRzIzbV8zN0U5YWpfSWZidk93RlZ2UmVjRQ?oc=5",
+      "source": "LOGI-BIZ online",
+      "date": "2026-06-17",
+      "cat": "business"
+    },
+    {
       "title": "中部圏の青果卸12社／共同物流会社を設立、2027年6月以降稼働へ",
       "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFBsVjNZdlNydVJjdUpPWXIwbW92M2ZCX21FNkYtNHVPOFNvTWtneUJmeElOMU5zT0NraDdZNTBmV09DSmdIUF9JWFBqSU5xRnVtZl95QQ?oc=5",
       "source": "物流ニュースのLNEWS",
@@ -164,11 +157,11 @@
       "cat": "market"
     },
     {
-      "title": "東京都中央卸売市場大田市場で、香川県産青果物のトップセールスを行いました",
-      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE9Yc2piSXdfZHc0bHZacHBYWnJzR3JwZ1oxcVRUMmRPdm9wYjNwelNjeEViWjBSRTZHS1Y1aGpjV3dRbTY2MGthWXhNRThCTl9kQ3RGMzUwYU5FNHZVT1A4d18wUTZiWkNwZnR6LUtyVmdnRzhBSkRnSU9TZEtEQjA?oc=5",
-      "source": "pref.kagawa.lg.jp",
-      "date": "2026-02-13",
-      "cat": "toyosu"
+      "title": "【中央卸売市場】5月イベント情報",
+      "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE5JT0ktcHJFSHZxYy00cl9TZ2hmZ1g1UjNWTHdpdlZLQ2xwV2JGWWNhV2pkTmk2MkJvaUp4YXBwVzdsQzk2Z2ZtUjZ4MTN0ektiZjlnNEVKU3Z5ck5NbXV5dE1GbG42N19n?oc=5",
+      "source": "my.metro.tokyo.lg.jp",
+      "date": "2026-05-07",
+      "cat": "market"
     },
     {
       "title": "飯田市地方卸売市場のご紹介",
@@ -180,7 +173,14 @@
     {
       "title": "東京都中央卸売市場・豊洲市場",
       "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9abnUyLWI2TWtuY0tKa1FoZlMwRUtHeDVsejhNTmwwck1sZi1iZ2ZhWlQ2OHgyU2xsQUdnM05mdzdpY1hNZGhGMzZoZTlFOWxQMHBiRVFwZmM3enM?oc=5",
-      "source": "GO TOKYO, The Official Tokyo Travel Guide",
+      "source": "gotokyo.org",
+      "date": "2025-12-25",
+      "cat": "toyosu"
+    },
+    {
+      "title": "SANKO、大田市場の青果仲卸と業務提携 販路拡大へ",
+      "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTFBRcDRxc25POTNNM19JcDRlR2ZFSnI0a2pHYmJfOTEyTW5hclM2SWVmbVN0S2lZMTg2S3Axb2ZEeW1jWk5iUTFzMkNJNnNuWkpXVG9EY1BXT3JiVGd1VkgtaW9nVHZBeEVzZ2dkbg?oc=5",
+      "source": "日本経済新聞",
       "date": "2025-12-25",
       "cat": "toyosu"
     }
