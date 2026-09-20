@@ -517,21 +517,24 @@ function holidayName(isoDate){
   return _holCache[y][isoDate] || '';
 }
 
-/** 祝日の日を「作らない」にする。まだ何も書いていない日だけ触る */
+/** 祝日の日を「作らない」にする。
+    明示的に「作る」と言われた日（承認済み／この日は作る、を押した日）だけは触らない。
+    提案で勝手に入っただけの未承認の日は、祝日で上書きする。 */
 function applyHolidays(w){
   if(S.settings && S.settings.skipHolidays === false) return;
   DAYS.forEach((d,i)=>{
     const day = w.days[d.k];
     if(!day) return;
     const nm = holidayName(iso(addDays(parseISO(w.start), i)));
-    if(nm){
-      if(day.mode==='cook' && day.status==='pending' && !day.mainId && !day.plainName){
-        day.mode = 'hol'; day.status = 'other'; day.holiday = nm;
-      }else if(day.mode==='hol'){ day.holiday = nm; }
-    }else if(day.mode==='hol' && day.holiday){
-      // 祝日でなくなった日（データのずれ）は作る日に戻す
-      day.mode = 'cook'; day.status = 'pending'; day.holiday = '';
+    if(!nm){
+      if(day.mode==='hol'){ day.mode='cook'; day.status='pending'; day.holiday=''; }
+      return;
     }
+    if(day.cookAnyway || day.status==='approved') return;   // 作ると決めた日は尊重する
+    if(day.mode==='hol'){ day.holiday = nm; return; }
+    if(day.mode==='out' || day.mode==='left') return;       // 外食・残り物の指定も尊重する
+    day.mode = 'hol'; day.status = 'other'; day.holiday = nm;
+    day.mainId = null; day.plainName = ''; day.sideIds = [];
   });
 }
 const STATUS = {pending:'未承認', approved:'承認', other:'その他'};
@@ -620,7 +623,7 @@ const KEY = 'kondate.v1';
 let S = null, viewWeek = null, tab = 'week';
 
 /* mainId … 登録済みレシピ / plainName … まだレシピになっていない料理名（直接入力） */
-function blankDay(){ return {mode:'cook', status:'pending', mainId:null, plainName:'', sideIds:[], rating:null, cooked:false, holiday:''}; }
+function blankDay(){ return {mode:'cook', status:'pending', mainId:null, plainName:'', sideIds:[], rating:null, cooked:false, holiday:'', cookAnyway:false}; }
 /** 作らない日の表示ラベル */
 function offLabel(day){
   if(day.mode==='hol') return '🎌 '+(day.holiday || '作らない');
@@ -1655,6 +1658,7 @@ function approveDay(dk){
   const wk = W(), day = wk.days[dk];
   if(!day.mainId && !day.plainName){ toast('先に料理を決めてください'); return; }
   day.mode = 'cook'; day.status = 'approved';
+  if(holidayName(iso(dayDate(wk.start, dk)))) day.cookAnyway = true;
   save(); render();
 }
 function rejectDay(dk){
@@ -1673,7 +1677,11 @@ function approveAll(){
   const wk = W(); let n = 0;
   DAYS.forEach(d=>{
     const day = wk.days[d.k];
-    if(day.status==='pending' && (day.mainId || day.plainName)){ day.status='approved'; day.mode='cook'; n++; }
+    if(day.status==='pending' && (day.mainId || day.plainName)){
+      day.status='approved'; day.mode='cook';
+      if(holidayName(iso(dayDate(wk.start, d.k)))) day.cookAnyway = true;
+      n++;
+    }
   });
   save(); render();
   toast(n ? n+'日ぶん承認しました' : '承認できる日がありません');
@@ -2017,7 +2025,7 @@ function renderWeek(){
   el.querySelectorAll('[data-adddish]').forEach(b=>b.onclick=()=>openAddByDish(b.dataset.adddish));
   el.querySelectorAll('[data-cook]').forEach(b=>b.onclick=()=>{
     const day = wk.days[b.dataset.cook];
-    day.mode='cook'; day.status='pending'; day.holiday='';
+    day.mode='cook'; day.status='pending'; day.holiday=''; day.cookAnyway=true;
     save(); render(); openPicker(b.dataset.cook,'main');
   });
   el.querySelectorAll('[data-appr]').forEach(b=>b.onclick=()=>approveDay(b.dataset.appr));
@@ -2797,14 +2805,15 @@ function openOther(dk){
   $('#otLeft').onclick = ()=>{ setOther(dk,'left'); closeSheet(); };
   $('#otNone').onclick = ()=>{
     const day = W().days[dk];
-    setOther(dk,'hol');
+    setOther(dk,'hol'); day.cookAnyway = false;
     day.holiday = holidayName(iso(dayDate(viewWeek, dk))) || '';
     save(); closeSheet(); render();
   };
   $('#otPick').onclick = ()=>openPicker(dk,'main');
   $('#otBack').onclick = ()=>{
     const day = W().days[dk];
-    day.mode='cook'; day.status='pending';
+    day.mode='cook'; day.status='pending'; day.holiday='';
+    if(holidayName(iso(dayDate(W().start, dk)))) day.cookAnyway = true;
     if(!day.mainId) shuffleMain(dk);
     save(); closeSheet(); render();
   };
