@@ -652,7 +652,7 @@ function dayDishName(day){
 }
 function blankWeek(start){
   const days = {}; DAYS.forEach(d => days[d.k] = blankDay());
-  return {start, days, checked:{}, extras:[], done:false, generatedAt:null};
+  return {start, days, checked:{}, extras:[], hidden:{}, done:false, generatedAt:null};
 }
 function defaultSettings(){
   return {
@@ -747,7 +747,7 @@ function normalize(){
     r.ratingSum = r.ratingSum||0; r.ratingCount = r.ratingCount||0;
   });
   Object.values(S.weeks).forEach(w=>{
-    w.days = w.days || {}; w.checked = w.checked||{}; w.extras = w.extras||[];
+    w.days = w.days || {}; w.checked = w.checked||{}; w.extras = w.extras||[]; w.hidden = w.hidden||{};
     w.extras.forEach(e=>{
       if(e.purpose===undefined) e.purpose = inferPurpose(e.name);
       if(e.dish===undefined) e.dish = '';
@@ -1767,7 +1767,7 @@ function snoozeStaple(st){
    買い物リストの生成
    承認した日の主菜＋副菜の食材だけを載せる（未承認・外食・残り物は載せない）
    ========================================================================= */
-function buildShopping(){
+function buildShopping(includeHidden){
   const wk = W();
   const map = new Map();
   DAYS.forEach(d=>{
@@ -1798,9 +1798,11 @@ function buildShopping(){
     items.push({key:'ext:'+e.id, name:e.name, cat:e.cat, kind:'extra', extra:e});
   });
 
+  const hid = wk.hidden || {};
+  items.forEach(it=>{ it.hidden = !!hid[it.key]; });
   const groups = CATS.map(c=>({k:c.k, ic:c.ic, nm:c.nm, items:[]}));
   const gmap = {}; groups.forEach(g=>gmap[g.k]=g);
-  items.forEach(it=>{ (gmap[it.cat]||gmap.other).items.push(it); });
+  items.forEach(it=>{ if(includeHidden || !it.hidden) (gmap[it.cat]||gmap.other).items.push(it); });
   groups.forEach(g=>g.items.sort((a,b)=>{
     const ka = a.kind==='ing'?0:(a.kind==='staple'?1:2), kb = b.kind==='ing'?0:(b.kind==='staple'?1:2);
     return ka-kb || a.name.localeCompare(b.name,'ja');
@@ -1808,6 +1810,12 @@ function buildShopping(){
   return groups.filter(g=>g.items.length);
 }
 const isChecked = key => !!W().checked[key];
+/** 今週のリストから消した品 */
+function hiddenList(){
+  const out = [];
+  buildShopping(true).forEach(g=>g.items.forEach(it=>{ if(it.hidden) out.push(it); }));
+  return out;
+}
 const pendingCount = () => DAYS.filter(d=>W().days[d.k].status==='pending').length;
 const approvedCount = () => DAYS.filter(d=>W().days[d.k].status==='approved').length;
 
@@ -2215,11 +2223,22 @@ function renderShop(){
              (note ? '<span class="qty">'+esc(note)+'</span>' : '')+'</div>'+
            '<div class="rwhy">'+why+'</div></div>'+
            '<button class="rnote'+(note?' has':'')+'" data-note="'+esc(it.name)+'">✎</button>'+
-           (it.kind==='extra' ? '<button class="rdel" data-delext="'+it.extra.id+'">✕</button>' : '')+
+           '<button class="rdel" data-del="'+esc(it.key)+'" data-kind="'+it.kind+'"'+
+             (it.kind==='extra' ? ' data-eid="'+it.extra.id+'"' : '')+' title="リストから消す">✕</button>'+
            '</div>';
     });
     h += '</div></div>';
   });
+
+  const hid = hiddenList();
+  if(hid.length){
+    h += '<div class="sec">🗑 消したもの（'+hid.length+'）<span class="line"></span></div>'+
+      '<div class="card">'+ hid.map(it=>'<div class="dishline">'+
+        '<div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:700;color:var(--sub2)">'+
+          catIc(it.cat)+' '+esc(it.name)+'</div></div>'+
+        '<button class="btn sub sm" data-unhide="'+esc(it.key)+'">戻す</button></div>').join('')+
+      '</div>';
+  }
 
   if(total){
     h += '<button class="btn gr full" style="margin:14px 0 6px" id="btnDoneShop">🎉 買い物おわり（常備品を更新）</button>'+
@@ -2232,14 +2251,26 @@ function renderShop(){
     e.stopPropagation(); openIngNote(b.dataset.note);
   });
   el.querySelectorAll('.row').forEach(r=>r.onclick=e=>{
-    if(e.target.closest('[data-delext]') || e.target.closest('[data-note]') || e.target.closest('[data-tag]')) return;
+    if(e.target.closest('[data-del]') || e.target.closest('[data-note]') || e.target.closest('[data-tag]')) return;
     const k = r.dataset.key;
     if(wk.checked[k]) delete wk.checked[k]; else wk.checked[k]=true;
     save(); renderShop(); renderCounts();
   });
-  el.querySelectorAll('[data-delext]').forEach(b=>b.onclick=e=>{
+  el.querySelectorAll('[data-del]').forEach(b=>b.onclick=e=>{
     e.stopPropagation();
-    wk.extras = wk.extras.filter(x=>x.id!==b.dataset.delext);
+    if(b.dataset.kind==='extra'){
+      // 自分で書いたメモは記録なので、その場で削除する
+      wk.extras = wk.extras.filter(x=>x.id!==b.dataset.eid);
+    }else{
+      // 献立や常備品から出ている品は、今週のリストから外すだけ（戻せる）
+      wk.hidden = wk.hidden || {};
+      wk.hidden[b.dataset.del] = true;
+      delete wk.checked[b.dataset.del];
+    }
+    save(); renderShop(); renderCounts();
+  });
+  el.querySelectorAll('[data-unhide]').forEach(b=>b.onclick=()=>{
+    if(wk.hidden) delete wk.hidden[b.dataset.unhide];
     save(); renderShop(); renderCounts();
   });
   el.querySelectorAll('[data-menu]').forEach(b=>b.onclick=()=>{
