@@ -459,7 +459,81 @@ function saveMyName(v){
 const DAYS = [
   {k:'mon',w:'月'},{k:'tue',w:'火'},{k:'wed',w:'水'},{k:'thu',w:'木'},{k:'fri',w:'金'}
 ];
-const MODES  = {cook:'作る', out:'外食', left:'残り物'};
+const MODES  = {cook:'作る', out:'外食', left:'残り物', hol:'作らない'};
+
+/* =========================================================================
+   日本の祝日
+   毎年手で入れるのは続かないので計算で出す。ハッピーマンデー、春分・秋分、
+   振替休日、国民の休日（祝日に挟まれた平日）まで含める。
+   ========================================================================= */
+function nthMonday(y, m, n){
+  const first = new Date(y, m-1, 1).getDay();      // 0=日
+  return new Date(y, m-1, 1 + ((1 - first + 7) % 7) + (n-1)*7);
+}
+/** 春分・秋分の日（1980〜2099年で有効な近似式） */
+function equinoxDay(y, spring){
+  const base = spring ? 20.8431 : 23.2488;
+  return Math.floor(base + 0.242194*(y-1980) - Math.floor((y-1980)/4));
+}
+function jpHolidays(y){
+  const H = {};
+  const add = (mo, da, nm) => { H[iso(new Date(y, mo-1, da))] = nm; };
+  add(1,1,'元日');
+  H[iso(nthMonday(y,1,2))] = '成人の日';
+  add(2,11,'建国記念の日');
+  add(2,23,'天皇誕生日');
+  H[iso(new Date(y, 2, equinoxDay(y,true)))]  = '春分の日';
+  add(4,29,'昭和の日');
+  add(5,3,'憲法記念日');
+  add(5,4,'みどりの日');
+  add(5,5,'こどもの日');
+  H[iso(nthMonday(y,7,3))] = '海の日';
+  add(8,11,'山の日');
+  H[iso(nthMonday(y,9,3))] = '敬老の日';
+  H[iso(new Date(y, 8, equinoxDay(y,false)))] = '秋分の日';
+  H[iso(nthMonday(y,10,2))] = 'スポーツの日';
+  add(11,3,'文化の日');
+  add(11,23,'勤労感謝の日');
+
+  // 振替休日：日曜と重なったら、次の祝日でない日へ送る
+  Object.keys(H).slice().sort().forEach(k=>{
+    if(parseISO(k).getDay() !== 0) return;
+    let n = addDays(parseISO(k), 1);
+    while(H[iso(n)]) n = addDays(n, 1);
+    H[iso(n)] = '振替休日';
+  });
+  // 国民の休日：祝日に挟まれた平日
+  Object.keys(H).slice().sort().forEach(k=>{
+    const d = parseISO(k), mid = addDays(d,1), nx = addDays(d,2);
+    if(H[iso(nx)] && !H[iso(mid)] && mid.getDay()!==0) H[iso(mid)] = '国民の休日';
+  });
+  return H;
+}
+const _holCache = {};
+function holidayName(isoDate){
+  const y = +String(isoDate).slice(0,4);
+  if(!y) return '';
+  if(!_holCache[y]) _holCache[y] = jpHolidays(y);
+  return _holCache[y][isoDate] || '';
+}
+
+/** 祝日の日を「作らない」にする。まだ何も書いていない日だけ触る */
+function applyHolidays(w){
+  if(S.settings && S.settings.skipHolidays === false) return;
+  DAYS.forEach((d,i)=>{
+    const day = w.days[d.k];
+    if(!day) return;
+    const nm = holidayName(iso(addDays(parseISO(w.start), i)));
+    if(nm){
+      if(day.mode==='cook' && day.status==='pending' && !day.mainId && !day.plainName){
+        day.mode = 'hol'; day.status = 'other'; day.holiday = nm;
+      }else if(day.mode==='hol'){ day.holiday = nm; }
+    }else if(day.mode==='hol' && day.holiday){
+      // 祝日でなくなった日（データのずれ）は作る日に戻す
+      day.mode = 'cook'; day.status = 'pending'; day.holiday = '';
+    }
+  });
+}
 const STATUS = {pending:'未承認', approved:'承認', other:'その他'};
 
 /* 土12:00 提案 → 日08:00 承認締切 → 日09:00 買い物 → 月〜金 調理 */
@@ -546,7 +620,13 @@ const KEY = 'kondate.v1';
 let S = null, viewWeek = null, tab = 'week';
 
 /* mainId … 登録済みレシピ / plainName … まだレシピになっていない料理名（直接入力） */
-function blankDay(){ return {mode:'cook', status:'pending', mainId:null, plainName:'', sideIds:[], rating:null, cooked:false}; }
+function blankDay(){ return {mode:'cook', status:'pending', mainId:null, plainName:'', sideIds:[], rating:null, cooked:false, holiday:''}; }
+/** 作らない日の表示ラベル */
+function offLabel(day){
+  if(day.mode==='hol') return '🎌 '+(day.holiday || '作らない');
+  if(day.mode==='out') return '🍜 外食';
+  return '🍱 残り物';
+}
 /** その日の料理名（レシピでも直接入力でも） */
 function dayDishName(day){
   const r = day.mainId ? recipeById(day.mainId) : null;
@@ -563,7 +643,8 @@ function defaultSettings(){
       tue:{type:'free', ids:[]}, wed:{type:'free', ids:[]}, thu:{type:'free', ids:[]},
       fri:{type:'pool', ids:[]}
     },
-    sidesPerDay: 1
+    sidesPerDay: 1,
+    skipHolidays: true
   };
 }
 function defaultState(){
@@ -655,6 +736,7 @@ function normalize(){
       if(e.at===undefined) e.at = w.start;
     });
     DAYS.forEach(d=>{ w.days[d.k] = Object.assign(blankDay(), w.days[d.k]||{}); });
+    applyHolidays(w);
   });
   // 古い週は落とす（両端末で同じ基準になるよう日付で切る）。
   // 買い物の記録を貯めるのが目的なので、1年ぶん以上は残す
@@ -679,7 +761,10 @@ function save(){
   try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){ toast('保存できませんでした'); }
   schedulePush();
 }
-function getWeek(start){ if(!S.weeks[start]) S.weeks[start] = blankWeek(start); return S.weeks[start]; }
+function getWeek(start){
+  if(!S.weeks[start]){ S.weeks[start] = blankWeek(start); applyHolidays(S.weeks[start]); }
+  return S.weeks[start];
+}
 const W = () => getWeek(viewWeek);
 const recipeById = id => S.recipes.find(r=>r.id===id) || null;
 const dayRule = k => (S.settings.dayRules||{})[k] || {type:'free', ids:[]};
@@ -1752,7 +1837,8 @@ function renderPhase(){
     const day = (idx>=0 && idx<=4) ? W().days[DAYS[idx].k] : null;
     const r = day && day.mode==='cook' ? recipeById(day.mainId) : null;
     dot='var(--p)';
-    txt = day ? (day.mode!=='cook' ? '今日は'+MODES[day.mode] : (r ? '今日：'+r.name : '今日の献立は未設定'))
+    txt = day ? (day.mode!=='cook' ? '今日は'+(day.mode==='hol' ? (day.holiday||'作らない日') : MODES[day.mode])
+                 : (r ? '今日：'+r.name : (day.plainName ? '今日：'+day.plainName : '今日の献立は未設定')))
               : '今週の献立';
     sub = '月〜金';
   }
@@ -1781,7 +1867,8 @@ function renderWeek(){
     const dk = DAYS[todayIdx].k, day = wk.days[dk], r = day.mode==='cook' ? recipeById(day.mainId) : null;
     if(day.mode!=='cook'){
       h += '<div class="hero rest"><div class="lb2">TODAY</div><div class="nm">'+
-           (day.mode==='out'?'🍜 今日は外食':'🍱 今日は残り物')+'</div></div>';
+           esc(day.mode==='hol' ? ('🎌 今日は'+(day.holiday||'作らない日'))
+             : (day.mode==='out'?'🍜 今日は外食':'🍱 今日は残り物'))+'</div></div>';
     }else if(r){
       const sides = (day.sideIds||[]).map(recipeById).filter(Boolean);
       h += '<div class="hero"><div class="lb2">TODAY</div><div class="nm">'+esc(r.name)+'</div>'+
@@ -1872,7 +1959,9 @@ function renderWeek(){
         h += '<div class="dname none" data-pick="'+d.k+'">＋ タップして料理を決める</div>';
       }
     }else{
-      h += '<div class="dname none">'+(day.mode==='out'?'🍜 外食':'🍱 残り物')+'（買い物リストに出ません）</div>';
+      h += '<div class="dname none">'+esc(offLabel(day))+
+           '<span style="font-weight:600;font-size:13px">（買い物リストに出ません）</span></div>'+
+           (isPast ? '' : '<div class="sides"><button class="sideadd" data-cook="'+d.k+'">＋ この日は作ることにする</button></div>');
     }
 
     // 承認・差戻し・その他
@@ -1926,6 +2015,11 @@ function renderWeek(){
   };
   el.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>openRecipeView(b.dataset.view));
   el.querySelectorAll('[data-adddish]').forEach(b=>b.onclick=()=>openAddByDish(b.dataset.adddish));
+  el.querySelectorAll('[data-cook]').forEach(b=>b.onclick=()=>{
+    const day = wk.days[b.dataset.cook];
+    day.mode='cook'; day.status='pending'; day.holiday='';
+    save(); render(); openPicker(b.dataset.cook,'main');
+  });
   el.querySelectorAll('[data-appr]').forEach(b=>b.onclick=()=>approveDay(b.dataset.appr));
   el.querySelectorAll('[data-rej]').forEach(b=>b.onclick=()=>rejectDay(b.dataset.rej));
   el.querySelectorAll('[data-oth]').forEach(b=>b.onclick=()=>openOther(b.dataset.oth));
@@ -2016,7 +2110,7 @@ function renderShop(){
       const day = wk.days[d.k], nm = dayDishName(day);
       const n = nm ? dishMemoIngs(nm, wk).length : 0;
       const body = day.mode!=='cook'
-        ? '<span class="tiny">'+MODES[day.mode]+'</span>'
+        ? '<span class="tiny">'+esc(offLabel(day))+'</span>'
         : (nm ? esc(nm)+(day.mainId?'':' <span class="pill a">未登録</span>')
               : '<span class="tiny">未定 — 献立タブで決める</span>');
       return '<div class="dishline" data-menu="'+d.k+'">'+
@@ -2122,7 +2216,7 @@ function listAsText(){
   let out = '🛒 買い物リスト '+md(ws)+'〜'+md(addDays(ws,4))+'\n\n【今週の献立】\n';
   DAYS.forEach(d=>{
     const day = wk.days[d.k];
-    if(day.mode!=='cook'){ out += d.w+'：'+MODES[day.mode]+'\n'; return; }
+    if(day.mode!=='cook'){ out += d.w+'：'+(day.mode==='hol' ? (day.holiday||'作らない') : MODES[day.mode])+'\n'; return; }
     const nm = dayDishName(day);
     const sides = (day.sideIds||[]).map(recipeById).filter(Boolean);
     out += d.w+'：'+(nm||'未定')+(sides.length?'（＋'+sides.map(x=>x.name).join('、')+'）':'')+
@@ -2695,11 +2789,18 @@ function openOther(dk){
     '外食・残り物にすると、その日の食材は買い物リストから外れます。</div>'+
     '<button class="btn sub full" style="margin-bottom:9px" id="otOut">🍜 外食にする</button>'+
     '<button class="btn sub full" style="margin-bottom:9px" id="otLeft">🍱 残り物にする</button>'+
+    '<button class="btn sub full" style="margin-bottom:9px" id="otNone">🎌 作らない（祝日・外出など）</button>'+
     '<button class="btn sub full" style="margin-bottom:9px" id="otPick">📖 自分で主菜を選ぶ</button>'+
     '<button class="btn sub full" id="otBack">↩︎ 提案に戻す（未承認）</button><div style="height:10px"></div>';
   sheet('その他', body, '<button class="btn" id="otClose">閉じる</button>');
   $('#otOut').onclick  = ()=>{ setOther(dk,'out');  closeSheet(); };
   $('#otLeft').onclick = ()=>{ setOther(dk,'left'); closeSheet(); };
+  $('#otNone').onclick = ()=>{
+    const day = W().days[dk];
+    setOther(dk,'hol');
+    day.holiday = holidayName(iso(dayDate(viewWeek, dk))) || '';
+    save(); closeSheet(); render();
+  };
   $('#otPick').onclick = ()=>openPicker(dk,'main');
   $('#otBack').onclick = ()=>{
     const day = W().days[dk];
@@ -3075,6 +3176,14 @@ function openSettings(){
     '</div>'+
     '<div class="tiny" style="margin-top:7px">主菜と食材がかぶらないもの、手早くできるものを優先して選びます。'+
     '副菜は「📖 レシピ → 副菜」で足せます。</div>'+
+    '<label class="lb">祝日</label>'+
+    '<div class="seg" id="cfHol">'+
+      '<button data-h="1" class="'+(S.settings.skipHolidays!==false?'on':'')+'">作らない</button>'+
+      '<button data-h="0" class="'+(S.settings.skipHolidays===false?'on':'')+'">ふつうに作る</button>'+
+    '</div>'+
+    '<div class="tiny" style="margin-top:7px">日本の祝日（振替休日・国民の休日を含む）を自動で判定して'+
+    '「作らない」にします。まだ何も書いていない日だけが対象なので、書いたものが消えることはありません。'+
+    '個別に「作る」に戻すこともできます。</div>'+
     '<label class="lb">1週間の流れ</label>'+
     '<div class="tiny" style="line-height:2">'+
       '土曜 '+PLAN_HOUR+':00　来週の献立が提案される（アプリを開いた時点で生成）<br>'+
@@ -3107,6 +3216,11 @@ function openSettings(){
 
   $('#cfClose').onclick = closeSheet;
   $('#shBody').querySelectorAll('[data-rule]').forEach(b=>b.onclick=()=>openDayRule(b.dataset.rule));
+  $('#shBody').querySelectorAll('#cfHol button').forEach(b=>b.onclick=()=>{
+    S.settings.skipHolidays = b.dataset.h==='1';
+    if(S.settings.skipHolidays) Object.values(S.weeks).forEach(applyHolidays);
+    save(); render(); openSettings();
+  });
   $('#shBody').querySelectorAll('#cfSides button').forEach(b=>b.onclick=()=>{
     S.settings.sidesPerDay = +b.dataset.n; save();
     $('#shBody').querySelectorAll('#cfSides button').forEach(x=>x.classList.toggle('on', +x.dataset.n===S.settings.sidesPerDay));
