@@ -1980,6 +1980,7 @@ function renderWeek(){
              '<button class="rej" data-rej="'+d.k+'">差戻し</button>'+
              '<button class="'+(day.status==='other'?'on':'')+'" data-oth="'+d.k+'">その他</button>'+
            '</div>'+
+           (day.mode==='cook' ? '<button data-pick="'+d.k+'" title="料理を変える">✏️</button>' : '')+
            (day.mode==='cook' && r ? '<button data-view="'+r.id+'" title="作り方">📖</button>' : '')+
            '</div>';
     }else if(day.mode==='cook' && r){
@@ -2428,13 +2429,19 @@ function openPicker(dk, kind, sideIdx){
   const list = pool.slice().sort((a,b)=>a.name.localeCompare(b.name,'ja'));
   const w = DAYS.find(d=>d.k===dk).w;
   const free = (kind!=='side')
-    ? '<label class="lb">料理名を書く</label>'+
-      '<div class="addrow" style="background:transparent;border:none;padding:0">'+
-        '<input id="pkFree" value="'+esc(day.plainName||'')+'" placeholder="例）麻婆春雨" enterkeyhint="done">'+
-        '<button class="btn sm" id="pkFreeGo">決定</button></div>'+
-      '<div class="tiny" style="margin-top:6px">レシピが未登録でもそのまま書けます。'+
-        '買い物メモをこの料理に紐づけていけば、あとで記録からレシピに起こせます。</div>'+
-      (list.length ? '<label class="lb">登録済みから選ぶ</label>' : '')
+    ? '<label class="lb">新しいメニューを書く</label>'+
+      '<input class="f" id="pkFree" value="'+esc(day.plainName||'')+'" '+
+        'placeholder="例）鶏の照り焼き" enterkeyhint="done">'+
+      '<div style="display:flex;gap:8px;margin-top:9px">'+
+        '<button class="btn" style="flex:1" id="pkFreeGo">この日に置く</button>'+
+        '<button class="btn sub" style="flex:1" id="pkFreeRec">レシピとして登録</button>'+
+      '</div>'+
+      '<div class="tiny" style="margin-top:7px;line-height:1.8">'+
+        '<b>この日に置く</b> … 料理名だけ。買い物メモをこの料理に紐づけていけば、'+
+          'あとで記録からレシピに起こせます。<br>'+
+        '<b>レシピとして登録</b> … 続けて食材や作り方（URLの貼り付けも可）まで入れられます。'+
+          '保存すると、この日に自動で入ります。</div>'+
+      (list.length ? '<label class="lb">登録ずみから選ぶ</label>' : '')
     : '<div class="tiny" style="margin:12px 0 2px">'+w+'曜日の副菜を選んでください。</div>';
   const body = free +
     '<div class="pickgrid">'+ list.map(r=>{
@@ -2454,20 +2461,33 @@ function openPicker(dk, kind, sideIdx){
     }else{
       day.mainId = b.dataset.r; day.plainName = ''; day.mode='cook';
       if(day.status==='other') day.status='pending';
+      if(holidayName(iso(dayDate(wk.start, dk)))) day.cookAnyway = true;
     }
     save(); closeSheet(); render();
   });
   const fg = $('#pkFreeGo');
   if(fg){
-    const commit = ()=>{
+    const setPlain = ()=>{
       const v = $('#pkFree').value.trim();
-      if(!v){ toast('料理名を入れてください'); return; }
+      if(!v){ toast('料理名を入れてください'); return null; }
       day.plainName = v; day.mainId = null; day.mode = 'cook';
       if(day.status==='other') day.status = 'pending';
-      save(); closeSheet(); render();
+      // 祝日の日に置いたなら「作る」と決めた扱いにする（開き直しで戻らないように）
+      if(holidayName(iso(dayDate(wk.start, dk)))) day.cookAnyway = true;
+      return v;
     };
+    const commit = ()=>{ if(setPlain()!==null){ save(); closeSheet(); render(); } };
     fg.onclick = commit;
     $('#pkFree').onkeydown = e => { if(e.key==='Enter'){ e.preventDefault(); commit(); } };
+    $('#pkFreeRec').onclick = ()=>{
+      const v = setPlain();
+      if(v===null) return;
+      save();
+      // 保存時に「同名の plainName の日」へ自動で紐づくので、この日に入る
+      draft = { id:null, kind:'main', day:null, title:v, minutes:null,
+                steps:'', url:'', protein:'other', ings:[], seasonings:[] };
+      openRecipeForm('レシピとして登録', false);
+    };
   }
   $('#pkClear').onclick = ()=>{
     if(kind==='side'){ if(sideIdx>=0) day.sideIds.splice(sideIdx,1); else day.sideIds=[]; }
