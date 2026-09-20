@@ -1422,28 +1422,35 @@ function reservedMainIds(){
   });
   return set;
 }
-/** このレシピが割り当てられている曜日（無ければ null） */
-function assignedDayOf(rid){
-  for(const d of DAYS){
-    const rule = dayRule(d.k);
-    if((rule.type==='rotate' || rule.type==='pool') && (rule.ids||[]).indexOf(rid)>=0) return d.k;
-  }
-  return null;
-}
-/** レシピの曜日割り当てを付け替える。dayK=null なら「おまかせ（気分）」に戻す。
-    割り当て先の曜日が「気分」ルールだった場合は「定番から選ぶ」に切り替える */
-function assignRecipeToDay(rid, dayK){
+/** このレシピが割り当てられている曜日（複数可） */
+function assignedDaysOf(rid){
+  const out = [];
   DAYS.forEach(d=>{
-    const rule = S.settings.dayRules[d.k];
-    if(rule && rule.ids){
-      rule.ids = rule.ids.filter(id=>id!==rid);
-      if(rule.type==='rotate' && (rule.next||0) >= rule.ids.length) rule.next = 0;
+    const rule = dayRule(d.k);
+    if((rule.type==='rotate' || rule.type==='pool') && (rule.ids||[]).indexOf(rid)>=0) out.push(d.k);
+  });
+  return out;
+}
+const assignedDayOf = rid => assignedDaysOf(rid)[0] || null;
+/** レシピの曜日割り当てを付け替える。dayKeys が空なら「おまかせ（気分）」に戻す。
+    割り当て先が「気分」ルールだった曜日は「定番から選ぶ」に切り替える */
+function assignRecipeToDays(rid, dayKeys){
+  const want = {}; (dayKeys||[]).forEach(k=>{ want[k] = 1; });
+  DAYS.forEach(d=>{
+    let rule = S.settings.dayRules[d.k];
+    if(!rule) rule = S.settings.dayRules[d.k] = {type:'free', ids:[]};
+    rule.ids = rule.ids || [];
+    const has = rule.ids.indexOf(rid) >= 0;
+    if(want[d.k]){
+      if(rule.type === 'free') S.settings.dayRules[d.k] = {type:'pool', ids:[rid]};
+      else if(!has) rule.ids.push(rid);
+    }else if(has){
+      rule.ids = rule.ids.filter(id => id !== rid);
+      if(rule.type === 'rotate' && (rule.next||0) >= rule.ids.length) rule.next = 0;
+      // 中身が空になったルールは「気分」に戻す
+      if(!rule.ids.length) S.settings.dayRules[d.k] = {type:'free', ids:[]};
     }
   });
-  if(!dayK) return;
-  const rule = S.settings.dayRules[dayK];
-  if(!rule || rule.type==='free') S.settings.dayRules[dayK] = {type:'pool', ids:[rid]};
-  else if(rule.ids.indexOf(rid)<0) rule.ids.push(rid);
 }
 
 /** 気分の日に出せる主菜（＝ルール未割り当てのもの）。1品も無ければ全体にフォールバック */
@@ -2566,7 +2573,7 @@ function openPicker(dk, kind, sideIdx){
       if(v===null) return;
       save();
       // 保存時に「同名の plainName の日」へ自動で紐づくので、この日に入る
-      draft = { id:null, kind:'main', day:null, title:v, minutes:null,
+      draft = { id:null, kind:'main', days:[], title:v, minutes:null,
                 steps:'', url:'', protein:'other', ings:[], seasonings:[] };
       openRecipeForm('レシピとして登録', false);
     };
@@ -2758,7 +2765,7 @@ function makeRecipeFromDish(dishName){
   names.forEach(n=>{ const c = classify(n); if(c.seasoning) seas.push(n); else ings.push({name:n, cat:c.cat}); });
   const ex = S.recipes.find(r=>!r.archived && r.name===dishName);
   draft = {
-    id: ex?ex.id:null, kind: ex?(ex.kind||'main'):'main', day: ex?assignedDayOf(ex.id):null,
+    id: ex?ex.id:null, kind: ex?(ex.kind||'main'):'main', days: ex?assignedDaysOf(ex.id):[],
     title: dishName, minutes: ex?ex.minutes:null,
     steps: ex?(ex.steps||''):'', url: ex?(ex.url||''):'',
     ings, seasonings: seas
@@ -2937,7 +2944,7 @@ function openPaste(){
   $('#pxCancel').onclick = closeSheet;
   const applyParsed = p => {
     draft = {
-      id:null, kind:'main', day:null, title:p.title, minutes:p.minutes,
+      id:null, kind:'main', days:[], title:p.title, minutes:p.minutes,
       steps: p.steps || '', url: p.url || '',
       ings: p.ings.map(i=>({name:i.name, cat:i.cat})),
       seasonings: p.seasonings.slice()
@@ -2950,7 +2957,7 @@ function openPaste(){
     if(ex){
       draft.id = ex.id;
       draft.kind = ex.kind || 'main';
-      draft.day = assignedDayOf(ex.id);
+      draft.days = assignedDaysOf(ex.id);
       if(!draft.steps && ex.steps) draft.steps = ex.steps;
       if(!draft.url && ex.url) draft.url = ex.url;
       if(!draft.minutes && ex.minutes) draft.minutes = ex.minutes;
@@ -2986,14 +2993,15 @@ function openRecipeEdit(id){
   const r = id ? recipeById(id) : null;
   draft = r ? {
     id:r.id, kind:r.kind||'main', title:r.name, minutes:r.minutes, protein:r.protein,
-    day:assignedDayOf(r.id), steps:r.steps||'', url:r.url||'',
+    days:assignedDaysOf(r.id), steps:r.steps||'', url:r.url||'',
     ings:r.ings.map(i=>({name:i.name,cat:i.cat})), seasonings:(r.seasonings||[]).slice()
   } : { id:null, kind:(recipeFilter==='side'?'side':'main'), title:'', minutes:null,
-        protein:'other', day:null, steps:'', url:'', ings:[], seasonings:[] };
+        protein:'other', days:[], steps:'', url:'', ings:[], seasonings:[] };
   openRecipeForm(r ? 'レシピを編集' : 'レシピを追加', false);
 }
 
 function openRecipeForm(title, fromPaste){
+  if(!Array.isArray(draft.days)) draft.days = draft.day ? [draft.day] : [];
   const body =
     (fromPaste ? '<div class="note" style="background:var(--g-l);border-color:#c9e8d6;color:#1f6b43">'+
       '<b>'+draft.ings.length+'品目</b>の食材を取り込みました'+
@@ -3008,10 +3016,10 @@ function openRecipeForm(title, fromPaste){
       '<button data-k="side" class="'+(draft.kind==='side'?'on':'')+'">🥗 副菜</button>'+
     '</div>'+
     '<div id="rfDayWrap"'+(draft.kind==='side'?' hidden':'')+'>'+
-      '<label class="lb">出す曜日</label>'+
+      '<label class="lb">出す曜日　<span style="font-weight:600;color:var(--sub2)">複数えらべます</span></label>'+
       '<div class="seg" id="rfDay">'+
-        '<button data-d="" class="'+(!draft.day?'on':'')+'">おまかせ</button>'+
-        DAYS.map(d=>'<button data-d="'+d.k+'" class="'+(draft.day===d.k?'on':'')+'">'+d.w+'</button>').join('')+
+        '<button data-d="" class="'+(!draft.days.length?'on':'')+'">おまかせ</button>'+
+        DAYS.map(d=>'<button data-d="'+d.k+'" class="'+(draft.days.indexOf(d.k)>=0?'on':'')+'">'+d.w+'</button>').join('')+
       '</div>'+
       '<div class="tiny" style="margin-top:6px" id="rfDayHint"></div>'+
     '</div>'+
@@ -3045,18 +3053,33 @@ function openRecipeForm(title, fromPaste){
   });
   function dayHint(){
     const el = $('#rfDayHint'); if(!el) return;
-    if(!draft.day){ el.textContent = '「気分」の日（ルールのない曜日）の候補になります。'; return; }
-    const w = DAYS.find(d=>d.k===draft.day).w;
-    const rule = dayRule(draft.day);
-    const already = (rule.ids||[]).filter(id=>id!==draft.id).map(id=>(recipeById(id)||{}).name).filter(Boolean);
-    el.textContent = w+'曜日の専用枠に入ります（他の曜日には出ません）。'+
-      (rule.type==='rotate' ? 'ローテーションの最後に追加：'+already.concat(['これ']).join(' → ')
-       : already.length ? '定番の仲間：'+already.join('、') : 'この曜日の定番になります。');
+    const ds = draft.days || [];
+    if(!ds.length){ el.textContent = '「気分」の日（ルールのない曜日）の候補になります。'; return; }
+    const ws = ds.map(k=>DAYS.find(d=>d.k===k).w).join('・');
+    let h = '<b>'+ws+'曜</b>の専用枠に入ります（ほかの曜日には出ません）。';
+    ds.forEach(k=>{
+      const w = DAYS.find(d=>d.k===k).w, rule = dayRule(k);
+      const others = (rule.ids||[]).filter(id=>id!==draft.id)
+        .map(id=>(recipeById(id)||{}).name).filter(Boolean);
+      if(rule.type==='rotate') h += '<br>'+w+'：ローテーション '+others.concat(['これ']).map(esc).join(' → ');
+      else if(others.length)   h += '<br>'+w+'：定番の仲間 '+others.map(esc).join('、');
+    });
+    el.innerHTML = h;
   }
   dayHint();
   $('#shBody').querySelectorAll('#rfDay button').forEach(b=>b.onclick=()=>{
-    draft.day = b.dataset.d || null;
-    $('#shBody').querySelectorAll('#rfDay button').forEach(x=>x.classList.toggle('on', (x.dataset.d||null)===draft.day));
+    const k = b.dataset.d;
+    draft.days = draft.days || [];
+    if(!k){ draft.days = []; }
+    else{
+      const i = draft.days.indexOf(k);
+      if(i>=0) draft.days.splice(i,1); else draft.days.push(k);
+      draft.days.sort((a,c)=>DAYS.findIndex(x=>x.k===a)-DAYS.findIndex(x=>x.k===c));
+    }
+    $('#shBody').querySelectorAll('#rfDay button').forEach(x=>{
+      const kk = x.dataset.d;
+      x.classList.toggle('on', kk ? draft.days.indexOf(kk)>=0 : draft.days.length===0);
+    });
     dayHint();
   });
   $('#shBody').querySelectorAll('#rfProt button').forEach(b=>b.onclick=()=>{
@@ -3136,7 +3159,7 @@ function saveRecipeDraft(){
     S.recipes.push(Object.assign({id:rid, lastCooked:null, cookCount:0,
       ratingSum:0, ratingCount:0, archived:false}, payload));
   }
-  assignRecipeToDay(rid, payload.kind==='side' ? null : (draft.day||null));
+  assignRecipeToDays(rid, payload.kind==='side' ? [] : (draft.days||[]));
   // 「まだレシピになっていない料理名」で置いてある日を、できたレシピに差し替える
   let linked = 0;
   Object.values(S.weeks).forEach(w=>DAYS.forEach(d=>{
