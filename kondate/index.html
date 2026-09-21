@@ -203,6 +203,27 @@ label.lb{display:block;font-size:12px;font-weight:800;color:var(--sub);margin:14
 .chip .x{color:var(--sub2);font-size:15px;line-height:1;margin-left:1px}
 .chip.on{background:var(--p);border-color:var(--p);color:#fff}
 .chip.off{opacity:.45;text-decoration:line-through}
+.calhd{display:flex;align-items:center;gap:10px;margin:12px 0 10px}
+.calhd .m{flex:1;text-align:center;font-size:16px;font-weight:800}
+.calhd button{border:1.5px solid var(--line);border-radius:9px;padding:8px 13px;font-size:14px;font-weight:800;background:#fff}
+.calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.calgrid .wd{text-align:center;font-size:11px;font-weight:800;color:var(--sub2);padding:3px 0}
+.calgrid .wd.s0{color:#d64545}
+.calgrid .wd.s6{color:#3a72c2}
+.cal{position:relative;height:42px;border:2px solid transparent;border-radius:10px;background:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:14.5px;font-weight:700;padding:0}
+.cal.empty{background:transparent;pointer-events:none}
+.cal.sun{color:#d64545}
+.cal.sat{color:#3a72c2}
+.cal.hol{color:#d64545;background:#fdeceb}
+.cal.today{border-color:var(--p)}
+.cal.sel{background:var(--p);color:#fff!important}
+.cal .dot{position:absolute;bottom:5px;left:50%;transform:translateX(-50%);
+  width:5px;height:5px;border-radius:99px;background:var(--b)}
+.cal.sel .dot{background:#fff}
+.evline{background:var(--b-l);color:var(--b);border-radius:8px;padding:6px 9px;font-size:12.5px;
+  font-weight:700;margin-bottom:7px;line-height:1.55}
+.evline .who{opacity:.65;font-weight:600;font-size:11.5px}
 .addbox{background:#fff;border:1.5px solid var(--p);border-radius:14px;padding:13px;margin:12px 0}
 .addbox .ttl{font-size:14.5px;font-weight:800;margin-bottom:8px}
 .addbox .lb4{font-size:12px;font-weight:800;color:var(--sub);margin:12px 0 6px}
@@ -279,6 +300,7 @@ label.lb{display:block;font-size:12px;font-weight:800;color:var(--sub);margin:14
   <div class="hrow">
     <div class="logo">チャワン<small>WEEKLY MEAL &amp; SHOPPING</small></div>
     <div class="hsp"></div>
+    <button class="hbtn" id="btnCal">📅</button>
     <button class="hbtn" id="btnSync" hidden>☁️</button>
     <button class="hbtn" id="btnSet">⚙️</button>
   </div>
@@ -672,7 +694,7 @@ function defaultState(){
     staples: STAPLE_PRESET.map(([nm,cat,cyc]) => ({
       id:uid(), name:nm, cat, cycleDays:cyc, lastBought:null, history:[], snoozeUntil:null, enabled:true, needBuy:false
     })),
-    weeks: {}, leftovers: [], ingNotes: {}, seeded: {}, settings: defaultSettings()
+    weeks: {}, leftovers: [], ingNotes: {}, events: {}, seeded: {}, settings: defaultSettings()
   };
 }
 
@@ -736,6 +758,7 @@ function normalize(){
   S.weeks    = S.weeks    || {};
   S.leftovers= S.leftovers|| [];
   S.ingNotes = S.ingNotes || {};
+  S.events   = S.events   || {};
   S.seeded   = S.seeded   || {};
   S.settings = Object.assign(defaultSettings(), S.settings||{});
   S.settings.dayRules = Object.assign(defaultSettings().dayRules, S.settings.dayRules||{});
@@ -1903,6 +1926,7 @@ function renderWeek(){
   // --- ヒーロー ---
   if(ph==='cook' && todayIdx>=0 && todayIdx<=4){
     const dk = DAYS[todayIdx].k, day = wk.days[dk], r = day.mode==='cook' ? recipeById(day.mainId) : null;
+    h += evLineHTML(iso(today()));
     if(day.mode!=='cook'){
       h += '<div class="hero rest"><div class="lb2">TODAY</div><div class="nm">'+
            esc(day.mode==='hol' ? ('🎌 今日は'+(day.holiday||'作らない日'))
@@ -1964,9 +1988,9 @@ function renderWeek(){
     const stl = ST_STYLE[day.status] || ST_STYLE.pending;
     const rule = dayRule(d.k);
     h += '<div class="day'+(isToday?' today':'')+(day.status==='approved'?' appr':'')+(day.status==='other'?' other':'')+'">'+
-         '<div class="dcol"><div class="w">'+d.w+'</div><div class="d">'+md(date)+'</div>'+
+         '<div class="dcol" data-cal="'+iso(date)+'"><div class="w">'+d.w+'</div><div class="d">'+md(date)+'</div>'+
          '<div class="st" style="background:'+stl.bg+';color:'+stl.fg+'">'+stl.nm+'</div></div>'+
-         '<div class="dbody">';
+         '<div class="dbody">'+ evLineHTML(iso(date));
 
     if(day.mode==='cook'){
       if(r){
@@ -2052,6 +2076,7 @@ function renderWeek(){
     DAYS.forEach(d=>{ wk.days[d.k] = blankDay(); });
     wk.generatedAt = null; save(); render();
   };
+  el.querySelectorAll('[data-cal]').forEach(b=>b.onclick=()=>openCalendar(b.dataset.cal));
   el.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>openRecipeView(b.dataset.view));
   el.querySelectorAll('[data-adddish]').forEach(b=>b.onclick=()=>openAddByDish(b.dataset.adddish));
   el.querySelectorAll('[data-cook]').forEach(b=>b.onclick=()=>{
@@ -2164,9 +2189,13 @@ function renderShop(){
         ? '<span class="tiny">'+esc(offLabel(day))+'</span>'
         : (nm ? esc(nm)+(day.mainId?'':' <span class="pill a">未登録</span>')
               : '<span class="tiny">未定 — 献立タブで決める</span>');
+      const ds = iso(addDays(parseISO(wk.start), DAYS.findIndex(x=>x.k===d.k)));
+      const evs = eventsOn(ds);
       return '<div class="dishline" data-menu="'+d.k+'">'+
         '<div class="w2" style="color:var(--p-d)">'+d.w+'</div>'+
-        '<div style="flex:1;min-width:0;font-size:14.5px;font-weight:700">'+body+'</div>'+
+        '<div style="flex:1;min-width:0"><div style="font-size:14.5px;font-weight:700">'+body+'</div>'+
+        (evs.length?'<div class="tiny" style="color:var(--b)">📅 '+
+          evs.map(e=>esc(e.text)).join('・')+'</div>':'')+'</div>'+
         (nm && day.mode==='cook'
           ? '<span class="pill'+(n?' g':'')+'">メモ'+n+'</span><div style="color:#c3c7cd;font-size:17px">＋</div>'
           : '<div style="color:#c3c7cd;font-size:17px">›</div>')+
@@ -2871,6 +2900,105 @@ function renderLog(){
   el.querySelectorAll('[data-mk]').forEach(b=>b.onclick=()=>makeRecipeFromDish(b.dataset.mk));
 }
 
+/* =========================================================================
+   予定（カレンダー）
+   「9/29 おじ夜仕事」のように書いておくと、その日の献立カードに出る。
+   ========================================================================= */
+const eventsOn = d => (S.events && S.events[d]) ? S.events[d] : [];
+function addEvent(d, text){
+  const v = String(text||'').trim(); if(!v) return null;
+  S.events = S.events || {};
+  S.events[d] = S.events[d] || [];
+  const e = {id:uid(), text:v, by:myName||'', at:iso(today())};
+  S.events[d].push(e);
+  return e;
+}
+function removeEvent(d, id){
+  if(!S.events || !S.events[d]) return;
+  S.events[d] = S.events[d].filter(x=>x.id!==id);
+  if(!S.events[d].length) delete S.events[d];
+}
+const evLineHTML = ds => {
+  const evs = eventsOn(ds);
+  if(!evs.length) return '';
+  return '<div class="evline" data-cal="'+ds+'">'+evs.map(e=>'\ud83d\udcc5 '+esc(e.text)+
+    (e.by?' <span class="who">'+esc(e.by)+'</span>':'')).join('\u3000\uff0f\u3000')+'</div>';
+};
+
+let calMonth = null;
+function openCalendar(preset){
+  let sel = preset || iso(today());
+  calMonth = new Date(parseISO(sel).getFullYear(), parseISO(sel).getMonth(), 1);
+
+  function body(){
+    const y = calMonth.getFullYear(), m = calMonth.getMonth();
+    const first = new Date(y, m, 1).getDay();
+    const dim = new Date(y, m+1, 0).getDate();
+    const cells = [];
+    for(let i=0;i<first;i++) cells.push(null);
+    for(let d=1;d<=dim;d++) cells.push(d);
+    while(cells.length % 7) cells.push(null);
+    const tIso = iso(today());
+
+    let h = '<div class="calhd"><button data-mv="-1">\u2039</button>'+
+      '<div class="m">'+y+'\u5e74'+(m+1)+'\u6708</div><button data-mv="1">\u203a</button></div>'+
+      '<div class="calgrid">'+
+      ['\u65e5','\u6708','\u706b','\u6c34','\u6728','\u91d1','\u571f']
+        .map((w,i)=>'<div class="wd s'+i+'">'+w+'</div>').join('')+
+      cells.map(d=>{
+        if(!d) return '<div class="cal empty"></div>';
+        const ds = iso(new Date(y,m,d)), wd = new Date(y,m,d).getDay();
+        const cls = ['cal'];
+        if(wd===0) cls.push('sun'); else if(wd===6) cls.push('sat');
+        if(holidayName(ds)) cls.push('hol');
+        if(ds===tIso) cls.push('today');
+        if(ds===sel) cls.push('sel');
+        return '<button class="'+cls.join(' ')+'" data-d="'+ds+'">'+d+
+          (eventsOn(ds).length?'<span class="dot"></span>':'')+'</button>';
+      }).join('')+'</div>';
+
+    const sd = parseISO(sel);
+    const W7 = ['\u65e5','\u6708','\u706b','\u6c34','\u6728','\u91d1','\u571f'][sd.getDay()];
+    const hn = holidayName(sel);
+    h += '<div class="sec">'+(sd.getMonth()+1)+'/'+sd.getDate()+'('+W7+')'+
+      (hn?' <span class="pill r">'+hn+'</span>':'')+' \u306e\u4e88\u5b9a<span class="line"></span></div>'+
+      '<div class="card">'+ (eventsOn(sel).length
+        ? eventsOn(sel).map(e=>'<div class="dishline">'+
+            '<div style="flex:1;min-width:0"><div style="font-size:14.5px;font-weight:700">'+esc(e.text)+'</div>'+
+            (e.by?'<div class="tiny">'+esc(e.by)+'</div>':'')+'</div>'+
+            '<button class="rdel" data-rm="'+e.id+'">\u2715</button></div>').join('')
+        : '<div class="empty" style="padding:20px">\u307e\u3060\u3042\u308a\u307e\u305b\u3093</div>')+
+      '<div class="addrow"><input id="evInput" placeholder="\u4f8b\uff09\u304a\u3058 \u591c\u4ed5\u4e8b / \u4fdd\u80b2\u5712\u304a\u3084\u3059\u307f" enterkeyhint="done">'+
+      '<button class="btn sm" id="evAdd">\u8ffd\u52a0</button></div></div>'+
+      '<div class="tiny" style="margin-top:9px">\u66f8\u3044\u305f\u4e88\u5b9a\u306f\u3001\u305d\u306e\u65e5\u306e\u732e\u7acb\u30ab\u30fc\u30c9\u306b\u51fa\u307e\u3059\u3002'+
+      '\u4e8c\u4eba\u3067\u5171\u6709\u3057\u3066\u3044\u308c\u3070\u3001\u76f8\u624b\u306e\u7aef\u672b\u306b\u3082\u51fa\u307e\u3059\u3002</div><div style="height:10px"></div>';
+    return h;
+  }
+  function bind(){
+    $('#shBody').querySelectorAll('[data-mv]').forEach(b=>b.onclick=()=>{
+      calMonth = new Date(calMonth.getFullYear(), calMonth.getMonth()+(+b.dataset.mv), 1);
+      redraw();
+    });
+    $('#shBody').querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{ sel = b.dataset.d; redraw(); });
+    $('#shBody').querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{
+      removeEvent(sel, b.dataset.rm); save(); redraw(); render();
+    });
+    const i = $('#evInput');
+    const add = ()=>{
+      if(!addEvent(sel, i.value)) return;
+      i.value=''; save(); redraw(); render();
+      setTimeout(()=>{ if($('#evInput')) $('#evInput').focus(); },30);
+    };
+    $('#evAdd').onclick = add;
+    i.onkeydown = e => { if(e.key==='Enter'){ e.preventDefault(); add(); } };
+  }
+  function redraw(){ $('#shBody').innerHTML = body(); bind(); }
+
+  sheet('\u4e88\u5b9a', body(), '<button class="btn" id="calClose">\u9589\u3058\u308b</button>');
+  bind();
+  $('#calClose').onclick = closeSheet;
+}
+
 /* ---------- 作り方ビュー ---------- */
 function openRecipeView(id){
   const r = recipeById(id); if(!r) return;
@@ -3481,6 +3609,7 @@ function switchTab(t){
 }
 $$('.tabbar button').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
 $('#btnSet').onclick = openSettings;
+$('#btnCal').onclick = ()=>openCalendar();
 $('#btnSync').onclick = ()=>syncNow({loud:true});
 $('#btnPrevWk').onclick = ()=>{ viewWeek = iso(addDays(parseISO(viewWeek),-7)); getWeek(viewWeek); save(); render(); };
 $('#btnNextWk').onclick = ()=>{ viewWeek = iso(addDays(parseISO(viewWeek), 7)); getWeek(viewWeek); save(); render(); };
