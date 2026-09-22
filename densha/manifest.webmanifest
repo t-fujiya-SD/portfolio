@@ -1,0 +1,16 @@
+{
+  "name": "でんしゃすごろく",
+  "short_name": "でんしゃすごろく",
+  "description": "ほんものの路線・種別・乗り換えで遊ぶ、親子向けの電車すごろく。",
+  "start_url": "/densha/",
+  "scope": "/densha/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1a6fb5",
+  "theme_color": "#1a6fb5",
+  "lang": "ja",
+  "icons": [
+    { "src": "/densha/icon-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "/densha/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
