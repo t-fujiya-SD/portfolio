@@ -135,6 +135,7 @@ function startMission(m) {
     turn: 1, pips: null, rolled: false, coins: 60, stamps: {}, goalIdx: 0,
     freeBoard: true, moves: 0, transfers: 0, gotCards: [], busy: false, over: false
   };
+  MapView.follow = true;
   show('screen-game');
   renderGame();
   speak('しゅっぱつ。' + S[m.from].kana + 'えきから、' + S[m.goals[0]].kana + 'を めざそう。');
@@ -172,6 +173,10 @@ function renderGame() {
   renderStrip();
   renderTransfers();
   renderDock();
+
+  if (!MapView.ready) MapView.init($('g-map'));
+  MapView.render(true);
+  $('m-me').classList.toggle('on', MapView.follow);
 }
 
 function stripIndices(len, i, dir, back, fwd, loop) {
@@ -680,4 +685,15 @@ $('sel-book').onclick = () => { renderBook(); show('screen-book'); };
 $('book-back').onclick = () => show(G ? 'screen-select' : 'screen-title');
 $('g-menu').onclick = () => settings(true);
 $('g-hint').onclick = showHint;
+$('m-in').onclick  = () => { MapView.zoom(1.5);   $('m-me').classList.remove('on'); };
+$('m-out').onclick = () => { MapView.zoom(1 / 1.5); $('m-me').classList.remove('on'); };
+$('m-me').onclick  = () => { MapView.follow = true; MapView.render(true); $('m-me').classList.add('on'); };
+$('m-all').onclick = () => { MapView.fitAll(); MapView.apply(); $('m-me').classList.remove('on'); };
+addEventListener('resize', () => { if (G && MapView.ready && !$('screen-game').classList.contains('hide')) MapView.render(false); });
+
+/* マップの駅をタップしたら その駅の説明を出す */
+$('g-map').addEventListener('click', e => {
+  const t = e.target.closest('.ms');
+  if (t && t.dataset.s) stationInfo(t.dataset.s);
+});
 applyAdult();

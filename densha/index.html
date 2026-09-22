@@ -21,7 +21,7 @@
   --ink:#14202c; --sub:#5b6a7a; --sub2:#8b98a6; --line:#dbe3ec;
   --led:#101720; --led-ink:#ffc23a; --led-green:#6ee787;
   --pri:#1a6fb5; --pri-d:#125a96;
-  --gold:#e0a415; --coin:#f0b429; --danger:#d64545;
+  --gold:#e0a415; --coin:#f0b429; --danger:#d64545; --mapbg:#eef3f8;
   --rad:18px; --rad-s:12px;
   --st:env(safe-area-inset-top,0px); --sb:env(safe-area-inset-bottom,0px);
   --kana:1;
@@ -30,13 +30,13 @@
   :root:not([data-theme="light"]){
     --bg:#0e141b; --card:#18212c; --card2:#131b24;
     --ink:#e8eef5; --sub:#9aabbc; --sub2:#6d7d8e; --line:#26323f;
-    --pri:#3b8fd8; --pri-d:#2a6fae;
+    --pri:#3b8fd8; --pri-d:#2a6fae; --mapbg:#0a1017;
   }
 }
 :root[data-theme="dark"]{
   --bg:#0e141b; --card:#18212c; --card2:#131b24;
   --ink:#e8eef5; --sub:#9aabbc; --sub2:#6d7d8e; --line:#26323f;
-  --pri:#3b8fd8; --pri-d:#2a6fae;
+  --pri:#3b8fd8; --pri-d:#2a6fae; --mapbg:#0a1017;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{overscroll-behavior-y:none}
@@ -97,8 +97,65 @@ body.adult .kj{display:inline} body.adult .kn{display:none}
 .stars{letter-spacing:1px;font-size:14px;color:var(--gold)}
 .lv1{background:#3fa46a}.lv2{background:#e08a1a}.lv3{background:#cf4b4b}
 
+/* ---------- ゲーム: 上下固定・中央スクロール ---------- */
+#screen-game{display:flex;flex-direction:column;height:100dvh;overflow:hidden}
+.gscroll{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding-bottom:14px;overscroll-behavior:contain}
+
+/* ---------- 全体マップ（すごろくの盤面） ---------- */
+.mapwrap{flex:none;height:min(42vh,420px);position:relative;background:var(--mapbg);
+  border-bottom:1px solid var(--line);overflow:hidden}
+#g-map{width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+.ml{stroke-width:var(--lw,15);stroke-linecap:round;transition:opacity .28s,stroke-width .28s}
+.ml.dim{opacity:.34;stroke-width:var(--lwd,10.5)}
+/* ふつうの駅は小さな点、のりかえ駅は白丸（実際の路線図と同じ約束） */
+.ms{fill:#94a3b1;stroke:none;transition:fill .28s}
+.ms.hub{fill:var(--card);stroke:#64748b;stroke-width:calc(1.1 * var(--dr,1))}
+.ms.on{fill:#2b3a4b}
+.ms.hub.on{fill:var(--card);stroke:#16202b;stroke-width:calc(1.5 * var(--dr,1))}
+#g-map.zl .ms:not(.hub){opacity:.35}
+.lb{font-weight:800;text-anchor:middle;fill:var(--ink);
+  paint-order:stroke;stroke:var(--mapbg);stroke-width:6px;stroke-linejoin:round;pointer-events:none}
+.lb.here{font-weight:900}
+.lb.goal{fill:#b8761a;font-weight:900}
+.lb.own{fill:#227a4b}
+.me{text-anchor:middle;pointer-events:none}
+.gflag{text-anchor:middle;pointer-events:none}
+.stamp{text-anchor:middle;pointer-events:none}
+.gring{fill:none;stroke:var(--coin);opacity:.75}
+.gring.now{animation:gr 1.5s ease-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes gr{0%{transform:scale(1);opacity:.9}100%{transform:scale(2.6);opacity:0}}
+.mapwrap .nowtrain{position:absolute;top:8px;left:8px;right:56px;margin:0;padding:7px 11px;
+  gap:9px;border-radius:13px;opacity:.96}
+.mapwrap .nowtrain .tsvg{width:42px}
+.mapwrap .nowtrain .lnm{font-size:11.5px}
+.mapwrap .nowtrain .led{font-size:16px}
+.mapctl{position:absolute;top:8px;right:8px;display:flex;flex-direction:column;gap:5px}
+.mbtn{width:40px;height:40px;border-radius:12px;background:var(--card);font-size:17px;font-weight:900;
+  box-shadow:0 1px 5px rgba(20,32,44,.26);display:grid;place-items:center}
+.mbtn:active{transform:scale(.93)}
+.mbtn.on{background:var(--pri);color:#fff}
+
+/* 画面が広いときは マップを左、操作パネルを右の 2列にする。
+   横長のマップ枠に正方形に近い路線網を入れると小さくなってしまうため */
+/* 背の低い画面では マップを小さくして 操作パネルの場所を確保する */
+@media (max-height:720px){ .mapwrap{height:min(34vh,300px)} }
+
+@media (min-width:760px) and (min-height:600px){
+  #screen-game{display:grid;height:100dvh;
+    grid-template-rows:auto minmax(0,1fr) auto;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    grid-template-areas:"head head" "map side" "dock dock"}
+  #screen-game > .ghead{grid-area:head}
+  .mapwrap{grid-area:map;height:auto;min-height:0;
+    border-right:1px solid var(--line);border-bottom:none}
+  .gscroll{grid-area:side;padding-top:4px}
+  #screen-game > .dock{grid-area:dock}
+  .dock-in,.gscroll .wrap{max-width:620px}
+  .striphead{margin-top:4px}
+}
+
 /* ---------- ゲーム ヘッダー ---------- */
-#screen-game{padding-bottom:calc(178px + var(--sb))}
 .ghead{position:sticky;top:0;z-index:30;background:var(--card);border-bottom:1px solid var(--line);
   padding-top:var(--st)}
 .ghead-in{max-width:560px;margin:0 auto;padding:8px 12px;display:flex;align-items:center;gap:8px}
@@ -129,12 +186,12 @@ body.adult .kj{display:inline} body.adult .kn{display:none}
 .sv-local{background:#4a5d70}.sv-rapid{background:#0a7ad1}.sv-exp{background:#d9451f}.sv-ltd{background:#b1268f}
 
 /* ---------- 車内路線図ストリップ ---------- */
-.striphead{display:flex;align-items:center;gap:8px;margin:0 0 6px;padding:0 2px}
+.striphead{display:flex;align-items:center;gap:8px;margin:10px 0 6px;padding:0 2px}
 .striphead b{font-size:12px;font-weight:800;color:var(--sub);flex:1;min-width:0;line-height:1.35}
 .sh-right{display:flex;gap:6px;flex:none}
 .striphead .pill{white-space:nowrap}
 .strip{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;
-  background:var(--card);border-radius:var(--rad);padding:16px 0 12px;
+  background:var(--card);border-radius:var(--rad);padding:12px 0 9px;
   box-shadow:0 1px 3px rgba(20,32,44,.07),0 6px 18px rgba(20,32,44,.05);
   scrollbar-width:none}
 .strip::-webkit-scrollbar{display:none}
@@ -142,9 +199,9 @@ body.adult .kj{display:inline} body.adult .kn{display:none}
 .track::before{content:"";position:absolute;left:24px;right:24px;top:30px;height:8px;border-radius:99px;
   background:var(--c,#999);opacity:.9}
 .node{position:relative;display:flex;flex-direction:column;align-items:center;flex:none;padding-top:8px}
-.node.stop{width:82px}
+.node.stop{width:74px}
 .node.skip{width:46px}
-.node .dot{width:22px;height:22px;border-radius:50%;background:var(--card);
+.node .dot{width:19px;height:19px;border-radius:50%;background:var(--card);
   box-shadow:0 0 0 5px var(--c,#999);z-index:2;margin-top:11px}
 .node.skip .dot{width:9px;height:9px;box-shadow:0 0 0 3px var(--c,#999);opacity:.5;margin-top:17px}
 .node .nm{margin-top:9px;font-size:12px;font-weight:800;text-align:center;line-height:1.22;
@@ -191,9 +248,9 @@ body.adult .kj{display:inline} body.adult .kn{display:none}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .xrow .xc.free{background:#123524;color:#7fd8a4}}
 
 /* ---------- 下部の操作バー ---------- */
-.dock{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--card);
+.dock{flex:none;background:var(--card);
   border-top:1px solid var(--line);box-shadow:0 -4px 20px rgba(20,32,44,.12);
-  padding:10px 14px calc(10px + var(--sb))}
+  padding:9px 14px calc(9px + var(--sb))}
 .dock-in{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:9px}
 .pips{display:flex;align-items:center;justify-content:center;gap:7px;min-height:26px}
 .pips .p{width:17px;height:17px;border-radius:50%;background:var(--coin);
@@ -296,7 +353,9 @@ body.adult .kj{display:inline} body.adult .kn{display:none}
     </div>
     <div class="goalstrip" id="g-chips"></div>
   </div>
-  <div class="wrap">
+
+  <div class="mapwrap">
+    <svg id="g-map" viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid meet"></svg>
     <div class="nowtrain">
       <svg class="tsvg" viewBox="0 0 200 120" id="g-tsvg" aria-hidden="true"></svg>
       <div class="ti">
@@ -304,19 +363,31 @@ body.adult .kj{display:inline} body.adult .kn{display:none}
         <div class="led" id="g-led">—</div>
       </div>
     </div>
-    <div class="striphead">
-      <b id="g-striplbl">この でんしゃが とまる えき</b>
-      <span class="sh-right">
-        <span class="pill" id="g-here">—</span>
-        <button class="pill hintbtn" id="g-hint">💡 ヒント</button>
-      </span>
-    </div>
-    <div class="strip" id="g-strip"><div class="track" id="g-track"></div></div>
-    <div class="sec">
-      <div class="sh" id="g-xhead">のりかえられる でんしゃ</div>
-      <div class="xlist" id="g-xlist"></div>
+    <div class="mapctl">
+      <button class="mbtn" id="m-in" aria-label="ズームイン">＋</button>
+      <button class="mbtn" id="m-out" aria-label="ズームアウト">−</button>
+      <button class="mbtn" id="m-me" aria-label="自分のいちへ">🚃</button>
+      <button class="mbtn" id="m-all" aria-label="ぜんたいを みる">🗾</button>
     </div>
   </div>
+
+  <div class="gscroll">
+    <div class="wrap">
+      <div class="striphead">
+        <b id="g-striplbl">この でんしゃが とまる えき</b>
+        <span class="sh-right">
+          <span class="pill" id="g-here">—</span>
+          <button class="pill hintbtn" id="g-hint">💡 ヒント</button>
+        </span>
+      </div>
+      <div class="strip" id="g-strip"><div class="track" id="g-track"></div></div>
+      <div class="sec">
+        <div class="sh" id="g-xhead">のりかえられる でんしゃ</div>
+        <div class="xlist" id="g-xlist"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="dock"><div class="dock-in">
     <div class="pips" id="g-pips"></div>
     <div class="dock-row" id="g-actions"></div>
@@ -339,6 +410,7 @@ body.adult .kj{display:inline} body.adult .kn{display:none}
 
 <script src="data.js"></script>
 <script src="engine.js"></script>
+<script src="map.js"></script>
 <script src="ui.js"></script>
 </body>
 </html>
