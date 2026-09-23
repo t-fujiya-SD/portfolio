@@ -80,10 +80,14 @@ const MapView = {
   init(el) {
     this.el = el;
     el.innerHTML =
-      '<g id="mp-geo"></g><g id="mp-lab"></g><g id="mp-mark"></g>';
+      '<g id="mp-geo"></g><g id="mp-trail"></g><g id="mp-prev"></g>' +
+      '<g id="mp-lab"></g><g id="mp-mark"></g><g id="mp-train"></g>';
     this.geo = el.querySelector('#mp-geo');
+    this.trail = el.querySelector('#mp-trail');
+    this.prev = el.querySelector('#mp-prev');
     this.lab = el.querySelector('#mp-lab');
     this.mark = el.querySelector('#mp-mark');
+    this.train = el.querySelector('#mp-train');
     this.drawGeometry();
     this.bindGestures();
     this.ready = true;
@@ -223,12 +227,93 @@ const MapView = {
       }
     }
 
-    const p = MAP.W[cur], x = this.sx(p), y = this.sy(p);
-    mk += `<circle class="mering" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(5.5 * U).toFixed(1)}"
-             fill="#fff" stroke="${LINES[G.line].color}" stroke-width="${(3 * U).toFixed(1)}"/>` +
-          `<text class="me" font-size="${(19 * U).toFixed(1)}" x="${x.toFixed(1)}" y="${(y - 7 * U).toFixed(1)}">🚃</text>`;
     this.lab.innerHTML = lab;
     this.mark.innerHTML = mk;
+    this.drawTrain();
+    this.drawTrail();
+    this.drawPreview();
+  },
+
+  /* 選んだ電車がどこまで行くかを、走る前に見せる。
+     「これに乗ったらここまで行く」が先に分かると、子供が考えられる */
+  preview(sids) {
+    this._prev = sids && sids.length > 1 ? sids : null;
+    this.drawPreview();
+  },
+  drawPreview() {
+    if (!this._prev) { if (this.prev) this.prev.innerHTML = ''; return; }
+    let h = '';
+    for (let i = 0; i < this._prev.length - 1; i++) {
+      const a = MAP.W[this._prev[i]], b = MAP.W[this._prev[i + 1]];
+      if (!a || !b) continue;
+      h += `<line class="pvl" x1="${this.sx(a).toFixed(1)}" y1="${this.sy(a).toFixed(1)}"
+        x2="${this.sx(b).toFixed(1)}" y2="${this.sy(b).toFixed(1)}"
+        stroke-width="${(7 * this.u).toFixed(1)}"/>`;
+    }
+    const e = MAP.W[this._prev[this._prev.length - 1]];
+    if (e) h += `<circle class="pve" cx="${this.sx(e).toFixed(1)}" cy="${this.sy(e).toFixed(1)}"
+      r="${(9 * this.u).toFixed(1)}" stroke-width="${(2.6 * this.u).toFixed(1)}"/>`;
+    this.prev.innerHTML = h;
+  },
+
+  /* 走ったところを濃く残す。どこを通ってきたかが後から見える */
+  drawTrail() {
+    if (!G || !G.trail || !G.trail.size) { this.trail.innerHTML = ''; return; }
+    let h = '';
+    for (const k of G.trail) {
+      const [a, b] = k.split('~');
+      if (!MAP.W[a] || !MAP.W[b]) continue;
+      const pa = MAP.W[a], pb = MAP.W[b];
+      h += `<line class="trl" x1="${this.sx(pa).toFixed(1)}" y1="${this.sy(pa).toFixed(1)}"
+        x2="${this.sx(pb).toFixed(1)}" y2="${this.sy(pb).toFixed(1)}"
+        stroke-width="${(3.5 * this.u).toFixed(1)}"/>`;
+    }
+    this.trail.innerHTML = h;
+  },
+
+  /* コマだけを描く（走行中は毎フレームこれだけ呼ぶので軽い） */
+  drawTrain(worldPos) {
+    if (!G) return;
+    const U = this.u;
+    const p = worldPos || MAP.W[G.at];
+    if (!p) return;
+    const x = this.sx(p), y = this.sy(p);
+    this.train.innerHTML =
+      `<circle class="mering" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(5.5 * U).toFixed(1)}"
+         fill="#fff" stroke="${LINES[G.line].color}" stroke-width="${(3 * U).toFixed(1)}"/>` +
+      `<text class="me" font-size="${(19 * U).toFixed(1)}" x="${x.toFixed(1)}" y="${(y - 7 * U).toFixed(1)}">🚃</text>`;
+  },
+
+  /* 1区間ぶん、線路の上をなめらかに走らせる */
+  runSegment(fromSid, toSid, ms, done) {
+    const a = MAP.W[fromSid], b = MAP.W[toSid];
+    if (!a || !b) { done && done(); return; }
+    const t0 = performance.now();
+    const tick = now => {
+      const u = Math.min(1, (now - t0) / ms);
+      const e = u < .5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;   /* ゆっくり発車・ゆっくり停車 */
+      this.drawTrain({ x: a.x + (b.x - a.x) * e, y: a.y + (b.y - a.y) * e });
+      if (u < 1) requestAnimationFrame(tick); else done && done();
+    };
+    requestAnimationFrame(tick);
+  },
+
+  /* これから走る区間ぜんぶが画面に入るように寄せる */
+  frameRun(sids) {
+    if (!sids.length) return;
+    let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+    for (const s of sids) {
+      const p = MAP.W[s]; if (!p) continue;
+      x0 = Math.min(x0, p.x); x1 = Math.max(x1, p.x);
+      y0 = Math.min(y0, p.y); y1 = Math.max(y1, p.y);
+    }
+    const pad = 130 / Math.max(this.k, .001);
+    const w = (x1 - x0) + pad * 2, h = (y1 - y0) + pad * 2;
+    const need = Math.min(760 / Math.max(w, 1), (this.vbh - 300) / Math.max(h, 1));
+    this.k = Math.max(0.8, Math.min(3.4, need));
+    this.tx = 500 - ((x0 + x1) / 2) * this.k;
+    this.ty = this.midY - ((y0 + y1) / 2) * this.k;
+    this.apply();
   },
 
   /* 乗っている路線だけ濃く */

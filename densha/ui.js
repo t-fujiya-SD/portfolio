@@ -45,7 +45,11 @@ const sfx = {
   transfer() { tone(587, 0, .1, 'sine', .14); tone(880, .08, .16, 'sine', .14); },
   coin() { tone(1318, 0, .07, 'square', .1); tone(1760, .06, .14, 'square', .1); },
   goal() { [523, 659, 784, 1046, 1318].forEach((f, i) => tone(f, i * .1, .34, 'triangle', .16)); },
-  ng() { tone(330, 0, .16, 'sawtooth', .1); tone(247, .14, .26, 'sawtooth', .1); }
+  ng() { tone(330, 0, .16, 'sawtooth', .1); tone(247, .14, .26, 'sawtooth', .1); },
+  pass() { tone(392, 0, .06, 'sine', .07); },
+  near() { tone(659, 0, .1); tone(880, .09, .2); },
+  far() { tone(440, 0, .12, 'sine', .12); tone(349, .1, .22, 'sine', .12); },
+  tap() { tone(740, 0, .05, 'sine', .1); }
 };
 
 /* ---------------- 読み上げ ---------------- */
@@ -127,56 +131,93 @@ function closeModal() { $('modal-root').innerHTML = ''; modalOpen = false; }
    ============================================================ */
 let G = null;
 
+/* 走行アニメーションの1駅あたりの時間。長く走るときは速くする */
+const segMs = n => n > 6 ? 200 : n > 3 ? 280 : 400;
+
 function startMission(m) {
-  /* スタート駅では「最初の目的地に いちばん近づく向き」の電車に乗る */
+  /* 出発駅では、目的地のほうを向いた電車に乗った状態から始める */
   const first = firstBoard(m.from, m.goals[0]);
   G = {
     m, at: m.from, line: first.lineId, sv: first.svId, dir: first.dir,
-    turn: 1, pips: null, rolled: false, coins: 60, stamps: {}, goalIdx: 0,
-    freeBoard: true, moves: 0, transfers: 0, gotCards: [], busy: false, over: false
+    coins: START_COINS, fare: 0, stamps: {}, goalIdx: 0,
+    moves: 0, transfers: 0, gotCards: [], trail: new Set(), freeBoard: true,
+    dist0: geoDist(m.from, m.goals[0]),
+    busy: false, over: false, lastLeft: null, showAllX: false
   };
   MapView.follow = true;
   show('screen-game');
   renderGame();
-  speak('しゅっぱつ。' + S[m.from].kana + 'えきから、' + S[m.goals[0]].kana + 'を めざそう。');
+  const d = bearing(m.from, m.goals[0]);
+  speak(S[m.from].kana + 'から しゅっぱつ。' + S[m.goals[0]].kana + 'は、' +
+    (d ? d[0] + 'の ほうだよ。' : '') + 'どの でんしゃに のる？');
 }
 
 const curGoal = () => G.m.goals[G.goalIdx];
-/* 遷移のあいだは操作を受け付けない。4歳は必ず連打するので、
-   ここを開けておくと 1回のサイコロで二重に動いてしまう */
+/* 目的地まで あと何駅か。選んだ結果でこの数が増えたか減ったかが「考える」手がかりになる */
+const leftNow = () => stationsLeft(G.at, G.line, G.sv, G.dir, curGoal());
+
+/* 走行中と演出中は操作を受け付けない（4歳は必ず連打する） */
 function lock(ms, fn) {
   G.busy = true; renderDock();
   setTimeout(() => { if (!G) return; G.busy = false; fn(); }, ms);
 }
 const blocked = () => !G || G.busy || G.over || modalOpen;
-const turnsLeft = () => G.m.turns - G.turn + 1;
 
 /* ---------------- 描画 ---------------- */
 function renderGame() {
   const L = LINES[G.line], sv = svOf(G.line, G.sv);
+  const left = leftNow();
 
   $('g-goal').innerHTML = nm(curGoal());
-  $('g-turn').textContent = turnsLeft();
+  const d = bearing(G.at, curGoal());
+  $('g-goaldir').textContent = d ? d[1] + ' ' + d[0] : '';
+  $('g-left').textContent = left === Infinity ? '?' : left;
   $('g-coin').textContent = G.coins;
   $('g-chips').innerHTML = G.m.goals.map((g, i) =>
     `<div class="gchip ${i < G.goalIdx ? 'done' : i === G.goalIdx ? 'now' : ''}"></div>`).join('');
+  renderProgress();
 
-  /* 乗っている電車 */
   const t = trainForLine(G.line, sv.cls);
   $('g-tsvg').outerHTML = `<svg class="tsvg" viewBox="0 0 200 120" id="g-tsvg">${trainSVG(t).replace(/^<svg[^>]*>|<\/svg>$/g, '')}</svg>`;
   $('g-lcolor').style.background = L.color;
   $('g-lname').textContent = lnText(G.line);
   $('g-led').innerHTML = `<span class="svbadge sv-${sv.cls}">${esc(svText(G.line, G.sv))}</span>` +
     esc((save.adult ? terminusOf(G.line, G.sv, G.dir) : terminusKana(G.line, G.sv, G.dir)) + ' ゆき');
-  $('g-here').innerHTML = 'いま ' + nm(G.at) + (step(G.line, G.sv, G.at, G.dir) ? '' : ' ・しゅうてん');
+  $('g-here').innerHTML = 'いま ' + nm(G.at);
 
   renderStrip();
+  renderBuy();
   renderTransfers();
   renderDock();
+  if (G.scrollToChoices) {
+    G.scrollToChoices = false;
+    const sc = $('g-scroll');
+    if (sc) sc.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
   if (!MapView.ready) MapView.init($('g-map'));
   MapView.render(true);
   $('m-me').classList.toggle('on', MapView.follow);
+}
+
+/* 目的地までの進み具合。電車が旗に近づいていくのが見える */
+function renderProgress() {
+  const bar = $('g-prog');
+  if (!bar || G.goalIdx >= G.m.goals.length) { if (bar) bar.innerHTML = ''; return; }
+  const d = geoDist(G.at, curGoal());
+  const pct = G.dist0 > 0 ? Math.max(0, Math.min(1, 1 - d / G.dist0)) : 1;
+  bar.innerHTML = `<div class="pfill" style="width:${(pct * 100).toFixed(1)}%"></div>
+    <span class="pme" style="left:${(pct * 100).toFixed(1)}%">🚃</span>
+    <span class="pgoal">🚩</span>`;
+}
+
+function updateHUD() {
+  renderProgress();
+  $('g-coin').textContent = G.coins;
+  const l = leftNow();
+  $('g-left').textContent = l === Infinity ? '?' : l;
+  const d = bearing(G.at, curGoal());
+  $('g-goaldir').textContent = d ? d[1] + ' ' + d[0] : '';
 }
 
 function stripIndices(len, i, dir, back, fwd, loop) {
@@ -194,13 +235,15 @@ function renderStrip() {
   const L = LINES[G.line], sv = svOf(G.line, G.sv);
   const stops = stopsOf(G.line, G.sv);
   const i = stops.indexOf(G.at);
-  const idx = stripIndices(stops.length, i, G.dir, 6, 15, L.loop);
+  const idx = stripIndices(stops.length, i, G.dir, 4, 13, L.loop);
   const track = $('g-track');
   track.style.setProperty('--c', L.color);
+  /* つぎの判断駅まで（＝この電車で行ける範囲）を強調する */
+  const runTo = runPath(G.at, G.line, G.sv, G.dir, curGoal());
+  const inRun = {}; runTo.forEach(s => inRun[s] = 1);
 
   let html = '';
   idx.forEach((j, k) => {
-    /* 前の停車駅との間の通過駅を描く */
     if (k > 0) {
       const p = L.stations.indexOf(stops[idx[k - 1]]), q = L.stations.indexOf(stops[j]);
       const d = Math.abs(p - q);
@@ -216,6 +259,7 @@ function renderStrip() {
     if (sid === G.at) cls.push('here');
     if (G.m.goals.indexOf(sid) >= 0 && G.m.goals.indexOf(sid) >= G.goalIdx) cls.push('goal');
     if (G.stamps[sid]) cls.push('owned');
+    if (inRun[sid]) cls.push('inrun');
     const xf = S[sid].lines.filter(x => x !== G.line)
       .map(x => `<i style="background:${LINES[x].color}" title="${esc(LINES[x].name)}"></i>`).join('');
     html += `<div class="node ${cls.join(' ')}" data-sid="${sid}">` +
@@ -227,15 +271,10 @@ function renderStrip() {
     ? `${esc(sv.name)}の停車駅（小さい点＝通過）`
     : 'この でんしゃが とまる えき（ちいさい てん＝とおる だけ）';
 
-  /* 現在地が左から 32% くらいに来るようにスクロール */
   const here = track.querySelector('.here');
   const strip = $('g-strip');
-  if (here) strip.scrollLeft = Math.max(0, here.offsetLeft - strip.clientWidth * .32);
-
-  /* 駅をタップしたら、その駅の説明を出す */
-  track.querySelectorAll('.node').forEach(n => {
-    n.onclick = () => stationInfo(n.dataset.sid || n.querySelector('.nm').textContent);
-  });
+  if (here) strip.scrollLeft = Math.max(0, here.offsetLeft - strip.clientWidth * .28);
+  track.querySelectorAll('.node').forEach(n => { n.onclick = () => stationInfo(n.dataset.sid); });
 }
 
 function stationInfo(sid) {
@@ -256,96 +295,147 @@ function stationInfo(sid) {
     [{ label: 'とじる', pri: true }]);
 }
 
-/* いまの状態から つぎの目的地への最適な一手 */
+/* ---------------- ヒント ---------------- */
 function plan() {
   if (!G || G.goalIdx >= G.m.goals.length) return null;
   const k = [G.at, G.line, G.sv, G.dir, curGoal(), G.freeBoard].join('|');
   if (G._pk === k) return G._plan;
-  G._pk = k; G._plan = planFrom(G.at, G.line, G.sv, G.dir, curGoal(), G.freeBoard);
+  G._pk = k; G._plan = farePlan(G.at, G.line, G.sv, G.dir, curGoal(), !!G.freeBoard);
   return G._plan;
 }
 function sameOpt(a, b) {
   return a && b && a.lineId === b.lineId && a.svId === b.svId && a.dir === b.dir;
 }
 function hintText(p) {
-  if (!p || !p.first) return save.adult ? 'もう着いています。' : 'もう ついてるよ！';
-  if (p.pips === Infinity) return save.adult ? 'この電車からは行けません。乗り換えてみて。' : 'この でんしゃでは いけないよ。のりかえてみよう';
-  const rest = save.adult ? `あと ${p.pips} 目で ${S[curGoal()].kanji} に着きます。` : `あと ${p.pips}かいで ${S[curGoal()].kana} に つくよ。`;
+  const d = bearing(G.at, curGoal());
+  const where = d ? `${S[curGoal()].kana}は ${d[1]} ${d[0]}の ほう。` : '';
+  if (!p || !p.first) return 'もう ついてるよ！';
+  if (p.pips === Infinity) return where + 'この でんしゃでは いけないよ。のりかえてみよう';
+  const rest = save.adult ? `あと ${leftNow()}駅です。` : `あと ${leftNow()}えき。`;
   if (p.first.kind === 'step') {
-    const nx = step(G.line, G.sv, G.at, G.dir);
-    return (save.adult ? `この電車のまま ${S[nx].kanji} へ進もう。` : `この でんしゃの まま ${S[nx].kana} へ すすもう。`) + rest;
+    const nx = runPath(G.at, G.line, G.sv, G.dir, curGoal());
+    const last = nx.length ? nmText(nx[nx.length - 1]) : '';
+    return where + (save.adult ? `この電車のまま ${last} へ進もう。` : `この でんしゃの まま ${last} へ すすもう。`) + rest;
   }
   const o = p.first.opt;
-  const d = save.adult ? terminusOf(o.lineId, o.svId, o.dir) : terminusKana(o.lineId, o.svId, o.dir);
-  return (save.adult ? `${LINES[o.lineId].name} の ${svOf(o.lineId, o.svId).name}（${d}ゆき）に乗り換えよう。` :
-    `${lnText(o.lineId)} の ${svText(o.lineId, o.svId)}、${d}ゆきに のりかえよう。`) + rest;
+  const dd = save.adult ? terminusOf(o.lineId, o.svId, o.dir) : terminusKana(o.lineId, o.svId, o.dir);
+  return where + `${lnText(o.lineId)} の ${svText(o.lineId, o.svId)}、${dd}ゆきに のりかえよう。` + rest;
 }
 function showHint() {
-  const p = plan();
-  const t = hintText(p);
+  const t = hintText(plan());
   speak(t);
   modal(`<div class="em">💡</div><h3>${save.adult ? 'ヒント' : 'どうすれば いい？'}</h3><p>${esc(t)}</p>` +
     (G.m.hint ? `<div class="ledger"><div class="lr"><span>${save.adult ? 'このおでかけのコツ' : 'コツ'}</span></div><div class="lr"><b style="font-weight:700">${esc(G.m.hint)}</b></div></div>` : ''),
     [{ label: 'わかった', pri: true }]);
 }
 
-function renderTransfers() {
-  const opts = boardOptions(G.at, G.line, G.sv, G.dir);
-  const p = save.hint ? plan() : null;
-  const bestOpt = p && p.first && p.first.kind === 'board' ? p.first.opt : null;
-  const box = $('g-xlist');
-  const usable = G.pips != null && G.pips > 0;
-  $('g-xhead').innerHTML = usable
-    ? (save.adult ? 'この駅で乗り換えられる電車' : 'ここで のりかえられる でんしゃ')
-    : (save.adult ? 'この駅で乗り換えられる電車（サイコロを振ってから）' : 'サイコロを ふったら のりかえできる');
-  if (!opts.length) {
-    box.innerHTML = `<div class="card" style="color:var(--sub);font-size:14px">${save.adult
-      ? 'この駅で乗り換えられる電車はありません。' : 'この えきで のりかえられる でんしゃは ないよ'}</div>`;
+/* ---------------- スタンプ（大人の経営要素） ---------------- */
+function renderBuy() {
+  const sid = G.at, box = $('g-buy');
+  if (G.stamps[sid]) {
+    const st = stampOf(sid);
+    box.innerHTML = `<div class="buyrow owned">${st.emoji} ${esc(nmText(sid))}の ${esc(st.name)}は もってるよ
+      <b>＋${stampIncome(sid)}／かい</b></div>`;
     return;
   }
+  const price = stampPrice(sid);
+  const st = stampOf(sid);
+  if (G.coins < price) {
+    box.innerHTML = `<div class="buyrow poor">${st.emoji} ${esc(nmText(sid))}の ${esc(st.name)} ${price}コイン
+      <b>コインが たりない</b></div>`;
+    return;
+  }
+  box.innerHTML = `<button class="buyrow buy" id="a-buy">
+    <span class="be">${st.emoji}</span>
+    <span class="bt"><b>${esc(nmText(sid))}の ${esc(st.name)}を かう</b>
+      <small>${price}コイン はらうと、もくてきちに つくたび ＋${stampIncome(sid)}コイン</small></span>
+    <span class="bp">${price}</span></button>`;
+  $('a-buy').onclick = () => {
+    if (blocked()) return;
+    G.coins -= price; G.stamps[sid] = st.id; sfx.coin();
+    speak(S[sid].kana + 'の ' + st.kana + 'の スタンプを かいました');
+    renderGame();
+  };
+}
 
-  /* 同じ路線・同じ向きは 1つにまとめ、種別はチップで選ばせる。
-     赤羽のような駅では候補が20件を超えるので、まとめないと子供には読めない */
+/* ---------------- のりかえの選択肢 ----------------
+   「このまま すすむ」も ほかの電車と同じ1行にして、ぜんぶ横一線に並べる。
+   大きなボタンが最初から用意されていると 4歳はそれを押すだけになり、
+   考える機会が消えてしまうため。選んでから「しゅっぱつ！」で確定する。 */
+function allChoices() {
+  const out = [];
+  for (const b of statesAt(G.at)) {
+    const isCur = b.lineId === G.line && b.svId === G.sv && b.dir === G.dir;
+    const cost = (isCur || G.freeBoard) ? 0 : boardCost(G.at, G.line, G.sv, G.dir, b.lineId, b.dir);
+    out.push({ lineId: b.lineId, svId: b.svId, dir: b.dir, cost, isCur,
+      through: !isCur && cost === 0 && b.lineId !== G.line });
+  }
+  return out;
+}
+function selOf() {
+  return G.sel || null;
+}
+function isSel(o) {
+  const s = selOf();
+  return s && s.lineId === o.lineId && s.svId === o.svId && s.dir === o.dir;
+}
+
+function renderTransfers() {
+  const opts = allChoices();
+  const p = save.hint ? plan() : null;
+  const bestOpt = p && p.first
+    ? (p.first.kind === 'step' ? { lineId: G.line, svId: G.sv, dir: G.dir } : p.first.opt)
+    : null;
+  const box = $('g-xlist');
+  $('g-xlabel').textContent = save.adult ? 'どの電車に乗る？' : 'どの でんしゃに のる？';
+
   const gm = new Map();
   opts.forEach((o, i) => {
     const k = o.lineId + '|' + o.dir;
-    if (!gm.has(k)) gm.set(k, { lineId: o.lineId, dir: o.dir, cost: o.cost, through: o.through, svs: [] });
+    if (!gm.has(k)) gm.set(k, { lineId: o.lineId, dir: o.dir, cost: o.cost, through: o.through, isCur: false, svs: [] });
     const g = gm.get(k);
     g.svs.push({ o, i });
     g.cost = Math.min(g.cost, o.cost);
+    if (o.isCur) { g.isCur = true; g.through = false; }
   });
   const groups = [...gm.values()];
   groups.forEach(g => {
     g.svs.sort((x, y) => SVRANK[svOf(x.o.lineId, x.o.svId).cls] - SVRANK[svOf(y.o.lineId, y.o.svId).cls]);
     const bi = g.svs.findIndex(x => sameOpt(x.o, bestOpt));
     g.best = bi >= 0;
-    if (bi > 0) g.svs.unshift(g.svs.splice(bi, 1)[0]);   /* 💡 の種別を代表にする */
+    if (bi > 0) g.svs.unshift(g.svs.splice(bi, 1)[0]);
+    const si = g.svs.findIndex(x => isSel(x.o));
+    g.sel = si >= 0;
+    if (si > 0) g.svs.unshift(g.svs.splice(si, 1)[0]);
+    const head = g.svs[0].o;
+    const rp = runPath(G.at, head.lineId, head.svId, head.dir, curGoal());
+    g.to = rp.length ? rp[rp.length - 1] : null;
+    g.hops = rp.length;
+    g.dir8 = g.to ? bearing(G.at, g.to) : null;
   });
-  groups.sort((a, b) => (b.best - a.best) || (a.cost - b.cost)
-    || ((a.lineId === G.line) - (b.lineId === G.line))
+  groups.sort((a, b) => (b.isCur - a.isCur) || (b.best - a.best) || (a.cost - b.cost)
     || a.lineId.localeCompare(b.lineId) || a.dir - b.dir);
 
   const LIMIT = 6;
   const shown = G.showAllX ? groups : groups.slice(0, LIMIT);
-  const cost = g => (G.freeBoard ? 0 : g.cost);
-  const ok = g => usable && (cost(g) === 0 || G.pips >= cost(g));
 
   box.innerHTML = shown.map(g => {
     const L = LINES[g.lineId], head = g.svs[0];
+    const fare = g.cost * FARE_X;
     const dest = save.adult ? terminusOf(g.lineId, head.o.svId, g.dir) : terminusKana(g.lineId, head.o.svId, g.dir);
-    const nx = step(g.lineId, head.o.svId, G.at, g.dir);
-    const c = cost(g);
-    return `<div class="xgroup${g.best ? ' best' : ''}" style="--c:${L.color}">
-      <button class="xrow" data-o="${head.i}" ${ok(g) ? '' : 'disabled'}>
+    return `<div class="xgroup${g.sel ? ' sel' : ''}${g.best ? ' best' : ''}" style="--c:${L.color}">
+      <button class="xrow" data-o="${head.i}">
         <div class="xi">
-          <div class="xl">${g.best ? '💡 ' : ''}${esc(lnText(g.lineId))}</div>
-          <div class="xd">${esc(dest)} ゆき ・ つぎは ${nx ? esc(nmText(nx)) : '—'}</div>
+          <div class="xl">${g.best ? '💡 ' : ''}${esc(lnText(g.lineId))}
+            ${g.isCur ? '<span class="curtag">いまの でんしゃ</span>' : ''}
+            ${g.dir8 ? `<span class="dirtag">${g.dir8[1]} ${esc(g.dir8[0])}</span>` : ''}</div>
+          <div class="xd">${esc(dest)} ゆき ・ ${g.to ? esc(nmText(g.to)) + ' まで ' + g.hops + 'えき' : 'いきどまり'}</div>
         </div>
-        <span class="xc ${c === 0 ? 'free' : ''}">${c === 0 ? (g.through ? 'ちょくつう 0' : '0') : 'サイコロ ' + c}</span>
+        <span class="xc ${fare === 0 ? 'free' : ''}">${fare === 0 ? (g.through ? 'ちょくつう 0' : '0') : fare + 'コイン'}</span>
       </button>
-      <div class="xchips">${g.svs.map((x, k) => {
+      <div class="xchips">${g.svs.map(x => {
         const sv = svOf(x.o.lineId, x.o.svId);
-        return `<button class="xchip ${k === 0 ? 'on sv-' + sv.cls : ''}" data-o="${x.i}" ${ok(g) ? '' : 'disabled'}>
+        return `<button class="xchip ${isSel(x.o) ? 'on sv-' + sv.cls : ''}" data-o="${x.i}">
           ${sameOpt(x.o, bestOpt) ? '<span class="hi">💡</span>' : ''}${esc(save.adult ? sv.name : sv.kana)}</button>`;
       }).join('')}</div>
     </div>`;
@@ -354,125 +444,158 @@ function renderTransfers() {
         ? '▴ すこしだけ みる' : `▾ ほかの でんしゃも みる（のこり ${groups.length - LIMIT}）`}</button>`
     : '');
 
-  box.querySelectorAll('[data-o]').forEach(b => { b.onclick = () => doBoard(opts[+b.dataset.o]); });
+  box.querySelectorAll('[data-o]').forEach(b => { b.onclick = () => selectChoice(opts[+b.dataset.o]); });
   const more = $('x-more');
   if (more) more.onclick = () => { G.showAllX = !G.showAllX; renderTransfers(); };
 }
 
-function renderDock() {
-  const pipsBox = $('g-pips'), acts = $('g-actions');
-  if (G.busy) {
-    acts.innerHTML = `<button class="btn big" disabled>… はっしゃ！</button>`;
-    return;
-  }
-  if (G.pips == null) {
-    pipsBox.innerHTML = `<span class="lb">${save.adult ? `${G.m.turns - G.turn + 1} ターンのこり` : 'のこり ' + turnsLeft() + 'かい'}</span>`;
-    acts.innerHTML = `<button class="btn pri big" id="a-roll"><span class="dice">🎲</span> サイコロを ふる</button>`;
-    $('a-roll').onclick = roll;
-    return;
-  }
-  let p = `<span class="lb">のこり</span>`;
-  for (let k = 0; k < G.total; k++) p += `<i class="p ${k >= G.pips ? 'used' : ''}"></i>`;
-  pipsBox.innerHTML = p;
-  const nx = step(G.line, G.sv, G.at, G.dir);
-  const stopBtn = `<button class="btn" id="a-stop" style="flex:0 0 116px">ここで<br>とまる</button>`;
-  if (nx) {
-    const p = save.hint ? plan() : null;
-    const best = p && p.first && p.first.kind === 'step' ? ' best-step' : '';
-    acts.innerHTML = `<button class="btn pri big${best}" id="a-step">▸ ${esc(nmText(nx))}</button>` + stopBtn;
-    $('a-step').onclick = doStep;
-  } else {
-    /* 終点。ここから先は のりかえるしかないので、反対向きの電車を出す */
-    const rev = boardOptions(G.at, G.line, G.sv, G.dir)
-      .find(o => o.lineId === G.line && o.svId === G.sv && o.dir === -G.dir);
-    if (rev && G.pips >= (G.freeBoard ? 0 : rev.cost)) {
-      acts.innerHTML = `<button class="btn pri big" id="a-rev">🔄 はんたいむきの<br>でんしゃに のる</button>` + stopBtn;
-      $('a-rev').onclick = () => doBoard(rev);
-    } else {
-      acts.innerHTML = `<button class="btn pri big" id="a-hint2">💡 どうすれば いい？</button>` + stopBtn;
-      $('a-hint2').onclick = showHint;
-    }
-  }
-  $('a-stop').onclick = () => { if (blocked()) return; G.pips = 0; endTurn(); };
-}
-
-/* ---------------- 操作 ---------------- */
-function roll() {
-  if (blocked() || G.pips != null) return;
-  G.busy = true;
-  const btn = $('a-roll'); const d = btn.querySelector('.dice');
-  d.classList.add('rolling'); btn.disabled = true; sfx.dice();
-  const faces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
-  let n = 0, tick = 0;
-  const iv = setInterval(() => {
-    n = 1 + Math.floor(Math.random() * 6);
-    d.textContent = faces[n - 1];
-    if (++tick > 9) {
-      clearInterval(iv); d.classList.remove('rolling');
-      G.busy = false; G.pips = n; G.total = n; G.rolled = true;
-      speak(n + '');
-      renderGame();
-    }
-  }, 70);
-}
-
-function doStep() {
-  if (blocked() || G.pips == null || G.pips <= 0) return;
-  const nx = step(G.line, G.sv, G.at, G.dir);
-  if (!nx) return;
-  G.pips--; G.moves++; G.at = nx; G.freeBoard = false;
-  sfx.depart();
-  renderGame();
-  const isGoal = nx === curGoal();
-  speak((isGoal ? 'とうちゃく。' : 'つぎは ') + S[nx].kana);
-  if (isGoal) { lock(380, reachGoal); return; }
-  if (G.pips === 0) lock(420, endTurn);
-}
-
-function doBoard(o) {
+/* 選ぶ＝まだ動かない。どこまで行くかを地図に薄く描いて見せる */
+function selectChoice(o) {
   if (blocked()) return;
-  const cost = G.freeBoard ? 0 : o.cost;
-  if (G.pips == null || (cost > 0 && G.pips < cost)) return;
-  /* 直通の説明文は「いまの駅」で先に確定させる。あとで参照すると駅が変わっている */
-  const thr = o.through
-    ? THROUGH.find(t => t.at === G.at && (t.a === o.lineId || t.b === o.lineId)) : null;
-  G.pips -= cost; if (cost > 0) G.transfers++;
-  G.freeBoard = false;
-  G.line = o.lineId; G.sv = o.svId; G.dir = o.dir; G.showAllX = false;
-  sfx.transfer();
-  renderGame();
+  G.sel = { lineId: o.lineId, svId: o.svId, dir: o.dir, cost: o.cost, through: o.through, isCur: o.isCur };
+  const rp = runPath(G.at, o.lineId, o.svId, o.dir, curGoal());
+  MapView.preview([G.at].concat(rp));
+  sfx.tap();
   const sv = svOf(o.lineId, o.svId);
-  speak(sv.kana + '、' + terminusKana(o.lineId, o.svId, o.dir) + 'ゆきに のりました');
-  if (thr) {
+  speak(lnText(o.lineId) + ' ' + sv.kana + '、' + terminusKana(o.lineId, o.svId, o.dir) + 'ゆき');
+  renderTransfers();
+  renderDock();
+}
+
+/* ---------------- 下の操作バー ---------------- */
+function renderDock() {
+  const acts = $('g-actions'), info = $('g-runinfo');
+  if (G.busy) {
+    info.innerHTML = '<span class="lb">はしってるよ…</span>';
+    acts.innerHTML = `<button class="btn big" disabled>🚃 …</button>`;
+    return;
+  }
+  const s = selOf();
+  if (!s) {
+    info.innerHTML = `<span class="lb">${save.adult ? '↑ 乗る電車を選ぼう' : '↑ うえから でんしゃを えらんでね'}</span>`;
+    acts.innerHTML = `<button class="btn big" disabled>🚃 えらんでね</button>` +
+      `<button class="btn" id="a-hint3" style="flex:0 0 92px">💡 ヒント</button>`;
+    $('a-hint3').onclick = showHint;
+    return;
+  }
+  const rp = runPath(G.at, s.lineId, s.svId, s.dir, curGoal());
+  if (!rp.length) {
+    info.innerHTML = `<span class="lb">その でんしゃは ここが しゅうてん</span>`;
+    acts.innerHTML = `<button class="btn big" disabled>▶ すすめない</button>` +
+      `<button class="btn" id="a-hint3" style="flex:0 0 92px">💡 ヒント</button>`;
+    $('a-hint3').onclick = showHint;
+    return;
+  }
+  const to = rp[rp.length - 1];
+  const d = bearing(G.at, to);
+  const same = s.lineId === G.line && s.svId === G.sv && s.dir === G.dir;
+  const xf = (same || G.freeBoard) ? 0 : boardCost(G.at, G.line, G.sv, G.dir, s.lineId, s.dir) * FARE_X;
+  const fare = xf + rp.length * FARE_STEP;
+  info.innerHTML = `<span class="lb">${esc(nmText(to))} まで ${rp.length}えき` +
+    `${xf ? '（のりかえ ' + xf + '）' : ''} ・ ${fare}コイン${d ? ' ・ ' + d[1] + d[0] : ''}</span>`;
+  acts.innerHTML = `<button class="btn pri big" id="a-go">▶ しゅっぱつ！ ${esc(nmText(to))} へ</button>`;
+  $('a-go').onclick = doDepart;
+}
+
+/* ---------------- 走る ---------------- */
+function doDepart() {
+  if (blocked()) return;
+  const s = selOf();
+  if (!s) return;
+  /* 選んだ電車がいまと違うなら、ここで のりかえ代を払う。
+     料金は選択肢に書いてある値ではなく、ここで計算し直す
+     （選択肢の側の値を信じると、ただのはずの のりかえに課金してしまう） */
+  if (!(s.lineId === G.line && s.svId === G.sv && s.dir === G.dir)) {
+    const fare = G.freeBoard ? 0 : boardCost(G.at, G.line, G.sv, G.dir, s.lineId, s.dir) * FARE_X;
+    if (fare > 0) { G.transfers++; G.coins = Math.max(0, G.coins - fare); G.fare += fare; }
+    G.line = s.lineId; G.sv = s.svId; G.dir = s.dir; G._pk = null;
+    if (s.through) {
+      const thr = THROUGH.find(t => t.at === G.at && (t.a === s.lineId || t.b === s.lineId));
+      if (thr) G._throughNote = thr.note;
+    }
+  }
+  G.sel = null; G.freeBoard = false;
+  MapView.preview(null);
+  const path = runPath(G.at, G.line, G.sv, G.dir, curGoal());
+  if (!path.length) { renderGame(); return; }
+  G.lastLeft = leftNow();
+  G.lastDist = geoDist(G.at, curGoal());
+  G.busy = true; renderDock();
+  MapView.frameRun([G.at].concat(path));
+  sfx.depart();
+  const seq = [G.at].concat(path);
+  const ms = segMs(path.length);
+  let i = 0;
+  const hop = () => {
+    if (!G || i >= seq.length - 1) { if (G) { G.busy = false; afterRun(); } return; }
+    const a = seq[i], b = seq[i + 1];
+    G.trail.add(a < b ? a + '~' + b : b + '~' + a);
+    MapView.runSegment(a, b, ms, () => {
+      if (!G) return;
+      i++; G.at = b; G.moves++;
+      G.fare += FARE_STEP; G.coins = Math.max(0, G.coins - FARE_STEP);
+      updateHUD();
+      if (i < seq.length - 1) { sfx.pass(); speak(S[b].kana); }
+      hop();
+    });
+  };
+  hop();
+}
+
+/* 走り終わったところ。近づいたか遠ざかったかを はっきり見せる */
+function afterRun() {
+  const sid = G.at;
+  G._pk = null; G.sel = null; G.showAllX = false; G.scrollToChoices = true;
+  MapView.preview(null);
+  sfx.arrive();
+  if (sid === curGoal()) { renderGame(); speak('とうちゃく！ ' + S[sid].kana); return lock(340, reachGoal); }
+  renderGame();
+  const now = leftNow();
+  const nowD = geoDist(sid, curGoal());
+  const wasD = G.lastDist;
+  const el = $('g-left').closest('.stat');
+  const bar = $('g-prog');
+  el.classList.remove('up', 'down'); bar.classList.remove('up', 'down');
+  void el.offsetWidth;
+  if (wasD != null && Math.abs(nowD - wasD) > 0.3) {
+    const closer = nowD < wasD;
+    el.classList.add(closer ? 'down' : 'up');
+    bar.classList.add(closer ? 'down' : 'up');
+    if (closer) { sfx.near(); speak(S[sid].kana + '。ちかづいたよ。あと ' + now + 'えき'); }
+    else { sfx.far(); speak(S[sid].kana + '。あれ、とおくなっちゃった。もどろうか'); }
+  } else {
+    speak(S[sid].kana + '。あと ' + now + 'えき');
+  }
+  if (G._throughNote) {
+    const note = G._throughNote; G._throughNote = null;
     lock(260, () => modal(
       `<div class="em">🔗</div><h3>ちょくつう うんてん！</h3>
-       <p>${esc(thr.note)}<br>
-       ${save.adult ? '電車を降りないので、サイコロを使いません。' : 'でんしゃを おりないから サイコロは つかわないよ。'}</p>`,
-      [{ label: 'わかった', pri: true, fn: () => { if (G.pips === 0) endTurn(); else renderGame(); } }]));
-    return;
+       <p>${esc(note)}<br>${save.adult ? '電車を降りないので、のりかえ代がかかりません。'
+         : 'でんしゃを おりないから、のりかえ代は 0コイン。'}</p>`,
+      [{ label: 'わかった', pri: true }]));
   }
-  if (G.pips === 0) lock(420, endTurn);
 }
 
 /* ---------------- 目的地に着いた ---------------- */
 function reachGoal() {
   const sid = curGoal();
-  const bonus = goalBonus(sid);
-  G.coins += bonus;
+  const reward = goalReward(sid);
+  G.coins += reward;
   sfx.goal();
-  /* 到着した路線の車両カードをもらう（まだ持っていないものを優先） */
   const wantLtd = svOf(G.line, G.sv).cls === 'ltd';
   const all = TRAINS.filter(t => t.lines.indexOf(G.line) >= 0);
   const matched = all.filter(t => !!t.ltd === wantLtd);
   const pool = matched.length ? matched : all;
   const fresh = pool.filter(t => save.cards.indexOf(t.id) < 0);
-  const card = (fresh.length ? fresh : pool)[Math.floor(Math.random() * (fresh.length ? fresh.length : pool.length))];
+  const src = fresh.length ? fresh : pool;
+  const card = src[Math.floor(Math.random() * src.length)];
   const isNew = card && save.cards.indexOf(card.id) < 0;
   if (card && isNew) { save.cards.push(card.id); persist(); }
   if (card) G.gotCards.push(card.id);
 
   G.goalIdx++;
-  G.freeBoard = true;   /* 目的地で ひとやすみ → つぎの のりかえは 0 */
+  G.freeBoard = true;      /* 目的地で ひとやすみ。つぎの のりかえは ただ */
+  if (G.goalIdx < G.m.goals.length) G.dist0 = geoDist(sid, G.m.goals[G.goalIdx]);
   const last = G.goalIdx >= G.m.goals.length;
   const joy = GOAL_JOY[sid] || 'とうちゃく！';
   speak(S[sid].kana + 'に とうちゃく。' + joy);
@@ -480,7 +603,7 @@ function reachGoal() {
   modal(
     `<div class="em">🎉</div><h3>${nm(sid)} に とうちゃく！</h3>
      <p>${esc(joy)}</p>
-     <div class="bignum">＋${bonus} <span style="font-size:20px">コイン</span></div>
+     <div class="bignum">＋${reward} <span style="font-size:20px">コイン</span></div>
      ${card ? `<div class="tcard" style="margin-top:14px">
         ${isNew ? '<div class="pill" style="background:#ffeec9;color:#a06a08;margin-bottom:6px">✨ あたらしい カード</div>' : ''}
         <div class="tsvg">${trainSVG(card)}</div>
@@ -488,116 +611,71 @@ function reachGoal() {
         <div class="tk">${esc(save.adult ? card.kana : card.name)}</div>
         <div class="tnote">${esc(card.note)}</div>
       </div>` : ''}
-     <p style="margin-top:12px">${last ? (save.adult ? '全部まわった！' : 'ぜんぶ まわれた！')
-        : (save.adult ? 'つぎは ' + S[curGoal()].kanji + '。ここからは乗り換え 0 で乗れます。' : 'つぎは ' + S[curGoal()].kana + '。ここからの のりかえは ただ！')}</p>`,
-    [{ label: last ? '🏁 けっか' : '▶ つぎへ', pri: true, fn: () => {
-      if (last) finish(true);
-      else if (G.pips === 0 || G.pips == null) endTurn();
-      else renderGame();
-    } }]);
+     ${last ? '' : `<p style="margin-top:12px">${save.adult ? 'つぎは ' + S[curGoal()].kanji + '。' : 'つぎは ' + S[curGoal()].kana + '！'}</p>`}`,
+    [{ label: last ? '🏁 けっか' : '▶ つぎへ', pri: true, fn: () => settlement(last) }]);
 }
 
-/* ---------------- ターンおわり ---------------- */
-function endTurn() {
-  if (G.over) return;
-  if (G.goalIdx >= G.m.goals.length) return finish(true);
-  G.pips = null; G.rolled = false;
-  const sid = G.at;
-  const price = stampPrice(sid);
-  const canBuy = !G.stamps[sid] && G.coins >= price;
-  const after = () => {
-    if (G.turn % 3 === 0) return settlement();
-    nextTurn();
-  };
-  if (canBuy) return buyPrompt(sid, price, after);
-  after();
-}
-
-function buyPrompt(sid, price, next) {
-  const st = stampOf(sid), inc = stampIncome(sid);
-  modal(
-    `<div class="em">${st.emoji}</div>
-     <h3>${nm(sid)} の ${esc(st.name)}</h3>
-     <p>${save.adult
-        ? `${price} コインで購入。決算ごとに ${inc} コイン入る（1日の乗車人員 約${S[sid].pax}万人）。`
-        : `スタンプを かうと、おこづかいの日に ${inc} コイン もらえるよ`}</p>
-     <div class="ledger">
-       <div class="lr"><span>${save.adult ? 'いま持っているコイン' : 'いまの コイン'}</span><b>${G.coins}</b></div>
-       <div class="lr"><span>${save.adult ? 'スタンプ代' : 'ねだん'}</span><b>−${price}</b></div>
-       <div class="lr tot"><span>${save.adult ? '毎回もらえる' : 'まいかい もらえる'}</span><b style="color:var(--coin)">＋${inc}</b></div>
-     </div>`,
-    [
-      { label: `🖐 ${st.emoji} スタンプを かう`, pri: true, fn: () => {
-        G.coins -= price; G.stamps[sid] = st.id; sfx.coin();
-        speak(S[sid].kana + 'の ' + st.kana + 'の スタンプを かいました');
-        next();
-      } },
-      { label: 'やめておく', fn: next }
-    ]);
-}
-
-function settlement() {
+/* 決算は「おだいを1つ達成するごと」。ターンの代わりの時間軸 */
+function settlement(last) {
   const owned = Object.keys(G.stamps);
-  const rows = owned.map(sid =>
-    `<div class="lr"><span>${stampOf(sid).emoji} ${nmText(sid)}</span><b>＋${stampIncome(sid)}</b></div>`).join('');
-  const total = owned.reduce((a, sid) => a + stampIncome(sid), 0);
+  let total = owned.reduce((a, sid) => a + stampIncome(sid), 0);
+  const endBonus = last ? owned.length * STAMP_END_BONUS : 0;
+  total += endBonus;
+  if (!total) { if (last) finish(); else { G._pk = null; renderGame(); } return; }
   G.coins += total;
-  if (total > 0) sfx.coin();
-  speak(owned.length ? 'おこづかいの日。' + total + 'コイン もらえました。' : 'おこづかいの日。スタンプが ないので 0コインです。');
+  sfx.coin();
+  speak('おこづかいの日。' + total + 'コイン もらえました。');
+  const rows = owned.map(sid =>
+    `<div class="lr"><span>${stampOf(sid).emoji} ${esc(nmText(sid))}</span><b>＋${stampIncome(sid)}</b></div>`).join('');
   modal(
-    `<div class="em">💰</div><h3>${save.adult ? '決算の日' : 'おこづかいの日！'}</h3>
-     <p>${owned.length ? (save.adult ? 'スタンプ（駅ナカのお店）からの収入です。' : 'もっている スタンプから コインが もらえるよ')
-        : (save.adult ? 'スタンプが 1つもないので収入はありません。' : 'スタンプが ないから 0コイン。えきで かってみよう')}</p>
-     ${owned.length ? `<div class="ledger">${rows}<div class="lr tot"><span>ごうけい</span><b style="color:var(--coin)">＋${total}</b></div></div>` : ''}
+    `<div class="em">💰</div><h3>${save.adult ? '決算' : 'おこづかいの日！'}</h3>
+     <p>${save.adult ? '持っているスタンプ（駅ナカのお店）からの収入です。' : 'もっている スタンプから コインが もらえるよ'}</p>
+     <div class="ledger">${rows}
+       ${endBonus ? `<div class="lr"><span>🎖 スタンプ ${owned.length}こ あつめた ボーナス</span><b>＋${endBonus}</b></div>` : ''}
+       <div class="lr tot"><span>ごうけい</span><b style="color:var(--coin)">＋${total}</b></div></div>
      <div class="bignum">${G.coins} <span style="font-size:20px">コイン</span></div>`,
-    [{ label: '▶ つぎの ターンへ', pri: true, fn: nextTurn }]);
+    [{ label: last ? '🏁 けっか' : '▶ つぎへ', pri: true,
+       fn: () => { if (last) finish(); else { G._pk = null; renderGame(); } } }]);
 }
 
-function nextTurn() {
-  if (G.over) return;
-  G.turn++;
-  if (G.turn > G.m.turns) return finish(false);
-  renderGame();
-}
-
-/* ---------------- おわり ---------------- */
-function finish(win) {
-  if (G.over) return;
+/* ---------------- おわり（負けはない） ---------------- */
+function finish() {
+  /* 二重に呼ばれても、結果画面だけは必ず出す。
+     ここで黙って return すると、操作できる UI が何も残らず詰んでしまう */
+  const first = !G.over;
   G.over = true;
-  const left = win ? Math.max(0, G.m.turns - G.turn + 1) : 0;
-  const score = win ? finalScore(G.coins, left) : 0;
-  const stars = win ? starsFor(G.m, score) : 0;
-  if (win) {
-    const b = save.best[G.m.id] || 0;
-    if (score > b) { save.best[G.m.id] = score; }
+  const best = missionFare(G.m);
+  const waste = Math.max(0, G.fare - best);
+  const stars = starsFor(G.m, G.coins, G.fare);
+  if (first) {
+    const prev = save.best[G.m.id] || 0;
+    if (G.coins > prev) save.best[G.m.id] = G.coins;
     save.best[G.m.id + ':stars'] = Math.max(save.best[G.m.id + ':stars'] || 0, stars);
     persist();
     sfx.goal();
-    speak('クリア！ ' + '★'.repeat(stars) + ' スコアは ' + score + 'です');
-  } else { sfx.ng(); speak('でんしゃが おくれちゃった。もういっかい やってみよう'); }
+    speak('ぜんぶ まわれた！ ' + '★'.repeat(stars));
+  }
 
-  const body = win
-    ? `<div class="em">🏁</div><h3>クリア！</h3>
-       <div class="stars" style="font-size:30px">${'★'.repeat(stars)}${'☆'.repeat(3 - stars)}</div>
-       <div class="ledger">
-         <div class="lr"><span>${save.adult ? '手持ちコイン' : 'もっている コイン'}</span><b>${G.coins}</b></div>
-         <div class="lr"><span>${save.adult ? `早着ボーナス（残り ${left} ターン × ${EARLY_BONUS}）` : 'はやく ついた ボーナス'}</span><b>＋${left * EARLY_BONUS}</b></div>
-         <div class="lr"><span>${save.adult ? 'すすんだ駅数 / 乗り換え' : 'すすんだ えき / のりかえ'}</span><b>${G.moves} / ${G.transfers}</b></div>
-         <div class="lr tot"><span>スコア</span><b style="color:var(--coin)">${score}</b></div>
-         <div class="lr"><span>${save.adult ? 'これまでの最高' : 'いちばん いい スコア'}</span><b>${save.best[G.m.id]}</b></div>
-       </div>`
-    : `<div class="em">🕒</div><h3>${save.adult ? 'ターン切れ' : 'でんしゃが おくれちゃった'}</h3>
-       <p>${esc(G.m.hint)}</p>`;
-
-  modal(body, [
-    { label: '🔄 もういっかい', pri: true, fn: () => startMission(G.m) },
-    { label: '🗺 べつの おでかけ', fn: () => { renderSelect(); show('screen-select'); } }
-  ]);
+  modal(
+    `<div class="em">🏁</div><h3>ぜんぶ まわれた！</h3>
+     <div class="stars" style="font-size:30px">${'★'.repeat(stars)}${'☆'.repeat(3 - stars)}</div>
+     <div class="ledger">
+       <div class="lr"><span>${save.adult ? 'すすんだ駅数 / 乗り換え' : 'すすんだ えき / のりかえ'}</span><b>${G.moves} / ${G.transfers}</b></div>
+       <div class="lr"><span>${save.adult ? '使った運賃' : 'つかった コイン'}</span><b>${G.fare}</b></div>
+       <div class="lr"><span>${save.adult ? 'いちばん安く行けた場合' : 'いちばん やすい ばあい'}</span><b>${best}</b></div>
+       <div class="lr"><span>${save.adult ? 'むだづかい' : 'とおまわりで そんした ぶん'}</span>
+         <b style="color:${waste ? 'var(--danger)' : 'var(--sub)'}">${waste ? '＋' + waste : 'なし'}</b></div>
+       <div class="lr tot"><span>${save.adult ? '手持ちコイン' : 'のこった コイン'}</span><b style="color:var(--coin)">${G.coins}</b></div>
+       <div class="lr"><span>${save.adult ? 'これまでの最高' : 'いちばん おおく のこせた'}</span><b>${save.best[G.m.id]}</b></div>
+     </div>
+     <p>${waste ? (save.adult ? 'もっと短いルートがあります。次は最短をねらってみよう。' : 'もっと ちかい みちが あったよ。つぎは さがしてみよう！')
+        : (save.adult ? '最短ルートで行けました。' : 'いちばん ちかい みちで いけた！すごい！')}</p>`,
+    [
+      { label: '🔄 もういっかい', pri: true, fn: () => startMission(G.m) },
+      { label: '🗺 べつの おでかけ', fn: () => { renderSelect(); show('screen-select'); } }
+    ]);
 }
 
-/* ============================================================
-   ミッション選択・図鑑・設定
-   ============================================================ */
 function renderSelect() {
   $('mlist').innerHTML = MISSIONS.map((m, i) => {
     const s = save.best[m.id + ':stars'] || 0;
@@ -606,8 +684,8 @@ function renderSelect() {
       <span class="no lv${m.level}">${i + 1}</span>
       <span class="tt">
         <b>${esc(m.title)}</b>
-        <small>${esc(save.adult ? S[m.from].kanji : S[m.from].kana)} から ・ ${m.turns}ターン
-        ${best ? ' ・ さいこう ' + best : ''}</small>
+        <small>${esc(save.adult ? S[m.from].kanji : S[m.from].kana)} から ・ ${esc(m.goals.map(g => nmText(g)).join('→'))}
+        ${best ? ' ・ さいこう ' + best + 'コイン' : ''}</small>
       </span>
       <span class="stars">${'★'.repeat(s)}${'☆'.repeat(3 - s)}</span>
     </button>`;
