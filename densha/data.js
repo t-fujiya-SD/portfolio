@@ -468,38 +468,38 @@ const STAMPS = [
 
 /* ============================================================
    おでかけミッション（協力モード）
-   from: スタート駅 / goals: 順番に回る目的駅 / turns: 制限ターン
+   from: スタート駅 / goals: 順番に回る目的駅
    ============================================================ */
 const MISSIONS = [
   { id:'m1', title:'あかばねで のりかえて しんじゅくへ', kana:'あかばねで のりかえて しんじゅくへ',
-    from:'kawaguchi', goals:['shinjuku'], turns: 6, level:1,
+    from:'kawaguchi', goals:['shinjuku'], level:1,
     hint:'さいきょうせんは かわぐちを とおらないよ。まず あかばねまで いこう' },
   { id:'m2', title:'てつどうはくぶつかんへ（大宮）', kana:'てつどうはくぶつかんへ',
-    from:'kawaguchi', goals:['omiya'], turns: 6, level:1,
+    from:'kawaguchi', goals:['omiya'], level:1,
     hint:'けいひんとうほくせんで きたへ すすむか、あかばねで はやい でんしゃに のりかえると ぐんと ちかづく' },
   { id:'m3', title:'うえのどうぶつえんと あきはばら', kana:'うえのどうぶつえんと あきはばら',
-    from:'akabane', goals:['ueno','akihabara'], turns: 7, level:1,
+    from:'akabane', goals:['ueno','akihabara'], level:1,
     hint:'うえのから あきはばらは とても ちかいよ' },
   { id:'m4', title:'ゆめの くに まいはまへ', kana:'ゆめの くに まいはまへ',
-    from:'kawaguchi', goals:['tokyo','maihama'], turns: 9, level:2,
+    from:'kawaguchi', goals:['tokyo','maihama'], level:2,
     hint:'とうきょうえきから けいようせんに のりかえ。ホームが とおいから じかんが かかる' },
   { id:'m5', title:'おだいばで あそぶ', kana:'おだいばで あそぶ',
-    from:'akabane', goals:['osaki','tokyoteleport'], turns: 10, level:2,
+    from:'akabane', goals:['osaki','tokyoteleport'], level:2,
     hint:'さいきょうせんは おおさきから そのまま りんかいせんに はいるよ' },
   { id:'m6', title:'よこはま みなとめぐり', kana:'よこはま みなとめぐり',
-    from:'omiya', goals:['ikebukuro','yokohama'], turns: 11, level:2,
+    from:'omiya', goals:['ikebukuro','yokohama'], level:2,
     hint:'しょうなんしんじゅくラインが はやい' },
   { id:'m7', title:'たかおさんに のぼる', kana:'たかおさんに のぼる',
-    from:'kawaguchi', goals:['shinjuku','takao'], turns: 12, level:3,
+    from:'kawaguchi', goals:['shinjuku','takao'], level:3,
     hint:'しんじゅくから ちゅうおうとっかいに のると ぐんと すすむ' },
   { id:'m8', title:'ロマンスカーで おだわらじょうへ', kana:'ロマンスカーで おだわらじょうへ',
-    from:'akabane', goals:['shinjuku','odawara'], turns: 9, level:3,
+    from:'akabane', goals:['shinjuku','odawara'], level:3,
     hint:'しんじゅくから おだきゅうの ロマンスカー。とまる えきが とても すくない' },
   { id:'m9', title:'そうてつせんで えびなまで', kana:'そうてつせんで えびなまで',
-    from:'omiya', goals:['osaki','ebina'], turns: 14, level:3,
+    from:'omiya', goals:['osaki','ebina'], level:3,
     hint:'さいきょうせんは そうてつせんにも そのまま はいっていく' },
   { id:'m10',title:'いちにちで とうきょうを ぐるり', kana:'いちにちで とうきょうを ぐるり',
-    from:'kawaguchi', goals:['ikebukuro','shibuya','tokyo','omiya'], turns: 17, level:3,
+    from:'kawaguchi', goals:['ikebukuro','shibuya','tokyo','omiya'], level:3,
     hint:'やまのてせんは ぐるぐる まわる。ちかい むきを えらぼう' }
 ];
 
