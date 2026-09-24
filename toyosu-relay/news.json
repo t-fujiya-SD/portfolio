@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-24T08:51:43+09:00",
+  "updated": "2026-09-25T08:57:38+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -17,6 +17,13 @@
   ],
   "items": [
     {
+      "title": "中国の牛肉卸売価格が71元/kg突破 供給不足で高値は2027年まで続く見通し",
+      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE1CNFFTdHk1N1k0dkJjOVdJcExYZnpYYmp4c2pRRERXQ3ZGRnlEVnRITGJMMWpmbDh3TjNzbkpEMXlUZXVkU3pWNUJrU2tZcE5aNzU2WlZSSDBLWTBUaEYzbG9PMnBObjhFMy0ta184U1k2VzQ4?oc=5",
+      "source": "BigGo ファイナンス",
+      "date": "2026-09-24",
+      "cat": "market"
+    },
+    {
       "title": "卸売市場に秋の味覚 天然キノコ入荷 岐阜・高山市（2026年9月23日掲載）｜中京テレビNEWS NNN",
       "link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxNcTRpR3BMRVlWM1owX3BVVnYzZW9kZkNzQUZBRTF0SjF0NFpweUItSjhaTkZtNDl5RHZlc3hINGNrbzN1MUxGbEY4T2lYUW9RYXY2cm5rQ2hEZlR2amVPQXJfeGFPUXVxVnhuc3R2UjVZbnFQQldhMUpkMFZYSENvR1Q2NA?oc=5",
       "source": "日テレNEWS NNN",
@@ -28,13 +35,6 @@
       "link": "https://news.google.com/rss/articles/CBMijgFBVV95cUxPY2tPM1Y2VWZuNXJHWGtqTWhIaG1wb3g1Y0w2WTJUaDhaRzNvU0tOUlZXMzZSVmJLUmxwWjNGSFRTTm84TlZWU0VTakp5TGlXTjhTZ1FZS3ZTZXl4ejdmSnI4TWN0RWZ3ZVVkcHBfTWIzWmtHSVlsTUp0MlFjMEhMc1NCajRrN29jbmdUSmVn?oc=5",
       "source": "Yahoo!ニュース",
       "date": "2026-09-23",
-      "cat": "market"
-    },
-    {
-      "title": "青果部門・数量、金額ともに減／八戸市中央卸売市場８月市況概要",
-      "link": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE9hUXFoRk9lcGh3WDIxdTQtaHhzbHdDcnBUTWtWcm1lSWdFcTI0TnZHdGt0VEdMWkZ4WXRuY01EdHB6MG54aklzdVY4a2ZUVmNxZDZrUmFsaEdaYUw1TlBGbWJQc1NuWjg?oc=5",
-      "source": "デーリー東北",
-      "date": "2026-09-22",
       "cat": "market"
     },
     {
@@ -67,16 +67,23 @@
     },
     {
       "title": "東京都中央卸売市場の生き残りポイントは「品質管理」と「市場ブランド」 中間まとめで存続に強い危機感 人手不足に物流問題",
-      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE9zZjlseVlmMjNPM0hCaElLNVlNN2EyNl9rNUZ6YUR2bm9MVDBCWkpSb0Fqc0dHNnlvSGN1UVNjRktjXzlEalo2ZjV6NVFVTTdlRTBjS3VDaVVCYTZoTjZzTWFGSDlhYWpSc05tYi1vQW9QTWREQ2NOUTQtRkRtZlk?oc=5",
-      "source": "Yahoo!ニュース",
+      "link": "https://news.google.com/rss/articles/CBMiTkFVX3lxTE1kSjVmOWhEejBOckM3cGJLTS1SdFg0MEFNNXNxcTJOb0RuajYzZkQyMVA5Zng0d2lYb1VNQkZrTC1YR3RGNTZSNnh5YXl6QQ?oc=5",
+      "source": "FNNプライムオンライン",
       "date": "2026-09-17",
       "cat": "toyosu"
     },
     {
-      "title": "青果卸に“AI経営参謀”が常駐する時代へ。DXONEが新機能を正式リリースPDF・Excelを読み取り、自社データへ自動変換。入力から経営分析まで生成AIが支援 - 問い合わせ急増中！…",
-      "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE5hcVAzblZ4QkNYbWRGOGp1N0lZN1lTQmJUbl9qbG1EYklGdFRCeDRoMERsX3JaLUZrOTRiV293WmEybzJ4WGt4emdBXzNRM0JBeDgyODNn?oc=5",
-      "source": "フーズチャネル",
+      "title": "青果卸に“AI経営参謀”が常駐する時代へ。DXONEが新機能を正式リリースPDF・Excelを読み取り、自社データへ自動変換。入力から経営分析まで生成AIが支援 - 問い合わせ急増中！",
+      "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9XcUpyZXJEUFpEMk9wenF1emszVjRtc1ZlcGRsNHF0eUhuZFQzVFJHakFYZTVTS0E2SkhSUS11LVdOUXZ0UENsd0FEZmZtV1paV01hMGVoaGEtQm9LTFBrZFlLNHZKZmRxVHc?oc=5",
+      "source": "PR TIMES",
       "date": "2026-09-14",
+      "cat": "business"
+    },
+    {
+      "title": "神明HD子会社、県内最大青果卸の神果を買収へ 物流効率化、全国でM&A加速|経済ニュース",
+      "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTFBiYXdhUm43SUt0eEg1MWItNGEyZkxvTHdBNUdOU2c2Y0NaMUR3N1FaNGptUGhlczRkdndLUlpFVkQxRlZ4c1FpMFQ1MUlRY1NQN01aOVlJR1VhTjU0aTl0LXlkWWJaX2N0R1EtdUVR?oc=5",
+      "source": "神戸新聞",
+      "date": "2026-09-11",
       "cat": "business"
     },
     {
@@ -108,13 +115,6 @@
       "cat": "market"
     },
     {
-      "title": "特集「食品卸 商社系VS民族系頂上決戦の幕開け」③ 国分グループ本社／持続可能な食の付加価値を地域と世界に届ける",
-      "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTFBEUVFKQnhXUHcwelc4TFlLaHVuT3MyMEFOYWRIeWdLdnpaRHJhSUY0MFM0eGU5Mnp2S3RPTEkzZzhoNnY3ZDZyTW54dXd1SFEySWc?oc=5",
-      "source": "激流オンライン",
-      "date": "2026-07-31",
-      "cat": "business"
-    },
-    {
       "title": "令和8年度 トップセールス・国内外への訪問",
       "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5lT2g2dXo4Z3ZGWDZuNGlKUTk2S042RDdJNzdQcFV0V0FHM2U3ei0teGw5VWxqUGJaSWxxVG0taDF6TEhlX3Y1Zmp1YmlVUjZjWThMbDdyaXM3YjJvQXpmeDR2dklQMW0zX0lJ?oc=5",
       "source": "福島県ホームページ",
@@ -131,7 +131,7 @@
     {
       "title": "食品卸 メーカー支援の新たな形 営業や物流を代行",
       "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBaaTZ3djlaT0NET2F5b3J6d2h0RG1aNml0b3hnXzRGRDFHYXZ2Yk1oVE5SWC1vSk9WXzdpXzJ5YkVEc1JSWjNLek4tNWE3YXl5V0w3elpuZDZGV3c?oc=5",
-      "source": "食品新聞 WEB版",
+      "source": "shokuhin.net",
       "date": "2026-07-01",
       "cat": "business"
     },
@@ -145,7 +145,7 @@
     {
       "title": "中部圏の青果卸売会社12社、共同物流インフラ確立へ共同で新会社設立",
       "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5JcVJhUHFvZ0FzVFNDVjVnbS1NZ1ZuVENXUzl1SkJ3bF9XLUEzSTFDcElyRzIzbV8zN0U5YWpfSWZidk93RlZ2UmVjRQ?oc=5",
-      "source": "online.logi-biz.com",
+      "source": "LOGI-BIZ online",
       "date": "2026-06-17",
       "cat": "business"
     },
