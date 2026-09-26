@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>仕入れ相見積もりシート｜飲食店の見積依頼と比較</title>
+<meta name="description" content="飲食店の仕入れの相見積もりを、目的を決める・依頼シートをつくる・実質の金額で比べるの3手順で進める無料ツール。入力は端末の中だけで計算し、送信しません。">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://spicy-device.com/shiire/aimitsumori/">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<script defer src="../../assets/site-config.js"></script>
+<script defer src="../../assets/analytics.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#ffffff;--soft:#f6f7f9;--panel:#ffffff;
+  --ink:#2f3133;--ink2:#5b6066;--muted:#858b93;--line:#e6e8eb;--line2:#d3d7dc;
+  --accent:#C32F1C;--accent-d:#9E2415;--accent-soft:#fbeeec;--accent-line:#eccfc9;--on-accent:#ffffff;
+  --good:#1e7a3e;--good-soft:#e7f4eb;--warn:#9a5a06;--warn-soft:#fdf2e0;--flat:#5b6066;--flat-soft:#eef0f2;--neg:#b3261e;
+  --paper:#ffffff;--paper-ink:#1b1c1d;--paper-line:#1b1c1d;--paper-sub:#55595e;
+  --focus:#2563eb;
+  --shadow:0 1px 2px rgba(24,20,20,.06),0 10px 28px rgba(24,20,20,.07);
+  --sans:"Noto Sans JP",-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN",Meiryo,sans-serif;
+  --num:"Chakra Petch","Noto Sans JP",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#141618;--soft:#1b1e21;--panel:#1e2124;
+    --ink:#eceef0;--ink2:#b8bdc3;--muted:#8b929a;--line:#2c3035;--line2:#3b4046;
+    --accent:#e5573f;--accent-d:#f27d69;--accent-soft:#35201c;--accent-line:#5c3028;--on-accent:#ffffff;
+    --good:#62c585;--good-soft:#17291e;--warn:#e6a74c;--warn-soft:#2e2414;--flat:#b8bdc3;--flat-soft:#262a2e;--neg:#ff8b7b;
+    --focus:#7aa7ff;
+    --shadow:0 1px 2px rgba(0,0,0,.45),0 10px 28px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#141618;--soft:#1b1e21;--panel:#1e2124;
+  --ink:#eceef0;--ink2:#b8bdc3;--muted:#8b929a;--line:#2c3035;--line2:#3b4046;
+  --accent:#e5573f;--accent-d:#f27d69;--accent-soft:#35201c;--accent-line:#5c3028;--on-accent:#ffffff;
+  --good:#62c585;--good-soft:#17291e;--warn:#e6a74c;--warn-soft:#2e2414;--flat:#b8bdc3;--flat-soft:#262a2e;--neg:#ff8b7b;
+  --focus:#7aa7ff;
+  --shadow:0 1px 2px rgba(0,0,0,.45),0 10px 28px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.75;-webkit-font-smoothing:antialiased}
+[hidden]{display:none!important}
+a{color:inherit}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:6px}
+.wrap{max-width:960px;margin:0 auto;padding-inline:20px}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:var(--bg);background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:56px;gap:12px}
+.logo{display:inline-flex;align-items:center;text-decoration:none}
+.logo img{height:22px;width:auto;display:block}
+.wordmark{font-family:var(--num);font-weight:700;letter-spacing:.08em;color:var(--accent);font-size:16px}
+.back{font-size:13px;font-weight:700;color:var(--ink2);text-decoration:none}
+.back:hover{color:var(--accent)}
+
+/* hero */
+.hero{padding-block:34px 18px;display:grid;gap:14px}
+.eyebrow{font-size:12px;letter-spacing:.14em;color:var(--accent);font-weight:700;margin:0}
+h1{font-size:clamp(26px,4.6vw,38px);font-weight:900;line-height:1.3;letter-spacing:.01em;margin:0;text-wrap:balance}
+.lead{margin:0;color:var(--ink2);max-width:38em}
+.meta-row{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+.privacy{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink2);border:1px solid var(--line2);border-radius:999px;padding:4px 12px 4px 10px;background:var(--soft)}
+.privacy svg{width:14px;height:14px;flex:none;color:var(--good)}
+.flow{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px 4px;align-items:center;font-size:12.5px}
+.flow li{display:flex;align-items:center;gap:4px;color:var(--muted)}
+.flow li + li::before{content:"→";color:var(--line2);margin-right:4px}
+.flow li.cur{color:var(--accent);font-weight:700}
+.flow .cap{color:var(--ink2);margin-right:6px;font-weight:700}
+
+/* sample banner */
+.banner{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 16px;border:1px dashed var(--accent-line);background:var(--accent-soft);border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:14px}
+.banner b{color:var(--accent-d)}
+
+/* stepper */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.step{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:10px;align-items:center;text-align:left;border:1.5px solid var(--line);background:var(--panel);border-radius:12px;padding:10px 12px;cursor:pointer}
+.step .n{grid-row:1 / span 2;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-family:var(--num);font-weight:700;font-size:15px;background:var(--soft);color:var(--ink2);border:1px solid var(--line2)}
+.step .t{font-weight:800;font-size:14px;line-height:1.35}
+.step .s{font-size:12px;color:var(--muted);line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.step[aria-selected="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.step[aria-selected="true"] .n{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.step.done:not([aria-selected="true"]) .n{color:var(--accent);border-color:var(--accent-line)}
+@media (max-width:640px){
+  .steps{gap:6px}
+  .step{grid-template-columns:1fr;grid-template-rows:auto auto auto;justify-items:start;row-gap:4px;padding:9px 10px}
+  .step .n{grid-row:auto;width:26px;height:26px;font-size:13px}
+  .step .t{font-size:12.5px}
+  .step .s{font-size:11px;white-space:normal}
+}
+
+/* panel */
+.panel > *,.blk > *,.results > *,.why > *{min-width:0}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:clamp(16px,3vw,26px);display:grid;gap:26px}
+.blk{display:grid;gap:12px}
+h2.sec{font-size:19px;font-weight:800;line-height:1.4;margin:0;text-wrap:balance}
+h3.sub{font-size:15px;font-weight:800;margin:0}
+.hint{margin:0;color:var(--ink2);font-size:13.5px;max-width:44em}
+.note{margin:0;color:var(--muted);font-size:12.5px}
+.divider{height:1px;background:var(--line);margin:0;border:0}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:800;font-size:14px;border-radius:10px;padding:11px 18px;cursor:pointer;border:1.5px solid transparent;text-decoration:none;line-height:1.3}
+.btn.primary{background:var(--accent);color:var(--on-accent)}
+.btn.primary:hover{background:var(--accent-d)}
+.btn.ghost{background:var(--panel);border-color:var(--line2);color:var(--ink)}
+.btn.ghost:hover{border-color:var(--accent);color:var(--accent)}
+.btn.small{font-size:12.5px;padding:7px 12px;border-radius:8px}
+.btn.link{background:none;border:none;padding:0;color:var(--accent);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.actions.end{justify-content:flex-end}
+
+/* step 1 */
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:640px){.opts{grid-template-columns:1fr}}
+.opt{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:start;padding:14px 16px;border:1.5px solid var(--line2);border-radius:12px;cursor:pointer;background:var(--bg)}
+.opt input{margin:4px 0 0;width:18px;height:18px;accent-color:var(--accent);grid-row:1 / span 2}
+.opt .ot{font-weight:800;font-size:15px;line-height:1.45}
+.opt .od{font-size:12.5px;color:var(--ink2);line-height:1.5}
+.opt.on{border-color:var(--accent);background:var(--accent-soft)}
+.advice{border-radius:12px;padding:16px 18px;background:var(--warn-soft);border:1px solid var(--line);display:grid;gap:8px}
+.advice h3{margin:0;font-size:15px;color:var(--warn)}
+.advice p{margin:0;font-size:14px}
+.why{display:grid;gap:10px;padding-top:4px}
+.why ol{margin:0;padding:0;list-style:none;display:grid;gap:8px;counter-reset:w}
+.why li{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:baseline;font-size:14px;counter-increment:w;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.why li::before{content:counter(w);font-family:var(--num);font-weight:700;color:var(--accent);font-size:14px}
+.why .res{font-size:12px;font-weight:700;color:var(--accent-d);background:var(--accent-soft);border-radius:999px;padding:2px 10px;white-space:nowrap}
+
+/* inputs */
+.in{width:100%;border:1px solid var(--line2);border-radius:8px;padding:7px 9px;font-size:14px;background:var(--bg);color:var(--ink);min-width:0}
+.in:focus{border-color:var(--focus);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--focus) 22%,transparent)}
+.in.num{text-align:right;font-variant-numeric:tabular-nums}
+.in::placeholder{color:var(--muted)}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px 14px}
+.fld{display:grid;gap:4px;min-width:0}
+.fld > span{font-size:12.5px;font-weight:700;color:var(--ink2)}
+.fld .req{color:var(--accent);margin-left:4px;font-weight:700}
+.inline{display:flex;gap:8px;align-items:center}
+.inline .in{flex:1}
+.inline .u{font-size:13px;color:var(--ink2);white-space:nowrap}
+.checks{display:grid;gap:8px}
+.chk{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;font-size:14px;cursor:pointer}
+.chk input{width:17px;height:17px;margin:4px 0 0;accent-color:var(--accent)}
+.chk small{display:block;color:var(--muted);font-size:12px;line-height:1.5}
+
+/* items */
+.sumbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:13.5px}
+.sumbar b{font-variant-numeric:tabular-nums}
+.sumbar .hl{color:var(--accent-d);font-weight:800}
+.it-head,.it-row{display:grid;grid-template-columns:26px minmax(6.5em,1.25fr) minmax(7em,1.5fr) 5.4em 5.6em 6.6em 6.8em 6.8em 28px;gap:6px;align-items:center}
+.it-head{font-size:11.5px;font-weight:700;color:var(--muted);padding:0 0 4px;border-bottom:1px solid var(--line)}
+.it-head .r{text-align:right}
+.it-row{padding:5px 0}
+.it-row.off .in,.it-row.off .amt{opacity:.5}
+.cell{display:block;min-width:0}
+.ml{display:none}
+.c-chk{display:grid;place-items:center}
+.c-chk input{width:17px;height:17px;accent-color:var(--accent);margin:0}
+.amt{display:block;text-align:right;font-variant-numeric:tabular-nums;font-weight:700;font-size:14px}
+.del{border:none;background:var(--soft);color:var(--muted);border-radius:7px;height:30px;width:28px;cursor:pointer;font-size:15px;line-height:1}
+.del:hover{background:var(--accent-soft);color:var(--accent)}
+.add{justify-self:start}
+@media (max-width:760px){
+  .it-head{display:none}
+  .it-row{grid-template-columns:26px 1fr 1fr 1fr;grid-template-areas:"chk name name name" "chk spec spec spec" "chk unit qty price" "chk sub amt del";gap:8px 10px;padding:14px 0;border-bottom:1px solid var(--line);align-items:end}
+  .c-chk{grid-area:chk;align-self:start;padding-top:24px}
+  .c-name{grid-area:name}.c-spec{grid-area:spec}.c-unit{grid-area:unit}.c-qty{grid-area:qty}.c-price{grid-area:price}.c-sub{grid-area:sub}.c-amt{grid-area:amt}
+  .it-row .del{grid-area:del;justify-self:end;width:auto;padding:0 12px;font-size:12.5px}
+  .it-row .del::after{content:" 削除"}
+  .ml{display:block;font-size:11.5px;font-weight:700;color:var(--muted);margin-bottom:3px}
+  .amt{text-align:left}
+}
+
+/* paper */
+.paper-wrap{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:clamp(10px,2.5vw,22px)}
+.paper{background:var(--paper);color:var(--paper-ink);box-shadow:var(--shadow);padding:clamp(16px,4vw,40px);max-width:794px;margin:0 auto;font-size:13px;line-height:1.6}
+.paper .p-top{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.paper .p-to{font-size:15px;font-weight:700;min-width:14em;border-bottom:1px solid var(--paper-line);padding-bottom:2px}
+.paper .p-date{font-size:12px;color:var(--paper-sub)}
+.paper .p-title{text-align:center;font-size:20px;font-weight:900;letter-spacing:.3em;margin:18px 0 12px}
+.paper .p-from{margin-left:auto;font-size:12px;line-height:1.7;text-align:left;width:fit-content;max-width:100%}
+.paper .p-from b{font-size:13.5px}
+.paper .p-lead{margin:12px 0}
+.paper .p-ki{text-align:center;margin:8px 0}
+.paper .p-scroll{overflow-x:auto}
+.paper table{width:100%;border-collapse:collapse;margin:6px 0 12px;font-size:12.5px}
+.paper th,.paper td{border:1px solid var(--paper-line);padding:5px 7px;text-align:left;vertical-align:top}
+.paper th{font-weight:700;white-space:nowrap}
+.paper .ct th{width:9.5em}
+.paper .it th{text-align:center}
+.paper .it td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.paper .it td.c{text-align:center;white-space:nowrap}
+.paper .it td.blank{min-width:6.5em}
+.paper .p-end{text-align:right;margin-top:6px}
+.paper .p-notes{margin:10px 0 0;padding-left:1.2em;font-size:11.5px;color:var(--paper-sub)}
+.paper .p-foot{margin-top:18px;font-size:10.5px;color:var(--paper-sub);text-align:right}
+.paper .empty{color:var(--paper-sub);text-align:center}
+
+/* step 3 */
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table.pt{border-collapse:collapse;width:100%;min-width:560px;font-size:13.5px}
+.pt th,.pt td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+.pt thead th{background:var(--soft);font-size:12px;color:var(--ink2);font-weight:700}
+.pt tbody tr:last-child td{border-bottom:none}
+.pt td.n,.pt th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pt .nm b{display:block;font-weight:700}
+.pt .nm small{color:var(--muted);font-size:11.5px}
+.pt .vin{width:7.5em}
+.pt .vname{font-weight:700;font-size:13px;width:8em}
+.pt .rm{margin-left:4px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.vc{border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:10px;background:var(--bg);align-content:start}
+.vc h4{margin:0;font-size:14px;font-weight:800;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.vc .fld > span{font-size:12px}
+.results{display:grid;gap:12px}
+.summary{border-radius:12px;padding:14px 16px;background:var(--soft);border:1px solid var(--line);font-size:14.5px}
+.summary b{color:var(--ink)}
+.res-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.res{border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:10px;background:var(--bg);align-content:start}
+.res-h{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.res-h h4{margin:0;font-size:15px;font-weight:800}
+.pill{font-size:12px;font-weight:800;border-radius:999px;padding:3px 11px;white-space:nowrap}
+.pill.good{background:var(--good-soft);color:var(--good)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.flat{background:var(--flat-soft);color:var(--flat)}
+.pill.none{background:var(--flat-soft);color:var(--muted)}
+.big{display:grid;gap:0}
+.big .l{font-size:12px;color:var(--muted);font-weight:700}
+.big .v{font-family:var(--num);font-weight:700;font-size:28px;line-height:1.2;font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.big .y2{font-size:12.5px;color:var(--ink2)}
+.pos{color:var(--good)}.neg{color:var(--neg)}
+dl.bd{margin:0;display:grid;grid-template-columns:1fr auto;gap:5px 12px;font-size:13px;border-top:1px solid var(--line);padding-top:10px}
+dl.bd dt{color:var(--ink2)}
+dl.bd dd{margin:0;text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+.res .msg{margin:0;font-size:13.5px}
+.res ul{margin:0;padding-left:1.1em;font-size:12.5px;color:var(--ink2);display:grid;gap:3px}
+.res .mat{background:var(--soft);border-radius:8px;padding:10px 12px;font-size:12.5px;display:grid;gap:4px}
+.res .mat b{font-size:12px}
+.res .mat span{font-variant-numeric:tabular-nums}
+.cta{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding-top:16px}
+.cta p{margin:0;font-size:14px}
+
+/* footer */
+.foot{padding-block:22px 48px;display:flex;flex-wrap:wrap;gap:10px 18px;justify-content:space-between;align-items:center;font-size:12.5px;color:var(--muted)}
+.foot .ctl{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.foot .confirm{color:var(--ink)}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:16px;padding-top:calc(16px + env(safe-area-inset-top,0px));padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+.modal-back{position:absolute;inset:0;background:rgba(10,12,14,.55)}
+.modal-card{position:relative;background:var(--panel);color:var(--ink);border-radius:16px;padding:22px;width:min(560px,100%);max-height:100%;overflow:auto;display:grid;gap:14px;box-shadow:var(--shadow)}
+.modal-card h2{margin:0;font-size:18px;font-weight:800;line-height:1.45;text-wrap:balance}
+.sendlist{font-size:12.5px;color:var(--ink2);background:var(--soft);border-radius:8px;padding:10px 12px}
+.err{margin:0;color:var(--neg);font-size:13px;font-weight:700}
+.fine{margin:0;font-size:12px;color:var(--muted)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:90;background:var(--ink);color:var(--bg);border-radius:12px;padding:12px 16px;font-size:13.5px;width:min(560px,calc(100% - 32px));box-shadow:var(--shadow)}
+#printRoot{display:none}
+
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+@page{size:A4;margin:12mm}
+@media print{
+  :root{color-scheme:light}
+  body{background:#fff!important;color:#000}
+  body.printing > *:not(#printRoot){display:none!important}
+  body.printing #printRoot{display:block!important}
+  body:not(.printing) .top,body:not(.printing) .steps,body:not(.printing) .actions,body:not(.printing) .foot,body:not(.printing) .banner{display:none!important}
+  #printRoot .paper{box-shadow:none;padding:0;max-width:none;font-size:10.5pt}
+  #printRoot .paper table{font-size:10pt}
+  #printRoot .p-scroll{overflow:visible}
+  .paper tr{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="https://spicy-device.com/" aria-label="SPICY DEVICE トップへ"><img src="../../assets/logo.png" alt="SPICY DEVICE"></a>
+    <a class="back" href="https://spicy-device.com/">← トップへ</a>
+  </div>
+</header>
+
+<main class="wrap" id="app">
+  <section class="hero">
+    <p class="eyebrow">飲食店の仕入れ</p>
+    <h1>仕入れ相見積もりシート</h1>
+    <p class="lead">相見積もりが面倒で、やっても安くならないのは、目的と条件が決まっていないまま頼んでいるからです。目的を決め、依頼を整え、返ってきた見積を実質の金額で比べる。3つの手順で進めます。</p>
+    <div class="meta-row">
+      <span class="privacy"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="1.5" fill="none"></rect><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2" fill="none"></path></svg>入力はこの端末の中だけで計算・保存します。送信はしません</span>
+      <ol class="flow" aria-label="仕入先を見直す流れ">
+        <li><span class="cap">このシートの範囲</span></li>
+        <li class="cur">取得</li><li class="cur">交渉</li><li class="cur">入れ替えの判断</li><li>定着</li><li>定期見直し</li>
+      </ol>
+    </div>
+  </section>
+
+  <div class="banner" id="sampleBanner" hidden>
+    <span><b>サンプルが入っています。</b>架空の店・架空の数字です。</span>
+    <button type="button" class="btn small primary" data-act="start-own">サンプルを消して、自分の店で始める</button>
+  </div>
+
+  <nav class="steps" role="tablist" aria-label="手順">
+    <button type="button" class="step" role="tab" id="tab1" aria-controls="p1" data-tab="1"><span class="n">1</span><span class="t">目的を決める</span><span class="s" id="st1"></span></button>
+    <button type="button" class="step" role="tab" id="tab2" aria-controls="p2" data-tab="2"><span class="n">2</span><span class="t">依頼シートをつくる</span><span class="s" id="st2"></span></button>
+    <button type="button" class="step" role="tab" id="tab3" aria-controls="p3" data-tab="3"><span class="n">3</span><span class="t">見積を比べる</span><span class="s" id="st3"></span></button>
+  </nav>
+
+  <!-- STEP 1 -->
+  <section class="panel" id="p1" role="tabpanel" aria-labelledby="tab1">
+    <div class="blk">
+      <h2 class="sec">何のために見積もりを取りますか</h2>
+      <p class="hint">目的によって、依頼の書き方も比べ方も変わります。いちばん近いものを1つ選んでください。</p>
+      <div class="opts" id="purposeOpts">
+        <label class="opt" data-v="1"><input type="radio" name="purpose" id="pu1" value="1"><span class="ot">今の業者を入れ替えたい</span><span class="od">品質・欠品・対応に不満がある。価格が合わない</span></label>
+        <label class="opt" data-v="2"><input type="radio" name="purpose" id="pu2" value="2"><span class="ot">今の業者と条件を見直したい</span><span class="od">値上げが続いている。まずは今の取引を整えたい</span></label>
+        <label class="opt" data-v="3"><input type="radio" name="purpose" id="pu3" value="3"><span class="ot">新規出店・新業態で業者を探している</span><span class="od">これから取引先を決める</span></label>
+        <label class="opt" data-v="4"><input type="radio" name="purpose" id="pu4" value="4"><span class="ot">なんとなく相場を知りたい</span><span class="od">今すぐ変える予定はない</span></label>
+      </div>
+      <div class="advice" id="advice4" hidden>
+        <h3>今は、相見積もりを取らないほうがいいかもしれません</h3>
+        <p>目的のない見積依頼は、卸にとって手間だけがかかる依頼です。条件があいまいな依頼は見積の作業が何倍にも膨らむため、後回しにされたり、高めの数字が返ってきたりしがちです。</p>
+        <p>相場を知りたいだけなら、まず手元の請求書で、ここ3か月に単価が上がった品目を確かめるところから始めましょう。次の手順で品目を金額順に並べると、見直すべき品目が見えてきます。</p>
+      </div>
+    </div>
+    <div class="why">
+      <h3 class="sub">相見積もりが面倒で、うまくいかない理由</h3>
+      <ol>
+        <li><span>目的が決まっていないと、全部の品目を全部の業者に聞くことになる</span><span class="res">面倒</span></li>
+        <li><span>条件があいまいな依頼は、卸の見積作業が何倍にも膨らみ、後回しにされるか高めに出される</span><span class="res">うまくいかない</span></li>
+        <li><span>単価だけで比べると、便数・最低発注金額・欠品で、入れ替えたあとに逆に高くつく</span><span class="res">うまくいかない</span></li>
+      </ol>
+    </div>
+    <div class="actions end"><button type="button" class="btn primary" data-go="2">次へ：依頼シートをつくる</button></div>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="panel" id="p2" role="tabpanel" aria-labelledby="tab2" hidden>
+    <div class="blk">
+      <h2 class="sec">見積に出す品目を絞る</h2>
+      <p class="hint">請求書を見ながら、よく仕入れる品目を入れます。「上位を自動で選ぶ」を押すと金額の大きい順に並び、月額の8割に届くまで（最大10品目）にチェックが入ります。全部を聞く必要はありません。</p>
+      <div class="sumbar"><span id="itemSum"></span><button type="button" class="btn small ghost" data-act="auto">上位を自動で選ぶ</button></div>
+      <div role="table" aria-label="品目">
+        <div class="it-head" role="row"><span role="columnheader" title="見積に出す">出す</span><span role="columnheader">品名</span><span role="columnheader">規格・産地・サイズ</span><span role="columnheader">単位</span><span role="columnheader" class="r">月の数量</span><span role="columnheader" class="r">今の単価（税抜）</span><span role="columnheader">欠品時</span><span role="columnheader" class="r">月額</span><span></span></div>
+        <div id="items"></div>
+      </div>
+      <button type="button" class="btn small ghost add" data-act="add">＋ 品目を追加</button>
+      <p class="note">今の単価と月額は、依頼シートには載りません。手順3で比べるためだけに使います。</p>
+    </div>
+    <hr class="divider">
+    <div class="blk">
+      <h2 class="sec">店の情報</h2>
+      <div class="fields">
+        <label class="fld"><span>店名</span><input class="in" id="shop-name" data-s="name" type="text" autocomplete="organization"></label>
+        <label class="fld"><span>業態</span><input class="in" id="shop-type" data-s="type" type="text" placeholder="例: 居酒屋"></label>
+        <label class="fld"><span>納品先（住所・エリア）</span><input class="in" id="shop-area" data-s="area" type="text"></label>
+        <label class="fld"><span>ご担当</span><input class="in" id="shop-person" data-s="person" type="text"></label>
+        <label class="fld"><span>電話</span><input class="in" id="shop-tel" data-s="tel" type="tel"></label>
+        <label class="fld"><span>FAX</span><input class="in" id="shop-fax" data-s="fax" type="tel"></label>
+        <label class="fld"><span>メール</span><input class="in" id="shop-mail" data-s="mail" type="email"></label>
+      </div>
+    </div>
+    <hr class="divider">
+    <div class="blk">
+      <h2 class="sec">取引の条件</h2>
+      <p class="hint">条件が書いてある依頼は、卸が短い時間で本気の数字を出せます。</p>
+      <div class="fields">
+        <label class="fld"><span>納品回数</span><span class="inline"><span class="u">週</span><input class="in num" id="c-weekly" data-c="weekly" type="number" inputmode="numeric" min="0" max="7" step="1"><span class="u">便</span></span></label>
+        <label class="fld"><span>納品の曜日</span><input class="in" id="c-days" data-c="days" type="text" placeholder="例: 月〜土"></label>
+        <label class="fld"><span>納品の時間帯</span><input class="in" id="c-time" data-c="time" type="text" placeholder="例: 9:00〜11:00"></label>
+        <label class="fld"><span>定休日</span><input class="in" id="c-holiday" data-c="holiday" type="text"></label>
+        <label class="fld"><span>発注方法</span><select class="in" id="c-method" data-c="method"><option>FAX</option><option>電話</option><option>LINE</option><option>メール</option><option>発注システム</option></select></label>
+        <label class="fld"><span>発注の締め</span><input class="in" id="c-cutoff" data-c="cutoff" type="text" placeholder="例: 前日20:00まで"></label>
+        <label class="fld"><span>お支払い条件</span><select class="in" id="c-pay" data-c="pay"><option>月末締め・翌月末払い</option><option>月末締め・翌月10日払い</option><option>月末締め・翌々月末払い</option><option>20日締め・翌月末払い</option><option>都度払い</option><option>相談したい</option></select></label>
+        <label class="fld"><span>回答期限</span><input class="in" id="c-deadline" data-c="deadline" type="date"></label>
+        <label class="fld"><span>宛先（空欄なら手書き用の線）</span><input class="in" id="c-to" data-c="to" type="text" placeholder="例: ○○青果"></label>
+      </div>
+      <div class="checks">
+        <label class="chk"><input type="checkbox" id="c-showVolume" data-c="showVolume"><span>月の発注金額の目安を載せる<small>取引量が分かると、卸は本気の見積を出しやすくなります。小さい店ほど載せるのがおすすめです。</small></span></label>
+        <label class="chk"><input type="checkbox" id="c-notify" data-c="notify"><span>単価が変わるときは、事前の連絡をお願いする</span></label>
+        <label class="chk"><input type="checkbox" id="c-review" data-c="review"><span>3か月ごとに単価の見直しを相談する<small>卸の単価は上がるときは動いても、下がるときは動きにくいものです。見直しの周期を最初に決めておきます。</small></span></label>
+        <label class="chk"><input type="checkbox" id="c-askFreq" data-c="askFreq"><span>便数を減らした場合の単価も聞く<small>卸の手間が増えるので、必要なときだけ。</small></span></label>
+      </div>
+    </div>
+    <hr class="divider">
+    <div class="blk">
+      <h2 class="sec">依頼シート</h2>
+      <p class="hint">この内容がそのまま依頼シートになります。今の単価は載りません。PDFにすれば、そのまま印刷してFAXでも送れます。</p>
+      <div class="paper-wrap"><div class="paper" id="sheet"></div></div>
+      <div class="actions">
+        <button type="button" class="btn primary" data-act="pdf-sheet" id="pdfSheetBtn">PDFで保存する</button>
+        <span class="note" id="pdfSheetNote"></span>
+      </div>
+    </div>
+    <div class="actions end"><button type="button" class="btn ghost" data-go="1">戻る</button><button type="button" class="btn primary" data-go="3">次へ：見積を比べる</button></div>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="panel" id="p3" role="tabpanel" aria-labelledby="tab3" hidden>
+    <div class="blk">
+      <h2 class="sec">返ってきた見積を比べる</h2>
+      <p class="hint">見積が届いたら、候補ごとに単価と条件を入れます。単価だけの差から、配送料・最低発注金額・欠品・切り替えの手間を差し引いた「実質の差」で判定します。</p>
+      <p class="note" id="noTargets" hidden>先に手順2で、見積に出す品目にチェックを入れてください。</p>
+    </div>
+    <div class="blk" id="cmpBlk">
+      <h3 class="sub">単価（税抜）</h3>
+      <p class="note">空欄の品目は「未提示」として比較から外します。</p>
+      <div class="scroll"><table class="pt" id="priceTable"></table></div>
+      <div class="actions"><button type="button" class="btn small ghost" data-act="add-vendor" id="addVendorBtn">＋ 候補を追加</button></div>
+    </div>
+    <div class="blk" id="condBlk">
+      <h3 class="sub">条件</h3>
+      <div class="cards" id="vendorCards"></div>
+    </div>
+    <div class="blk" id="lossBlk">
+      <h3 class="sub">自店側の損失</h3>
+      <div class="fields">
+        <label class="fld"><span>欠品・買い足し1回あたりの損失</span><span class="inline"><input class="in num" id="l-miss" data-l="lossPerMiss" type="number" inputmode="numeric" min="0" step="100"><span class="u">円</span></span><small class="note">例: スタッフが1時間買い出しに行く人件費と交通費、割高に買った分</small></label>
+        <label class="fld"><span>切り替えの手間（一度だけ）</span><span class="inline"><input class="in num" id="l-hours" data-l="switchHours" type="number" inputmode="decimal" min="0" step="0.5"><span class="u">時間 ×</span><input class="in num" id="l-wage" data-l="wage" type="number" inputmode="numeric" min="0" step="50"><span class="u">円</span></span><small class="note">口座開設、発注方法の変更、スタッフへの周知など</small></label>
+      </div>
+    </div>
+    <hr class="divider">
+    <div class="results" id="results"></div>
+    <div class="actions">
+      <button type="button" class="btn primary" data-act="pdf-cmp" id="pdfCmpBtn">比較結果をPDFで保存する</button>
+      <span class="note" id="pdfCmpNote"></span>
+    </div>
+    <div class="cta">
+      <p>自店の条件で、一緒に仕入れを見直したい方はご相談ください。</p>
+      <a class="btn ghost" href="https://spicy-device.com/#cta" id="consultLink">仕入れの見直しを相談する</a>
+    </div>
+    <div class="actions end"><button type="button" class="btn ghost" data-go="2">戻る</button></div>
+  </section>
+
+  <footer class="foot">
+    <span>入力はこの端末のブラウザにだけ保存されます。</span>
+    <span class="ctl" id="footCtl">
+      <button type="button" class="btn link" data-act="reset-sample">サンプルに戻す</button>
+      <button type="button" class="btn link" data-act="clear-ask">すべて消す</button>
+    </span>
+    <span class="ctl confirm" id="footConfirm" hidden>
+      入力をすべて消しますか？
+      <button type="button" class="btn small primary" data-act="clear-do">消す</button>
+      <button type="button" class="btn small ghost" data-act="clear-cancel">やめる</button>
+    </span>
+  </footer>
+</main>
+
+<div class="modal" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle" hidden>
+  <div class="modal-back" data-act="gate-close"></div>
+  <form class="modal-card" id="gateForm" novalidate>
+    <h2 id="gateTitle">PDFで保存する前に、ご登録をお願いします</h2>
+    <p class="hint">登録は一度だけです。いただいた内容をもとに、株式会社スパイシーデバイスからご連絡することがあります。</p>
+    <div class="fields">
+      <label class="fld"><span>店名・会社名<b class="req">必須</b></span><input class="in" id="g-shop" name="shop" type="text" required autocomplete="organization"></label>
+      <label class="fld"><span>お名前<b class="req">必須</b></span><input class="in" id="g-name" name="name" type="text" required autocomplete="name"></label>
+      <label class="fld"><span>役職<b class="req">必須</b></span><select class="in" id="g-role" name="role" required><option value="">選んでください</option><option>オーナー・経営者</option><option>店長</option><option>料理長・調理責任者</option><option>購買・本部の担当</option><option>その他</option></select></label>
+      <label class="fld"><span>店舗数<b class="req">必須</b></span><select class="in" id="g-stores" name="stores" required><option value="">選んでください</option><option>1店舗</option><option>2〜3店舗</option><option>4〜9店舗</option><option>10店舗以上</option><option>開業準備中</option></select></label>
+      <label class="fld"><span>メールアドレス<b class="req">必須</b></span><input class="in" id="g-mail" name="email" type="email" required autocomplete="email"></label>
+      <label class="fld"><span>このシートを知ったきっかけ</span><select class="in" id="g-source" name="source"><option value="">選んでください</option><option>検索</option><option>note</option><option>Instagram</option><option>Threads</option><option>X</option><option>知人・取引先の紹介</option><option>その他</option></select></label>
+    </div>
+    <div class="sendlist">送信するのは、このフォームの項目と、手順1で選んだ目的（<span id="gatePurpose">未選択</span>）だけです。品目・単価・店の条件は送信しません。</div>
+    <p class="err" id="gateErr" hidden></p>
+    <div class="actions end">
+      <button type="button" class="btn ghost" data-act="gate-close">やめる</button>
+      <button type="submit" class="btn primary" id="gateSubmit">送信してPDFを保存</button>
+    </div>
+    <p class="fine"><a href="https://spicy-device.com/privacy/">プライバシーポリシー</a></p>
+  </form>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<div id="printRoot" aria-hidden="true"></div>
+<noscript><p class="wrap">このツールはJavaScriptを使います。ブラウザの設定でJavaScriptを有効にしてください。</p></noscript>
+
+<script>
+(function(){
+'use strict';
+var PREVIEW = !!window.SD_PREVIEW;
+var KEY = 'sd_mitsumori_v1', UNLOCK = 'sd_mitsumori_unlocked';
+var WEEKS = 52 / 12;
+var UNITS = ['kg','個','玉','本','束','パック','ケース','袋','箱','g'];
+var PURPOSE = {'1':'業者の入れ替えを検討','2':'今の業者と条件の見直し','3':'新規出店・新業態で業者探し','4':'相場を知りたい'};
+var LEAD = {
+  '1':'仕入先の見直しを検討しております。下記の条件にて、お見積りをお願いいたします。',
+  '2':'お取引条件の見直しについて、ご相談させてください。下記の条件にて、現在の単価のご確認とお見積りをお願いいたします。',
+  '3':'新規出店にあたり、仕入先を探しております。下記の条件にて、お見積りをお願いいたします。',
+  '4':'下記の品目について、お見積りをお願いいたします。',
+  '':'下記の条件にて、お見積りをお願いいたします。'
+};
+
+function $(s, r){ return (r || document).querySelector(s); }
+function $$(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+function num(v){ var n = parseFloat(String(v == null ? '' : v).replace(/,/g, '')); return isFinite(n) ? n : 0; }
+function has(v){ return v !== '' && v != null && isFinite(parseFloat(v)); }
+function fmt(n){ return Math.round(n).toLocaleString('ja-JP'); }
+function yen(n){ return fmt(n) + '円'; }
+function sgn(n){ var r = Math.round(n); return (r > 0 ? '+' : r < 0 ? '−' : '±') + Math.abs(r).toLocaleString('ja-JP') + '円'; }
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function uid(){ return 'i' + Math.random().toString(36).slice(2, 9); }
+function track(n){ try { if (window.sdTrack) window.sdTrack(n); } catch (e) {} }
+function sget(k){ try { return window.localStorage.getItem(k); } catch (e) { return null; } }
+function sset(k, v){ try { window.localStorage.setItem(k, v); } catch (e) {} }
+function sdel(k){ try { window.localStorage.removeItem(k); } catch (e) {} }
+function isoIn(days){ var d = new Date(); d.setDate(d.getDate() + days); return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
+function jpDate(iso){
+  if (!iso) return '';
+  var p = iso.split('-'); if (p.length !== 3) return iso;
+  var d = new Date(+p[0], +p[1] - 1, +p[2]);
+  return (d.getMonth() + 1) + '月' + d.getDate() + '日（' + '日月火水木金土'.charAt(d.getDay()) + '）';
+}
+function today(){ var d = new Date(); return d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日'; }
+
+/* ---------- state ---------- */
+function blankVendor(name){ return { id: uid(), name: name, weekly: '', fee: 0, min: '', underFee: '', miss: '', prices: {} }; }
+function baseCmp(){ return { lossPerMiss: 3000, switchHours: 10, wage: 1500, cur: { fee: 0, miss: 1 }, vendors: [blankVendor('候補A'), blankVendor('候補B')] }; }
+function sampleState(){
+  var rows = [
+    ['トマト','M・箱','kg',30,780,'ng', 720,760],
+    ['玉ねぎ','L・北海道産','kg',120,190,'ok', 175,185],
+    ['キャベツ','1玉1.2kg前後','玉',90,210,'ok', 195,200],
+    ['じゃがいも','M・メークイン','kg',60,260,'ok', 245,250],
+    ['長ねぎ','2L','本',150,95,'ok', 88,92],
+    ['にんじん','M','kg',50,240,'ok', 225,235],
+    ['レモン','輸入・140玉','個',200,60,'ok', 55,''],
+    ['生姜','国産','kg',8,1400,'ok', 1300,1350],
+    ['しいたけ','国産・菌床100g','パック',60,180,'ok', 170,''],
+    ['もやし','業務用4kg','ケース',8,1100,'ok', 1000,1080],
+    ['大葉','10枚束','束',80,90,'ng', 85,88],
+    ['パセリ','束','束',10,180,'ok', 170,175]
+  ];
+  var a = blankVendor('候補A'), b = blankVendor('候補B');
+  a.weekly = 3; a.min = 15000; a.underFee = 1000; a.miss = 3;
+  b.weekly = 5; b.min = 5000; b.underFee = 500; b.miss = 1;
+  var items = rows.map(function(r){
+    var it = { id: uid(), name: r[0], spec: r[1], unit: r[2], qty: r[3], price: r[4], sub: r[5], on: false };
+    if (r[6] !== '') a.prices[it.id] = r[6];
+    if (r[7] !== '') b.prices[it.id] = r[7];
+    return it;
+  });
+  var s = {
+    v: 1, sample: true, tab: 1, purpose: '1',
+    shop: { name: 'サンプル食堂（架空）', type: '居酒屋', area: '東京都○○区（例）', person: '山田', tel: '03-0000-0000', fax: '03-0000-0001', mail: '' },
+    items: items,
+    cond: { weekly: 6, days: '月〜土', time: '9:00〜11:00', holiday: '日曜', method: 'LINE', cutoff: '前日20:00まで', pay: '月末締め・翌月末払い', deadline: isoIn(7), to: '', showVolume: true, notify: true, review: true, askFreq: false },
+    cmp: baseCmp()
+  };
+  s.cmp.vendors = [a, b];
+  autoSelect(s);
+  return s;
+}
+function ownState(){
+  return {
+    v: 1, sample: false, tab: 1, purpose: '',
+    shop: { name: '', type: '', area: '', person: '', tel: '', fax: '', mail: '' },
+    items: [{ id: uid(), name: '', spec: '', unit: 'kg', qty: '', price: '', sub: 'ok', on: true }],
+    cond: { weekly: '', days: '', time: '', holiday: '', method: 'FAX', cutoff: '', pay: '月末締め・翌月末払い', deadline: isoIn(7), to: '', showVolume: true, notify: true, review: true, askFreq: false },
+    cmp: baseCmp()
+  };
+}
+function valid(s){ return s && s.v === 1 && Array.isArray(s.items) && s.cond && s.cmp && Array.isArray(s.cmp.vendors) && s.shop; }
+
+var state;
+(function(){
+  var raw = sget(KEY), s = null;
+  if (raw) { try { s = JSON.parse(raw); } catch (e) { s = null; } }
+  state = valid(s) ? s : sampleState();
+})();
+
+var saveT = null;
+function persist(){ clearTimeout(saveT); saveT = setTimeout(function(){ sset(KEY, JSON.stringify(state)); }, 250); }
+
+function monthly(it){ return num(it.qty) * num(it.price); }
+function targets(){ return state.items.filter(function(it){ return it.on && String(it.name).trim(); }); }
+function autoSelect(s){
+  s.items.sort(function(x, y){ return monthly(y) - monthly(x); });
+  var total = s.items.reduce(function(a, it){ return a + monthly(it); }, 0), cum = 0, n = 0;
+  s.items.forEach(function(it){
+    var m = monthly(it);
+    if (m > 0 && String(it.name).trim() && n < 10 && (cum < total * 0.8 || n === 0)) { it.on = true; cum += m; n++; }
+    else it.on = false;
+  });
+}
+
+/* ---------- tabs ---------- */
+function setTab(n, focus){
+  state.tab = n;
+  [1, 2, 3].forEach(function(i){
+    $('#p' + i).hidden = (i !== n);
+    $('#tab' + i).setAttribute('aria-selected', i === n ? 'true' : 'false');
+    $('#tab' + i).tabIndex = (i === n) ? 0 : -1;
+  });
+  if (n === 3) renderCompare();
+  track('mitsu-step-' + n);
+  persist();
+  if (focus) { var top = $('.steps').getBoundingClientRect().top + window.pageYOffset - 70; window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' }); }
+}
+function renderStepper(){
+  $('#st1').textContent = state.purpose ? PURPOSE[state.purpose] : '未選択';
+  var t = targets();
+  $('#st2').textContent = t.length ? t.length + '品目を依頼' : '品目を入力';
+  var q = state.cmp.vendors.filter(function(v){ return t.some(function(it){ return has(v.prices[it.id]); }); }).length;
+  $('#st3').textContent = q ? q + '社の見積を比較' : '見積待ち';
+  $('#tab1').classList.toggle('done', !!state.purpose);
+  $('#tab2').classList.toggle('done', t.length > 0);
+  $('#tab3').classList.toggle('done', q > 0);
+  $('#sampleBanner').hidden = !state.sample;
+}
+
+/* ---------- step 1 ---------- */
+function renderPurpose(){
+  $$('#purposeOpts .opt').forEach(function(l){
+    var on = l.getAttribute('data-v') === state.purpose;
+    l.classList.toggle('on', on);
+    $('input', l).checked = on;
+  });
+  $('#advice4').hidden = state.purpose !== '4';
+}
+
+/* ---------- step 2: items ---------- */
+function cell(it, f, label, isNum, ph){
+  var v = it[f]; if (v == null) v = '';
+  var attrs = isNum ? ' type="number" inputmode="decimal" min="0" step="any"' : ' type="text"';
+  return '<label class="cell c-' + f + '"><span class="ml">' + label + '</span><input class="in' + (isNum ? ' num' : '') + '" id="' + f + '-' + it.id + '" data-f="' + f + '"' + attrs + ' value="' + esc(v) + '" placeholder="' + esc(ph) + '" aria-label="' + label + '"></label>';
+}
+function rowHTML(it){
+  var units = UNITS.indexOf(it.unit) < 0 && it.unit ? UNITS.concat([it.unit]) : UNITS;
+  return '<div class="it-row' + (it.on ? '' : ' off') + '" role="row" data-id="' + it.id + '">' +
+    '<label class="cell c-chk"><input type="checkbox" id="on-' + it.id + '" data-f="on"' + (it.on ? ' checked' : '') + ' aria-label="見積に出す"></label>' +
+    cell(it, 'name', '品名', false, '例: 玉ねぎ') +
+    cell(it, 'spec', '規格・産地・サイズ', false, '例: L・北海道産') +
+    '<label class="cell c-unit"><span class="ml">単位</span><select class="in" id="unit-' + it.id + '" data-f="unit" aria-label="単位">' + units.map(function(u){ return '<option' + (u === it.unit ? ' selected' : '') + '>' + esc(u) + '</option>'; }).join('') + '</select></label>' +
+    cell(it, 'qty', '月の数量', true, '0') +
+    cell(it, 'price', '今の単価（税抜）', true, '0') +
+    '<label class="cell c-sub"><span class="ml">欠品時</span><select class="in" id="sub-' + it.id + '" data-f="sub" aria-label="欠品時"><option value="ok"' + (it.sub === 'ok' ? ' selected' : '') + '>代替OK</option><option value="ng"' + (it.sub === 'ng' ? ' selected' : '') + '>代替不可</option></select></label>' +
+    '<div class="cell c-amt"><span class="ml">月額</span><span class="amt" data-amt></span></div>' +
+    '<button type="button" class="del" data-act="del" aria-label="この品目を削除">×</button>' +
+  '</div>';
+}
+function renderItems(){ $('#items').innerHTML = state.items.map(rowHTML).join(''); updateItems(); }
+function updateItems(){
+  $$('#items .it-row').forEach(function(row){
+    var it = findItem(row.getAttribute('data-id')); if (!it) return;
+    var m = monthly(it);
+    $('[data-amt]', row).textContent = m ? yen(m) : '—';
+    row.classList.toggle('off', !it.on);
+  });
+  var total = state.items.reduce(function(a, it){ return a + monthly(it); }, 0);
+  var t = targets(), tm = t.reduce(function(a, it){ return a + monthly(it); }, 0);
+  var named = state.items.filter(function(it){ return String(it.name).trim(); }).length;
+  $('#itemSum').innerHTML = named + '品目・月額 <b>' + yen(total) + '</b> ／ 見積に出す <span class="hl">' + t.length + '品目</span>' + (total > 0 ? '（月額の <b>' + Math.round(tm / total * 100) + '%</b>）' : '');
+}
+function findItem(id){ for (var i = 0; i < state.items.length; i++) if (state.items[i].id === id) return state.items[i]; return null; }
+
+/* ---------- step 2: form fields ---------- */
+function fillForms(){
+  $$('[data-s]').forEach(function(el){ el.value = state.shop[el.getAttribute('data-s')] || ''; });
+  $$('[data-c]').forEach(function(el){
+    var k = el.getAttribute('data-c'), v = state.cond[k];
+    if (el.type === 'checkbox') el.checked = !!v; else el.value = (v == null ? '' : v);
+  });
+  $$('[data-l]').forEach(function(el){ el.value = state.cmp[el.getAttribute('data-l')]; });
+}
+
+/* ---------- sheet ---------- */
+function perDelivery(){ var d = num(state.cond.weekly) * WEEKS; var tm = targets().reduce(function(a, it){ return a + monthly(it); }, 0); return d > 0 ? tm / d : 0; }
+function roundMan(n){ if (n >= 10000) return '約' + (Math.round(n / 10000 * 10) / 10).toLocaleString('ja-JP') + '万円'; return '約' + fmt(Math.round(n / 100) * 100) + '円'; }
+function renderSheet(){
+  var s = state.shop, c = state.cond, t = targets();
+  var fromLines = [];
+  if (s.name) fromLines.push('<b>' + esc(s.name) + '</b>' + (s.type ? '（' + esc(s.type) + '）' : ''));
+  if (s.area) fromLines.push('納品先：' + esc(s.area));
+  if (s.person) fromLines.push('ご担当：' + esc(s.person));
+  var contact = [];
+  if (s.tel) contact.push('TEL ' + esc(s.tel));
+  if (s.fax) contact.push('FAX ' + esc(s.fax));
+  if (contact.length) fromLines.push(contact.join('　'));
+  if (s.mail) fromLines.push(esc(s.mail));
+
+  var cond = [];
+  if (has(c.weekly)) cond.push(['納品回数', '週' + num(c.weekly) + '便' + (c.days ? '（' + esc(c.days) + '）' : '')]);
+  else if (c.days) cond.push(['納品の曜日', esc(c.days)]);
+  if (c.time) cond.push(['納品の時間帯', esc(c.time)]);
+  if (c.holiday) cond.push(['定休日', esc(c.holiday)]);
+  cond.push(['発注方法', esc(c.method) + (c.cutoff ? '（' + esc(c.cutoff) + '）' : '')]);
+  cond.push(['お支払い', esc(c.pay)]);
+  if (c.showVolume) {
+    var tm = t.reduce(function(a, it){ return a + monthly(it); }, 0);
+    if (tm > 0) {
+      cond.push(['月の発注金額', roundMan(tm) + '（下記の品目のみ）']);
+      var pd = perDelivery(); if (pd > 0) cond.push(['1回あたり', roundMan(pd) + '前後']);
+    }
+  }
+  cond.push(['欠品時の対応', '品目表の「欠品時」欄をご確認ください。代替OKの品目は、産地・サイズ違いでも構いません。']);
+  if (c.deadline) cond.push(['回答期限', jpDate(c.deadline) + 'まで']);
+
+  var rows = t.length ? t.map(function(it, i){
+    return '<tr><td class="n">' + (i + 1) + '</td><td>' + esc(it.name) + '</td><td>' + esc(it.spec) + '</td><td class="c">' + esc(it.unit) + '</td><td class="n">' + (has(it.qty) ? fmt(num(it.qty)) : '') + '</td><td class="c">' + (it.sub === 'ng' ? '代替不可' : '代替OK') + '</td><td class="blank"></td>' + (c.askFreq ? '<td class="blank"></td>' : '') + '<td class="blank"></td></tr>';
+  }).join('') : '<tr><td class="empty" colspan="' + (c.askFreq ? 9 : 8) + '">手順2で品目にチェックを入れると、ここに並びます。</td></tr>';
+
+  var notes = ['原価の内訳のご提示は不要です。'];
+  if (c.notify) notes.push('単価が変わる場合は、事前にご連絡をお願いいたします。');
+  if (c.review) notes.push('お取引が始まりましたら、3か月ごとに単価の見直しをご相談させてください。');
+  if (c.askFreq) notes.push('「便数を減らした場合」欄は、差し支えなければご記入ください。');
+
+  $('#sheet').innerHTML =
+    '<div class="p-top"><div class="p-to">' + (c.to ? esc(c.to) : '') + '　御中</div><div class="p-date">' + today() + '</div></div>' +
+    '<div class="p-title">お見積りのお願い</div>' +
+    (fromLines.length ? '<div class="p-from">' + fromLines.join('<br>') + '</div>' : '') +
+    '<p class="p-lead">' + LEAD[state.purpose || ''] + '</p>' +
+    '<div class="p-ki">記</div>' +
+    '<table class="ct"><tbody>' + cond.map(function(r){ return '<tr><th>' + r[0] + '</th><td>' + r[1] + '</td></tr>'; }).join('') + '</tbody></table>' +
+    '<div class="p-scroll"><table class="it"><thead><tr><th>No</th><th>品名</th><th>規格・産地・サイズ</th><th>単位</th><th>月の数量</th><th>欠品時</th><th>ご提示単価<br>（税抜）</th>' + (c.askFreq ? '<th>便数を減らした<br>場合の単価</th>' : '') + '<th>備考</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+    '<table class="ct"><tbody><tr><th>見積の有効期限</th><td>　</td></tr><tr><th>ご担当・ご連絡先</th><td>　</td></tr></tbody></table>' +
+    '<ul class="p-notes">' + notes.map(function(n){ return '<li>' + n + '</li>'; }).join('') + '</ul>' +
+    '<div class="p-end">以上</div>' +
+    '<div class="p-foot">spicy-device.com「仕入れ相見積もりシート」で作成</div>';
+}
+
+/* ---------- step 3 ---------- */
+function vendorQuoted(v){ return targets().some(function(it){ return has(v.prices[it.id]); }); }
+function renderCompare(){
+  var t = targets();
+  $('#noTargets').hidden = t.length > 0;
+  ['#cmpBlk', '#condBlk', '#lossBlk'].forEach(function(sel){ $(sel).hidden = t.length === 0; });
+  var V = state.cmp.vendors;
+  var head = '<thead><tr><th>品目</th><th class="n">月の数量</th><th class="n">今の単価</th>' + V.map(function(v){
+    return '<th class="n"><input class="in vname" id="vn-' + v.id + '" data-v="' + v.id + '" data-vf="name" value="' + esc(v.name) + '" aria-label="候補の名前"></th>';
+  }).join('') + '</tr></thead>';
+  var body = '<tbody>' + t.map(function(it){
+    return '<tr><td class="nm"><b>' + esc(it.name) + '</b><small>' + esc(it.spec) + '</small></td><td class="n">' + (has(it.qty) ? fmt(num(it.qty)) : '—') + ' ' + esc(it.unit) + '</td><td class="n">' + (has(it.price) ? yen(num(it.price)) : '—') + '</td>' + V.map(function(v){
+      var p = v.prices[it.id]; if (p == null) p = '';
+      return '<td class="n"><input class="in num vin" id="vp-' + v.id + '-' + it.id + '" data-v="' + v.id + '" data-item="' + it.id + '" type="number" inputmode="decimal" min="0" step="any" value="' + esc(p) + '" placeholder="未提示" aria-label="' + esc(v.name) + 'の' + esc(it.name) + 'の単価"></td>';
+    }).join('') + '</tr>';
+  }).join('') + '</tbody>';
+  $('#priceTable').innerHTML = head + body;
+  $('#addVendorBtn').hidden = V.length >= 3;
+
+  var cur = state.cmp.cur;
+  var cards = '<div class="vc"><h4>今の業者</h4>' +
+    fld('週の便数', '<span class="inline"><span class="u">週</span><input class="in num" id="cur-weekly" data-cur="weekly" type="number" inputmode="numeric" min="0" max="7" step="1" value="' + esc(state.cond.weekly) + '"><span class="u">便</span></span>') +
+    fld('配送料（毎回かかる場合）', yenIn('cur-fee', 'data-cur="fee"', cur.fee)) +
+    fld('月の欠品・買い足し', cntIn('cur-miss', 'data-cur="miss"', cur.miss)) +
+  '</div>';
+  cards += V.map(function(v){
+    return '<div class="vc"><h4><span>' + esc(v.name || '候補') + '</span>' + (V.length > 1 ? '<button type="button" class="btn link rm" data-act="rm-vendor" data-v="' + v.id + '">削除</button>' : '') + '</h4>' +
+      fld('週の便数', '<span class="inline"><span class="u">週</span><input class="in num" id="vw-' + v.id + '" data-v="' + v.id + '" data-vf="weekly" type="number" inputmode="numeric" min="0" max="7" step="1" value="' + esc(v.weekly) + '"><span class="u">便</span></span>') +
+      fld('配送料（毎回かかる場合）', yenIn('vf-' + v.id, 'data-v="' + v.id + '" data-vf="fee"', v.fee)) +
+      fld('最低発注金額（1回）', yenIn('vm-' + v.id, 'data-v="' + v.id + '" data-vf="min"', v.min)) +
+      fld('届かない回の配送料', yenIn('vu-' + v.id, 'data-v="' + v.id + '" data-vf="underFee"', v.underFee)) +
+      fld('月の欠品・買い足しの見込み', cntIn('vx-' + v.id, 'data-v="' + v.id + '" data-vf="miss"', v.miss)) +
+    '</div>';
+  }).join('');
+  $('#vendorCards').innerHTML = cards;
+  renderResults();
+}
+function fld(label, inner){ return '<label class="fld"><span>' + label + '</span>' + inner + '</label>'; }
+function yenIn(id, data, v){ return '<span class="inline"><input class="in num" id="' + id + '" ' + data + ' type="number" inputmode="numeric" min="0" step="100" value="' + esc(v == null ? '' : v) + '"><span class="u">円</span></span>'; }
+function cntIn(id, data, v){ return '<span class="inline"><input class="in num" id="' + id + '" ' + data + ' type="number" inputmode="decimal" min="0" step="0.5" value="' + esc(v == null ? '' : v) + '"><span class="u">回</span></span>'; }
+
+function compute(v){
+  var t = targets(), diffM = 0, spendV = 0, missing = [], gains = [];
+  t.forEach(function(it){
+    if (!has(v.prices[it.id])) { missing.push(it.name); return; }
+    var p = num(v.prices[it.id]), d = (num(it.price) - p) * num(it.qty);
+    diffM += d; spendV += p * num(it.qty);
+    if (d > 0) gains.push({ name: it.name, cur: num(it.price), p: p, year: d * 12 });
+  });
+  var cmp = state.cmp;
+  var curDel = num(state.cond.weekly) * WEEKS, vDel = num(v.weekly) * WEEKS;
+  var perOrder = vDel > 0 ? spendV / vDel : 0;
+  var under = vDel > 0 && num(v.min) > 0 && perOrder < num(v.min);
+  var r = {
+    quoted: t.length - missing.length, missing: missing, perOrder: perOrder, under: under,
+    price: diffM * 12,
+    delivery: (num(cmp.cur.fee) * curDel - num(v.fee) * vDel) * 12,
+    minimum: under ? -num(v.underFee) * vDel * 12 : 0,
+    miss: -(num(v.miss) - num(cmp.cur.miss)) * num(cmp.lossPerMiss) * 12,
+    switching: -num(cmp.switchHours) * num(cmp.wage),
+    gains: gains.sort(function(a, b){ return b.year - a.year; }).slice(0, 3)
+  };
+  r.year2 = r.price + r.delivery + r.minimum + r.miss;
+  r.year1 = r.year2 + r.switching;
+  return r;
+}
+function threshold(){ return targets().reduce(function(a, it){ return a + monthly(it); }, 0) * 12 * 0.01; }
+function verdict(r, th){
+  if (!r.quoted) return { k: 'none', label: '見積待ち' };
+  if (r.year1 >= th && r.year1 > 0) return { k: 'good', label: '入れ替えを検討する価値あり' };
+  if (r.price >= th && r.price > 0) return { k: 'warn', label: '今の業者と交渉が得' };
+  return { k: 'flat', label: '差がない' };
+}
+var FACTORS = [['delivery', '配送料'], ['minimum', '最低発注金額に届かない分'], ['miss', '欠品・買い足しの増加'], ['switching', '切り替えの手間']];
+function worst(r){ var w = null; FACTORS.forEach(function(f){ if (r[f[0]] < 0 && (!w || r[f[0]] < r[w[0]])) w = f; }); return w ? w[1] : ''; }
+function cls(n){ return Math.round(n) > 0 ? 'pos' : Math.round(n) < 0 ? 'neg' : ''; }
+
+function renderResults(){
+  var t = targets(), box = $('#results');
+  if (!t.length) { box.innerHTML = ''; renderStepper(); return; }
+  var th = threshold(), V = state.cmp.vendors;
+  var list = V.map(function(v){ var r = compute(v); return { v: v, r: r, vd: verdict(r, th) }; });
+  var q = list.filter(function(x){ return x.r.quoted; });
+  var sum;
+  if (!q.length) sum = '見積が届いたら、候補の単価を入れてください。';
+  else {
+    var best = q.slice().sort(function(a, b){ return b.r.year1 - a.r.year1; })[0];
+    var warn = q.filter(function(x){ return x.vd.k === 'warn'; });
+    if (best.vd.k === 'good') sum = 'いちばん得なのは<b>' + esc(best.v.name) + '</b>です。初年度で<b>' + sgn(best.r.year1) + '</b>、2年目以降は年<b>' + sgn(best.r.year2) + '</b>の見込みです。';
+    else if (warn.length) sum = '入れ替えるほどの差がある候補はありません。<b>' + esc(warn[0].v.name) + '</b>の見積を材料に、今の業者と条件をセットで相談するのがおすすめです。';
+    else sum = 'どの候補も、今の業者と大きな差はありません。入れ替えの手間に見合わないため、今の取引を続けて、定期的に見直しましょう。';
+  }
+  box.innerHTML = '<h2 class="sec">判定</h2><div class="summary">' + sum + '</div><div class="res-grid">' + list.map(function(x){ return resCard(x.v, x.r, x.vd); }).join('') + '</div>' +
+    '<p class="note">対象品目の年間の仕入額は' + yen(th * 100) + 'です。この1%（' + yen(th) + '）に届かない差は「差がない」と判定しています。1か月は4.33週（52週÷12か月）で計算しています。</p>';
+  renderStepper();
+}
+function resCard(v, r, vd){
+  var h = '<div class="res"><div class="res-h"><h4>' + esc(v.name || '候補') + '</h4><span class="pill ' + vd.k + '">' + vd.label + '</span></div>';
+  if (!r.quoted) return h + '<p class="msg note">単価を入れると判定します。</p></div>';
+  h += '<div class="big"><span class="l">実質の差（初年度）</span><span class="v ' + cls(r.year1) + '">' + sgn(r.year1) + '</span><span class="y2">2年目以降は年 ' + sgn(r.year2) + '</span></div>';
+  h += '<dl class="bd"><dt>単価の差（年間）</dt><dd class="' + cls(r.price) + '">' + sgn(r.price) + '</dd>' +
+    '<dt>配送料</dt><dd class="' + cls(r.delivery) + '">' + sgn(r.delivery) + '</dd>' +
+    '<dt>最低発注金額に届かない分</dt><dd class="' + cls(r.minimum) + '">' + sgn(r.minimum) + '</dd>' +
+    '<dt>欠品・買い足しの増減</dt><dd class="' + cls(r.miss) + '">' + sgn(r.miss) + '</dd>' +
+    '<dt>切り替えの手間（初年度のみ）</dt><dd class="' + cls(r.switching) + '">' + sgn(r.switching) + '</dd></dl>';
+  var msg = '';
+  if (vd.k === 'good') msg = '条件を差し引いても、初年度で' + sgn(r.year1) + 'の差があります。この見積を今の業者に見せて、条件を相談する手もあります。';
+  else if (vd.k === 'warn') msg = '単価は年' + sgn(r.price) + '安いものの、' + (worst(r) || '条件の差') + 'で差が消えます。入れ替えより、この見積を材料に今の業者と相談するほうが得です。';
+  else msg = '入れ替えの手間に見合う差はありません。';
+  h += '<p class="msg">' + msg + '</p>';
+  var warns = [];
+  if (!has(v.weekly) || num(v.weekly) <= 0) warns.push('週の便数を入れてください。配送料と最低発注金額の計算に使います。');
+  if (r.under) warns.push('1回あたりの発注額（' + roundMan(r.perOrder) + '）が、最低発注金額（' + yen(num(v.min)) + '）に届きません。');
+  if (has(v.weekly) && has(state.cond.weekly) && num(v.weekly) < num(state.cond.weekly)) warns.push('便数が週' + num(state.cond.weekly) + '便から週' + num(v.weekly) + '便に減ります。欠品・買い足しの見込みを確かめてください。');
+  if (r.missing.length) warns.push('未提示の' + r.missing.length + '品目（' + r.missing.map(esc).join('、') + '）は比較から外しています。入れ替える場合、この品目は今の業者に残ります。');
+  if (warns.length) h += '<ul>' + warns.map(function(w){ return '<li>' + w + '</li>'; }).join('') + '</ul>';
+  if ((vd.k === 'good' || vd.k === 'warn') && r.gains.length) {
+    h += '<div class="mat"><b>交渉の材料になる品目</b>' + r.gains.map(function(g){ return '<span>' + esc(g.name) + '：今 ' + yen(g.cur) + ' → ' + yen(g.p) + '（年 ' + fmt(g.year) + '円）</span>'; }).join('') + '<span class="note">単価だけでなく、便数・発注の締め時間・代替OKの品目とセットで相談すると通りやすくなります。</span></div>';
+  }
+  return h + '</div>';
+}
+
+/* ---------- print & gate ---------- */
+var pending = null;
+function unlocked(){ return sget(UNLOCK) === '1'; }
+function toast(msg, ms){ var t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(function(){ t.hidden = true; }, ms || 5000); }
+function buildCmpPaper(){
+  var th = threshold(), V = state.cmp.vendors.filter(vendorQuoted);
+  var el = document.createElement('div'); el.className = 'paper';
+  var rows = [['単価の差（年間）', 'price'], ['配送料', 'delivery'], ['最低発注金額に届かない分', 'minimum'], ['欠品・買い足しの増減', 'miss'], ['切り替えの手間（初年度のみ）', 'switching'], ['実質の差（初年度）', 'year1'], ['2年目以降（年間）', 'year2']];
+  var rs = V.map(function(v){ return compute(v); });
+  el.innerHTML = '<div class="p-top"><div><b>' + esc(state.shop.name || '') + '</b></div><div class="p-date">' + today() + '</div></div>' +
+    '<div class="p-title">仕入先の比較結果</div>' +
+    '<p class="p-lead">対象 ' + targets().length + '品目／年間の仕入額 ' + yen(th * 100) + '（今の業者の単価で計算）</p>' +
+    '<div class="p-scroll"><table class="it"><thead><tr><th>項目</th>' + V.map(function(v){ return '<th>' + esc(v.name) + '</th>'; }).join('') + '</tr></thead><tbody>' +
+    rows.map(function(r){ return '<tr><th>' + r[0] + '</th>' + rs.map(function(x){ return '<td class="n">' + sgn(x[r[1]]) + '</td>'; }).join('') + '</tr>'; }).join('') +
+    '<tr><th>判定</th>' + rs.map(function(x){ return '<td class="c">' + verdict(x, th).label + '</td>'; }).join('') + '</tr>' +
+    '</tbody></table></div>' +
+    '<ul class="p-notes"><li>プラスは今の業者より得、マイナスは損を表します。</li><li>年間の仕入額の1%に届かない差は「差がない」と判定しています。</li><li>1か月は4.33週で計算しています。</li></ul>' +
+    '<div class="p-foot">spicy-device.com「仕入れ相見積もりシート」で作成</div>';
+  return el;
+}
+function doPrint(kind){
+  var root = $('#printRoot');
+  root.innerHTML = '';
+  root.appendChild(kind === 'sheet' ? $('#sheet').cloneNode(true) : buildCmpPaper());
+  var old = document.title;
+  document.title = (kind === 'sheet' ? '見積依頼_' : '比較結果_') + (state.shop.name || '店名') + '_' + isoIn(0);
+  document.body.classList.add('printing');
+  var done = function(){ document.body.classList.remove('printing'); document.title = old; window.removeEventListener('afterprint', done); };
+  window.addEventListener('afterprint', done);
+  window.print();
+}
+function requestPdf(kind){
+  track(kind === 'sheet' ? 'mitsu-pdf-sheet' : 'mitsu-pdf-cmp');
+  if (kind === 'sheet' && !targets().length) { toast('先に、見積に出す品目にチェックを入れてください。'); return; }
+  if (kind === 'cmp' && !state.cmp.vendors.some(vendorQuoted)) { toast('候補の単価を入れると、比較結果を保存できます。'); return; }
+  if (unlocked()) return finishPdf(kind);
+  pending = kind; openGate();
+}
+function finishPdf(kind){
+  if (PREVIEW) {
+    toast('プレビューのため、印刷画面は開きません。サイトに載せると、ここで印刷画面が開き、PDFとして保存できます。', 7000);
+    var target = kind === 'sheet' ? $('#sheet') : $('#results');
+    if (target && target.scrollIntoView) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
+  doPrint(kind);
+}
+function openGate(){
+  $('#gatePurpose').textContent = state.purpose ? PURPOSE[state.purpose] : '未選択';
+  if (!$('#g-shop').value && state.shop.name && !state.sample) $('#g-shop').value = state.shop.name;
+  $('#gateErr').hidden = true;
+  $('#gateSubmit').textContent = PREVIEW ? '送信してシートを表示（プレビュー）' : '送信してPDFを保存';
+  $('#gate').hidden = false;
+  track('mitsu-gate-open');
+  setTimeout(function(){ $('#g-shop').focus(); }, 30);
+}
+function closeGate(){ $('#gate').hidden = true; pending = null; }
+function submitGate(e){
+  e.preventDefault();
+  var f = $('#gateForm'), err = $('#gateErr');
+  var bad = $$('[required]', f).filter(function(el){ return !el.value.trim() || (el.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim())); });
+  if (bad.length) { err.textContent = '必須の項目を入れてください（メールアドレスは形式も確かめてください）。'; err.hidden = false; bad[0].focus(); return; }
+  var data = {
+    shop: $('#g-shop').value.trim(), name: $('#g-name').value.trim(), role: $('#g-role').value, stores: $('#g-stores').value,
+    email: $('#g-mail').value.trim(), source: $('#g-source').value, purpose: state.purpose ? PURPOSE[state.purpose] : '未選択',
+    tool: '仕入れ相見積もりシート', output: pending === 'cmp' ? '比較結果' : '見積依頼シート',
+    _subject: '【相見積もりシート】' + $('#g-shop').value.trim()
+  };
+  var kind = pending || 'sheet';
+  var ok = function(){
+    sset(UNLOCK, '1'); track('mitsu-gate-submit'); closeGate();
+    if (PREVIEW) toast('プレビューのため送信していません。', 3000);
+    setTimeout(function(){ finishPdf(kind); }, PREVIEW ? 800 : 50);
+  };
+  var cfg = window.SITE_CONFIG || {};
+  if (PREVIEW || !cfg.formspreeId || !window.fetch) { ok(); return; }
+  var btn = $('#gateSubmit'); btn.disabled = true; btn.textContent = '送信しています…';
+  fetch('https://formspree.io/f/' + cfg.formspreeId, { method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+    .then(function(res){ if (!res.ok) throw new Error('status ' + res.status); ok(); })
+    .catch(function(){ err.textContent = '送信できませんでした。通信状況を確かめて、もう一度お試しください。'; err.hidden = false; })
+    .then(function(){ btn.disabled = false; btn.textContent = '送信してPDFを保存'; });
+}
+
+/* ---------- events ---------- */
+function refreshAll(){ renderPurpose(); renderItems(); fillForms(); renderSheet(); renderStepper(); if (state.tab === 3) renderCompare(); }
+
+$('.steps').addEventListener('click', function(e){ var b = e.target.closest('[data-tab]'); if (b) setTab(+b.getAttribute('data-tab')); });
+$('.steps').addEventListener('keydown', function(e){
+  if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+  var n = state.tab + (e.key === 'ArrowRight' ? 1 : -1); if (n < 1) n = 3; if (n > 3) n = 1;
+  setTab(n); $('#tab' + n).focus();
+});
+document.addEventListener('click', function(e){
+  var go = e.target.closest('[data-go]'); if (go) { setTab(+go.getAttribute('data-go'), true); return; }
+  var a = e.target.closest('[data-act]'); if (!a) return;
+  var act = a.getAttribute('data-act');
+  if (act === 'add') { state.items.push({ id: uid(), name: '', spec: '', unit: 'kg', qty: '', price: '', sub: 'ok', on: true }); renderItems(); var last = state.items[state.items.length - 1]; var inp = $('#name-' + last.id); if (inp) inp.focus(); after(); }
+  else if (act === 'del') { var row = a.closest('.it-row'); var id = row.getAttribute('data-id'); state.items = state.items.filter(function(it){ return it.id !== id; }); state.cmp.vendors.forEach(function(v){ delete v.prices[id]; }); renderItems(); after(); }
+  else if (act === 'auto') { autoSelect(state); renderItems(); after(); toast('金額の大きい順に並べ、上位の品目を選びました。'); }
+  else if (act === 'pdf-sheet') requestPdf('sheet');
+  else if (act === 'pdf-cmp') requestPdf('cmp');
+  else if (act === 'add-vendor') { if (state.cmp.vendors.length < 3) { state.cmp.vendors.push(blankVendor('候補' + 'ABC'.charAt(state.cmp.vendors.length))); renderCompare(); persist(); } }
+  else if (act === 'rm-vendor') { var vid = a.getAttribute('data-v'); state.cmp.vendors = state.cmp.vendors.filter(function(v){ return v.id !== vid; }); renderCompare(); persist(); }
+  else if (act === 'gate-close') closeGate();
+  else if (act === 'start-own') { state = ownState(); refreshAll(); setTab(1, true); persist(); track('mitsu-start-own'); }
+  else if (act === 'reset-sample') { state = sampleState(); refreshAll(); setTab(1, true); persist(); }
+  else if (act === 'clear-ask') { $('#footCtl').hidden = true; $('#footConfirm').hidden = false; }
+  else if (act === 'clear-cancel') { $('#footCtl').hidden = false; $('#footConfirm').hidden = true; }
+  else if (act === 'clear-do') { sdel(KEY); state = ownState(); refreshAll(); setTab(1, true); persist(); $('#footCtl').hidden = false; $('#footConfirm').hidden = true; toast('入力を消しました。'); }
+});
+function after(){ renderSheet(); renderStepper(); persist(); }
+
+$('#purposeOpts').addEventListener('change', function(e){
+  if (e.target.name !== 'purpose') return;
+  state.purpose = e.target.value; renderPurpose(); renderSheet(); renderStepper(); persist(); track('mitsu-purpose-' + state.purpose);
+});
+function onItemInput(e){
+  var row = e.target.closest('.it-row'); if (!row) return;
+  var it = findItem(row.getAttribute('data-id')), f = e.target.getAttribute('data-f'); if (!it || !f) return;
+  if (f === 'on') it.on = e.target.checked;
+  else if (f === 'qty' || f === 'price') it[f] = e.target.value === '' ? '' : num(e.target.value);
+  else it[f] = e.target.value;
+  updateItems(); after();
+}
+$('#items').addEventListener('input', onItemInput);
+$('#items').addEventListener('change', onItemInput);
+
+function onFormInput(e){
+  var el = e.target, k;
+  if ((k = el.getAttribute('data-s'))) state.shop[k] = el.value;
+  else if ((k = el.getAttribute('data-c'))) {
+    state.cond[k] = el.type === 'checkbox' ? el.checked : (el.type === 'number' ? (el.value === '' ? '' : num(el.value)) : el.value);
+    if (k === 'weekly' && state.tab === 3) renderResults();
+  }
+  else if ((k = el.getAttribute('data-l'))) { state.cmp[k] = el.value === '' ? '' : num(el.value); renderResults(); persist(); return; }
+  else return;
+  renderSheet(); renderStepper(); persist();
+}
+$('#p2').addEventListener('input', function(e){ if (!e.target.closest('#items')) onFormInput(e); });
+$('#p2').addEventListener('change', function(e){ if (!e.target.closest('#items')) onFormInput(e); });
+$('#lossBlk').addEventListener('input', onFormInput);
+
+function onCmpInput(e){
+  var el = e.target, vid = el.getAttribute('data-v'), k;
+  if ((k = el.getAttribute('data-cur'))) {
+    var val = el.value === '' ? '' : num(el.value);
+    if (k === 'weekly') { state.cond.weekly = val; var w = $('#c-weekly'); if (w) w.value = el.value; renderSheet(); }
+    else state.cmp.cur[k] = val;
+  } else if (vid) {
+    var v = null; state.cmp.vendors.forEach(function(x){ if (x.id === vid) v = x; }); if (!v) return;
+    var item = el.getAttribute('data-item');
+    if (item) { if (el.value === '') delete v.prices[item]; else v.prices[item] = num(el.value); }
+    else if ((k = el.getAttribute('data-vf'))) {
+      v[k] = k === 'name' ? el.value : (el.value === '' ? '' : num(el.value));
+      if (k === 'name') { $$('.vc').forEach(function(card){ var b = $('[data-act="rm-vendor"][data-v="' + vid + '"]', card); if (b) { var sp = $('h4 span', card); if (sp) sp.textContent = el.value || '候補'; } }); }
+    }
+  } else return;
+  renderResults(); persist();
+}
+$('#cmpBlk').addEventListener('input', onCmpInput);
+$('#condBlk').addEventListener('input', onCmpInput);
+
+$('#gateForm').addEventListener('submit', submitGate);
+document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !$('#gate').hidden) closeGate(); });
+
+if (PREVIEW) {
+  $('#pdfSheetBtn').textContent = 'PDF保存の流れを試す（プレビュー）';
+  $('#pdfCmpBtn').textContent = '比較結果の保存を試す（プレビュー）';
+  $('#pdfSheetNote').textContent = 'プレビューでは印刷画面は開きません。登録フォームの動きだけ確かめられます。';
+  $('#pdfCmpNote').textContent = 'プレビューでは印刷画面は開きません。';
+} else {
+  $('#pdfSheetNote').textContent = '初回のみ、かんたんな登録が必要です。';
+}
+
+refreshAll();
+setTab(state.tab || 1);
+})();
+</script>
+</body>
+</html>
