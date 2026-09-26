@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-26T09:00:30+09:00",
+  "updated": "2026-09-27T08:44:34+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -45,17 +45,17 @@
       "cat": "market"
     },
     {
+      "title": "卸売市場に秋の味覚 天然キノコ入荷 岐阜・高山市",
+      "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE9BcG5aS3VJSDRNTDUwbVNkaTFkNlF1aXJia0hYcm9jNFp3TTl1RUZnMEVpdmVxUFQyMVREVktvSFlFU2kwQzNSUnhsbw?oc=5",
+      "source": "TVer",
+      "date": "2026-09-23",
+      "cat": "market"
+    },
+    {
       "title": "秋の便りは山から 市場に天然キノコ入荷",
       "link": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE9vMDVIRG9oNUZPMGdkV0xlb09FdkRGdU5NVDZJTmJ6Mm1BUS1FWjJCVEd5U2VqMk5xbGhCWWdVVF9BUHZ6ZnlfQzhVVF82Q2c2?oc=5",
       "source": "桐生タイムス",
       "date": "2026-09-22",
-      "cat": "market"
-    },
-    {
-      "title": "船橋市地方市場で恒例の夏祭り 抽選会や模擬せり、令和の盆踊りも",
-      "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9JSDU3RWcwcTAzazhZMHA3cU5MNFNrLS1IMlJDWFJpa0lmaTc4MkVFdUh0YjVsVllDUGF3YXB2V21GUFRZdnJVYjk4QTh1SnZJQmRhaHVB?oc=5",
-      "source": "船橋経済新聞",
-      "date": "2026-09-21",
       "cat": "market"
     },
     {
@@ -75,7 +75,7 @@
     {
       "title": "青果卸に“AI経営参謀”が常駐する時代へ。DXONEが新機能を正式リリースPDF・Excelを読み取り、自社データへ自動変換。入力から経営分析まで生成AIが支援 - 問い合わせ急増中！",
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9XcUpyZXJEUFpEMk9wenF1emszVjRtc1ZlcGRsNHF0eUhuZFQzVFJHakFYZTVTS0E2SkhSUS11LVdOUXZ0UENsd0FEZmZtV1paV01hMGVoaGEtQm9LTFBrZFlLNHZKZmRxVHc?oc=5",
-      "source": "prtimes.jp",
+      "source": "PR TIMES",
       "date": "2026-09-14",
       "cat": "business"
     },
@@ -115,10 +115,10 @@
       "cat": "market"
     },
     {
-      "title": "特集「食品卸 商社系VS民族系頂上決戦の幕開け」③ 国分グループ本社／持続可能な食の付加価値を地域と世界に届ける",
-      "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTFBEUVFKQnhXUHcwelc4TFlLaHVuT3MyMEFOYWRIeWdLdnpaRHJhSUY0MFM0eGU5Mnp2S3RPTEkzZzhoNnY3ZDZyTW54dXd1SFEySWc?oc=5",
-      "source": "激流オンライン",
-      "date": "2026-07-31",
+      "title": "食品卸が営業と物流を代行 人手不足に悩む地方メーカーの販路拡大を支える新ビジネス",
+      "link": "https://news.google.com/rss/articles/CBMihgFBVV95cUxPcS1CLW4xaExiSFpIYXI0UndaU3NPUFcyNGJOS1lPRDcwTS12RU5Fa3JxTWg1MDdHX210aFRvTzF2QmVPa1h4ZkQ0TGptam44cmVreXJKLUFKdEJyZ1R4aTloZ0h2N2tPb0Y1dXhFd3NHT1BfTGxVOElTbTRLN002MFU2RVdDQQ?oc=5",
+      "source": "projectdesign.jp",
+      "date": "2026-08-07",
       "cat": "business"
     },
     {
@@ -145,7 +145,7 @@
     {
       "title": "決算:長野の青果卸R&CHD、純利益38％減 26年3月期",
       "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9FZ2Qwak5sY1VXM2tzWU1MTDNaS3pfZ2tQZkRpcWEyc3BFM3RiOHc1eU5nNU5CeXJ4R19VV3hWRVM3djZmWnFNQlo4dXo1eG5yWGwwUG5ldlI4QkVsRnkyTk1KV1VhMDk0SmQwMw?oc=5",
-      "source": "nikkei.com",
+      "source": "日本経済新聞",
       "date": "2026-06-22",
       "cat": "business"
     },
