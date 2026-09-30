@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-29T10:08:50+09:00",
+  "updated": "2026-09-30T09:40:03+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -17,6 +17,20 @@
   ],
   "items": [
     {
+      "title": "関西の花き流通を支える大阪鶴見花き地方卸売市場：近畿農政局",
+      "link": "https://news.google.com/rss/articles/CBMifkFVX3lxTE9KUmVIbW5KZG9fcW1BTWhSVEJRRUZ1ZHRsclNYcDNBX1c1NnRLSGQ0TzNjRlY3UFZQRDJqSVI0cndmUWpmOFFlNFg0alBTTHU3eVpwYkhQVUtaM0M2aTJPR0ViVU9mVDUyY205TmZmSGk2dWx4OWdEMU9ZQk5VUQ?oc=5",
+      "source": "maff.go.jp",
+      "date": "2026-09-29",
+      "cat": "market"
+    },
+    {
+      "title": "トモシア、食品卸3社の物流・販売基盤を共通化",
+      "link": "https://news.google.com/rss/articles/CBMiSkFVX3lxTE5TNkNPQXdVcDJNRzZLQy1uM21HTDJhTUdCUjZ6ZldubGNGNE1vVUllbW1CamJqWTZ2WjFiZUZ1aDRGSWxWOWMxeFdn?oc=5",
+      "source": "LOGISTICS TODAY",
+      "date": "2026-09-29",
+      "cat": "business"
+    },
+    {
       "title": "まつたけの入荷ピーク 上田の卸売市場 長野県内有数の産地",
       "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9qbXd1eEs2aXFZeUVuV2wwem1LMDNkMU55UjVySy1VVTQxMVQzQ3NXWUJiR1FCN0h3NkwwUVc4OXNPLXpZS19TaVF4VmNzWFhnQlM1eDNqaTQ?oc=5",
       "source": "NHKニュース",
@@ -26,7 +40,7 @@
     {
       "title": "全国卸流通特集：日本加工食品卸協会・時岡肯平専務理事 2つの物流規制に懸念",
       "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9NODJiU0daYW02Y2tibnRnYzJhTU9nWVZfd29ycldERFhoTFBDN3dGNDhOMWFfdkJaZUZfWGZQZDVaMjdZNk9NMjdxQm1tS0FucTRVRGg1XzhRSEY0djhZTHpLcHYtc2p6?oc=5",
-      "source": "news.nissyoku.co.jp",
+      "source": "日本食糧新聞・電子版",
       "date": "2026-09-28",
       "cat": "business"
     },
@@ -35,12 +49,12 @@
       "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9CY19tYXVQRUJ5RXhiZldSUjk4SFBSbXQ0OFBicmNYSnVXeC1LWWMzc1c1Z1JqR0tOb3RkVmJ0Zjh6bGFYNW1VRUc5cU9iMVNja3p3UTBkRjVITEN4Zk5KLVZ1VUpjV0dCbm9N?oc=5",
       "source": "maff.go.jp",
       "date": "2026-09-25",
-      "cat": "market"
+      "cat": "toyosu"
     },
     {
       "title": "中国の牛肉卸売価格が71元/kg突破 供給不足で高値は2027年まで続く見通し",
       "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE1CNFFTdHk1N1k0dkJjOVdJcExYZnpYYmp4c2pRRERXQ3ZGRnlEVnRITGJMMWpmbDh3TjNzbkpEMXlUZXVkU3pWNUJrU2tZcE5aNzU2WlZSSDBLWTBUaEYzbG9PMnBObjhFMy0ta184U1k2VzQ4?oc=5",
-      "source": "BigGo ファイナンス",
+      "source": "finance.biggo.jp",
       "date": "2026-09-24",
       "cat": "market"
     },
@@ -87,6 +101,13 @@
       "cat": "business"
     },
     {
+      "title": "DXONEが青果卸向けに“AI経営参謀”を正式リリースし業務を革新する時代到来",
+      "link": "https://news.google.com/rss/articles/CBMidkFVX3lxTFBQMGZQd01CZWZDb0VKbFRISm1mU1NDOExEY3ZTTUF4WmNUUjNIVnZtMHRiZU54VlVrNkJKNnZtdl9tWTFXOVIwdE5oWDE2elBMQWFyWm05NndtUGlQRVdvdWQxV0NIZnpJYzNZRnU0MDZlRW5ITVE?oc=5",
+      "source": "ニュースメディアVOIX",
+      "date": "2026-09-14",
+      "cat": "business"
+    },
+    {
       "title": "首都圏で人気の高いブドウやリンゴ 県とJA全農長野が都内の卸売市場でトップセールス 阿部知事「しっかりと発信していくことが大変重要」",
       "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxPSE9ySkctY3BkVHdVeEphbU9wQkJWOE1JUGltaGFvNVFBcGNGWFkyelNHV0JZQnozWlFhM3VuU21IQnBFMUdOY2RHT3pGMWxEYlNCTmc3RzhCWGZlbTBMb2pBcXViLVpKdkoyTXU1dTBCOFB3V2FLYmJLdnlMbXl0N2pzNlZFbHM?oc=5",
       "source": "日テレNEWS NNN",
@@ -122,13 +143,6 @@
       "cat": "toyosu"
     },
     {
-      "title": "【現地取材・動画】小池都知事、卸売市場に導入の自動立体冷蔵倉庫とAGVを視察",
-      "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1rM1Q1SThjRGRqSElkZUd3aHRFNXB6U1FjdTJvOVF5QmtidHN3elpuX0JfcnRvSFBQY2Y5eFZTeF8xMUVyVnF1R05Rbw?oc=5",
-      "source": "LOGI-BIZ online",
-      "date": "2026-07-07",
-      "cat": "toyosu"
-    },
-    {
       "title": "【令和8年度】夏休み親子市場せり見学会",
       "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE5xemZuXzdnYzVXUnc2WkI4VnRPSEFYbVZ4a1UzcXJOUkZ4VXVRenhLQUQ0Yzdjb3FZbUs0SVNGTnJLRjF5a1ZTMG90emtmckI0aU5MMlY1TzZpYUkxNDZpa1JYNzhoOEV6U0R5c2o5ZmgyZm5sd1pFalBMcHUxZGM?oc=5",
       "source": "city.niigata.lg.jp",
@@ -147,20 +161,6 @@
       "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9FZ2Qwak5sY1VXM2tzWU1MTDNaS3pfZ2tQZkRpcWEyc3BFM3RiOHc1eU5nNU5CeXJ4R19VV3hWRVM3djZmWnFNQlo4dXo1eG5yWGwwUG5ldlI4QkVsRnkyTk1KV1VhMDk0SmQwMw?oc=5",
       "source": "日本経済新聞",
       "date": "2026-06-22",
-      "cat": "business"
-    },
-    {
-      "title": "中部圏の青果卸売会社12社、共同物流インフラ確立へ共同で新会社設立",
-      "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5JcVJhUHFvZ0FzVFNDVjVnbS1NZ1ZuVENXUzl1SkJ3bF9XLUEzSTFDcElyRzIzbV8zN0U5YWpfSWZidk93RlZ2UmVjRQ?oc=5",
-      "source": "LOGI-BIZ online",
-      "date": "2026-06-17",
-      "cat": "business"
-    },
-    {
-      "title": "中部圏の青果卸12社／共同物流会社を設立、2027年6月以降稼働へ",
-      "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFBsVjNZdlNydVJjdUpPWXIwbW92M2ZCX21FNkYtNHVPOFNvTWtneUJmeElOMU5zT0NraDdZNTBmV09DSmdIUF9JWFBqSU5xRnVtZl95QQ?oc=5",
-      "source": "物流ニュースのLNEWS",
-      "date": "2026-06-16",
       "cat": "business"
     },
     {
