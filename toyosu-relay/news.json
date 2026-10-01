@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-30T09:40:03+09:00",
+  "updated": "2026-10-01T09:41:22+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -26,7 +26,7 @@
     {
       "title": "トモシア、食品卸3社の物流・販売基盤を共通化",
       "link": "https://news.google.com/rss/articles/CBMiSkFVX3lxTE5TNkNPQXdVcDJNRzZLQy1uM21HTDJhTUdCUjZ6ZldubGNGNE1vVUllbW1CamJqWTZ2WjFiZUZ1aDRGSWxWOWMxeFdn?oc=5",
-      "source": "LOGISTICS TODAY",
+      "source": "logi-today.com",
       "date": "2026-09-29",
       "cat": "business"
     },
@@ -45,6 +45,13 @@
       "cat": "business"
     },
     {
+      "title": "京都の“じゃないほう市場”？「京都市中央市場」の早朝せり見学に行ってみた(1/2)",
+      "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9GSjJ5Z0Nwbmg1UlM4ZDJNVFE3ZUZma3ZmUFFwRzQyV2FCcHlxTW5qOU9ReHdNdFA3Mko1RFEwRkVvcTVIV2dRbjM3UTc0NjVFS08ydnRR0gFbQVVfeXFMTndWSm5nVjlRTzRBdkpOeHZ5Vnlvb1VlRXY2X2NoWlJJd1JyMi02YjZPM0dqWmFjOUd5Q25Yc1pEeE1CMjZJNkVkRnYyS0JwN1FrdlJsUnNDTkRZVQ?oc=5",
+      "source": "ウォーカープラス",
+      "date": "2026-09-27",
+      "cat": "market"
+    },
+    {
       "title": "今週のお手頃野菜(令和8年9月25日更新)",
       "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9CY19tYXVQRUJ5RXhiZldSUjk4SFBSbXQ0OFBicmNYSnVXeC1LWWMzc1c1Z1JqR0tOb3RkVmJ0Zjh6bGFYNW1VRUc5cU9iMVNja3p3UTBkRjVITEN4Zk5KLVZ1VUpjV0dCbm9N?oc=5",
       "source": "maff.go.jp",
@@ -54,7 +61,7 @@
     {
       "title": "中国の牛肉卸売価格が71元/kg突破 供給不足で高値は2027年まで続く見通し",
       "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE1CNFFTdHk1N1k0dkJjOVdJcExYZnpYYmp4c2pRRERXQ3ZGRnlEVnRITGJMMWpmbDh3TjNzbkpEMXlUZXVkU3pWNUJrU2tZcE5aNzU2WlZSSDBLWTBUaEYzbG9PMnBObjhFMy0ta184U1k2VzQ4?oc=5",
-      "source": "finance.biggo.jp",
+      "source": "BigGo ファイナンス",
       "date": "2026-09-24",
       "cat": "market"
     },
@@ -69,13 +76,6 @@
       "title": "卸売市場に秋の味覚 天然キノコ入荷 岐阜・高山市 (中京テレビＮＥＷＳ)",
       "link": "https://news.google.com/rss/articles/CBMijgFBVV95cUxPY2tPM1Y2VWZuNXJHWGtqTWhIaG1wb3g1Y0w2WTJUaDhaRzNvU0tOUlZXMzZSVmJLUmxwWjNGSFRTTm84TlZWU0VTakp5TGlXTjhTZ1FZS3ZTZXl4ejdmSnI4TWN0RWZ3ZVVkcHBfTWIzWmtHSVlsTUp0MlFjMEhMc1NCajRrN29jbmdUSmVn?oc=5",
       "source": "Yahoo!ニュース",
-      "date": "2026-09-23",
-      "cat": "market"
-    },
-    {
-      "title": "卸売市場に秋の味覚 天然キノコ入荷 岐阜・高山市",
-      "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE9BcG5aS3VJSDRNTDUwbVNkaTFkNlF1aXJia0hYcm9jNFp3TTl1RUZnMEVpdmVxUFQyMVREVktvSFlFU2kwQzNSUnhsbw?oc=5",
-      "source": "TVer",
       "date": "2026-09-23",
       "cat": "market"
     },
@@ -101,10 +101,10 @@
       "cat": "business"
     },
     {
-      "title": "DXONEが青果卸向けに“AI経営参謀”を正式リリースし業務を革新する時代到来",
-      "link": "https://news.google.com/rss/articles/CBMidkFVX3lxTFBQMGZQd01CZWZDb0VKbFRISm1mU1NDOExEY3ZTTUF4WmNUUjNIVnZtMHRiZU54VlVrNkJKNnZtdl9tWTFXOVIwdE5oWDE2elBMQWFyWm05NndtUGlQRVdvdWQxV0NIZnpJYzNZRnU0MDZlRW5ITVE?oc=5",
-      "source": "ニュースメディアVOIX",
-      "date": "2026-09-14",
+      "title": "神明HD子会社、県内最大青果卸の神果を買収へ 物流効率化、全国でM&A加速|経済ニュース",
+      "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTFBiYXdhUm43SUt0eEg1MWItNGEyZkxvTHdBNUdOU2c2Y0NaMUR3N1FaNGptUGhlczRkdndLUlpFVkQxRlZ4c1FpMFQ1MUlRY1NQN01aOVlJR1VhTjU0aTl0LXlkWWJaX2N0R1EtdUVR?oc=5",
+      "source": "神戸新聞NEXT",
+      "date": "2026-09-11",
       "cat": "business"
     },
     {
@@ -143,6 +143,13 @@
       "cat": "toyosu"
     },
     {
+      "title": "【現地取材・動画】小池都知事、卸売市場に導入の自動立体冷蔵倉庫とAGVを視察",
+      "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1rM1Q1SThjRGRqSElkZUd3aHRFNXB6U1FjdTJvOVF5QmtidHN3elpuX0JfcnRvSFBQY2Y5eFZTeF8xMUVyVnF1R05Rbw?oc=5",
+      "source": "LOGI-BIZ online",
+      "date": "2026-07-07",
+      "cat": "toyosu"
+    },
+    {
       "title": "【令和8年度】夏休み親子市場せり見学会",
       "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE5xemZuXzdnYzVXUnc2WkI4VnRPSEFYbVZ4a1UzcXJOUkZ4VXVRenhLQUQ0Yzdjb3FZbUs0SVNGTnJLRjF5a1ZTMG90emtmckI0aU5MMlY1TzZpYUkxNDZpa1JYNzhoOEV6U0R5c2o5ZmgyZm5sd1pFalBMcHUxZGM?oc=5",
       "source": "city.niigata.lg.jp",
@@ -174,13 +181,6 @@
       "title": "東京都中央卸売市場・豊洲市場",
       "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9abnUyLWI2TWtuY0tKa1FoZlMwRUtHeDVsejhNTmwwck1sZi1iZ2ZhWlQ2OHgyU2xsQUdnM05mdzdpY1hNZGhGMzZoZTlFOWxQMHBiRVFwZmM3enM?oc=5",
       "source": "go tokyo",
-      "date": "2025-12-25",
-      "cat": "toyosu"
-    },
-    {
-      "title": "SANKO、大田市場の青果仲卸と業務提携 販路拡大へ",
-      "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTFBRcDRxc25POTNNM19JcDRlR2ZFSnI0a2pHYmJfOTEyTW5hclM2SWVmbVN0S2lZMTg2S3Axb2ZEeW1jWk5iUTFzMkNJNnNuWkpXVG9EY1BXT3JiVGd1VkgtaW9nVHZBeEVzZ2dkbg?oc=5",
-      "source": "日本経済新聞",
       "date": "2025-12-25",
       "cat": "toyosu"
     }
