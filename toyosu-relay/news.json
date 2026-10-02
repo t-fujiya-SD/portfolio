@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-01T09:41:22+09:00",
+  "updated": "2026-10-02T10:00:31+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -26,7 +26,7 @@
     {
       "title": "トモシア、食品卸3社の物流・販売基盤を共通化",
       "link": "https://news.google.com/rss/articles/CBMiSkFVX3lxTE5TNkNPQXdVcDJNRzZLQy1uM21HTDJhTUdCUjZ6ZldubGNGNE1vVUllbW1CamJqWTZ2WjFiZUZ1aDRGSWxWOWMxeFdn?oc=5",
-      "source": "logi-today.com",
+      "source": "LOGISTICS TODAY",
       "date": "2026-09-29",
       "cat": "business"
     },
@@ -59,13 +59,6 @@
       "cat": "toyosu"
     },
     {
-      "title": "中国の牛肉卸売価格が71元/kg突破 供給不足で高値は2027年まで続く見通し",
-      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE1CNFFTdHk1N1k0dkJjOVdJcExYZnpYYmp4c2pRRERXQ3ZGRnlEVnRITGJMMWpmbDh3TjNzbkpEMXlUZXVkU3pWNUJrU2tZcE5aNzU2WlZSSDBLWTBUaEYzbG9PMnBObjhFMy0ta184U1k2VzQ4?oc=5",
-      "source": "BigGo ファイナンス",
-      "date": "2026-09-24",
-      "cat": "market"
-    },
-    {
       "title": "卸売市場に秋の味覚 天然キノコ入荷 岐阜・高山市（2026年9月23日掲載）｜中京テレビNEWS NNN",
       "link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxNcTRpR3BMRVlWM1owX3BVVnYzZW9kZkNzQUZBRTF0SjF0NFpweUItSjhaTkZtNDl5RHZlc3hINGNrbzN1MUxGbEY4T2lYUW9RYXY2cm5rQ2hEZlR2amVPQXJfeGFPUXVxVnhuc3R2UjVZbnFQQldhMUpkMFZYSENvR1Q2NA?oc=5",
       "source": "日テレNEWS NNN",
@@ -96,14 +89,14 @@
     {
       "title": "青果卸に“AI経営参謀”が常駐する時代へ。DXONEが新機能を正式リリースPDF・Excelを読み取り、自社データへ自動変換。入力から経営分析まで生成AIが支援 - 問い合わせ急増中！",
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9XcUpyZXJEUFpEMk9wenF1emszVjRtc1ZlcGRsNHF0eUhuZFQzVFJHakFYZTVTS0E2SkhSUS11LVdOUXZ0UENsd0FEZmZtV1paV01hMGVoaGEtQm9LTFBrZFlLNHZKZmRxVHc?oc=5",
-      "source": "PR TIMES",
+      "source": "prtimes.jp",
       "date": "2026-09-14",
       "cat": "business"
     },
     {
       "title": "神明HD子会社、県内最大青果卸の神果を買収へ 物流効率化、全国でM&A加速|経済ニュース",
       "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTFBiYXdhUm43SUt0eEg1MWItNGEyZkxvTHdBNUdOU2c2Y0NaMUR3N1FaNGptUGhlczRkdndLUlpFVkQxRlZ4c1FpMFQ1MUlRY1NQN01aOVlJR1VhTjU0aTl0LXlkWWJaX2N0R1EtdUVR?oc=5",
-      "source": "神戸新聞NEXT",
+      "source": "kobe-np.co.jp",
       "date": "2026-09-11",
       "cat": "business"
     },
@@ -166,7 +159,7 @@
     {
       "title": "決算:長野の青果卸R&CHD、純利益38％減 26年3月期",
       "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9FZ2Qwak5sY1VXM2tzWU1MTDNaS3pfZ2tQZkRpcWEyc3BFM3RiOHc1eU5nNU5CeXJ4R19VV3hWRVM3djZmWnFNQlo4dXo1eG5yWGwwUG5ldlI4QkVsRnkyTk1KV1VhMDk0SmQwMw?oc=5",
-      "source": "日本経済新聞",
+      "source": "nikkei.com",
       "date": "2026-06-22",
       "cat": "business"
     },
@@ -178,9 +171,16 @@
       "cat": "toyosu"
     },
     {
+      "title": "【中央卸売市場】5月イベント情報",
+      "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE5JT0ktcHJFSHZxYy00cl9TZ2hmZ1g1UjNWTHdpdlZLQ2xwV2JGWWNhV2pkTmk2MkJvaUp4YXBwVzdsQzk2Z2ZtUjZ4MTN0ektiZjlnNEVKU3Z5ck5NbXV5dE1GbG42N19n?oc=5",
+      "source": "my.metro.tokyo.lg.jp",
+      "date": "2026-05-07",
+      "cat": "market"
+    },
+    {
       "title": "東京都中央卸売市場・豊洲市場",
       "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9abnUyLWI2TWtuY0tKa1FoZlMwRUtHeDVsejhNTmwwck1sZi1iZ2ZhWlQ2OHgyU2xsQUdnM05mdzdpY1hNZGhGMzZoZTlFOWxQMHBiRVFwZmM3enM?oc=5",
-      "source": "go tokyo",
+      "source": "gotokyo.org",
       "date": "2025-12-25",
       "cat": "toyosu"
     }
