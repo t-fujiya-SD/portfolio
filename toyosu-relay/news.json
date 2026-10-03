@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-03T09:36:50+09:00",
+  "updated": "2026-10-04T08:58:22+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -17,6 +17,13 @@
   ],
   "items": [
     {
+      "title": "品川港南で「東京食肉市場まつり」開催へ 今年の無料試食はくまもと黒毛和牛",
+      "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9wenY4SkZTOXhqY1dtS0JCSFhrTkdoVXVRU1ZKeVo1bnVsWmE2MmY4YjNKd2s5bEhyNXpqSERRUU9JRXBfVllSUzE3YlA4am1zbFdvMEJn?oc=5",
+      "source": "品川経済新聞",
+      "date": "2026-10-03",
+      "cat": "toyosu"
+    },
+    {
       "title": "今週のお手頃野菜(令和8年10月2日更新)",
       "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9CY19tYXVQRUJ5RXhiZldSUjk4SFBSbXQ0OFBicmNYSnVXeC1LWWMzc1c1Z1JqR0tOb3RkVmJ0Zjh6bGFYNW1VRUc5cU9iMVNja3p3UTBkRjVITEN4Zk5KLVZ1VUpjV0dCbm9N?oc=5",
       "source": "maff.go.jp",
@@ -29,13 +36,6 @@
       "source": "いこーよニュース",
       "date": "2026-10-02",
       "cat": "market"
-    },
-    {
-      "title": "品川港南で「東京食肉市場まつり」開催へ 今年の無料試食はくまもと黒毛和牛",
-      "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9wenY4SkZTOXhqY1dtS0JCSFhrTkdoVXVRU1ZKeVo1bnVsWmE2MmY4YjNKd2s5bEhyNXpqSERRUU9JRXBfVllSUzE3YlA4am1zbFdvMEJn?oc=5",
-      "source": "品川経済新聞",
-      "date": "2026-10-02",
-      "cat": "toyosu"
     },
     {
       "title": "関西の花き流通を支える大阪鶴見花き地方卸売市場：近畿農政局",
@@ -66,13 +66,6 @@
       "cat": "business"
     },
     {
-      "title": "京都の“じゃないほう市場”？「京都市中央市場」の早朝せり見学に行ってみた(1/2)",
-      "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9GSjJ5Z0Nwbmg1UlM4ZDJNVFE3ZUZma3ZmUFFwRzQyV2FCcHlxTW5qOU9ReHdNdFA3Mko1RFEwRkVvcTVIV2dRbjM3UTc0NjVFS08ydnRR0gFbQVVfeXFMTndWSm5nVjlRTzRBdkpOeHZ5Vnlvb1VlRXY2X2NoWlJJd1JyMi02YjZPM0dqWmFjOUd5Q25Yc1pEeE1CMjZJNkVkRnYyS0JwN1FrdlJsUnNDTkRZVQ?oc=5",
-      "source": "ウォーカープラス",
-      "date": "2026-09-27",
-      "cat": "market"
-    },
-    {
       "title": "卸売市場に秋の味覚 天然キノコ入荷 岐阜・高山市（2026年9月23日掲載）｜中京テレビNEWS NNN",
       "link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxNcTRpR3BMRVlWM1owX3BVVnYzZW9kZkNzQUZBRTF0SjF0NFpweUItSjhaTkZtNDl5RHZlc3hINGNrbzN1MUxGbEY4T2lYUW9RYXY2cm5rQ2hEZlR2amVPQXJfeGFPUXVxVnhuc3R2UjVZbnFQQldhMUpkMFZYSENvR1Q2NA?oc=5",
       "source": "日テレNEWS NNN",
@@ -96,16 +89,16 @@
     {
       "title": "青果卸に“AI経営参謀”が常駐する時代へ。DXONEが新機能を正式リリースPDF・Excelを読み取り、自社データへ自動変換。入力から経営分析まで生成AIが支援 - 問い合わせ急増中！",
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9XcUpyZXJEUFpEMk9wenF1emszVjRtc1ZlcGRsNHF0eUhuZFQzVFJHakFYZTVTS0E2SkhSUS11LVdOUXZ0UENsd0FEZmZtV1paV01hMGVoaGEtQm9LTFBrZFlLNHZKZmRxVHc?oc=5",
-      "source": "PR TIMES",
+      "source": "prtimes.jp",
       "date": "2026-09-14",
       "cat": "business"
     },
     {
-      "title": "DXONEが青果卸向けに“AI経営参謀”を正式リリースし業務を革新する時代到来",
-      "link": "https://news.google.com/rss/articles/CBMidkFVX3lxTFBQMGZQd01CZWZDb0VKbFRISm1mU1NDOExEY3ZTTUF4WmNUUjNIVnZtMHRiZU54VlVrNkJKNnZtdl9tWTFXOVIwdE5oWDE2elBMQWFyWm05NndtUGlQRVdvdWQxV0NIZnpJYzNZRnU0MDZlRW5ITVE?oc=5",
-      "source": "ニュースメディアVOIX",
-      "date": "2026-09-14",
-      "cat": "business"
+      "title": "卸売市場市民感謝デー（9月）を開催しました！",
+      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE11aDdET1Z2a2hwWGxFMUtPRHVNX0dwcW5LUnBSMjJNTlpYb05haUJJNzR6ZnVKejVWemZEdldIelZNWG5WdnNaVHVQamIyVy12LXhDeHltWFBqYWlkSDlVME92R0o?oc=5",
+      "source": "city.oita.oita.jp",
+      "date": "2026-09-12",
+      "cat": "market"
     },
     {
       "title": "首都圏で人気の高いブドウやリンゴ 県とJA全農長野が都内の卸売市場でトップセールス 阿部知事「しっかりと発信していくことが大変重要」",
@@ -117,7 +110,7 @@
     {
       "title": "青果卸５割が減収減益 ２５年度決算 営業利益率１％超はわずか１割 生産費増と節約志向の板挟み",
       "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE9tdm0yYjlra0puOU0xcnRFZy0wanNicy1CcjF5aFRuNHVuSmJ3c0IwY0VRTUhPVzRvQ1k4X0F1b0F3MVlGRktROFNLeGxKZ3E5TkRybTFPaw?oc=5",
-      "source": "日本農業新聞",
+      "source": "agrinews.co.jp",
       "date": "2026-08-20",
       "cat": "business"
     },
@@ -164,6 +157,13 @@
       "cat": "business"
     },
     {
+      "title": "中部圏の青果卸12社／共同物流会社を設立、2027年6月以降稼働へ",
+      "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFBsVjNZdlNydVJjdUpPWXIwbW92M2ZCX21FNkYtNHVPOFNvTWtneUJmeElOMU5zT0NraDdZNTBmV09DSmdIUF9JWFBqSU5xRnVtZl95QQ?oc=5",
+      "source": "物流ニュースのLNEWS",
+      "date": "2026-06-16",
+      "cat": "business"
+    },
+    {
       "title": "２６２０ 資金ショートは２０５６年度に８年前倒し 東京都中央卸売市場会計、２０２６年経営レポート どらったら！！",
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1Xb0xLYTJ6eDV1WkxhbzgzTnFqVWRNcmxMMGc1OUVEMDZoZHJzQU1oaXlFdV9GYjNQbmxER0tmR1BnOGg0MGpEWmlOWVFhR25MS1hxZ084bFJpdUFIaU1xSERBWGVwT0E5dkE?oc=5",
       "source": "どらったら！！",
@@ -180,7 +180,7 @@
     {
       "title": "東京都中央卸売市場・豊洲市場",
       "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9abnUyLWI2TWtuY0tKa1FoZlMwRUtHeDVsejhNTmwwck1sZi1iZ2ZhWlQ2OHgyU2xsQUdnM05mdzdpY1hNZGhGMzZoZTlFOWxQMHBiRVFwZmM3enM?oc=5",
-      "source": "gotokyo.org",
+      "source": "go tokyo",
       "date": "2025-12-25",
       "cat": "toyosu"
     }
