@@ -155,6 +155,9 @@ label.lb{display:block;font-size:12px;font-weight:800;color:var(--sub);margin:14
 .lgd{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;font-weight:700}
 .lgd span{display:inline-flex;align-items:center;gap:5px}
 .lgd i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.spot{display:inline-block;font-size:11.5px;font-weight:700;color:var(--sub);background:#f0eeea;
+  border-radius:6px;padding:1px 7px;margin-left:6px;vertical-align:1px}
+.row.ck .spot{opacity:.5}
 .qty{display:inline-block;font-size:12.5px;font-weight:800;color:var(--p-d);background:var(--p-l);
   border-radius:6px;padding:1px 7px;margin-left:7px;vertical-align:1px}
 .row.ck .qty{background:#f0eeea;color:var(--sub2)}
@@ -286,6 +289,9 @@ label.lb{display:block;font-size:12px;font-weight:800;color:var(--sub);margin:14
 .chk .nm3{flex:1;font-size:14.5px;font-weight:600}
 .chk.on .cb{background:var(--g);border-color:var(--g)}
 .chk.on .cb::after{content:"";width:6px;height:11px;border:2.5px solid #fff;border-top:none;border-left:none;transform:rotate(42deg) translateY(-1.5px)}
+.ordb{flex:none;width:34px;height:30px;border-radius:9px;border:1.5px solid var(--line);background:#fff;
+  color:var(--sub);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.ordb:disabled{opacity:.3}
 .ordn{flex:none;width:22px;height:22px;border-radius:99px;background:var(--p);color:#fff;font-size:11px;font-weight:800;
   display:flex;align-items:center;justify-content:center}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(88px + var(--sb));background:#2b2f36;color:#fff;
@@ -684,7 +690,8 @@ function defaultSettings(){
       fri:{type:'pool', ids:[]}
     },
     sidesPerDay: 1,
-    skipHolidays: true
+    skipHolidays: true,
+    catOrder: CATS.map(c=>c.k)     // 売り場をまわる順（店に合わせて並べ替えられる）
   };
 }
 function defaultState(){
@@ -694,7 +701,8 @@ function defaultState(){
     staples: STAPLE_PRESET.map(([nm,cat,cyc]) => ({
       id:uid(), name:nm, cat, cycleDays:cyc, lastBought:null, history:[], snoozeUntil:null, enabled:true, needBuy:false
     })),
-    weeks: {}, leftovers: [], ingNotes: {}, events: {}, seeded: {}, settings: defaultSettings()
+    weeks: {}, leftovers: [], ingNotes: {}, spotNotes: {}, freshItems: {},
+    events: {}, seeded: {}, settings: defaultSettings()
   };
 }
 
@@ -759,9 +767,15 @@ function normalize(){
   S.leftovers= S.leftovers|| [];
   S.ingNotes = S.ingNotes || {};
   S.events   = S.events   || {};
+  S.spotNotes= S.spotNotes|| {};      // 売り場メモ（食材名ごと）
+  S.freshItems=S.freshItems||{};      // 直前に買うもの（食材名ごと）
   S.seeded   = S.seeded   || {};
   S.settings = Object.assign(defaultSettings(), S.settings||{});
   S.settings.dayRules = Object.assign(defaultSettings().dayRules, S.settings.dayRules||{});
+  // 売り場の順番：未設定や、カテゴリが増減したときを補正する
+  const ord = (S.settings.catOrder||[]).filter(k=>CATS.some(c=>c.k===k));
+  CATS.forEach(c=>{ if(ord.indexOf(c.k)<0) ord.push(c.k); });
+  S.settings.catOrder = ord;
   S.recipes.forEach(r=>{
     r.ings = r.ings||[]; r.seasonings = r.seasonings||[];
     r.kind = r.kind || 'main';
@@ -1121,6 +1135,8 @@ function proteinOf(ings){
   return 'other';
 }
 const PROT = {meat:{nm:'肉',ic:'🥩'}, fish:{nm:'魚',ic:'🐟'}, other:{nm:'その他',ic:'🍚'}};
+/** 読み込みや同期で知らない値が入っても落ちないように */
+const protOf = k => PROT[k] || PROT.other;
 /** 傷みやすさ（大きいほど早く使いたい） */
 const perishOf = r => r.protein==='fish' ? 2 : (r.protein==='meat' ? 1 : 0);
 
@@ -1829,8 +1845,14 @@ function buildShopping(includeHidden){
   });
 
   const hid = wk.hidden || {};
-  items.forEach(it=>{ it.hidden = !!hid[it.key]; });
-  const groups = CATS.map(c=>({k:c.k, ic:c.ic, nm:c.nm, items:[]}));
+  items.forEach(it=>{
+    it.hidden = !!hid[it.key];
+    it.fresh  = !!(S.freshItems||{})[it.name];
+    it.spot   = (S.spotNotes||{})[it.name] || '';
+  });
+  const order = (S.settings.catOrder && S.settings.catOrder.length) ? S.settings.catOrder : CATS.map(c=>c.k);
+  const groups = order.map(k=>CATS.find(c=>c.k===k)).filter(Boolean)
+    .map(c=>({k:c.k, ic:c.ic, nm:c.nm, items:[]}));
   const gmap = {}; groups.forEach(g=>gmap[g.k]=g);
   items.forEach(it=>{ if(includeHidden || !it.hidden) (gmap[it.cat]||gmap.other).items.push(it); });
   groups.forEach(g=>g.items.sort((a,b)=>{
@@ -1995,7 +2017,7 @@ function renderWeek(){
     if(day.mode==='cook'){
       if(r){
         h += '<div class="dname" data-pick="'+d.k+'">'+esc(r.name)+
-             ' <span class="pill '+r.protein+'">'+PROT[r.protein].ic+'</span>'+
+             ' <span class="pill '+r.protein+'">'+protOf(r.protein).ic+'</span>'+
              (r.minutes?' <span class="pill min">'+r.minutes+'分</span>':'')+
              (rule.type==='rotate'?' <span class="pill b">ローテ</span>':'')+
              (rule.type==='pool'?' <span class="pill b">定番</span>':'')+'</div>';
@@ -2157,6 +2179,50 @@ function dishMemoIngs(dishName, wk){
 /* 買い物タブで選択中の用途。選んだまま続けて足せるように保持する */
 let addSel = null;
 
+/** その品がいつ必要か（曜日） */
+function neededDays(it, wk){
+  if(it.kind==='ing') return (it.uses||[]).map(u=>u.w);
+  const e = it.extra;
+  if(e && e.purpose==='dish' && e.dish){
+    const d = DAYS.find(x=>dayDishName(wk.days[x.k])===e.dish);
+    return d ? [d.w] : [];
+  }
+  return [];
+}
+
+/** 買い物リストの1行 */
+function shopRow(it, wk){
+  const ck = isChecked(it.key);
+  let why = '';
+  if(it.kind==='ing'){
+    why = it.uses.map(u=>'<span class="pill b">'+u.w+'</span>'+(u.side?'<span style="opacity:.6">副菜 </span>':'')+esc(u.recipe)).join(' ');
+    if(it.leftover) why += ' <span class="pill a">余りあり</span>';
+    if(it.staple)   why += ' <span class="pill a">常備品</span>'+esc(it.why);
+  }else if(it.kind==='staple'){
+    why = '<span class="pill '+(stapleStatus(it.staple).level==='out'?'r':'a')+'">常備品</span>'+esc(it.why);
+  }else{
+    const e = it.extra, pu = e.purpose ? PURPOSES[e.purpose] : null;
+    why = '<button class="pbadge" data-tag="'+e.id+'" style="'+
+      (pu ? 'background:'+pu.bg+';color:'+pu.col : 'background:#f0eeea;color:var(--sub)')+'">'+
+      (pu ? pu.ic+' '+(e.purpose==='dish' && e.dish ? esc(e.dish) : pu.nm) : '？ 用途')+'</button>'+
+      (e.by ? ' <span class="tiny">'+esc(e.by)+'</span>' : '');
+  }
+  if(it.fresh){
+    const nd = neededDays(it, wk);
+    why = '<span class="pill r">⏰ '+(nd.length ? nd.join('・')+'曜に必要' : '直前に')+'</span>'+(why?' '+why:'');
+  }
+  const note = (S.ingNotes||{})[it.name] || '';
+  return '<div class="row'+(ck?' ck':'')+'" data-key="'+esc(it.key)+'">'+
+    '<div class="cb"></div><div class="rmain"><div class="rname">'+esc(it.name)+
+      (note ? '<span class="qty">'+esc(note)+'</span>' : '')+
+      (it.spot ? '<span class="spot">📍'+esc(it.spot)+'</span>' : '')+'</div>'+
+    '<div class="rwhy">'+why+'</div></div>'+
+    '<button class="rnote'+(note||it.spot||it.fresh?' has':'')+'" data-note="'+esc(it.name)+'">✎</button>'+
+    '<button class="rdel" data-del="'+esc(it.key)+'" data-kind="'+it.kind+'"'+
+      (it.kind==='extra' ? ' data-eid="'+it.extra.id+'"' : '')+' title="リストから消す">✕</button>'+
+    '</div>';
+}
+
 /* ---------- 買い物タブ ---------- */
 function renderShop(){
   const el = $('#pane-shop'), wk = W(), groups = buildShopping();
@@ -2234,36 +2300,23 @@ function renderShop(){
       (hasPlain ? '上の献立をタップして、その料理の食材を足していきましょう'
                 : '献立を承認すると食材が自動で並びます')+'</div>';
   }
+  // 直前に買うもの（日持ちしない）は、まとめ買いとは別の買い物なので先頭に分けて出す
+  const freshList = [];
   groups.forEach(g=>{
+    g.items = g.items.filter(it=>{ if(it.fresh){ freshList.push(it); return false; } return true; });
+  });
+  if(freshList.length){
+    const restF = freshList.filter(it=>!isChecked(it.key)).length;
+    h += '<div class="shopsec"><div class="shophd" style="background:#fdf0e8;color:var(--p-d)">'+
+      '⏰ 直前に買う<span class="n">残り '+restF+'</span></div><div class="shopbody">'+
+      freshList.map(it=>shopRow(it, wk)).join('')+
+      '<div class="tiny" style="padding:9px 13px;background:#fffaf6">'+
+      '日持ちしないので、まとめ買いでは買わずに必要な日の前に。✎ から解除できます。</div></div></div>';
+  }
+  groups.filter(g=>g.items.length).forEach(g=>{
     const rest = g.items.filter(it=>!isChecked(it.key)).length;
-    h += '<div class="shopsec"><div class="shophd">'+g.ic+' '+g.nm+'<span class="n">残り '+rest+'</span></div><div class="shopbody">';
-    g.items.forEach(it=>{
-      const ck = isChecked(it.key);
-      let why = '';
-      if(it.kind==='ing'){
-        why = it.uses.map(u=>'<span class="pill b">'+u.w+'</span>'+(u.side?'<span style="opacity:.6">副菜 </span>':'')+esc(u.recipe)).join(' ');
-        if(it.leftover) why += ' <span class="pill a">余りあり</span>';
-        if(it.staple)   why += ' <span class="pill a">常備品</span>'+esc(it.why);
-      }else if(it.kind==='staple'){
-        why = '<span class="pill '+(stapleStatus(it.staple).level==='out'?'r':'a')+'">常備品</span>'+esc(it.why);
-      }else{
-        const e = it.extra, pu = e.purpose ? PURPOSES[e.purpose] : null;
-        why = '<button class="pbadge" data-tag="'+e.id+'" style="'+
-          (pu ? 'background:'+pu.bg+';color:'+pu.col : 'background:#f0eeea;color:var(--sub)')+'">'+
-          (pu ? pu.ic+' '+(e.purpose==='dish' && e.dish ? esc(e.dish) : pu.nm) : '？ 用途')+'</button>'+
-          (e.by ? ' <span class="tiny">'+esc(e.by)+'</span>' : '');
-      }
-      const note = (S.ingNotes||{})[it.name] || '';
-      h += '<div class="row'+(ck?' ck':'')+'" data-key="'+esc(it.key)+'">'+
-           '<div class="cb"></div><div class="rmain"><div class="rname">'+esc(it.name)+
-             (note ? '<span class="qty">'+esc(note)+'</span>' : '')+'</div>'+
-           '<div class="rwhy">'+why+'</div></div>'+
-           '<button class="rnote'+(note?' has':'')+'" data-note="'+esc(it.name)+'">✎</button>'+
-           '<button class="rdel" data-del="'+esc(it.key)+'" data-kind="'+it.kind+'"'+
-             (it.kind==='extra' ? ' data-eid="'+it.extra.id+'"' : '')+' title="リストから消す">✕</button>'+
-           '</div>';
-    });
-    h += '</div></div>';
+    h += '<div class="shopsec"><div class="shophd">'+g.ic+' '+g.nm+'<span class="n">残り '+rest+'</span></div>'+
+      '<div class="shopbody">'+ g.items.map(it=>shopRow(it, wk)).join('') +'</div></div>';
   });
 
   const hid = hiddenList();
@@ -2502,7 +2555,7 @@ function renderRecipes(){
       const ds = daysSince(r.lastCooked), av = avgRating(r);
       h += '<div class="rc" data-edrec="'+r.id+'"><div class="rcm">'+
         '<div class="rcn">'+esc(r.name)+
-          (r.kind==='side'?' <span class="pill">副菜</span>':' <span class="pill '+r.protein+'">'+PROT[r.protein].ic+'</span>')+
+          (r.kind==='side'?' <span class="pill">副菜</span>':' <span class="pill '+r.protein+'">'+protOf(r.protein).ic+'</span>')+
           (r.minutes?' <span class="pill min">'+r.minutes+'分</span>':'')+
           (ruleBadge[r.id]?' <span class="pill b">'+ruleBadge[r.id]+'</span>':'')+
           (av!==null?' <span class="pill '+(av>=2.5?'g':(av<1.7?'r':'a'))+'">'+
@@ -2565,7 +2618,7 @@ function openPicker(dk, kind, sideIdx){
     '<div class="pickgrid">'+ list.map(r=>{
       const ds = daysSince(r.lastCooked);
       return '<button data-r="'+r.id+'" class="'+(r.id===cur?'on':'')+'"><div class="pn">'+esc(r.name)+'</div>'+
-      '<div class="pi">'+(r.kind==='side'?'副菜':PROT[r.protein].ic)+(r.minutes?' '+r.minutes+'分':'')+
+      '<div class="pi">'+(r.kind==='side'?'副菜':protOf(r.protein).ic)+(r.minutes?' '+r.minutes+'分':'')+
       (ds===null?'':' ・'+ds+'日前')+'</div></button>';
     }).join('') +'</div>';
   sheet((kind==='side'?'副菜':'主菜')+'を選ぶ', body,
@@ -2615,38 +2668,66 @@ function openPicker(dk, kind, sideIdx){
   $('#pkClose').onclick = closeSheet;
 }
 
-/* ---------- 食材の買う量メモ ----------
+/* ---------- 食材の設定（買う量・売り場・買うタイミング） ----------
    分量はレシピ側で管理しない方針だが、一人で買いに行くと「玉ねぎ何個？」で迷う。
    そこで、迷った食材だけその場でメモを残せるようにする。
-   メモは食材名に紐づけて覚えるので、次の週からはずっと表示される。 */
+   あわせて「店のどこにあるか」「まとめ買いでいいのか直前に買うのか」も覚える。
+   どれも食材名に紐づけるので、次の週からはずっと表示される。 */
 function openIngNote(name){
-  const cur = (S.ingNotes||{})[name] || '';
+  const cur   = (S.ingNotes||{})[name]   || '';
+  const spot  = (S.spotNotes||{})[name]  || '';
+  const fresh = !!(S.freshItems||{})[name];
   const body =
-    '<div class="tiny" style="margin:12px 0 10px">'+
-      '<b>'+esc(name)+'</b> を買うときの目安を書いておくと、次の週からもここに出ます。'+
-      '一人で買いに行くときに迷わなくなります。</div>'+
-    '<input class="f" id="inNote" value="'+esc(cur)+'" placeholder="例）3個入りネット / 大きめ1本 / 2パック" enterkeyhint="done">'+
+    '<div class="tiny" style="margin:12px 0 2px"><b>'+esc(name)+'</b> について覚えておくことを書けます。'+
+    '次の週からも買い物リストにそのまま出ます。</div>'+
+    '<label class="lb">買う量のめやす</label>'+
+    '<input class="f" id="inNote" value="'+esc(cur)+'" placeholder="例）3個入りネット / 大きめ1本 / 2パック" enterkeyhint="next">'+
     '<div class="chips" style="margin-top:10px">'+
       ['1袋','1パック','2パック','1本','2本','1個','3個','1玉','半玉','1束','大きめ','少なめ']
         .map(x=>'<button class="chip" data-q="'+x+'">'+x+'</button>').join('')+
-    '</div><div style="height:10px"></div>';
-  sheet('買う量のメモ', body,
-    (cur ? '<button class="btn sub" id="inDel" style="flex:none;padding:12px 15px;color:var(--r)">消す</button>' : '')+
+    '</div>'+
+    '<label class="lb">売り場（店のどこ）</label>'+
+    '<input class="f" id="inSpot" value="'+esc(spot)+'" placeholder="例）入口すぐ左 / 奥の冷蔵ケース / パンの横" enterkeyhint="done">'+
+    '<div class="tiny" style="margin-top:6px">一度書いておくと毎週 📍 で出ます。店の中を探して歩き回らずに済みます。</div>'+
+    '<label class="lb">買うタイミング</label>'+
+    '<div class="seg" id="inFresh">'+
+      '<button data-f="0" class="'+(fresh?'':'on')+'">日曜にまとめて</button>'+
+      '<button data-f="1" class="'+(fresh?'on':'')+'">⏰ 直前に買う</button>'+
+    '</div>'+
+    '<div class="tiny" style="margin-top:6px">鍋の野菜や刺身のように日もちしないものは「直前に買う」にしておくと、'+
+    '買い物リストのいちばん上の <b>⏰ 直前に買う</b> にまとめて出ます。何曜に必要かも一緒に出ます。</div>'+
+    '<div style="height:12px"></div>';
+  sheet('食材の設定', body,
+    ((cur||spot||fresh) ? '<button class="btn sub" id="inDel" style="flex:none;padding:12px 15px;color:var(--r)">消す</button>' : '')+
     '<button class="btn" id="inSave">保存</button>');
   const inp = $('#inNote');
+  let fr = fresh;
   $('#shBody').querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{
     inp.value = (inp.value.trim() ? inp.value.trim()+' ' : '') + b.dataset.q;
   });
+  $('#shBody').querySelectorAll('#inFresh button').forEach(b=>b.onclick=()=>{
+    fr = b.dataset.f==='1';
+    $('#shBody').querySelectorAll('#inFresh button')
+      .forEach(x=>x.classList.toggle('on', (x.dataset.f==='1')===fr));
+  });
   const commit = ()=>{
-    const v = inp.value.trim();
-    S.ingNotes = S.ingNotes || {};
-    if(v) S.ingNotes[name] = v; else delete S.ingNotes[name];
+    const v = inp.value.trim(), sp = ($('#inSpot').value||'').trim();
+    S.ingNotes = S.ingNotes||{}; S.spotNotes = S.spotNotes||{}; S.freshItems = S.freshItems||{};
+    if(v)  S.ingNotes[name]   = v;    else delete S.ingNotes[name];
+    if(sp) S.spotNotes[name]  = sp;   else delete S.spotNotes[name];
+    if(fr) S.freshItems[name] = true; else delete S.freshItems[name];
     save(); closeSheet(); renderShop();
   };
   $('#inSave').onclick = commit;
-  inp.onkeydown = e => { if(e.key==='Enter'){ e.preventDefault(); commit(); } };
+  inp.onkeydown = e => { if(e.key==='Enter'){ e.preventDefault(); $('#inSpot').focus(); } };
+  $('#inSpot').onkeydown = e => { if(e.key==='Enter'){ e.preventDefault(); commit(); } };
   const d = $('#inDel');
-  if(d) d.onclick = ()=>{ delete S.ingNotes[name]; save(); closeSheet(); renderShop(); };
+  if(d) d.onclick = ()=>{
+    delete (S.ingNotes||{})[name];
+    delete (S.spotNotes||{})[name];
+    delete (S.freshItems||{})[name];
+    save(); closeSheet(); renderShop();
+  };
   setTimeout(()=>{ if($('#inNote')) $('#inNote').focus(); }, 150);
 }
 
@@ -3004,7 +3085,7 @@ function openRecipeView(id){
   const r = recipeById(id); if(!r) return;
   let h = '<div style="margin-top:12px">'+
     (r.kind==='side' ? '<span class="pill">副菜</span>'
-      : '<span class="pill '+r.protein+'">'+PROT[r.protein].ic+' '+PROT[r.protein].nm+'</span>')+
+      : '<span class="pill '+r.protein+'">'+protOf(r.protein).ic+' '+protOf(r.protein).nm+'</span>')+
     (r.minutes?' <span class="pill min">'+r.minutes+'分</span>':'')+
     (r.lastCooked?' <span class="pill">前回 '+md(parseISO(r.lastCooked))+'</span>':'')+'</div>';
   h += '<label class="lb">食材</label><div style="font-size:14.5px;line-height:1.9">'+
@@ -3423,6 +3504,20 @@ function openDayRule(dk){
 }
 
 /* ---------- 設定 ---------- */
+/** 設定の「売り場をまわる順」一覧。並べ替えのたびにここだけ差し替える */
+function catOrderHTML(){
+  const o = S.settings.catOrder || [];
+  return o.map((k,i)=>{
+    const c = CAT[k]; if(!c) return '';
+    return '<div class="ruleRow">'+
+      '<div class="ordn">'+(i+1)+'</div>'+
+      '<div style="flex:1;min-width:0;font-size:13.5px;font-weight:700">'+c.ic+' '+esc(c.nm)+'</div>'+
+      '<button class="ordb" data-up="'+i+'"'+(i===0?' disabled':'')+'>▲</button>'+
+      '<button class="ordb" data-dn="'+i+'"'+(i===o.length-1?' disabled':'')+'>▼</button>'+
+    '</div>';
+  }).join('');
+}
+
 function openSettings(){
   const body =
     '<label class="lb">曜日ごとの決め方</label>'+
@@ -3438,6 +3533,10 @@ function openSettings(){
     '</div>'+
     '<div class="tiny" style="margin-top:7px">主菜と食材がかぶらないもの、手早くできるものを優先して選びます。'+
     '副菜は「📖 レシピ → 副菜」で足せます。</div>'+
+    '<label class="lb">売り場をまわる順</label>'+
+    '<div class="card" style="margin:0" id="cfOrd">'+catOrderHTML()+'</div>'+
+    '<div class="tiny" style="margin-top:7px">買い物リストはこの順番で並びます。いつも行く店を歩く順に合わせておくと、'+
+    '上から順に取っていくだけで済むので、売り場を行ったり来たりしなくなります。</div>'+
     '<label class="lb">祝日</label>'+
     '<div class="seg" id="cfHol">'+
       '<button data-h="1" class="'+(S.settings.skipHolidays!==false?'on':'')+'">作らない</button>'+
@@ -3478,6 +3577,18 @@ function openSettings(){
 
   $('#cfClose').onclick = closeSheet;
   $('#shBody').querySelectorAll('[data-rule]').forEach(b=>b.onclick=()=>openDayRule(b.dataset.rule));
+  const bindOrd = ()=>{
+    $('#shBody').querySelectorAll('#cfOrd [data-up],#cfOrd [data-dn]').forEach(b=>b.onclick=()=>{
+      const o = S.settings.catOrder, up = b.dataset.up !== undefined;
+      const i = +(up ? b.dataset.up : b.dataset.dn), j = up ? i-1 : i+1;
+      if(j<0 || j>=o.length) return;
+      const t = o[i]; o[i] = o[j]; o[j] = t;
+      save();
+      $('#cfOrd').innerHTML = catOrderHTML(); bindOrd();
+      renderShop();
+    });
+  };
+  bindOrd();
   $('#shBody').querySelectorAll('#cfHol button').forEach(b=>b.onclick=()=>{
     S.settings.skipHolidays = b.dataset.h==='1';
     if(S.settings.skipHolidays) Object.values(S.weeks).forEach(applyHolidays);
