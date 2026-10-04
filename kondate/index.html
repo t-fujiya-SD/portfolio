@@ -735,7 +735,7 @@ function defaultState(){
       id:uid(), name:nm, cat, cycleDays:cyc, lastBought:null, history:[], snoozeUntil:null, enabled:true, needBuy:false
     })),
     weeks: {}, leftovers: [], ingNotes: {}, spotNotes: {}, freshItems: {},
-    events: {}, buys: [], seeded: {}, settings: defaultSettings()
+    events: {}, buys: [], catSpots: {}, seeded: {}, settings: defaultSettings()
   };
 }
 
@@ -803,6 +803,7 @@ function normalize(){
   S.spotNotes= S.spotNotes|| {};      // 売り場メモ（食材名ごと）
   S.freshItems=S.freshItems||{};      // 直前に買うもの（食材名ごと）
   S.buys     = S.buys     || [];      // 買ったものと値段の台帳
+  S.catSpots = S.catSpots || {};      // 売り場メモ（カテゴリごと＝店内のどのあたりか）
   S.seeded   = S.seeded   || {};
   S.settings = Object.assign(defaultSettings(), S.settings||{});
   S.settings.dayRules = Object.assign(defaultSettings().dayRules, S.settings.dayRules||{});
@@ -1629,7 +1630,16 @@ function fillFreeDays(freeDays, base, pool, ctx, used){
   let budget = 8000;
 
   const protAt = k => assign[k] ? assign[k].protein : (base[k] ? base[k].protein : null);
+  const idAt   = k => assign[k] ? assign[k].id      : (base[k] ? base[k].id      : null);
+  /** 同じ料理が隣り合わないこと。これだけは絶対に守る（連日おなじものは献立とは言えない） */
+  function notSameAdj(k, r){
+    const i = idxOf[k];
+    if(i>0 && idAt(order[i-1])===r.id) return false;
+    if(i<order.length-1 && !isSlot[order[i+1]] && idAt(order[i+1])===r.id) return false;
+    return true;
+  }
   function ok(k, r){
+    if(!notSameAdj(k, r)) return false;
     const i = idxOf[k];
     if(i>0 && protAt(order[i-1])===r.protein) return false;
     // 次の曜日が固定なら、そこともぶつからないようにする
@@ -1658,13 +1668,14 @@ function fillFreeDays(freeDays, base, pool, ctx, used){
     return false;
   }
   if(!dfs(0)){
-    // 条件を満たす組み合わせが無い（レシピがタンパク源に偏っている）
-    // → 連続を最小限に抑えつつスコア順で埋める
+    // 条件を満たす組み合わせが無い（レシピがタンパク源に偏っている／そもそも品数が足りない）
+    // → たんぱく源の連続は妥協するが、同じ料理の連続だけは妥協しない。
+    //   どうしても置けない日は空けておく（「未定」のほうが、連日おなじものよりましなので）
     slots.forEach(k=>{ delete assign[k]; });
     taken.clear();
     slots.forEach(k=>{
       const list = sortedFor(k);
-      const pick = list.find(r=>ok(k,r)) || list[0];
+      const pick = list.find(r=>ok(k,r)) || list.find(r=>notSameAdj(k,r)) || null;
       if(pick){ assign[k]=pick; taken.add(pick.id); }
     });
   }
@@ -2068,10 +2079,19 @@ function renderWeek(){
   }else{
     const reserved = reservedMainIds();
     const nFree = mainPool().filter(r=>!reserved.has(r.id)).length;
-    if(nFree < 8){
-      h += '<div class="note">火〜木（気分）に出せる主菜が<b>'+nFree+'品</b>しかありません。'+
+    const freeDayCount = DAYS.filter(d=>dayRule(d.k).type==='free').length;
+    const freeDayNames = DAYS.filter(d=>dayRule(d.k).type==='free').map(d=>d.w).join('・');
+    if(freeDayCount && nFree < freeDayCount){
+      // 品数が日数に足りないと、同じ料理の連続を避けるために日が空く。その理由を先に言う
+      h += '<div class="note" style="background:var(--a-l);border-color:#f0e0b8;color:#7a5c14">'+
+           '<b>'+freeDayNames+'（気分）に出せる主菜が'+nFree+'品しかありません。</b>'+
+           'おなじ料理を連日は出さないので、足りないぶんの日は<b>「未定」のまま</b>空けています。'+
+           'その日は自分で書くか、📖 レシピを足してください。<br>'+
+           '<span style="opacity:.85">ローテーション（月）や定番（金）に割り当てたレシピは、その曜日以外には出しません。</span></div>';
+    }else if(nFree < 8){
+      h += '<div class="note">'+freeDayNames+'（気分）に出せる主菜が<b>'+nFree+'品</b>しかありません。'+
            'ローテーションや定番に割り当てたレシピは、その曜日以外には出しません。'+
-           '📖 レシピの貼り付けで火〜木用の定番を増やしてください。</div>';
+           '📖 レシピの貼り付けで増やすと、提案の幅が広がります。</div>';
     }
   }
 
@@ -2391,7 +2411,10 @@ function renderShop(){
   }
   groups.filter(g=>g.items.length).forEach(g=>{
     const rest = g.items.filter(it=>!isChecked(it.key)).length;
-    h += '<div class="shopsec"><div class="shophd">'+g.ic+' '+g.nm+'<span class="n">残り '+rest+'</span></div>'+
+    const gsp = (S.catSpots||{})[g.k] || '';
+    h += '<div class="shopsec"><div class="shophd">'+g.ic+' '+g.nm+
+      (gsp ? '<span style="font-weight:700;font-size:11.5px;opacity:.75">📍'+esc(gsp)+'</span>' : '')+
+      '<span class="n">残り '+rest+'</span></div>'+
       '<div class="shopbody">'+ g.items.map(it=>shopRow(it, wk)).join('') +'</div></div>';
   });
 
@@ -2672,6 +2695,38 @@ function shrinkImage(file, max){
   });
 }
 
+/** Claude に画像つきで聞いて、返ってきたJSONを返す。失敗は日本語の文言にして投げる */
+async function askClaude(content, maxTokens, parseErrMsg){
+  const r = await fetch('https://api.anthropic.com/v1/messages', {
+    method:'POST',
+    headers:{
+      'content-type':'application/json',
+      'x-api-key': aiKey,
+      'anthropic-version':'2023-06-01',
+      'anthropic-dangerous-direct-browser-access':'true'
+    },
+    body: JSON.stringify({
+      model: AI_MODEL, max_tokens: maxTokens||1500,
+      messages:[{role:'user', content: content}]
+    })
+  });
+  if(!r.ok){
+    let detail = '';
+    try{ const e = await r.json(); detail = (e.error && e.error.message) || ''; }catch(_){}
+    throw new Error(
+      r.status===401 ? 'APIキーが違うようです。⚙️ 設定で入れ直してください。' :
+      r.status===400 ? ('リクエストが通りませんでした。'+(detail?'（'+detail+'）':'')) :
+      r.status===429 ? '混み合っています。少し待ってもう一度お試しください。' :
+      r.status>=500  ? 'Claude 側で一時的なエラーが出ています。もう一度お試しください。' :
+                       ('読み取りに失敗しました（'+r.status+'）'));
+  }
+  const j = await r.json();
+  const txt = (j.content||[]).filter(c=>c.type==='text').map(c=>c.text).join('');
+  const m = txt.match(/\{[\s\S]*\}/);
+  if(!m) throw new Error(parseErrMsg || '読み取れませんでした。撮り直すか、手で入れてください。');
+  return JSON.parse(m[0]);
+}
+
 function receiptPrompt(names){
   return 'このレシートを読んで、買った品物と税込価格をJSONだけで返してください。\n\n'+
    '{"items":[{"name":"レシートの表記","match":"買い物リストの品名または空文字","price":198}]}\n\n'+
@@ -2693,37 +2748,11 @@ async function runReceiptOCR(file){
   show('レシートを読んでいます…（10秒ほど）');
   try{
     const b64 = await shrinkImage(file, 1600);
-    const r = await fetch('https://api.anthropic.com/v1/messages', {
-      method:'POST',
-      headers:{
-        'content-type':'application/json',
-        'x-api-key': aiKey,
-        'anthropic-version':'2023-06-01',
-        'anthropic-dangerous-direct-browser-access':'true'
-      },
-      body: JSON.stringify({
-        model: AI_MODEL, max_tokens: 2000,
-        messages:[{role:'user', content:[
-          {type:'image', source:{type:'base64', media_type:'image/jpeg', data:b64}},
-          {type:'text',  text: receiptPrompt(rcRows.map(x=>x.name))}
-        ]}]
-      })
-    });
-    if(!r.ok){
-      let detail = '';
-      try{ const e = await r.json(); detail = (e.error && e.error.message) || ''; }catch(_){}
-      throw new Error(
-        r.status===401 ? 'APIキーが違うようです。⚙️ 設定で入れ直してください。' :
-        r.status===400 ? ('リクエストが通りませんでした。'+(detail?'（'+detail+'）':'')) :
-        r.status===429 ? '混み合っています。少し待ってもう一度お試しください。' :
-        r.status>=500  ? 'Claude 側で一時的なエラーが出ています。もう一度お試しください。' :
-                         ('読み取りに失敗しました（'+r.status+'）'));
-    }
-    const j = await r.json();
-    const txt = (j.content||[]).filter(c=>c.type==='text').map(c=>c.text).join('');
-    const m = txt.match(/\{[\s\S]*\}/);
-    if(!m) throw new Error('レシートを読み取れませんでした。明るいところで撮り直すか、手で入れてください。');
-    const items = (JSON.parse(m[0]).items||[]).filter(x=>x && x.price>0 && x.name);
+    const j = await askClaude([
+      {type:'image', source:{type:'base64', media_type:'image/jpeg', data:b64}},
+      {type:'text',  text: receiptPrompt(rcRows.map(x=>x.name))}
+    ], 2000, 'レシートを読み取れませんでした。明るいところで撮り直すか、手で入れてください。');
+    const items = (j.items||[]).filter(x=>x && x.price>0 && x.name);
     if(!items.length) throw new Error('品物を1つも読み取れませんでした。手で入れてください。');
 
     let hit = 0, add = 0;
@@ -2745,6 +2774,76 @@ async function runReceiptOCR(file){
     show(esc(err && err.message ? err.message :
       'つながりませんでした。電波とAPIキーを確かめてください。'), 'err');
   }
+}
+
+/* ---------- 売り場の案内図・写真を読む ----------
+   順番と場所は店ごとに違うし、言葉にするのは面倒。写真1枚で済ませる。
+   結果はそのまま確定せず、並びを見せてから入れ替える。 */
+function aislePrompt(){
+  return 'この写真はスーパーの売り場案内図か、売り場の様子です。\n'+
+   '買い物の順路として自然な順（入口から出口まで、行ったり来たりしない順）に'+
+   '次のカテゴリを並べ、それぞれが店内のどのあたりにあるかを短く書いてください。\n\n'+
+   '## カテゴリ（keyはそのまま使う）\n'+
+   CATS.map(c=>'- '+c.k+': '+c.nm).join('\n')+'\n\n'+
+   '## 出力（JSONだけ。説明文やコードフェンスは付けない）\n'+
+   '{"order":["veg","meat"],"spots":{"veg":"入口すぐ左","meat":"奥の壁沿い"},"store":"店名があれば"}\n\n'+
+   '## ルール\n'+
+   '- order には上のkeyを全部、重複なく入れる\n'+
+   '- 写真から場所が読み取れないカテゴリは spots に入れなくてよい。'+
+   'その場合でも order には一般的な売り場配置から推測して入れる\n'+
+   '- spots は12文字くらいまでの短い言葉で（例：入口すぐ左、奥の冷蔵ケース、レジ手前）\n'+
+   '- 写真が売り場と関係ないものなら {"order":[],"spots":{}} を返す';
+}
+
+async function runAisleOCR(file){
+  const show = (html, cls)=>{ const el = $('#cfMapMsg'); if(el) el.innerHTML =
+    '<div class="note" style="margin:10px 0 0'+(cls==='err'?';background:#fbeceb;border-color:#f1d4d0;color:#9c3b30':'')+'">'+html+'</div>'; };
+  show('売り場を読んでいます…（10秒ほど）');
+  try{
+    const b64 = await shrinkImage(file, 1600);
+    const j = await askClaude([
+      {type:'image', source:{type:'base64', media_type:'image/jpeg', data:b64}},
+      {type:'text',  text: aislePrompt()}
+    ], 1200);
+    const order = (j.order||[]).filter(k=>CAT[k]);
+    const spots = j.spots || {};
+    if(!order.length) throw new Error('売り場として読み取れませんでした。案内図や棚の見出しが写るように撮ってみてください。');
+    // 足りないkeyは今の並びのうしろに残す（勝手に落とさない）
+    const full = order.slice();
+    (S.settings.catOrder||[]).forEach(k=>{ if(full.indexOf(k)<0) full.push(k); });
+    CATS.forEach(c=>{ if(full.indexOf(c.k)<0) full.push(c.k); });
+    showAisleResult(full, spots, j.store||'');
+  }catch(err){
+    show(esc(err && err.message ? err.message : 'つながりませんでした。'), 'err');
+  }
+}
+
+/** 読み取った並びを見せてから入れ替える（今の並びを黙って壊さない） */
+function showAisleResult(order, spots, store){
+  const body = '<div class="tiny" style="margin:12px 0 10px">'+
+      (store ? '<b>'+esc(store)+'</b> の' : '')+'写真から、この順番で回るのが良さそうだと読み取りました。'+
+      'これにすると、買い物リストの並びがこの通りになります。</div>'+
+    '<div class="card" style="margin:0">'+
+      order.map((k,i)=>{
+        const c = CAT[k], sp = spots[k] || '';
+        return '<div class="ruleRow"><div class="ordn">'+(i+1)+'</div>'+
+          '<div style="flex:1;min-width:0"><div style="font-size:13.5px;font-weight:700">'+c.ic+' '+esc(c.nm)+'</div>'+
+          (sp ? '<div class="tiny" style="margin-top:1px">📍'+esc(sp)+'</div>' : '')+'</div></div>';
+      }).join('')+
+    '</div>'+
+    '<div class="tiny" style="margin-top:9px">入れたあとも ⚙️ 設定の ▲▼ で直せますし、'+
+    '売り場メモは行をタップして書き換えられます。</div><div style="height:12px"></div>';
+  sheet('📷 読み取った売り場', body,
+    '<button class="btn sub" id="amNo" style="flex:none;padding:12px 15px">やめる</button>'+
+    '<button class="btn" id="amYes">これにする</button>');
+  $('#amNo').onclick = ()=>openSettings();
+  $('#amYes').onclick = ()=>{
+    S.settings.catOrder = order;
+    S.catSpots = S.catSpots || {};
+    Object.keys(spots).forEach(k=>{ if(CAT[k] && spots[k]) S.catSpots[k] = String(spots[k]).slice(0,16); });
+    save(); render(); openSettings();
+    toast('売り場の順番を入れ替えました');
+  };
 }
 
 /* ---------- 常備品 ---------- */
@@ -3913,13 +4012,39 @@ function catOrderHTML(){
   const o = S.settings.catOrder || [];
   return o.map((k,i)=>{
     const c = CAT[k]; if(!c) return '';
+    const sp = (S.catSpots||{})[k] || '';
     return '<div class="ruleRow">'+
       '<div class="ordn">'+(i+1)+'</div>'+
-      '<div style="flex:1;min-width:0;font-size:13.5px;font-weight:700">'+c.ic+' '+esc(c.nm)+'</div>'+
+      '<div style="flex:1;min-width:0" data-cs="'+k+'">'+
+        '<div style="font-size:13.5px;font-weight:700">'+c.ic+' '+esc(c.nm)+'</div>'+
+        '<div class="tiny" style="margin-top:1px">'+(sp ? '📍'+esc(sp) : '<span style="opacity:.6">売り場メモを書く</span>')+'</div>'+
+      '</div>'+
       '<button class="ordb" data-up="'+i+'"'+(i===0?' disabled':'')+'>▲</button>'+
       '<button class="ordb" data-dn="'+i+'"'+(i===o.length-1?' disabled':'')+'>▼</button>'+
     '</div>';
   }).join('');
+}
+
+/** カテゴリ1つぶんの売り場メモ */
+function openCatSpot(k){
+  const c = CAT[k]; if(!c) return;
+  const cur = (S.catSpots||{})[k] || '';
+  sheet(c.ic+' '+c.nm+' の売り場',
+    '<div class="tiny" style="margin:12px 0 10px">店内のどのあたりにあるかを短く書いておくと、'+
+    '買い物リストの見出しに出ます。</div>'+
+    '<input class="f" id="csIn" value="'+esc(cur)+'" placeholder="例）入口すぐ左 / 奥の壁沿い / レジ手前" enterkeyhint="done">'+
+    '<div style="height:12px"></div>',
+    (cur?'<button class="btn sub" id="csDel" style="flex:none;padding:12px 15px;color:var(--r)">消す</button>':'')+
+    '<button class="btn" id="csSave">保存</button>');
+  const done = v=>{
+    S.catSpots = S.catSpots || {};
+    if(v) S.catSpots[k] = v; else delete S.catSpots[k];
+    save(); openSettings(); render();
+  };
+  $('#csSave').onclick = ()=>done(($('#csIn').value||'').trim());
+  $('#csIn').onkeydown = e=>{ if(e.key==='Enter'){ e.preventDefault(); done(($('#csIn').value||'').trim()); } };
+  const d = $('#csDel'); if(d) d.onclick = ()=>done('');
+  setTimeout(()=>{ if($('#csIn')) $('#csIn').focus(); }, 150);
 }
 
 function openSettings(){
@@ -3945,7 +4070,14 @@ function openSettings(){
     '<label class="lb">売り場をまわる順</label>'+
     '<div class="card" style="margin:0" id="cfOrd">'+catOrderHTML()+'</div>'+
     '<div class="tiny" style="margin-top:7px">買い物リストはこの順番で並びます。いつも行く店を歩く順に合わせておくと、'+
-    '上から順に取っていくだけで済むので、売り場を行ったり来たりしなくなります。</div>'+
+    '上から順に取っていくだけで済むので、売り場を行ったり来たりしなくなります。'+
+    '行をタップすると、その売り場が店のどのあたりかを書けます。</div>'+
+    '<button class="btn sub full" style="margin-top:10px" id="cfMap">📷 売り場の案内図・写真から読み取る</button>'+
+    '<input type="file" id="cfMapFile" accept="image/*" style="display:none">'+
+    '<div id="cfMapMsg"></div>'+
+    '<div class="tiny" style="margin-top:6px">'+
+      (aiKey ? '店の案内図や売り場の写真を撮ると、Claude が順番と場所を読み取って入れます。'
+             : '下の「レシートの読み取り」で Claude の API キーを入れると使えます。')+'</div>'+
     '<label class="lb">祝日</label>'+
     '<div class="seg" id="cfHol">'+
       '<button data-h="1" class="'+(S.settings.skipHolidays!==false?'on':'')+'">作らない</button>'+
@@ -4005,7 +4137,16 @@ function openSettings(){
     S.settings.servings = +b.dataset.s; save();
     $('#shBody').querySelectorAll('#cfSv button').forEach(x=>x.classList.toggle('on', +x.dataset.s===S.settings.servings));
   });
+  $('#cfMap').onclick = ()=>{
+    if(!aiKey){ const f=$('#cfAiKey'); if(f){ f.scrollIntoView({block:'center'}); f.focus(); } return; }
+    $('#cfMapFile').click();
+  };
+  $('#cfMapFile').onchange = e => {
+    const f = e.target.files && e.target.files[0]; e.target.value='';
+    if(f) runAisleOCR(f);
+  };
   const bindOrd = ()=>{
+    $('#shBody').querySelectorAll('#cfOrd [data-cs]').forEach(b=>b.onclick=()=>openCatSpot(b.dataset.cs));
     $('#shBody').querySelectorAll('#cfOrd [data-up],#cfOrd [data-dn]').forEach(b=>b.onclick=()=>{
       const o = S.settings.catOrder, up = b.dataset.up !== undefined;
       const i = +(up ? b.dataset.up : b.dataset.dn), j = up ? i-1 : i+1;
