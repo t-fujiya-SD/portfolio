@@ -158,6 +158,24 @@ label.lb{display:block;font-size:12px;font-weight:800;color:var(--sub);margin:14
 .spot{display:inline-block;font-size:11.5px;font-weight:700;color:var(--sub);background:#f0eeea;
   border-radius:6px;padding:1px 7px;margin-left:6px;vertical-align:1px}
 .row.ck .spot{opacity:.5}
+.pz{display:inline-block;font-size:11.5px;font-weight:800;color:#9aa0a8;margin-left:7px;vertical-align:1px}
+.pz.on{color:var(--sub);background:#f0eeea;border-radius:6px;padding:1px 7px}
+.pz i{font-style:normal;font-size:10.5px}
+.pz.up{color:#b4493c;background:#fbeceb}
+.pz.dn{color:var(--g-d);background:var(--g-l)}
+.row.ck .pz{opacity:.5}
+.prow{display:flex;align-items:center;gap:9px;padding:9px 2px;border-bottom:1px solid #f0eeea}
+.prow:last-child{border-bottom:none}
+.prow .pn{flex:1;min-width:0;font-size:14px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prow .py{position:relative;flex:none;width:108px}
+.prow .py::before{content:"¥";position:absolute;left:10px;top:50%;transform:translateY(-50%);
+  font-size:13px;font-weight:800;color:var(--sub2);pointer-events:none}
+.prow input{width:100%;padding:9px 9px 9px 23px;border:1.5px solid var(--line);border-radius:9px;
+  font-size:15px;font-weight:800;text-align:right;background:#fff;font-family:inherit}
+.prow input:focus{outline:none;border-color:var(--p)}
+.prow .pd{flex:none;font-size:11px;font-weight:800;width:62px;text-align:right}
+.mny{display:flex;align-items:baseline;gap:7px;margin-top:3px}
+.mny b{font-size:27px;font-weight:800;letter-spacing:-.5px}
 .qty{display:inline-block;font-size:12.5px;font-weight:800;color:var(--p-d);background:var(--p-l);
   border-radius:6px;padding:1px 7px;margin-left:7px;vertical-align:1px}
 .row.ck .qty{background:#f0eeea;color:var(--sub2)}
@@ -498,6 +516,20 @@ function saveMyName(v){
   try{ myName ? localStorage.setItem(ME_KEY, myName) : localStorage.removeItem(ME_KEY); }catch(e){}
 }
 
+/* ---------- レシート読み取りのAPIキー（同期しない。端末ごとに持つ） ----------
+   共有のGitHubトークンと同じ扱い。同期する本体には絶対に書かない。 */
+const AI_KEY = 'kondate.ai';
+const AI_MODEL = 'claude-sonnet-5-5';
+let aiKey = '';
+function loadAiKey(){
+  try{ aiKey = localStorage.getItem(AI_KEY) || ''; }catch(e){ aiKey = ''; }
+  return aiKey;
+}
+function saveAiKey(v){
+  aiKey = String(v||'').trim();
+  try{ aiKey ? localStorage.setItem(AI_KEY, aiKey) : localStorage.removeItem(AI_KEY); }catch(e){}
+}
+
 /* ---------- 曜日と週の運用タイムライン ---------- */
 const DAYS = [
   {k:'mon',w:'月'},{k:'tue',w:'火'},{k:'wed',w:'水'},{k:'thu',w:'木'},{k:'fri',w:'金'}
@@ -691,7 +723,8 @@ function defaultSettings(){
     },
     sidesPerDay: 1,
     skipHolidays: true,
-    catOrder: CATS.map(c=>c.k)     // 売り場をまわる順（店に合わせて並べ替えられる）
+    catOrder: CATS.map(c=>c.k),    // 売り場をまわる順（店に合わせて並べ替えられる）
+    servings: 2                    // 1回に作る人数（材料費のめやすを割るのに使う）
   };
 }
 function defaultState(){
@@ -702,7 +735,7 @@ function defaultState(){
       id:uid(), name:nm, cat, cycleDays:cyc, lastBought:null, history:[], snoozeUntil:null, enabled:true, needBuy:false
     })),
     weeks: {}, leftovers: [], ingNotes: {}, spotNotes: {}, freshItems: {},
-    events: {}, seeded: {}, settings: defaultSettings()
+    events: {}, buys: [], seeded: {}, settings: defaultSettings()
   };
 }
 
@@ -769,6 +802,7 @@ function normalize(){
   S.events   = S.events   || {};
   S.spotNotes= S.spotNotes|| {};      // 売り場メモ（食材名ごと）
   S.freshItems=S.freshItems||{};      // 直前に買うもの（食材名ごと）
+  S.buys     = S.buys     || [];      // 買ったものと値段の台帳
   S.seeded   = S.seeded   || {};
   S.settings = Object.assign(defaultSettings(), S.settings||{});
   S.settings.dayRules = Object.assign(defaultSettings().dayRules, S.settings.dayRules||{});
@@ -797,6 +831,8 @@ function normalize(){
   // 買い物の記録を貯めるのが目的なので、1年ぶん以上は残す
   const cutoff = iso(addDays(today(), -400));
   Object.keys(S.weeks).forEach(k=>{ if(k < cutoff) delete S.weeks[k]; });
+  S.buys = S.buys.filter(b=>b && b.name && b.d >= cutoff);
+  _pIdx = null;
   viewWeek = currentWeekStart();
   getWeek(viewWeek);
 }
@@ -813,6 +849,7 @@ function load(){
   save();
 }
 function save(){
+  _pIdx = null;
   try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){ toast('保存できませんでした'); }
   schedulePush();
 }
@@ -1813,6 +1850,44 @@ function snoozeStaple(st){
    買い物リストの生成
    承認した日の主菜＋副菜の食材だけを載せる（未承認・外食・残り物は載せない）
    ========================================================================= */
+/* ---------- 値段（レシート） ----------
+   S.buys に「いつ・何を・いくらで買ったか」を1行ずつ貯める。
+   在庫と同じで、数えずに「買った」の記録だけを残す方針。
+   ここから 前回比 / 1人前の原価 / 娯楽に使った額 が全部出る。 */
+let _pIdx = null;
+function priceIndex(){
+  if(_pIdx) return _pIdx;
+  _pIdx = new Map();
+  (S.buys||[]).forEach(b=>{
+    if(!_pIdx.has(b.name)) _pIdx.set(b.name, []);
+    _pIdx.get(b.name).push(b);
+  });
+  _pIdx.forEach(a=>a.sort((x,y)=>String(y.d).localeCompare(String(x.d))));
+  return _pIdx;
+}
+const priceHist = name => priceIndex().get(name) || [];
+const lastPrice = name => priceHist(name)[0] || null;
+const yen = n => '¥' + Math.round(n).toLocaleString('ja-JP');
+/** 「この週の買い物」の起点。買い物は日曜（週の前日）に行くので、月曜より前に取る */
+const shopFrom = start => iso(addDays(parseISO(start), -2));
+/** この週ぶんとして記録ずみか */
+function boughtThisWeek(name, start){
+  const from = shopFrom(start);
+  return priceHist(name).find(b=>b.d >= from) || null;
+}
+/** 値段のバッジ。記録ずみなら前回比、まだなら前回いくらだったか */
+function priceBadge(name, start){
+  const h = priceHist(name); if(!h.length) return '';
+  const now = h[0].d >= shopFrom(start) ? h[0] : null;
+  if(!now) return '<span class="pz">前回 '+yen(h[0].p)+'</span>';
+  const prev = h[1];
+  if(!prev) return '<span class="pz on">'+yen(now.p)+'</span>';
+  const df = now.p - prev.p;
+  if(!df) return '<span class="pz on">'+yen(now.p)+' <i>前回と同じ</i></span>';
+  return '<span class="pz on '+(df<0?'dn':'up')+'">'+yen(now.p)+
+         ' <i>'+(df<0?'▼':'▲')+yen(Math.abs(df))+'</i></span>';
+}
+
 function buildShopping(includeHidden){
   const wk = W();
   const map = new Map();
@@ -2215,6 +2290,7 @@ function shopRow(it, wk){
   return '<div class="row'+(ck?' ck':'')+'" data-key="'+esc(it.key)+'">'+
     '<div class="cb"></div><div class="rmain"><div class="rname">'+esc(it.name)+
       (note ? '<span class="qty">'+esc(note)+'</span>' : '')+
+      priceBadge(it.name, wk.start)+
       (it.spot ? '<span class="spot">📍'+esc(it.spot)+'</span>' : '')+'</div>'+
     '<div class="rwhy">'+why+'</div></div>'+
     '<button class="rnote'+(note||it.spot||it.fresh?' has':'')+'" data-note="'+esc(it.name)+'">✎</button>'+
@@ -2330,7 +2406,10 @@ function renderShop(){
   }
 
   if(total){
-    h += '<button class="btn gr full" style="margin:14px 0 6px" id="btnDoneShop">🎉 買い物おわり（常備品を更新）</button>'+
+    h += '<button class="btn sub full" style="margin-top:14px" id="btnReceipt">🧾 レシートを登録（値段をつける）</button>'+
+         '<div class="tiny" style="text-align:center;margin-top:6px">'+
+         '値段を入れると、次からは「前回いくらだったか」が各行に出ます。</div>'+
+         '<button class="btn gr full" style="margin:12px 0 6px" id="btnDoneShop">🎉 買い物おわり（常備品を更新）</button>'+
          '<div class="tiny" style="text-align:center;padding-bottom:8px">'+
          'チェックした常備品の「購入日」を今日に更新し、次のサイクルを実績から学習します。</div>';
   }
@@ -2389,6 +2468,7 @@ function renderShop(){
   $('#btnCopy').onclick = copyList;
   const bw = $('#btnToWeek'); if(bw) bw.onclick = ()=>switchTab('week');
   const bd = $('#btnDoneShop'); if(bd) bd.onclick = finishShopping;
+  const br = $('#btnReceipt');   if(br) br.onclick = openReceipt;
 }
 
 function listAsText(){
@@ -2440,6 +2520,231 @@ function finishShopping(){
   wk.done = true;
   save(); render();
   toast(n ? '常備品を'+n+'件 更新しました' : '買い物おつかれさまでした');
+}
+
+/* ---------- レシートを登録する ----------
+   「何を買ったか」はもうリストにある。足りないのは値段だけなので、
+   リストの行に金額を入れるだけの画面にする。写真から読む場合も同じ画面に流し込む。
+   こうすると、自動読み取りが外しても人が1行直せば済む。 */
+
+/** 買い物リストの行から「用途」を引き継ぐ（記録の内訳をそのまま使えるように） */
+function buyMeta(it){
+  if(it.kind==='extra')  return {purpose: it.extra.purpose||null, dish: it.extra.dish||''};
+  if(it.kind==='staple') return {purpose:'stock', dish:''};
+  const u = (it.uses||[])[0];
+  return {purpose:'dish', dish: u ? u.recipe : ''};
+}
+
+let rcRows = [];   // {name, cat, price, purpose, dish, extra:true/false}
+
+function openReceipt(){
+  const wk = W();
+  const groups = buildShopping();
+  const all = [];
+  groups.forEach(g=>g.items.forEach(it=>all.push(it)));
+  const anyChecked = all.some(it=>isChecked(it.key));
+  // チェックしたものだけ（まだ誰も押していなければ全部）を候補にする
+  rcRows = all.filter(it=>!anyChecked || isChecked(it.key)).map(it=>{
+    const m = buyMeta(it), rec = boughtThisWeek(it.name, wk.start);
+    return {name:it.name, cat:it.cat, price: rec ? rec.p : null,
+            purpose:m.purpose, dish:m.dish, buyId: rec ? rec.id : null, added:false};
+  });
+  drawReceipt();
+}
+
+function receiptBodyHTML(){
+  const n = rcRows.filter(r=>r.price>0).length;
+  const sum = rcRows.reduce((a,r)=>a+(r.price>0?r.price:0), 0);
+  return '<div class="tiny" style="margin:12px 0 10px">'+
+      '買ったものの値段を入れてください。入れたものだけが記録されます。'+
+      '次の週からは各行に「前回 ¥198」が出て、レジ前で高いか安いか分かるようになります。</div>'+
+    '<button class="btn sub full" id="rcShot">📷 レシートの写真から読み取る</button>'+
+    '<div class="tiny" style="margin:6px 0 2px">'+
+      (aiKey ? 'レシートを撮るか選ぶと、Claude が品名と値段を読んで下の欄を埋めます。'
+             : '<b>未設定です。</b>⚙️ 設定 → レシートの読み取り で Claude の API キーを入れると使えます。')+
+    '</div>'+
+    '<input type="file" id="rcFile" accept="image/*" style="display:none">'+
+    '<div id="rcMsg"></div>'+
+    '<label class="lb">買ったもの</label>'+
+    '<div class="card" style="margin:0;padding:3px 13px">'+
+      (rcRows.length ? rcRows.map((r,i)=>{
+        const h = priceHist(r.name).filter(b=>b.id!==r.buyId);
+        const pv = h[0];
+        const df = (r.price>0 && pv) ? r.price - pv.p : null;
+        return '<div class="prow">'+
+          '<div class="pn">'+(r.added?'<span style="color:var(--p)">＋</span> ':'')+esc(r.name)+'</div>'+
+          '<div class="pd" style="color:'+(df===null?'#c3c7cd':(df<0?'var(--g-d)':(df>0?'#b4493c':'var(--sub2)')))+'">'+
+            (df===null ? (pv?'前回 '+yen(pv.p):'') : (df===0?'前回と同じ':(df<0?'▼':'▲')+yen(Math.abs(df))))+'</div>'+
+          '<div class="py"><input type="number" inputmode="numeric" pattern="[0-9]*" data-pi="'+i+'" '+
+            'value="'+(r.price>0?r.price:'')+'" placeholder="'+(pv?pv.p:'')+'"></div>'+
+        '</div>';
+      }).join('') : '<div class="tiny" style="padding:12px 0">買い物リストが空です。</div>')+
+    '</div>'+
+    '<label class="lb">リストになかったもの</label>'+
+    '<div style="display:flex;gap:8px">'+
+      '<input class="f" id="rcNew" placeholder="品名" style="flex:1" enterkeyhint="done">'+
+      '<button class="btn sub" id="rcAdd" style="flex:none;padding:12px 16px">足す</button>'+
+    '</div>'+
+    '<div class="tiny" style="margin-top:6px">レシートにあってリストになかったものです。'+
+      'ここに足すと記録にも残るので、あとで「用途がまだのもの」から 🍺娯楽 などを付けられます。</div>'+
+    '<div class="card" style="margin-top:12px;padding:13px">'+
+      '<div class="tiny">入力ずみ '+n+' 件</div>'+
+      '<div class="mny"><b>'+yen(sum)+'</b><span class="tiny">合計</span></div></div>'+
+    '<div style="height:10px"></div>';
+}
+
+function drawReceipt(){
+  sheet('🧾 レシートを登録', receiptBodyHTML(),
+    '<button class="btn sub" id="rcCancel" style="flex:none;padding:12px 15px">閉じる</button>'+
+    '<button class="btn" id="rcSave">記録する</button>');
+  const redraw = ()=>{ const t=$('#shBody').scrollTop; drawReceipt(); $('#shBody').scrollTop=t; };
+
+  $('#shBody').querySelectorAll('[data-pi]').forEach(inp=>{
+    inp.oninput = ()=>{ const v = parseInt(inp.value,10);
+      rcRows[+inp.dataset.pi].price = (isFinite(v) && v>0) ? v : null; };
+    inp.onblur = redraw;
+  });
+  const addNew = ()=>{
+    const v = ($('#rcNew').value||'').trim(); if(!v) return;
+    if(!rcRows.some(r=>r.name===v))
+      rcRows.push({name:v, cat:classify(v).cat, price:null, purpose:null, dish:'', buyId:null, added:true});
+    redraw();
+    setTimeout(()=>{ const ins=$('#shBody').querySelectorAll('[data-pi]');
+      if(ins.length) ins[ins.length-1].focus(); }, 60);
+  };
+  $('#rcAdd').onclick = addNew;
+  $('#rcNew').onkeydown = e => { if(e.key==='Enter'){ e.preventDefault(); addNew(); } };
+  $('#rcShot').onclick = ()=>{
+    if(!aiKey){ closeSheet(); openSettings();
+      setTimeout(()=>{ const f=$('#cfAiKey'); if(f){ f.scrollIntoView({block:'center'}); f.focus(); } }, 250);
+      return; }
+    $('#rcFile').click();
+  };
+  $('#rcFile').onchange = e => {
+    const f = e.target.files && e.target.files[0]; e.target.value='';
+    if(f) runReceiptOCR(f);
+  };
+  $('#rcCancel').onclick = closeSheet;
+  $('#rcSave').onclick = saveReceipt;
+}
+
+function saveReceipt(){
+  const wk = W(), d = iso(today());
+  let n = 0;
+  rcRows.forEach(r=>{
+    const old = r.buyId ? (S.buys||[]).find(b=>b.id===r.buyId) : null;
+    if(!(r.price>0)){ if(old) S.buys = S.buys.filter(b=>b.id!==r.buyId); return; }
+    n++;
+    if(old){ old.p = r.price; return; }
+    S.buys.push({id:uid(), d, name:r.name, p:r.price, cat:r.cat||'other',
+                 purpose:r.purpose||null, dish:r.dish||''});
+    // リストになかったものは記録にも残す（娯楽の集計はここから出る）
+    if(r.added && !(wk.extras||[]).some(e=>e.name===r.name))
+      addLogItem(r.name, r.purpose, r.dish);
+  });
+  _pIdx = null;
+  save(); closeSheet(); render();
+  toast(n ? n+'件の値段を記録しました' : '値段の記録を消しました');
+}
+
+/* ---------- レシートの写真を読む（Claude API を直接たたく） ----------
+   キーは端末のlocalStorageにだけ置き、同期する本体には絶対に入れない。
+   返ってきた結果は必ず人が直せる欄に流し込む（勝手に確定させない）。 */
+function shrinkImage(file, max){
+  return new Promise((res, rej)=>{
+    const fr = new FileReader();
+    fr.onerror = ()=>rej(new Error('画像を読めませんでした'));
+    fr.onload = ()=>{
+      const img = new Image();
+      img.onerror = ()=>rej(new Error('画像を読めませんでした'));
+      img.onload = ()=>{
+        const sc = Math.min(1, max/Math.max(img.width, img.height));
+        const c = document.createElement('canvas');
+        c.width = Math.max(1, Math.round(img.width*sc));
+        c.height= Math.max(1, Math.round(img.height*sc));
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        const u = c.toDataURL('image/jpeg', 0.82);
+        res(u.slice(u.indexOf(',')+1));
+      };
+      img.src = fr.result;
+    };
+    fr.readAsDataURL(file);
+  });
+}
+
+function receiptPrompt(names){
+  return 'このレシートを読んで、買った品物と税込価格をJSONだけで返してください。\n\n'+
+   '{"items":[{"name":"レシートの表記","match":"買い物リストの品名または空文字","price":198}]}\n\n'+
+   '## ルール\n'+
+   '- 小計・合計・税・お預り・お釣り・ポイント・レジ番号などの行は入れない\n'+
+   '- 値引きや割引がその品の次の行にある場合は、引いたあとの金額を price にする\n'+
+   '- 「×2」のようにまとめ買いしている行は、price をその行の合計額にして1行で返す\n'+
+   '- price は整数の円。読めない行は入れない\n'+
+   '- match は、下の買い物リストに同じものがあれば、その品名を一字一句そのまま書く。'+
+   'レシートの略称（例：ﾌﾞﾀｺﾏ切落シ → 豚こま）と見比べて、同じ食材だと判断できるものだけ。なければ空文字\n'+
+   '- 説明文やコードフェンスは付けず、JSONだけを返す\n\n'+
+   '## 買い物リスト\n'+ (names.length ? names.map(n=>'- '+n).join('\n') : '（なし）');
+}
+
+async function runReceiptOCR(file){
+  const msg = $('#rcMsg');
+  const show = (html, cls)=>{ if($('#rcMsg')) $('#rcMsg').innerHTML =
+    '<div class="note" style="margin:10px 0 0'+(cls==='err'?';background:#fbeceb;border-color:#f1d4d0;color:#9c3b30':'')+'">'+html+'</div>'; };
+  show('レシートを読んでいます…（10秒ほど）');
+  try{
+    const b64 = await shrinkImage(file, 1600);
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{
+        'content-type':'application/json',
+        'x-api-key': aiKey,
+        'anthropic-version':'2023-06-01',
+        'anthropic-dangerous-direct-browser-access':'true'
+      },
+      body: JSON.stringify({
+        model: AI_MODEL, max_tokens: 2000,
+        messages:[{role:'user', content:[
+          {type:'image', source:{type:'base64', media_type:'image/jpeg', data:b64}},
+          {type:'text',  text: receiptPrompt(rcRows.map(x=>x.name))}
+        ]}]
+      })
+    });
+    if(!r.ok){
+      let detail = '';
+      try{ const e = await r.json(); detail = (e.error && e.error.message) || ''; }catch(_){}
+      throw new Error(
+        r.status===401 ? 'APIキーが違うようです。⚙️ 設定で入れ直してください。' :
+        r.status===400 ? ('リクエストが通りませんでした。'+(detail?'（'+detail+'）':'')) :
+        r.status===429 ? '混み合っています。少し待ってもう一度お試しください。' :
+        r.status>=500  ? 'Claude 側で一時的なエラーが出ています。もう一度お試しください。' :
+                         ('読み取りに失敗しました（'+r.status+'）'));
+    }
+    const j = await r.json();
+    const txt = (j.content||[]).filter(c=>c.type==='text').map(c=>c.text).join('');
+    const m = txt.match(/\{[\s\S]*\}/);
+    if(!m) throw new Error('レシートを読み取れませんでした。明るいところで撮り直すか、手で入れてください。');
+    const items = (JSON.parse(m[0]).items||[]).filter(x=>x && x.price>0 && x.name);
+    if(!items.length) throw new Error('品物を1つも読み取れませんでした。手で入れてください。');
+
+    let hit = 0, add = 0;
+    items.forEach(x=>{
+      const price = Math.round(x.price);
+      const row = rcRows.find(r=>r.name === x.match) ||
+                  rcRows.find(r=>r.name === x.name);
+      if(row){ row.price = price; hit++; }
+      else{
+        rcRows.push({name:String(x.name).slice(0,24), cat:classify(String(x.name)).cat,
+                     price, purpose:null, dish:'', buyId:null, added:true});
+        add++;
+      }
+    });
+    const t = $('#shBody').scrollTop; drawReceipt(); $('#shBody').scrollTop = t;
+    show('読み取りました。リストの '+hit+' 件に値段が入り、'+add+' 件を下に足しました。<br>'+
+         '<b>合っているか必ず目で確かめてください。</b>違う行はその場で直せます。');
+  }catch(err){
+    show(esc(err && err.message ? err.message :
+      'つながりませんでした。電波とAPIキーを確かめてください。'), 'err');
+  }
 }
 
 /* ---------- 常備品 ---------- */
@@ -2743,9 +3048,10 @@ function findExtra(id){
   }
   return null;
 }
+const rangeFrom = range => range==='week'  ? currentWeekStart()
+                         : range==='month' ? iso(addDays(today(),-30)) : '0000-00-00';
 function logItems(range){
-  const from = range==='week'  ? currentWeekStart()
-             : range==='month' ? iso(addDays(today(),-30)) : '0000-00-00';
+  const from = rangeFrom(range);
   const out = [];
   Object.keys(S.weeks).sort().forEach(ws=>{
     if(ws < from) return;
@@ -2887,6 +3193,76 @@ function makeRecipeFromDish(dishName){
 /* ---------- 記録タブ ---------- */
 let logRange = 'month';
 const RANGE_NM = {week:'今週', month:'この1ヶ月', all:'全期間'};
+/** 用途があとから付いた品も拾えるように、メモ側の用途を名前で引けるようにする */
+function purposeByName(items){
+  const m = {};
+  items.forEach(e=>{ if(e.purpose) m[e.name] = {purpose:e.purpose, dish:e.dish||''}; });
+  return m;
+}
+
+/** 記録タブの金額セクション。値段を1件も入れていないうちは出さない */
+function moneyHTML(range, items){
+  // 今週ぶんの買い物は日曜に済ませているので、週の起点を2日前に取る
+  const from = range==='week' ? shopFrom(currentWeekStart()) : rangeFrom(range);
+  const buys = (S.buys||[]).filter(b=>b.d >= from);
+  if(!buys.length){
+    return '<div class="note" style="margin-top:12px">🧾 <b>レシートを登録すると、ここに金額が出ます。</b>'+
+      '買い物タブのいちばん下から、値段を入れるか写真を読み取ってください。'+
+      '娯楽に使った額や、前より高くなったものが分かるようになります。</div>';
+  }
+  const pm = purposeByName(items);
+  const sum = {dish:0, stock:0, fun:0, daily:0, none:0};
+  buys.forEach(b=>{
+    const pp = b.purpose || (pm[b.name] && pm[b.name].purpose) || 'none';
+    sum[sum[pp]===undefined ? 'none' : pp] += b.p;
+  });
+  const total = buys.reduce((a,b)=>a+b.p, 0);
+
+  // 前回と比べて動いたもの（同じ名前の1つ前の記録と比較）
+  const moves = [];
+  buys.forEach(b=>{
+    const hist = priceHist(b.name);
+    const i = hist.findIndex(x=>x.id===b.id);
+    const prev = i>=0 ? hist[i+1] : null;
+    if(prev && prev.p !== b.p) moves.push({name:b.name, now:b.p, was:prev.p, df:b.p-prev.p});
+  });
+  moves.sort((x,y)=>Math.abs(y.df)-Math.abs(x.df));
+
+  let h = '<div class="card" style="padding:14px">'+
+    '<div style="font-size:15px;font-weight:800">'+RANGE_NM[range]+'の買い物</div>'+
+    '<div class="mny"><b>'+yen(total)+'</b><span class="tiny">'+buys.length+'件</span></div>'+
+    '<div class="bar2" style="margin-top:10px">'+
+      PURPOSE_KEYS.filter(k=>sum[k]).map(k=>'<i style="width:'+(sum[k]/total*100)+'%;background:'+PURPOSES[k].col+'"></i>').join('')+
+      (sum.none?'<i style="width:'+(sum.none/total*100)+'%;background:#cfd3d8"></i>':'')+
+    '</div>'+
+    '<div class="lgd">'+
+      PURPOSE_KEYS.filter(k=>sum[k]).map(k=>'<span><i style="background:'+PURPOSES[k].col+'"></i>'+
+        PURPOSES[k].nm+' '+yen(sum[k])+'</span>').join('')+
+      (sum.none?'<span><i style="background:#cfd3d8"></i>未分類 '+yen(sum.none)+'</span>':'')+
+    '</div>';
+  if(sum.fun){
+    h += '<div class="tiny" style="margin-top:11px;padding-top:11px;border-top:1px solid #f0eeea">'+
+      '🍺 <b>娯楽に '+yen(sum.fun)+'</b>（全体の '+Math.round(sum.fun/total*100)+'%）。'+
+      '減らしたいときに最初に見るのはここです。</div>';
+  }
+  if(sum.none){
+    h += '<div class="tiny" style="margin-top:8px">未分類ぶんは、下の「用途がまだのもの」を決めると振り分けられます。</div>';
+  }
+  h += '</div>';
+
+  if(moves.length){
+    h += '<div class="sec">💹 前より動いたもの（'+moves.length+'）<span class="line"></span></div>'+
+      '<div class="card">'+ moves.slice(0,12).map(m=>
+        '<div class="dishline"><div style="flex:1;min-width:0">'+
+          '<div style="font-size:14.5px;font-weight:700">'+esc(m.name)+'</div>'+
+          '<div class="tiny">'+yen(m.was)+' → '+yen(m.now)+'</div></div>'+
+        '<div style="font-size:14px;font-weight:800;color:'+(m.df<0?'var(--g-d)':'#b4493c')+'">'+
+          (m.df<0?'▼':'▲')+yen(Math.abs(m.df))+'</div></div>').join('')+
+      '</div>';
+  }
+  return h;
+}
+
 function renderLog(){
   const el = $('#pane-log');
   const items = logItems(logRange);
@@ -2918,6 +3294,9 @@ function renderLog(){
         PURPOSES[k].nm+' '+cnt[k]+'</span>').join('')+
       (cnt.none?'<span><i style="background:#cfd3d8"></i>未分類 '+cnt.none+'</span>':'')+
     '</div></div>';
+
+  // --- お金 ---
+  h += moneyHTML(logRange, items);
 
   // --- 未分類 ---
   const untagged = items.filter(e=>!e.purpose);
@@ -3081,6 +3460,30 @@ function openCalendar(preset){
 }
 
 /* ---------- 作り方ビュー ---------- */
+/* ---------- 1人前のめやす原価 ----------
+   分量を持たない方針なので、これは「材料を1つずつ買ったらいくらか」のめやす。
+   それでも、高い料理と安い料理の差は十分に見えるので出す意味がある。 */
+function recipeCostHTML(r){
+  if(!r.ings || !r.ings.length) return '';
+  const known = [], unknown = [];
+  r.ings.forEach(i=>{ const b = lastPrice(i.name); b ? known.push({n:i.name, p:b.p}) : unknown.push(i.name); });
+  if(!known.length) return '';
+  const sum = known.reduce((a,x)=>a+x.p, 0);
+  const sv  = Math.max(1, S.settings.servings|0 || 2);
+  const top = known.slice().sort((a,b)=>b.p-a.p).slice(0,3);
+  return '<label class="lb">材料費のめやす</label>'+
+    '<div class="card" style="margin:0;padding:13px">'+
+      '<div class="mny"><b>'+yen(sum/sv)+'</b><span class="tiny">1人前（'+sv+'人で割って）・材料ぜんぶで '+yen(sum)+'</span></div>'+
+      '<div class="tiny" style="margin-top:8px;line-height:1.8">'+
+        '高いもの：'+top.map(x=>esc(x.n)+' '+yen(x.p)).join('・')+
+        (unknown.length ? '<br>値段がまだ分からない：'+unknown.map(esc).join('・') : '')+
+      '</div>'+
+      '<div class="tiny" style="margin-top:8px;color:var(--sub2)">'+
+        'レシートに出てきた直近の値段を、材料1つにつき1個ぶんとして足しています。'+
+        '実際は使い切らないので、これより安く付きます。料理どうしを比べるめやすとして見てください。</div>'+
+    '</div>';
+}
+
 function openRecipeView(id){
   const r = recipeById(id); if(!r) return;
   let h = '<div style="margin-top:12px">'+
@@ -3090,6 +3493,7 @@ function openRecipeView(id){
     (r.lastCooked?' <span class="pill">前回 '+md(parseISO(r.lastCooked))+'</span>':'')+'</div>';
   h += '<label class="lb">食材</label><div style="font-size:14.5px;line-height:1.9">'+
     (r.ings.length ? r.ings.map(i=>catIc(i.cat)+' '+esc(i.name)).join('　') : '<span class="tiny">登録なし</span>')+'</div>';
+  h += recipeCostHTML(r);
   if(r.seasonings && r.seasonings.length){
     h += '<label class="lb">調味料</label><div class="tiny" style="font-size:13px">🧂 '+r.seasonings.map(esc).join('・')+'</div>';
   }
@@ -3533,6 +3937,11 @@ function openSettings(){
     '</div>'+
     '<div class="tiny" style="margin-top:7px">主菜と食材がかぶらないもの、手早くできるものを優先して選びます。'+
     '副菜は「📖 レシピ → 副菜」で足せます。</div>'+
+    '<label class="lb">何人ぶん作るか</label>'+
+    '<div class="seg" id="cfSv">'+
+      [1,2,3,4,5].map(n=>'<button data-s="'+n+'" class="'+((S.settings.servings|0)===n?'on':'')+'">'+n+'人</button>').join('')+
+    '</div>'+
+    '<div class="tiny" style="margin-top:7px">レシピの「材料費のめやす」を割るのに使います。献立の提案には影響しません。</div>'+
     '<label class="lb">売り場をまわる順</label>'+
     '<div class="card" style="margin:0" id="cfOrd">'+catOrderHTML()+'</div>'+
     '<div class="tiny" style="margin-top:7px">買い物リストはこの順番で並びます。いつも行く店を歩く順に合わせておくと、'+
@@ -3555,6 +3964,21 @@ function openSettings(){
     '<input class="f" id="cfMe" value="'+esc(myName)+'" placeholder="例）わたし / つま" maxlength="12">'+
     '<div class="tiny" style="margin-top:6px">買い物メモに「誰が足したか」が残ります。空でもかまいません。'+
     'この設定は端末ごとで、共有されません。</div>'+
+    '<label class="lb">レシートの読み取り</label>'+
+    '<div class="tiny" style="margin-bottom:9px">'+
+      'レシートの写真から品名と値段を読み取るのに、<b>Claude の API キー</b>を使います。'+
+      '入れなくてもレシートは手で入力できます。</div>'+
+    '<input class="f" id="cfAiKey" type="password" value="'+esc(aiKey)+'" placeholder="sk-ant-..." '+
+      'autocapitalize="off" autocorrect="off" spellcheck="false">'+
+    '<div style="display:flex;gap:8px;margin-top:8px">'+
+      '<button class="btn sub sm" style="flex:1" id="cfAiSave">保存</button>'+
+      (aiKey ? '<button class="btn sub sm" style="flex:none;padding:10px 14px;color:var(--r)" id="cfAiDel">消す</button>' : '')+
+    '</div>'+
+    '<div class="tiny" style="margin-top:7px">'+
+      'キーは<b>この端末のブラウザにだけ</b>保存され、共有や書き出しには一切含まれません。'+
+      'ただしブラウザに置く以上、この端末を他人に触られると読まれます。'+
+      '<b>専用のワークスペースを作り、上限金額を設定したキー</b>を使ってください。'+
+      '発行は console.anthropic.com から。1枚あたり数円です。</div>'+
     '<label class="lb">共有（奥さんの端末と同期）</label>'+ shareSectionHTML() +
     '<label class="lb">データ</label>'+
     '<div class="tiny" style="margin-bottom:9px">保存先はこの端末のブラウザ内です。'+
@@ -3577,6 +4001,10 @@ function openSettings(){
 
   $('#cfClose').onclick = closeSheet;
   $('#shBody').querySelectorAll('[data-rule]').forEach(b=>b.onclick=()=>openDayRule(b.dataset.rule));
+  $('#shBody').querySelectorAll('#cfSv button').forEach(b=>b.onclick=()=>{
+    S.settings.servings = +b.dataset.s; save();
+    $('#shBody').querySelectorAll('#cfSv button').forEach(x=>x.classList.toggle('on', +x.dataset.s===S.settings.servings));
+  });
   const bindOrd = ()=>{
     $('#shBody').querySelectorAll('#cfOrd [data-up],#cfOrd [data-dn]').forEach(b=>b.onclick=()=>{
       const o = S.settings.catOrder, up = b.dataset.up !== undefined;
@@ -3599,6 +4027,10 @@ function openSettings(){
     $('#shBody').querySelectorAll('#cfSides button').forEach(x=>x.classList.toggle('on', +x.dataset.n===S.settings.sidesPerDay));
     render();
   });
+  const aiS = $('#cfAiSave');
+  if(aiS) aiS.onclick = ()=>{ saveAiKey($('#cfAiKey').value); openSettings(); toast(aiKey?'保存しました':'消しました'); };
+  const aiD = $('#cfAiDel');
+  if(aiD) aiD.onclick = ()=>{ saveAiKey(''); openSettings(); toast('消しました'); };
   $('#cfExp').onclick = ()=>{
     const blob = new Blob([JSON.stringify(S,null,1)], {type:'application/json'});
     const a = document.createElement('a');
@@ -3743,6 +4175,7 @@ document.addEventListener('visibilitychange', ()=>{
 
 load();
 loadMyName();
+loadAiKey();
 loadSyncCfg();
 setSyncState(syncCfg ? 'ok' : 'off',
   syncCfg && syncCfg.lastSyncAt ? '最終同期 '+new Date(syncCfg.lastSyncAt).toLocaleTimeString('ja-JP') : '');
