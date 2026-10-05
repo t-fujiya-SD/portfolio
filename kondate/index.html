@@ -312,6 +312,12 @@ label.lb{display:block;font-size:12px;font-weight:800;color:var(--sub);margin:14
 .ordb:disabled{opacity:.3}
 .ordn{flex:none;width:22px;height:22px;border-radius:99px;background:var(--p);color:#fff;font-size:11px;font-weight:800;
   display:flex;align-items:center;justify-content:center}
+.updbar{position:fixed;left:12px;right:12px;bottom:calc(84px + var(--sb));z-index:190;background:#2b2f36;color:#fff;
+  border-radius:13px;padding:10px 10px 10px 15px;display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:700;
+  box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.updbar[hidden]{display:none}
+.updbar span{flex:1;min-width:0}
+.updbar button{flex:none;border:none;background:var(--p);color:#fff;font-weight:800;font-size:13.5px;padding:9px 16px;border-radius:9px;font-family:inherit}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(88px + var(--sb));background:#2b2f36;color:#fff;
   padding:11px 18px;border-radius:11px;font-size:13.5px;font-weight:700;z-index:200;opacity:0;pointer-events:none;
   transition:.25s;max-width:88vw;text-align:center}
@@ -359,6 +365,7 @@ label.lb{display:block;font-size:12px;font-weight:800;color:var(--sub);margin:14
   <div class="shft" id="shFoot"></div>
 </div></div>
 
+<div class="updbar" id="updBar" hidden><span>🔄 新しい版があります</span><button id="updGo">更新</button></div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -514,6 +521,41 @@ function loadMyName(){
 function saveMyName(v){
   myName = String(v||'').slice(0,12);
   try{ myName ? localStorage.setItem(ME_KEY, myName) : localStorage.removeItem(ME_KEY); }catch(e){}
+}
+
+/* ---------- 新しい版の確認 ----------
+   ホーム画面のアプリは、iOSが前回の画面をメモリに残したまま再開する。そのため公開しても
+   古い画面で動き続ける（配信側のキャッシュも最大10分ある）。
+   開いたとき・戻ってきたときに自分自身を取り直し、BUILD が違えば更新する。
+   BUILD は kondate/stamp.sh が書き換える（kondate を直したら公開前に実行）。 */
+const BUILD = '20261005-001245';
+let updNext = '', updAt = 0;
+function hideUpdBar(){ const b = $('#updBar'); if(b) b.hidden = true; }
+function applyUpdate(){
+  try{ sessionStorage.setItem('kondate.reloaded', updNext); }catch(e){}
+  // 新しいURLにして、HTTPキャッシュに当たらないようにする。データは localStorage にあるので消えない
+  location.replace(location.pathname + '?v=' + encodeURIComponent(updNext));
+}
+async function checkUpdate(manual){
+  if(!manual && Date.now() - updAt < 20000) return;
+  updAt = Date.now();
+  try{
+    const r = await fetch(location.pathname + '?_=' + Date.now(), {cache:'no-store'});
+    if(!r.ok) throw new Error('http');
+    const m = (await r.text()).match(/const BUILD = '(\d{8}-\d{6})'/);
+    if(!m) throw new Error('nobuild');
+    if(m[1] === BUILD){ updNext = ''; hideUpdBar(); if(manual) toast('最新版です'); return; }
+    updNext = m[1];
+    // 入力の途中や画面を開いている最中に、勝手に切り替えない
+    const ae = document.activeElement, busy = $('#ov').classList.contains('on') ||
+      (ae && /^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName));
+    let tried = ''; try{ tried = sessionStorage.getItem('kondate.reloaded') || ''; }catch(e){}
+    if(!manual && !busy && tried !== updNext) applyUpdate();   // 同じ版で二度は自動で繰り返さない
+    else if(manual) applyUpdate();
+    else { const b = $('#updBar'); if(b) b.hidden = false; }
+  }catch(e){
+    if(manual) toast('確認できませんでした。通信を確かめてください');
+  }
 }
 
 /* ---------- レシート読み取りのAPIキー（同期しない。端末ごとに持つ） ----------
@@ -4125,6 +4167,10 @@ function openSettings(){
     '<button class="btn sub full" id="cfShare">📤 献立＋買い物リストをコピー</button>'+
     '<label class="lb" style="color:var(--r)">リセット</label>'+
     '<button class="btn sub full" id="cfReset" style="color:var(--r)">すべてのデータを消去</button>'+
+    '<label class="lb">バージョン</label>'+
+    '<div class="tiny" style="margin-bottom:9px">この画面の版：<b>'+BUILD+'</b>。'+
+      'アプリを開くたびに自動で新しい版を確認します。反映されないときはここから。</div>'+
+    '<button class="btn sub full" id="cfUpd">🔄 最新版を確認して更新</button>'+
     '<div style="height:14px"></div>'+
     '<div class="tiny">チャワン / 端末内保存（localStorage）'+
       (syncCfg ? '＋GitHub Gist 同期' : '・外部通信なし')+'</div>'+
@@ -4132,6 +4178,7 @@ function openSettings(){
   sheet('設定', body, '<button class="btn" id="cfClose">閉じる</button>');
 
   $('#cfClose').onclick = closeSheet;
+  $('#cfUpd').onclick = ()=>checkUpdate(true);
   $('#shBody').querySelectorAll('[data-rule]').forEach(b=>b.onclick=()=>openDayRule(b.dataset.rule));
   $('#shBody').querySelectorAll('#cfSv button').forEach(b=>b.onclick=()=>{
     S.settings.servings = +b.dataset.s; save();
@@ -4311,8 +4358,9 @@ function tick(){
 }
 setInterval(tick, 60000);
 document.addEventListener('visibilitychange', ()=>{
-  if(document.visibilityState==='visible'){ tick(); render(); syncNow(); }
+  if(document.visibilityState==='visible'){ checkUpdate(); tick(); render(); syncNow(); }
 });
+$('#updGo').onclick = applyUpdate;
 
 load();
 loadMyName();
@@ -4321,6 +4369,7 @@ loadSyncCfg();
 setSyncState(syncCfg ? 'ok' : 'off',
   syncCfg && syncCfg.lastSyncAt ? '最終同期 '+new Date(syncCfg.lastSyncAt).toLocaleTimeString('ja-JP') : '');
 render();
+setTimeout(checkUpdate, 1200);
 if(syncCfg){ syncNow(); setInterval(()=>{ if(document.visibilityState==='visible') syncNow(); }, 60000); }
 </script>
 </body>
