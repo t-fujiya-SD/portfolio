@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>チャワン — 平日5日の献立・買い物・常備品</title>
+<title>月曜はお魚です — 平日5日の献立・買い物・常備品</title>
 <meta name="theme-color" content="#c25a28">
 <link rel="icon" type="image/png" sizes="180x180" href="/kondate/icon-180.png">
 <link rel="apple-touch-icon" href="/kondate/icon-180.png">
 <link rel="icon" type="image/png" sizes="512x512" href="/kondate/icon-512.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="チャワン">
+<meta name="apple-mobile-web-app-title" content="月曜はお魚です">
 <style>
 :root{
   --p:#e2703a; --p-d:#c25a28; --p-l:#fdf1e9; --p-ll:#fff8f4;
@@ -328,7 +328,7 @@ label.lb{display:block;font-size:12px;font-weight:800;color:var(--sub);margin:14
 
 <header>
   <div class="hrow">
-    <div class="logo">チャワン<small>WEEKLY MEAL &amp; SHOPPING</small></div>
+    <div class="logo">月曜はお魚です<small>WEEKLY MEAL &amp; SHOPPING</small></div>
     <div class="hsp"></div>
     <button class="hbtn" id="btnCal">📅</button>
     <button class="hbtn" id="btnSync" hidden>☁️</button>
@@ -371,7 +371,7 @@ label.lb{display:block;font-size:12px;font-weight:800;color:var(--sub);margin:14
 <script>
 "use strict";
 /* =========================================================================
-   チャワン — 平日5日の献立 → 買い物リスト → 常備品 を一直線につなぐ
+   月曜はお魚です — 平日5日の献立 → 買い物リスト → 常備品 を一直線につなぐ
    単一HTML / localStorage / 外部通信なし
    ========================================================================= */
 
@@ -528,7 +528,7 @@ function saveMyName(v){
    古い画面で動き続ける（配信側のキャッシュも最大10分ある）。
    開いたとき・戻ってきたときに自分自身を取り直し、BUILD が違えば更新する。
    BUILD は kondate/stamp.sh が書き換える（kondate を直したら公開前に実行）。 */
-const BUILD = '20261005-001245';
+const BUILD = '20261005-001947';
 let updNext = '', updAt = 0;
 function hideUpdBar(){ const b = $('#updBar'); if(b) b.hidden = true; }
 function applyUpdate(){
@@ -1056,7 +1056,7 @@ async function gistWrite(cfg, data){
 async function gistCreate(cfg, data){
   const files = {}; files[GIST_FILE] = {content: JSON.stringify(data)};
   const g = await gistCall(cfg, '/gists', 'POST',
-    {description:'チャワン 共有データ', public:false, files});
+    {description:'月曜はお魚です 共有データ', public:false, files});
   return g.id;
 }
 
@@ -4172,7 +4172,7 @@ function openSettings(){
       'アプリを開くたびに自動で新しい版を確認します。反映されないときはここから。</div>'+
     '<button class="btn sub full" id="cfUpd">🔄 最新版を確認して更新</button>'+
     '<div style="height:14px"></div>'+
-    '<div class="tiny">チャワン / 端末内保存（localStorage）'+
+    '<div class="tiny">月曜はお魚です / 端末内保存（localStorage）'+
       (syncCfg ? '＋GitHub Gist 同期' : '・外部通信なし')+'</div>'+
     '<div style="height:8px"></div>';
   sheet('設定', body, '<button class="btn" id="cfClose">閉じる</button>');
