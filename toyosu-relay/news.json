@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-05T09:03:38+09:00",
+  "updated": "2026-10-06T10:49:34+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -40,16 +40,9 @@
     {
       "title": "トモシア、食品卸3社の物流・販売基盤を共通化",
       "link": "https://news.google.com/rss/articles/CBMiSkFVX3lxTE5TNkNPQXdVcDJNRzZLQy1uM21HTDJhTUdCUjZ6ZldubGNGNE1vVUllbW1CamJqWTZ2WjFiZUZ1aDRGSWxWOWMxeFdn?oc=5",
-      "source": "LOGISTICS TODAY",
+      "source": "logi-today.com",
       "date": "2026-09-29",
       "cat": "business"
-    },
-    {
-      "title": "まつたけの入荷ピーク 上田の卸売市場 長野県内有数の産地",
-      "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9qbXd1eEs2aXFZeUVuV2wwem1LMDNkMU55UjVySy1VVTQxMVQzQ3NXWUJiR1FCN0h3NkwwUVc4OXNPLXpZS19TaVF4VmNzWFhnQlM1eDNqaTQ?oc=5",
-      "source": "NHKニュース",
-      "date": "2026-09-28",
-      "cat": "market"
     },
     {
       "title": "全国卸流通特集：日本加工食品卸協会・時岡肯平専務理事 2つの物流規制に懸念",
@@ -57,6 +50,13 @@
       "source": "日本食糧新聞・電子版",
       "date": "2026-09-28",
       "cat": "business"
+    },
+    {
+      "title": "京都の“じゃないほう市場”？「京都市中央市場」の早朝せり見学に行ってみた(1/2)",
+      "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9GSjJ5Z0Nwbmg1UlM4ZDJNVFE3ZUZma3ZmUFFwRzQyV2FCcHlxTW5qOU9ReHdNdFA3Mko1RFEwRkVvcTVIV2dRbjM3UTc0NjVFS08ydnRR0gFbQVVfeXFMTndWSm5nVjlRTzRBdkpOeHZ5Vnlvb1VlRXY2X2NoWlJJd1JyMi02YjZPM0dqWmFjOUd5Q25Yc1pEeE1CMjZJNkVkRnYyS0JwN1FrdlJsUnNDTkRZVQ?oc=5",
+      "source": "ウォーカープラス",
+      "date": "2026-09-27",
+      "cat": "market"
     },
     {
       "title": "卸売市場に秋の味覚 天然キノコ入荷 岐阜・高山市（2026年9月23日掲載）｜中京テレビNEWS NNN",
@@ -87,7 +87,7 @@
       "cat": "toyosu"
     },
     {
-      "title": "青果卸に“AI経営参謀”が常駐する時代へ。DXONEが新機能を正式リリースPDF・Excelを読み取り、自社データへ自動変換。入力から経営分析まで生成AIが支援 - 問い合わせ急増中！",
+      "title": "青果卸に“AI経営参謀”が常駐する時代へ。DXONEが新機能を正式リリースPDF・Excelを読み取り、自社データへ自動変換。入力から経営分析まで生成AIが支援 - 問い合わせ急増中！ | DXONE株式会社のプレスリリース",
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9XcUpyZXJEUFpEMk9wenF1emszVjRtc1ZlcGRsNHF0eUhuZFQzVFJHakFYZTVTS0E2SkhSUS11LVdOUXZ0UENsd0FEZmZtV1paV01hMGVoaGEtQm9LTFBrZFlLNHZKZmRxVHc?oc=5",
       "source": "PR TIMES",
       "date": "2026-09-14",
@@ -131,8 +131,15 @@
     {
       "title": "令和8年度 トップセールス・国内外への訪問",
       "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5lT2g2dXo4Z3ZGWDZuNGlKUTk2S042RDdJNzdQcFV0V0FHM2U3ei0teGw5VWxqUGJaSWxxVG0taDF6TEhlX3Y1Zmp1YmlVUjZjWThMbDdyaXM3YjJvQXpmeDR2dklQMW0zX0lJ?oc=5",
-      "source": "福島県ホームページ",
+      "source": "pref.fukushima.lg.jp",
       "date": "2026-07-31",
+      "cat": "toyosu"
+    },
+    {
+      "title": "【現地取材・動画】小池都知事、卸売市場に導入の自動立体冷蔵倉庫とAGVを視察",
+      "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1rM1Q1SThjRGRqSElkZUd3aHRFNXB6U1FjdTJvOVF5QmtidHN3elpuX0JfcnRvSFBQY2Y5eFZTeF8xMUVyVnF1R05Rbw?oc=5",
+      "source": "online.logi-biz.com",
+      "date": "2026-07-07",
       "cat": "toyosu"
     },
     {
@@ -145,14 +152,14 @@
     {
       "title": "食品卸 メーカー支援の新たな形 営業や物流を代行",
       "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBaaTZ3djlaT0NET2F5b3J6d2h0RG1aNml0b3hnXzRGRDFHYXZ2Yk1oVE5SWC1vSk9WXzdpXzJ5YkVEc1JSWjNLek4tNWE3YXl5V0w3elpuZDZGV3c?oc=5",
-      "source": "shokuhin.net",
+      "source": "食品新聞 WEB版",
       "date": "2026-07-01",
       "cat": "business"
     },
     {
       "title": "決算:長野の青果卸R&CHD、純利益38％減 26年3月期",
       "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9FZ2Qwak5sY1VXM2tzWU1MTDNaS3pfZ2tQZkRpcWEyc3BFM3RiOHc1eU5nNU5CeXJ4R19VV3hWRVM3djZmWnFNQlo4dXo1eG5yWGwwUG5ldlI4QkVsRnkyTk1KV1VhMDk0SmQwMw?oc=5",
-      "source": "日本経済新聞",
+      "source": "nikkei.com",
       "date": "2026-06-22",
       "cat": "business"
     },
@@ -171,16 +178,9 @@
       "cat": "toyosu"
     },
     {
-      "title": "インターネット都政モニターアンケート結果 生鮮食料品等の購買意識 〉 Q16 東京都中央卸売市場の認知|1月",
-      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE4wNEFBMThJRExadlJ6WDQ2d25pVXhNck1ldHBrcG1KVXhndDdkcWNfU2tlSW9lM0EzTGZMN2pSQlRTQjliU2JLVG1ZMlVSa3ljOWpxcTBaNmNzdUlEWFlrTXZTWmNDVzlLYmEtaGxTWWRGM3FQ?oc=5",
-      "source": "metro.tokyo.lg.jp",
-      "date": "2026-01-21",
-      "cat": "toyosu"
-    },
-    {
       "title": "東京都中央卸売市場・豊洲市場",
       "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9abnUyLWI2TWtuY0tKa1FoZlMwRUtHeDVsejhNTmwwck1sZi1iZ2ZhWlQ2OHgyU2xsQUdnM05mdzdpY1hNZGhGMzZoZTlFOWxQMHBiRVFwZmM3enM?oc=5",
-      "source": "gotokyo.org",
+      "source": "go tokyo",
       "date": "2025-12-25",
       "cat": "toyosu"
     }
