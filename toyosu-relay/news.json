@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-07T09:54:25+09:00",
+  "updated": "2026-10-08T10:10:47+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -24,16 +24,16 @@
       "cat": "market"
     },
     {
-      "title": "今週のお手頃野菜(令和8年10月2日更新)",
-      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9CY19tYXVQRUJ5RXhiZldSUjk4SFBSbXQ0OFBicmNYSnVXeC1LWWMzc1c1Z1JqR0tOb3RkVmJ0Zjh6bGFYNW1VRUc5cU9iMVNja3p3UTBkRjVITEN4Zk5KLVZ1VUpjV0dCbm9N?oc=5",
-      "source": "農林水産省",
-      "date": "2026-10-02",
-      "cat": "market"
-    },
-    {
       "title": "「豊洲市場」に集結する逸品10選 日本各地の極上の食材＆東京老舗の味",
       "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE4xVUdfTWNSV3gtOE5tZjNfV0kyR21UWGNVOWVhVllpcXJfSWdIZnJsRU9sRklYSUt3aUJkMnh1ZGYwZzVUZmNMeVl2Ujc2dWZGclBZWTQ1dmIzZw?oc=5",
       "source": "CREA WEB",
+      "date": "2026-10-02",
+      "cat": "toyosu"
+    },
+    {
+      "title": "今週のお手頃野菜(令和8年10月2日更新)",
+      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9CY19tYXVQRUJ5RXhiZldSUjk4SFBSbXQ0OFBicmNYSnVXeC1LWWMzc1c1Z1JqR0tOb3RkVmJ0Zjh6bGFYNW1VRUc5cU9iMVNja3p3UTBkRjVITEN4Zk5KLVZ1VUpjV0dCbm9N?oc=5",
+      "source": "農林水産省",
       "date": "2026-10-02",
       "cat": "toyosu"
     },
@@ -43,6 +43,13 @@
       "source": "品川経済新聞",
       "date": "2026-10-02",
       "cat": "toyosu"
+    },
+    {
+      "title": "関西の花き流通を支える大阪鶴見花き地方卸売市場：近畿農政局",
+      "link": "https://news.google.com/rss/articles/CBMifkFVX3lxTE9KUmVIbW5KZG9fcW1BTWhSVEJRRUZ1ZHRsclNYcDNBX1c1NnRLSGQ0TzNjRlY3UFZQRDJqSVI0cndmUWpmOFFlNFg0alBTTHU3eVpwYkhQVUtaM0M2aTJPR0ViVU9mVDUyY205TmZmSGk2dWx4OWdEMU9ZQk5VUQ?oc=5",
+      "source": "農林水産省",
+      "date": "2026-09-29",
+      "cat": "market"
     },
     {
       "title": "トモシア、食品卸3社の物流・販売基盤を共通化",
@@ -133,13 +140,6 @@
       "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5lT2g2dXo4Z3ZGWDZuNGlKUTk2S042RDdJNzdQcFV0V0FHM2U3ei0teGw5VWxqUGJaSWxxVG0taDF6TEhlX3Y1Zmp1YmlVUjZjWThMbDdyaXM3YjJvQXpmeDR2dklQMW0zX0lJ?oc=5",
       "source": "福島県ホームページ",
       "date": "2026-07-31",
-      "cat": "toyosu"
-    },
-    {
-      "title": "【現地取材・動画】小池都知事、卸売市場に導入の自動立体冷蔵倉庫とAGVを視察",
-      "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1rM1Q1SThjRGRqSElkZUd3aHRFNXB6U1FjdTJvOVF5QmtidHN3elpuX0JfcnRvSFBQY2Y5eFZTeF8xMUVyVnF1R05Rbw?oc=5",
-      "source": "LOGI-BIZ online",
-      "date": "2026-07-07",
       "cat": "toyosu"
     },
     {
