@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-08T10:10:47+09:00",
+  "updated": "2026-10-09T10:19:29+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -34,13 +34,6 @@
       "title": "今週のお手頃野菜(令和8年10月2日更新)",
       "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9CY19tYXVQRUJ5RXhiZldSUjk4SFBSbXQ0OFBicmNYSnVXeC1LWWMzc1c1Z1JqR0tOb3RkVmJ0Zjh6bGFYNW1VRUc5cU9iMVNja3p3UTBkRjVITEN4Zk5KLVZ1VUpjV0dCbm9N?oc=5",
       "source": "農林水産省",
-      "date": "2026-10-02",
-      "cat": "toyosu"
-    },
-    {
-      "title": "品川港南で「東京食肉市場まつり」開催へ 今年の無料試食はくまもと黒毛和牛",
-      "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9wenY4SkZTOXhqY1dtS0JCSFhrTkdoVXVRU1ZKeVo1bnVsWmE2MmY4YjNKd2s5bEhyNXpqSERRUU9JRXBfVllSUzE3YlA4am1zbFdvMEJn?oc=5",
-      "source": "品川経済新聞",
       "date": "2026-10-02",
       "cat": "toyosu"
     },
@@ -101,7 +94,7 @@
       "cat": "toyosu"
     },
     {
-      "title": "青果卸に“AI経営参謀”が常駐する時代へ。DXONEが新機能を正式リリースPDF・Excelを読み取り、自社データへ自動変換。入力から経営分析まで生成AIが支援 - 問い合わせ急増中！",
+      "title": "青果卸に“AI経営参謀”が常駐する時代へ。DXONEが新機能を正式リリースPDF・Excelを読み取り、自社データへ自動変換。入力から経営分析まで生成AIが支援 - 問い合わせ急増中！ | DXONE株式会社のプレスリリース",
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9XcUpyZXJEUFpEMk9wenF1emszVjRtc1ZlcGRsNHF0eUhuZFQzVFJHakFYZTVTS0E2SkhSUS11LVdOUXZ0UENsd0FEZmZtV1paV01hMGVoaGEtQm9LTFBrZFlLNHZKZmRxVHc?oc=5",
       "source": "PR TIMES",
       "date": "2026-09-14",
@@ -143,6 +136,13 @@
       "cat": "toyosu"
     },
     {
+      "title": "【現地取材・動画】小池都知事、卸売市場に導入の自動立体冷蔵倉庫とAGVを視察",
+      "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1rM1Q1SThjRGRqSElkZUd3aHRFNXB6U1FjdTJvOVF5QmtidHN3elpuX0JfcnRvSFBQY2Y5eFZTeF8xMUVyVnF1R05Rbw?oc=5",
+      "source": "LOGI-BIZ online",
+      "date": "2026-07-07",
+      "cat": "toyosu"
+    },
+    {
       "title": "【令和8年度】夏休み親子市場せり見学会",
       "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE5xemZuXzdnYzVXUnc2WkI4VnRPSEFYbVZ4a1UzcXJOUkZ4VXVRenhLQUQ0Yzdjb3FZbUs0SVNGTnJLRjF5a1ZTMG90emtmckI0aU5MMlY1TzZpYUkxNDZpa1JYNzhoOEV6U0R5c2o5ZmgyZm5sd1pFalBMcHUxZGM?oc=5",
       "source": "新潟市",
@@ -171,10 +171,10 @@
       "cat": "business"
     },
     {
-      "title": "２６２０ 資金ショートは２０５６年度に８年前倒し 東京都中央卸売市場会計、２０２６年経営レポート どらったら！！",
-      "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1Xb0xLYTJ6eDV1WkxhbzgzTnFqVWRNcmxMMGc1OUVEMDZoZHJzQU1oaXlFdV9GYjNQbmxER0tmR1BnOGg0MGpEWmlOWVFhR25MS1hxZ084bFJpdUFIaU1xSERBWGVwT0E5dkE?oc=5",
-      "source": "どらったら！！",
-      "date": "2026-06-07",
+      "title": "東京都中央卸売市場大田市場で、香川県産青果物のトップセールスを行いました",
+      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE9Yc2piSXdfZHc0bHZacHBYWnJzR3JwZ1oxcVRUMmRPdm9wYjNwelNjeEViWjBSRTZHS1Y1aGpjV3dRbTY2MGthWXhNRThCTl9kQ3RGMzUwYU5FNHZVT1A4d18wUTZiWkNwZnR6LUtyVmdnRzhBSkRnSU9TZEtEQjA?oc=5",
+      "source": "香川県公式ホームページ",
+      "date": "2026-02-13",
       "cat": "toyosu"
     },
     {
