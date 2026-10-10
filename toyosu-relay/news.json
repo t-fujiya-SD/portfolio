@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-09T10:19:29+09:00",
+  "updated": "2026-10-10T10:06:28+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -17,25 +17,39 @@
   ],
   "items": [
     {
+      "title": "脂がのった「三陸塩竈ひがしもの」仙台市中央卸売市場に入荷 例年並みの価格で取引へ",
+      "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE96VVMzU0pEN1pGT2R4cEdob250MmNQUzc2R2UzUjhLd2lhNk5yYUFSRDd5YXlRS25QTUlRbGxRaGRSOXNpa1d6ZWQ1SVhiODd5SmlVY1hEQXFnQmwwNFJr?oc=5",
+      "source": "TBS NEWS DIG",
+      "date": "2026-10-09",
+      "cat": "market"
+    },
+    {
+      "title": "脂がのった「三陸塩竈ひがしもの」仙台市中央卸売市場に入荷 例年並みの価格で取引へ（tbc東北放送）",
+      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE1jWWdoTEdFc1Y5Y0lqMjhlR3VxQ2NGb1dOdXNIZHJsb0ZSYWJwWE5xUUItS0ZiT2E5RHJMMXZOeUFBa09VX1ZqN1lPWkJmcmREYU9pejlQeEtlVG80YTR2SHdOdHlkWjcxbW5MZGVvbThyamowcm0wZXFnNkdsMWs?oc=5",
+      "source": "Yahoo!ニュース",
+      "date": "2026-10-09",
+      "cat": "market"
+    },
+    {
+      "title": "脂がのった「三陸塩竈ひがしもの」仙台市中央卸売市場に入荷　例年並みの価格で取引へ",
+      "link": "https://news.google.com/rss/articles/CBMihAFBVV95cUxPYmJVN3lPTmh1bU9LUjhLbUhwUms0MWVXcHEyNkZpQTVMNHh2NnZIVWExNFQwdEwzaUJBR25jdVlOX2lybWMtbW1ESU12QnNtSEpIWEJBbnhqYzYyZ0RmWHdaZTNVNnRzWDEwbmdtQ3JDSkFfVk8tTW43dU5tR0NFekZMS07SAYQBQVVfeXFMT2JiVTd5T05odW1PS1I4S21IcFJrNDFlV3BxMjZGaUE1TDR4djZ2SFVhMTRUMHRMM2lCQUduY3VZTl9pcm1jLW1tRElNdkJzbUhKSFhCQW54amM2MmdEZlh3WmUzVTZ0c1gxMG5nbUNyQ0pBX1ZPLU1uN3VObUdDRXpGTEtO?oc=5",
+      "source": "ｄメニューニュース",
+      "date": "2026-10-09",
+      "cat": "market"
+    },
+    {
+      "title": "今週のお手頃野菜(令和8年10月9日更新)",
+      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9CY19tYXVQRUJ5RXhiZldSUjk4SFBSbXQ0OFBicmNYSnVXeC1LWWMzc1c1Z1JqR0tOb3RkVmJ0Zjh6bGFYNW1VRUc5cU9iMVNja3p3UTBkRjVITEN4Zk5KLVZ1VUpjV0dCbm9N?oc=5",
+      "source": "農林水産省",
+      "date": "2026-10-09",
+      "cat": "toyosu"
+    },
+    {
       "title": "模擬せりや被災地の特産品販売も！ 東京都の中央卸売市場7カ所で「市場まつり」開催",
       "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE1uMUVRR2JXUFUycFotNTBJaDdtSF9jR2lnLW1DbmJObkdpZFY1WmxsRTZBaWtMWDR5UlR1ekxmcUdubFdxR21yZVNQekFTazhmbFE?oc=5",
       "source": "いこーよニュース",
       "date": "2026-10-02",
       "cat": "market"
-    },
-    {
-      "title": "「豊洲市場」に集結する逸品10選 日本各地の極上の食材＆東京老舗の味",
-      "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE4xVUdfTWNSV3gtOE5tZjNfV0kyR21UWGNVOWVhVllpcXJfSWdIZnJsRU9sRklYSUt3aUJkMnh1ZGYwZzVUZmNMeVl2Ujc2dWZGclBZWTQ1dmIzZw?oc=5",
-      "source": "CREA WEB",
-      "date": "2026-10-02",
-      "cat": "toyosu"
-    },
-    {
-      "title": "今週のお手頃野菜(令和8年10月2日更新)",
-      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9CY19tYXVQRUJ5RXhiZldSUjk4SFBSbXQ0OFBicmNYSnVXeC1LWWMzc1c1Z1JqR0tOb3RkVmJ0Zjh6bGFYNW1VRUc5cU9iMVNja3p3UTBkRjVITEN4Zk5KLVZ1VUpjV0dCbm9N?oc=5",
-      "source": "農林水産省",
-      "date": "2026-10-02",
-      "cat": "toyosu"
     },
     {
       "title": "関西の花き流通を支える大阪鶴見花き地方卸売市場：近畿農政局",
@@ -59,23 +73,9 @@
       "cat": "business"
     },
     {
-      "title": "京都の“じゃないほう市場”？「京都市中央市場」の早朝せり見学に行ってみた(1/2)",
-      "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9GSjJ5Z0Nwbmg1UlM4ZDJNVFE3ZUZma3ZmUFFwRzQyV2FCcHlxTW5qOU9ReHdNdFA3Mko1RFEwRkVvcTVIV2dRbjM3UTc0NjVFS08ydnRR0gFbQVVfeXFMTndWSm5nVjlRTzRBdkpOeHZ5Vnlvb1VlRXY2X2NoWlJJd1JyMi02YjZPM0dqWmFjOUd5Q25Yc1pEeE1CMjZJNkVkRnYyS0JwN1FrdlJsUnNDTkRZVQ?oc=5",
-      "source": "ウォーカープラス",
-      "date": "2026-09-27",
-      "cat": "market"
-    },
-    {
       "title": "卸売市場に秋の味覚 天然キノコ入荷 岐阜・高山市（2026年9月23日掲載）｜中京テレビNEWS NNN",
       "link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxNcTRpR3BMRVlWM1owX3BVVnYzZW9kZkNzQUZBRTF0SjF0NFpweUItSjhaTkZtNDl5RHZlc3hINGNrbzN1MUxGbEY4T2lYUW9RYXY2cm5rQ2hEZlR2amVPQXJfeGFPUXVxVnhuc3R2UjVZbnFQQldhMUpkMFZYSENvR1Q2NA?oc=5",
       "source": "日テレNEWS NNN",
-      "date": "2026-09-23",
-      "cat": "market"
-    },
-    {
-      "title": "卸売市場に秋の味覚 天然キノコ入荷 岐阜・高山市 (中京テレビＮＥＷＳ)",
-      "link": "https://news.google.com/rss/articles/CBMijgFBVV95cUxPY2tPM1Y2VWZuNXJHWGtqTWhIaG1wb3g1Y0w2WTJUaDhaRzNvU0tOUlZXMzZSVmJLUmxwWjNGSFRTTm84TlZWU0VTakp5TGlXTjhTZ1FZS3ZTZXl4ejdmSnI4TWN0RWZ3ZVVkcHBfTWIzWmtHSVlsTUp0MlFjMEhMc1NCajRrN29jbmdUSmVn?oc=5",
-      "source": "Yahoo!ニュース",
       "date": "2026-09-23",
       "cat": "market"
     },
@@ -99,13 +99,6 @@
       "source": "PR TIMES",
       "date": "2026-09-14",
       "cat": "business"
-    },
-    {
-      "title": "卸売市場市民感謝デー（9月）を開催しました！",
-      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE11aDdET1Z2a2hwWGxFMUtPRHVNX0dwcW5LUnBSMjJNTlpYb05haUJJNzR6ZnVKejVWemZEdldIelZNWG5WdnNaVHVQamIyVy12LXhDeHltWFBqYWlkSDlVME92R0o?oc=5",
-      "source": "大分市",
-      "date": "2026-09-12",
-      "cat": "market"
     },
     {
       "title": "青果卸５割が減収減益 ２５年度決算 営業利益率１％超はわずか１割 生産費増と節約志向の板挟み",
@@ -169,6 +162,13 @@
       "source": "物流ニュースのLNEWS",
       "date": "2026-06-16",
       "cat": "business"
+    },
+    {
+      "title": "２６２０ 資金ショートは２０５６年度に８年前倒し 東京都中央卸売市場会計、２０２６年経営レポート どらったら！！",
+      "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1Xb0xLYTJ6eDV1WkxhbzgzTnFqVWRNcmxMMGc1OUVEMDZoZHJzQU1oaXlFdV9GYjNQbmxER0tmR1BnOGg0MGpEWmlOWVFhR25MS1hxZ084bFJpdUFIaU1xSERBWGVwT0E5dkE?oc=5",
+      "source": "どらったら！！",
+      "date": "2026-06-07",
+      "cat": "toyosu"
     },
     {
       "title": "東京都中央卸売市場大田市場で、香川県産青果物のトップセールスを行いました",
