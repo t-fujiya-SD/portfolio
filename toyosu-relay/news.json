@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-13T11:40:09+09:00",
+  "updated": "2026-10-14T09:28:46+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -59,13 +59,6 @@
       "cat": "market"
     },
     {
-      "title": "関西の花き流通を支える大阪鶴見花き地方卸売市場：近畿農政局",
-      "link": "https://news.google.com/rss/articles/CBMifkFVX3lxTE9KUmVIbW5KZG9fcW1BTWhSVEJRRUZ1ZHRsclNYcDNBX1c1NnRLSGQ0TzNjRlY3UFZQRDJqSVI0cndmUWpmOFFlNFg0alBTTHU3eVpwYkhQVUtaM0M2aTJPR0ViVU9mVDUyY205TmZmSGk2dWx4OWdEMU9ZQk5VUQ?oc=5",
-      "source": "農林水産省",
-      "date": "2026-09-29",
-      "cat": "market"
-    },
-    {
       "title": "トモシア、食品卸3社の物流・販売基盤を共通化",
       "link": "https://news.google.com/rss/articles/CBMiSkFVX3lxTE5TNkNPQXdVcDJNRzZLQy1uM21HTDJhTUdCUjZ6ZldubGNGNE1vVUllbW1CamJqWTZ2WjFiZUZ1aDRGSWxWOWMxeFdn?oc=5",
       "source": "LOGISTICS TODAY",
@@ -106,6 +99,13 @@
       "source": "FNNプライムオンライン",
       "date": "2026-09-17",
       "cat": "toyosu"
+    },
+    {
+      "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年9月、東京都中央卸売市場）：関東農政局",
+      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE91M1djVjVFSUZnekYweWhpUGUyWDhkeDlYejlZOEtidGdZOWNUNlVHdkt5cHpFZVMwSmlZMzdUeXloVHloNTlySl92SkNqVlVZd2h3b3NwRVowN1ppMjZRWmRWaDk5R2I4VldV?oc=5",
+      "source": "農林水産省",
+      "date": "2026-08-31",
+      "cat": "market"
     },
     {
       "title": "青果卸５割が減収減益 ２５年度決算 営業利益率１％超はわずか１割 生産費増と節約志向の板挟み",
