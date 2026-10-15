@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-15T09:00:13+09:00",
+  "updated": "2026-10-16T08:44:53+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -17,6 +17,13 @@
   ],
   "items": [
     {
+      "title": "希少部位の生肉は１キロ30万円 ナガスクジラ入荷、仙台市中央卸売市場で競り",
+      "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE1ZVGJFT3Z5cVk0VnZUSFB0QmpMa1BQcTZ4bmhvY1RBTG4yOUw2Tk5Ma1d3UTJ4ZnlLODJEeDkwZUdMZzFmSnQxMUc2Y1JXbHBPTlJjRDd3V0xYN2s?oc=5",
+      "source": "河北新報オンライン",
+      "date": "2026-10-15",
+      "cat": "market"
+    },
+    {
       "title": "【新高島平】板橋市場で「市場まつり」開催！2026年10月25日（日）",
       "link": "https://news.google.com/rss/articles/CBMiY0FVX3lxTFBsVG9mN1Q0UC1sSDNlR3V1bGJGX2E2dUZ4U3ZlZEFoVXFKdk1OeU5MYzhXT1pqWXJ5YzlTaFVaNmg5UElfRFJtYmRLZF9FWm9XMVFPcWVqN3Awa3dEUkhRTVVQVQ?oc=5",
       "source": "いたばしTIMES",
@@ -25,15 +32,8 @@
     },
     {
       "title": "脂がのった「三陸塩竈ひがしもの」仙台市中央卸売市場に入荷 例年並みの価格で取引へ",
-      "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE1HTG02VXdrTm5KbUtnd1pEMjljVXVRbUE2eGxMNTFGbTVsNGc4bTc1SlZSdlRDWXpVbnQ5cmxMVGdsZlRVa3VnREQzYUNxaUtKNzFPbHhHdw?oc=5",
+      "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE96VVMzU0pEN1pGT2R4cEdob250MmNQUzc2R2UzUjhLd2lhNk5yYUFSRDd5YXlRS25QTUlRbGxRaGRSOXNpa1d6ZWQ1SVhiODd5SmlVY1hEQXFnQmwwNFJr?oc=5",
       "source": "TBS NEWS DIG",
-      "date": "2026-10-09",
-      "cat": "market"
-    },
-    {
-      "title": "脂がのった「三陸塩竈ひがしもの」仙台市中央卸売市場に入荷 例年並みの価格で取引へ（tbc東北放送）",
-      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE1jWWdoTEdFc1Y5Y0lqMjhlR3VxQ2NGb1dOdXNIZHJsb0ZSYWJwWE5xUUItS0ZiT2E5RHJMMXZOeUFBa09VX1ZqN1lPWkJmcmREYU9pejlQeEtlVG80YTR2SHdOdHlkWjcxbW5MZGVvbThyamowcm0wZXFnNkdsMWs?oc=5",
-      "source": "Yahoo!ニュース",
       "date": "2026-10-09",
       "cat": "market"
     },
@@ -50,6 +50,13 @@
       "source": "農林水産省",
       "date": "2026-10-09",
       "cat": "toyosu"
+    },
+    {
+      "title": "食品卸(総合) 売上高ランキング 企業一覧",
+      "link": "https://news.google.com/rss/articles/CBMilwFBVV95cUxPYWNxQVJBS1V0YTYwdXpHaWc0YU5wTS1jMzk3Ni1JNHc0NWo5cUROdVRSWnVFdUs3WjdXZGd4M1RSdlpiOW5OU2xpenZLVzYtckFkaEpvREFGbXZiU0pLaHZYQjJoOTV0bDJob0Y2NUJ1ZERUOVVRNWhZa3V4WmhvSUNydTZFNDBGRTJUZUo2Z2Qwd2ROVmw0?oc=5",
+      "source": "PERAGARU",
+      "date": "2026-10-08",
+      "cat": "business"
     },
     {
       "title": "【10/5東京都中央卸売市場の「次期経営計画（第2期）中間まとめ」について】都議会第3回定例会...",
@@ -161,13 +168,6 @@
       "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9FZ2Qwak5sY1VXM2tzWU1MTDNaS3pfZ2tQZkRpcWEyc3BFM3RiOHc1eU5nNU5CeXJ4R19VV3hWRVM3djZmWnFNQlo4dXo1eG5yWGwwUG5ldlI4QkVsRnkyTk1KV1VhMDk0SmQwMw?oc=5",
       "source": "日本経済新聞",
       "date": "2026-06-22",
-      "cat": "business"
-    },
-    {
-      "title": "中部圏の青果卸12社／共同物流会社を設立、2027年6月以降稼働へ",
-      "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFBsVjNZdlNydVJjdUpPWXIwbW92M2ZCX21FNkYtNHVPOFNvTWtneUJmeElOMU5zT0NraDdZNTBmV09DSmdIUF9JWFBqSU5xRnVtZl95QQ?oc=5",
-      "source": "物流ニュースのLNEWS",
-      "date": "2026-06-16",
       "cat": "business"
     },
     {
