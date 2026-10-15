@@ -528,7 +528,7 @@ function saveMyName(v){
    古い画面で動き続ける（配信側のキャッシュも最大10分ある）。
    開いたとき・戻ってきたときに自分自身を取り直し、BUILD が違えば更新する。
    BUILD は kondate/stamp.sh が書き換える（kondate を直したら公開前に実行）。 */
-const BUILD = '20261005-003757';
+const BUILD = '20261015-073910';
 let updNext = '', updAt = 0;
 function hideUpdBar(){ const b = $('#updBar'); if(b) b.hidden = true; }
 function applyUpdate(){
@@ -1853,7 +1853,11 @@ function rateDay(dk, val){
    ========================================================================= */
 function stapleStatus(st){
   const cyc = Math.max(1, st.cycleDays||14);
-  if(st.needBuy) return {left:0, ratio:0, level:'out', text:'切らしてる'};
+  if(st.needBuy){
+    // 「次買う」は在庫がまだある前提の予約。「切らしてる」と同じ赤で見せると実態と合わない
+    if(st.needNote==='next') return {left:0, ratio:0, level:'soon', text:'次買う'};
+    return {left:0, ratio:0, level:'out', text:'切らしてる'};
+  }
   if(!st.lastBought) return {left:0, ratio:0, level:'unknown', text:'未設定'};
   let used = daysSince(st.lastBought);
   let left = cyc - used;
@@ -1888,14 +1892,18 @@ function buyStaple(st){
   st.lastBought = d;
   st.snoozeUntil = null;
   st.needBuy = false;
+  st.needNote = '';
 }
-function markOut(st){ st.needBuy = true; st.snoozeUntil = null; }
+function markOut(st){ st.needBuy = true; st.needNote = ''; st.snoozeUntil = null; }
+/** まだ残っているが、次の買い物で買う。買い物リストに載せるだけで、購入日やサイクルは触らない */
+function markNext(st){ st.needBuy = true; st.needNote = 'next'; st.snoozeUntil = null; }
 function snoozeStaple(st){
   // 「まだある」→ サイクルを少し長めに学習しつつ先送り
   const cyc = Math.max(1, st.cycleDays||14);
   st.cycleDays = Math.round(cyc * 1.12);
   st.snoozeUntil = iso(addDays(today(), Math.max(2, Math.round(cyc*0.3))));
   st.needBuy = false;
+  st.needNote = '';
 }
 
 
@@ -1962,7 +1970,7 @@ function buildShopping(includeHidden){
 
   S.staples.filter(stapleNeeded).forEach(st=>{
     const stt = stapleStatus(st);
-    const why = (st.needBuy ? '切らしてる' : (stt.level==='out' ? '切れてるかも' : 'そろそろ')) +
+    const why = (st.needBuy ? (st.needNote==='next' ? '次買う' : '切らしてる') : (stt.level==='out' ? '切れてるかも' : 'そろそろ')) +
                 (st.lastBought ? '・前回'+daysSince(st.lastBought)+'日前' : '');
     const dup = items.find(x=>x.kind==='ing' && x.name===st.name);
     if(dup){ dup.staple = st; dup.why = why; return; }
@@ -2902,7 +2910,7 @@ function renderStock(){
   const rest  = list.filter(st=>!stapleNeeded(st) && !stapleUnset(st));
 
   let h = '<div class="note">在庫は<b>数えません</b>。「買った日 ＋ 目安サイクル」から切れそうな時期を推定し、'+
-          '買い物リストに自動で載せます。実際に見て残っていたら <b>まだある</b> を押すだけ。'+
+          '買い物リストに自動で載せます。実際に見て残っていたら <b>まだある</b>、少なくなっていたら <b>次買う</b> を押すだけ。'+
           'その実績からサイクルを自動で補正していきます。</div>';
 
   h += '<div class="sec">⚠️ 買い物リストに載っているもの（'+need.length+'）<span class="line"></span></div>';
@@ -2931,6 +2939,12 @@ function renderStock(){
     buyStaple(st); save(); render();
     toast(first ? st.name+' のサイクル推定を開始しました' : st.name+' の購入日を今日に更新しました');
   });
+  el.querySelectorAll('[data-next]').forEach(b=>b.onclick=e=>{
+    e.stopPropagation();
+    const st = S.staples.find(x=>x.id===b.dataset.next); if(!st) return;
+    if(st.needBuy){ toast(st.name+' はもう買い物リストに載っています'); return; }   // 「切らしてる」を「次買う」に弱めない
+    markNext(st); save(); render(); toast(st.name+' を次の買い物リストに追加しました');
+  });
   el.querySelectorAll('[data-out]').forEach(b=>b.onclick=e=>{
     e.stopPropagation();
     const st = S.staples.find(x=>x.id===b.dataset.out); if(!st) return;
@@ -2957,7 +2971,7 @@ function stapleRow(st){
       (st.lastBought ? '・前回 '+md(parseISO(st.lastBought))+'（'+daysSince(st.lastBought)+'日前）' : '・購入日 未設定')+'</div>'+
     '</div><div class="stpa">'+
       (st.lastBought || st.needBuy
-        ? '<button data-snz="'+st.id+'">まだある</button><button class="buy" data-buy="'+st.id+'">買った</button>'
+        ? '<button data-snz="'+st.id+'">まだある</button><button class="buy" data-next="'+st.id+'">次買う</button>'
         : '<button data-out="'+st.id+'">切らしてる</button><button class="buy" data-buy="'+st.id+'">今ある</button>')+
     '</div></div>';
 }
@@ -3938,7 +3952,7 @@ function openStapleEdit(id){
       CATS.map(c=>'<option value="'+c.k+'"'+(d.cat===c.k?' selected':'')+'>'+c.ic+' '+c.nm+'</option>').join('')+'</select>'+
     '<label class="lb">目安サイクル（何日でなくなるか）</label>'+
     '<input class="f" id="sfCyc" type="number" inputmode="numeric" min="1" max="365" value="'+(d.cycleDays||14)+'">'+
-    '<div class="tiny" style="margin-top:5px">正確でなくて大丈夫です。「買った」を2〜3回押すと、実際の間隔から自動で補正されます。</div>'+
+    '<div class="tiny" style="margin-top:5px">正確でなくて大丈夫です。買い物で「買い物おわり」を2〜3回押すと、実際の間隔から自動で補正されます。</div>'+
     '<label class="lb">最後に買った日</label>'+
     '<input class="f" id="sfDate" type="date" value="'+(d.lastBought||'')+'">'+
     '<label class="lb" style="margin-bottom:8px">この品目を使う</label>'+
