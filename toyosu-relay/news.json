@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-16T08:44:53+09:00",
+  "updated": "2026-10-17T08:45:22+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -16,6 +16,13 @@
     }
   ],
   "items": [
+    {
+      "title": "市場を開放して行われる年に一度の肉の祭典「東京食肉市場まつり2026」が東京都中央卸売市場食肉市場で10月17・18日に開催",
+      "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE82enhsRGdBMXc4bXJXTFBvQUI4aThFeU4zOGh4TDJlVHpkWWg0ZFZHTEtlaHlPaVFHOWV6VFJ2NC1xZGhURHZxRmhpbzB4WFpiRXIxY19NTGRIaU9vYkdR?oc=5",
+      "source": "千葉テレビ放送株式会社",
+      "date": "2026-10-16",
+      "cat": "toyosu"
+    },
     {
       "title": "希少部位の生肉は１キロ30万円 ナガスクジラ入荷、仙台市中央卸売市場で競り",
       "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE1ZVGJFT3Z5cVk0VnZUSFB0QmpMa1BQcTZ4bmhvY1RBTG4yOUw2Tk5Ma1d3UTJ4ZnlLODJEeDkwZUdMZzFmSnQxMUc2Y1JXbHBPTlJjRDd3V0xYN2s?oc=5",
@@ -43,13 +50,6 @@
       "source": "アットエス",
       "date": "2026-10-09",
       "cat": "market"
-    },
-    {
-      "title": "今週のお手頃野菜(令和8年10月9日更新)",
-      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9CY19tYXVQRUJ5RXhiZldSUjk4SFBSbXQ0OFBicmNYSnVXeC1LWWMzc1c1Z1JqR0tOb3RkVmJ0Zjh6bGFYNW1VRUc5cU9iMVNja3p3UTBkRjVITEN4Zk5KLVZ1VUpjV0dCbm9N?oc=5",
-      "source": "農林水産省",
-      "date": "2026-10-09",
-      "cat": "toyosu"
     },
     {
       "title": "食品卸(総合) 売上高ランキング 企業一覧",
@@ -87,13 +87,6 @@
       "cat": "business"
     },
     {
-      "title": "卸売市場に秋の味覚 天然キノコ入荷 岐阜・高山市（2026年9月23日掲載）",
-      "link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxNcTRpR3BMRVlWM1owX3BVVnYzZW9kZkNzQUZBRTF0SjF0NFpweUItSjhaTkZtNDl5RHZlc3hINGNrbzN1MUxGbEY4T2lYUW9RYXY2cm5rQ2hEZlR2amVPQXJfeGFPUXVxVnhuc3R2UjVZbnFQQldhMUpkMFZYSENvR1Q2NA?oc=5",
-      "source": "日テレNEWS NNN",
-      "date": "2026-09-23",
-      "cat": "market"
-    },
-    {
       "title": "市場からのお知らせ",
       "link": "https://news.google.com/rss/articles/CBMihgFBVV95cUxNVURMNWVJVk81M3IxU0ZRUkQtV290VE9oN3JnQ0lpbW4xNTVVTFREUHM4TnplV3d2QlJKUzFJc0l5XzViOFBneHN2Qk1WSDJ5TC1HZTdTSGhjSC1ScmUxYlV3czNwcjNGWTRuY0M3SEJOMzVBWDZ6cjVwUS1WdGVYTThpd2c5Zw?oc=5",
       "source": "木更津市",
@@ -106,6 +99,13 @@
       "source": "FNNプライムオンライン",
       "date": "2026-09-17",
       "cat": "toyosu"
+    },
+    {
+      "title": "卸売市場市民感謝デー（9月）を開催しました！",
+      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE11aDdET1Z2a2hwWGxFMUtPRHVNX0dwcW5LUnBSMjJNTlpYb05haUJJNzR6ZnVKejVWemZEdldIelZNWG5WdnNaVHVQamIyVy12LXhDeHltWFBqYWlkSDlVME92R0o?oc=5",
+      "source": "大分市",
+      "date": "2026-09-12",
+      "cat": "market"
     },
     {
       "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年9月、東京都中央卸売市場）：関東農政局",
