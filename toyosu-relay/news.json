@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-20T09:30:33+09:00",
+  "updated": "2026-10-21T09:01:31+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -66,10 +66,17 @@
       "cat": "market"
     },
     {
-      "title": "食品卸(総合) 売上高ランキング 企業一覧",
-      "link": "https://news.google.com/rss/articles/CBMilwFBVV95cUxPYWNxQVJBS1V0YTYwdXpHaWc0YU5wTS1jMzk3Ni1JNHc0NWo5cUROdVRSWnVFdUs3WjdXZGd4M1RSdlpiOW5OU2xpenZLVzYtckFkaEpvREFGbXZiU0pLaHZYQjJoOTV0bDJob0Y2NUJ1ZERUOVVRNWhZa3V4WmhvSUNydTZFNDBGRTJUZUo2Z2Qwd2ROVmw0?oc=5",
+      "title": "脂がのった「三陸塩竈ひがしもの」仙台市中央卸売市場に入荷 例年並みの価格で取引へ",
+      "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE96VVMzU0pEN1pGT2R4cEdob250MmNQUzc2R2UzUjhLd2lhNk5yYUFSRDd5YXlRS25QTUlRbGxRaGRSOXNpa1d6ZWQ1SVhiODd5SmlVY1hEQXFnQmwwNFJr?oc=5",
+      "source": "TBS NEWS DIG",
+      "date": "2026-10-09",
+      "cat": "market"
+    },
+    {
+      "title": "食品卸(水産) 売上高ランキング 企業一覧",
+      "link": "https://news.google.com/rss/articles/CBMilwFBVV95cUxNdkxyOE5QVWFwY0JtbFpZR3IwamVGdVhMc3hCSnpoQXc3WHE2NExxU2Z1S2VJdHY0dWxBNDgtLTlRZ3F0d0M3elBPWUhkQkE5MVhWckg4dnR6aGxGbmJ3NDBRLTNycEZEc2hiOEl6TTdJWnNwWkZtdUZpdEJ0RndMQ2V5elhaMURVQ1QzdEhQN3NNVEppd2hV?oc=5",
       "source": "PERAGARU",
-      "date": "2026-10-08",
+      "date": "2026-10-09",
       "cat": "business"
     },
     {
@@ -85,13 +92,6 @@
       "source": "農林水産省",
       "date": "2026-09-29",
       "cat": "market"
-    },
-    {
-      "title": "トモシア、食品卸3社の物流・販売基盤を共通化",
-      "link": "https://news.google.com/rss/articles/CBMiSkFVX3lxTE5TNkNPQXdVcDJNRzZLQy1uM21HTDJhTUdCUjZ6ZldubGNGNE1vVUllbW1CamJqWTZ2WjFiZUZ1aDRGSWxWOWMxeFdn?oc=5",
-      "source": "LOGISTICS TODAY",
-      "date": "2026-09-29",
-      "cat": "business"
     },
     {
       "title": "全国卸流通特集：日本加工食品卸協会・時岡肯平専務理事 2つの物流規制に懸念",
@@ -115,13 +115,6 @@
       "cat": "business"
     },
     {
-      "title": "秋の味覚サンマ 仙台市中央卸売市場に入荷 入荷少なく高値で取引",
-      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE91MWV5eXpJay1SYnE5VmFEalJqdFZpcDhEVVVHazFkZjFNWG9wUWRRYVgwaGpxZVJtTDNlempPQzNYY3hDVzV3bTI4ck9iY1k?oc=5",
-      "source": "khb東日本放送",
-      "date": "2026-08-18",
-      "cat": "market"
-    },
-    {
       "title": "食品卸が営業と物流を代行 人手不足に悩む地方メーカーの販路拡大を支える新ビジネス",
       "link": "https://news.google.com/rss/articles/CBMihgFBVV95cUxPcS1CLW4xaExiSFpIYXI0UndaU3NPUFcyNGJOS1lPRDcwTS12RU5Fa3JxTWg1MDdHX210aFRvTzF2QmVPa1h4ZkQ0TGptam44cmVreXJKLUFKdEJyZ1R4aTloZ0h2N2tPb0Y1dXhFd3NHT1BfTGxVOElTbTRLN002MFU2RVdDQQ?oc=5",
       "source": "月刊「事業構想」オンライン",
@@ -140,6 +133,13 @@
       "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9Hc2xhSWVQc2hwcnN6YUZHQ0l3UnJSRVo4cWJGbXNlUlpSSnpPbXQ0VzQweF9MWEZfNUNMd3NkTFVfdTllQ05tUkg2RHlJQktSVnpJdzNkZlZwQkgyVklOZUZuVkJCV2pibmc?oc=5",
       "source": "PR TIMES",
       "date": "2026-07-27",
+      "cat": "business"
+    },
+    {
+      "title": "食品卸の倒産高止まり、物流費も採算圧迫",
+      "link": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE1vV0lVLTFVMWxQVG1OUTFucG5Ybm9zcXhkUk5xZUQ0VS1ObnR1SUh4UHcxRnhOcEZBNkFDLUJVQV83M2ktS3BvbtIBTkFVX3lxTFBydkJKTlMzODJVQmJrcnB2X0x1SnYtNWxmQkVHaVdEVHFVVzFIOElzcUFpLVNlSm96U1dIbG51dF9haFJaVzRyd0QzdTVXdw?oc=5",
+      "source": "LOGISTICS TODAY",
+      "date": "2026-07-08",
       "cat": "business"
     },
     {
@@ -171,10 +171,10 @@
       "cat": "toyosu"
     },
     {
-      "title": "インターネット都政モニターアンケート結果 生鮮食料品等の購買意識 〉 Q16 東京都中央卸売市場の認知|1月",
-      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE4wNEFBMThJRExadlJ6WDQ2d25pVXhNck1ldHBrcG1KVXhndDdkcWNfU2tlSW9lM0EzTGZMN2pSQlRTQjliU2JLVG1ZMlVSa3ljOWpxcTBaNmNzdUlEWFlrTXZTWmNDVzlLYmEtaGxTWWRGM3FQ?oc=5",
-      "source": "都庁総合ホームページ",
-      "date": "2026-01-21",
+      "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年6月、東京都中央卸売市場）：関東農政局",
+      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE54NGtjb0xmUzNCTHdta2RsQjY4UVF6WTNFYmJYZ3BEUktGNDdYbGUzSmFqOEFzX2E4Yk1lS3VIZHdnYWZTRlR6Z0tfeUxxS09QRmFRdWZaMTBoWThqLXVjTUVmQ1I5azU4Uzkw?oc=5",
+      "source": "農林水産省",
+      "date": "2026-05-29",
       "cat": "toyosu"
     },
     {
