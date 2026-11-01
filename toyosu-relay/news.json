@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-31T09:56:47+09:00",
+  "updated": "2026-11-01T09:17:08+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -66,6 +66,27 @@
       "cat": "market"
     },
     {
+      "title": "市場を開放して行われる年に一度の肉の祭典「東京食肉市場まつり2026」が東京都中央卸売市場食肉市場で10月17・18日に開催",
+      "link": "https://news.google.com/rss/articles/CBMifEFVX3lxTE5iY3NFcHItRUhmb3pyZHloeXhuVGMxSkluakFvM19YbjhIRFp2UEROUzhlQUxmV3hvaWVZaUw4UjRzako4UElIdWR6M3JIX2VvQ1ZkekFFOS02R1EzSTlOMy1XaGhWMS1Gb1puLXJ4YUNEMXJSMHRPQktGdFjSAYIBQVVfeXFMTmw2ZVNDV05Vc0J1bUg2Rm85SEtaUmgzTmp5bG96UTlra3AtU2RFYjVEQjdJbWF6ek9MN19VekJzTkNyaUFQeTVwSVZPUkJFMmhLbThDdlZJWGlFdHJsRHBnSk1OdEVQRHJCelpOQ19zZkVLdTFTcmVTdlpEdk9KNDl4Zw?oc=5",
+      "source": "ｄメニューニュース",
+      "date": "2026-10-17",
+      "cat": "toyosu"
+    },
+    {
+      "title": "黒毛和牛しゃぶしゃぶの無料試食も！年に一度開放の東京食肉市場まつり 品川駅近く",
+      "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE9sYkR2N2RxQk1sVk51Ui1NSllSTDRwT1BvS1FPVWtELTFkYmpmTC1nWDFPTXI3eGZNR1FaWE9henplRDNwNld6OTJ6V3AySE45clE?oc=5",
+      "source": "いこーよニュース",
+      "date": "2026-10-13",
+      "cat": "toyosu"
+    },
+    {
+      "title": "【10/5東京都中央卸売市場の「次期経営計画（第2期）中間まとめ」について】都議会第3回定例会...",
+      "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1ydWhXeE1tNURDMUp5amdsRWc4WnB3anhBdVJVMlV3S24zR2NiV1lyZXc3dFEyUXIwWm1wZUFYdEpKdFdDSDF4SnBhU0lzWThJcW9nbFNjYjdaNEZyQXBB?oc=5",
+      "source": "選挙ドットコム",
+      "date": "2026-10-07",
+      "cat": "toyosu"
+    },
+    {
       "title": "トモシア、食品卸3社の物流・販売基盤を共通化",
       "link": "https://news.google.com/rss/articles/CBMiSkFVX3lxTE5TNkNPQXdVcDJNRzZLQy1uM21HTDJhTUdCUjZ6ZldubGNGNE1vVUllbW1CamJqWTZ2WjFiZUZ1aDRGSWxWOWMxeFdn?oc=5",
       "source": "LOGISTICS TODAY",
@@ -115,10 +136,17 @@
       "cat": "business"
     },
     {
-      "title": "【夏休み2026】豊洲千客万来「親子で学ぶ中央卸売市場」8/21-22",
-      "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFBERmVqZ0x5ZjA5S0drZXpvc1Y5RmpYNldOb3NLTG4xaGxSZDhrN3lmbUozR2prTjFYWG9yNmV3T0VuOFpNWk5QS0IyazY5TnIyR2JjWXJfLVB6Zmtz?oc=5",
-      "source": "リセマム",
-      "date": "2026-07-30",
+      "title": "令和8年度 トップセールス・国内外への訪問",
+      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5lT2g2dXo4Z3ZGWDZuNGlKUTk2S042RDdJNzdQcFV0V0FHM2U3ei0teGw5VWxqUGJaSWxxVG0taDF6TEhlX3Y1Zmp1YmlVUjZjWThMbDdyaXM3YjJvQXpmeDR2dklQMW0zX0lJ?oc=5",
+      "source": "福島県ホームページ",
+      "date": "2026-07-31",
+      "cat": "toyosu"
+    },
+    {
+      "title": "「新潟産えだまめ」の出荷最盛期に合わせ東京・大田市場でのトップセールスのほか県内外の消費者に向けたＰＲを実施します。",
+      "link": "https://news.google.com/rss/articles/CBMickFVX3lxTE9nYWZtTTl3azVmNUlmbTBaUU00MVhmR1U1c1pGdUxDSjIydUxzaVhoN01ybzFkNmdBc0JCOEpMQ2tTNnlwbE9uQlV6ZHVUcWFDakdpNkxrZ0U3UW15eDFIMjVNdjNqWG8xLVJtUWNENkZuQQ?oc=5",
+      "source": "新潟県",
+      "date": "2026-07-07",
       "cat": "toyosu"
     },
     {
@@ -143,17 +171,10 @@
       "cat": "business"
     },
     {
-      "title": "拡大から持続的流通へ〜変化に対応する市場の社会的役割 – 卸売市場流通についての諸問題",
-      "link": "https://news.google.com/rss/articles/CBMiPEFVX3lxTE9acVVkRlF2ckJWRmphOW5JNTR4dGoxdjZkTlhPWEtHYnlZYWZtVEMwUURUUUlHcjdiamhyaA?oc=5",
-      "source": "卸売市場流通についての諸問題",
-      "date": "2026-03-06",
-      "cat": "toyosu"
-    },
-    {
-      "title": "東京都中央卸売市場大田市場で、香川県産青果物のトップセールスを行いました",
-      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE9Yc2piSXdfZHc0bHZacHBYWnJzR3JwZ1oxcVRUMmRPdm9wYjNwelNjeEViWjBSRTZHS1Y1aGpjV3dRbTY2MGthWXhNRThCTl9kQ3RGMzUwYU5FNHZVT1A4d18wUTZiWkNwZnR6LUtyVmdnRzhBSkRnSU9TZEtEQjA?oc=5",
-      "source": "香川県",
-      "date": "2026-02-13",
+      "title": "２６２０ 資金ショートは２０５６年度に８年前倒し 東京都中央卸売市場会計、２０２６年経営レポート どらったら！！",
+      "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1Xb0xLYTJ6eDV1WkxhbzgzTnFqVWRNcmxMMGc1OUVEMDZoZHJzQU1oaXlFdV9GYjNQbmxER0tmR1BnOGg0MGpEWmlOWVFhR25MS1hxZ084bFJpdUFIaU1xSERBWGVwT0E5dkE?oc=5",
+      "source": "どらったら！！",
+      "date": "2026-06-07",
       "cat": "toyosu"
     },
     {
@@ -162,27 +183,6 @@
       "source": "名古屋市公式ウェブサイト",
       "date": "2025-12-23",
       "cat": "market"
-    },
-    {
-      "title": "東京都中央卸売市場、再エネ100％に向け東電と連携 - ニュース - メガソーラービジネス plus",
-      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE9GdzB1bzZ6ZkJIaDJ2eFgtZTZkU29pTGdHdGV6OERYdmtJY3VuZU0tM2wyTDlTOEIwZVh2NnNkbWhveHd5Z1VkVW1CM0FPZ0hncURXNUpSMlNOTVpmNlE1SVAycUR4SURyTW55MUJkQ1BjVHda?oc=5",
-      "source": "日経BP",
-      "date": "2025-09-17",
-      "cat": "toyosu"
-    },
-    {
-      "title": "「大田市場花き紹介動画」を公開します‼ 日本一の花市場 大田市場から日常に彩りを",
-      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE5jTE8yV3B5Vkhpc1FKWEtYbEdfTXBMM0RFbEVQYmlNeTk2QTFKVF9FSFZrNkN6dUR6V280SXZnSHZ5VnRuWThpMmlzUVJuTEVXcldTd2szckJuX2pNbzlISW9aY3p4UDIybTZZb3UxcWhlTXRj?oc=5",
-      "source": "都庁総合ホームページ",
-      "date": "2025-03-27",
-      "cat": "toyosu"
-    },
-    {
-      "title": "東京都中央卸売市場豊洲市場視察",
-      "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTE1HcHJpQWN0ZERHei11MWVKWm1oeGZiNDcyTnhmRXg3SjRKZmpBSUxtVGNnOGNlRUhENnR0dmxfZlJ2SFhrOG1GcFpVb2RCay1YRGNaRmZ1MXc4aGI3b0lHci1LQ1dtZVoyaTRUS2Vn?oc=5",
-      "source": "内閣府ホームページ",
-      "date": "2020-01-09",
-      "cat": "toyosu"
     }
   ]
 }
