@@ -528,7 +528,7 @@ function saveMyName(v){
    古い画面で動き続ける（配信側のキャッシュも最大10分ある）。
    開いたとき・戻ってきたときに自分自身を取り直し、BUILD が違えば更新する。
    BUILD は kondate/stamp.sh が書き換える（kondate を直したら公開前に実行）。 */
-const BUILD = '20261103-025420';
+const BUILD = '20261103-041435';
 let updNext = '', updAt = 0;
 function hideUpdBar(){ const b = $('#updBar'); if(b) b.hidden = true; }
 function applyUpdate(){
@@ -1624,10 +1624,13 @@ function rotateIndex(rule, dk, ref){
   if(rule.nextSetAt && rule.nextSetAt > lastDate) return manual;
   return (lastIdx+1) % n;
 }
-function pickRotate(rule, used, exclude, dk, ctx){
+/** fromId を渡すと、その料理の次から探す（差戻しで1つずつ先へ進めるため）。
+    渡さなければ、その週の番（rotateIndex）から探す。 */
+function pickRotate(rule, used, exclude, dk, ctx, fromId){
   const list = (rule.ids||[]).map(recipeById).filter(r=>r && !r.archived);
   if(!list.length) return null;
-  const start = rotateIndex(rule, dk, ctx && ctx.ref);
+  const fi = fromId ? list.findIndex(r=>r.id===fromId) : -1;
+  const start = fi>=0 ? (fi+1) % list.length : rotateIndex(rule, dk, ctx && ctx.ref);
   for(let i=0;i<list.length;i++){
     const c = list[(start+i)%list.length];
     if(!used.has(c.id) && c.id!==exclude) return c;
@@ -1795,7 +1798,8 @@ function shuffleMain(dk){
   const rule = dayRule(dk);
   let next = null;
 
-  if(rule.type==='rotate')      next = pickRotate(rule, used, cur, dk, ctx);
+  // 差戻しは「今の料理の次」へ。週の番から探し直すと、2品を行き来するだけで残りに届かない
+  if(rule.type==='rotate')      next = pickRotate(rule, used, cur, dk, ctx, cur);
   else if(rule.type==='pool')   next = pickPool(rule, used, ctx, cur);
   if(!next){
     const idx  = DAYS.findIndex(d=>d.k===dk);
