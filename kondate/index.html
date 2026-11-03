@@ -528,7 +528,7 @@ function saveMyName(v){
    古い画面で動き続ける（配信側のキャッシュも最大10分ある）。
    開いたとき・戻ってきたときに自分自身を取り直し、BUILD が違えば更新する。
    BUILD は kondate/stamp.sh が書き換える（kondate を直したら公開前に実行）。 */
-const BUILD = '20261015-073910';
+const BUILD = '20261103-025420';
 let updNext = '', updAt = 0;
 function hideUpdBar(){ const b = $('#updBar'); if(b) b.hidden = true; }
 function applyUpdate(){
@@ -1518,15 +1518,38 @@ async function importFromUrl(url){
      ・最近作ったもの／評価の低いものは出しにくい
      ・余っている食材を使うレシピを優先
    ========================================================================= */
+/** 提案に使う文脈。ref（提案する週の月曜）より前の週の献立から、各レシピが最後に出た日を集める。
+    承認や「買い物おわり」を押さない使い方でも、前の週に出たものは「最近出た」と分かるようにする。 */
+function planCtx(ref, avoid){
+  const lastUse = new Map();
+  Object.keys(S.weeks).forEach(ws=>{
+    if(ws >= ref) return;
+    const w = S.weeks[ws];
+    DAYS.forEach(d=>{
+      const day = w.days && w.days[d.k];
+      if(!day || day.mode!=='cook') return;
+      const dt = iso(dayDate(ws, d.k));
+      [day.mainId].concat(day.sideIds||[]).filter(Boolean).forEach(id=>{
+        if(!lastUse.has(id) || lastUse.get(id) < dt) lastUse.set(id, dt);
+      });
+    });
+  });
+  return { leftNames:new Set(S.leftovers.map(l=>l.name)), lastUse, ref, avoid: avoid || null };
+}
 function scoreRecipe(r, ctx){
   let sc = 0;
-  const ds = daysSince(r.lastCooked);
-  sc += ds===null ? 45 : Math.min(ds, 70);
-  sc -= (r.cookCount||0) * 0.6;
+  // 最後に出た日：作った記録と、前の週までの献立に載った日の新しいほう
+  let lu = ctx.lastUse ? (ctx.lastUse.get(r.id) || null) : null;
+  if(r.lastCooked && (!ctx.ref || r.lastCooked < ctx.ref) && (!lu || r.lastCooked > lu)) lu = r.lastCooked;
+  const ds = lu ? Math.max(0, ctx.ref ? diffDays(ctx.ref, lu) : daysSince(lu)) : null;
+  // 4週以上出ていなければ横並び。そこから先はランダムで選ぶ（毎週同じ顔ぶれにしない）
+  sc += (ds===null || ds > 28) ? 28 : ds;
+  sc -= Math.min(6, (r.cookCount||0) * 0.3);
   const av = avgRating(r);
-  if(av !== null) sc += (av - 2) * 26;                  // 👍で出やすく、👎で出にくく
+  if(av !== null) sc += (av - 2) * 8;                   // 👍で少し出やすく。強すぎると毎週同じものになる
   if(ctx.leftNames.size) r.ings.forEach(i=>{ if(ctx.leftNames.has(i.name)) sc += 22; });
-  sc += Math.random()*14;
+  if(ctx.avoid && ctx.avoid.has(r.id)) sc -= 12;        // 「提案」を押し直したら、今出ているものから変える
+  sc += Math.random()*20;
   return sc;
 }
 const mainPool = () => S.recipes.filter(r=>!r.archived && r.kind!=='side');
@@ -1580,10 +1603,31 @@ function freeMainPool(){
 }
 const sidePool = () => S.recipes.filter(r=>!r.archived && r.kind==='side');
 
-function pickRotate(rule, used, exclude){
+/** ローテーションの「次」の位置。
+    前の週までにこの曜日でこのローテーションから最後に出た料理の、次。
+    （以前は「買い物おわり」を押したときだけ進んだため、押さない週があると毎週同じものが出ていた）
+    設定画面で手動で「次」を決めた場合は、その後この曜日に一度出るまでそちらを優先する。 */
+function rotateIndex(rule, dk, ref){
+  const ids = (rule.ids||[]).filter(id=>{ const r = recipeById(id); return r && !r.archived; });
+  const n = ids.length; if(!n) return 0;
+  const manual = ((rule.next||0) % n + n) % n;
+  if(!dk || !ref) return manual;
+  let lastIdx = -1, lastDate = '';
+  Object.keys(S.weeks).filter(ws=>ws < ref).sort().reverse().some(ws=>{
+    const day = (S.weeks[ws].days||{})[dk];
+    if(!day || day.mode!=='cook' || !day.mainId) return false;
+    const i = ids.indexOf(day.mainId);
+    if(i<0) return false;
+    lastIdx = i; lastDate = iso(dayDate(ws, dk)); return true;
+  });
+  if(lastIdx<0) return manual;
+  if(rule.nextSetAt && rule.nextSetAt > lastDate) return manual;
+  return (lastIdx+1) % n;
+}
+function pickRotate(rule, used, exclude, dk, ctx){
   const list = (rule.ids||[]).map(recipeById).filter(r=>r && !r.archived);
   if(!list.length) return null;
-  const start = ((rule.next||0) % list.length + list.length) % list.length;
+  const start = rotateIndex(rule, dk, ctx && ctx.ref);
   for(let i=0;i<list.length;i++){
     const c = list[(start+i)%list.length];
     if(!used.has(c.id) && c.id!==exclude) return c;
@@ -1601,7 +1645,6 @@ function suggestWeek(opts){
   opts = opts || {};
   const wk = W(), mains = mainPool();
   if(!mains.length) return false;
-  const ctx = { leftNames:new Set(S.leftovers.map(l=>l.name)) };
 
   // 触ってよい日：「その他」にした日は動かさない。承認済みも既定では動かさない
   const editable = DAYS.map(d=>d.k).filter(k=>{
@@ -1611,6 +1654,10 @@ function suggestWeek(opts){
     return true;
   });
   if(!editable.length){ save(); return true; }
+  // 押し直しのときは、いま出ている主菜を少し出にくくする（ローテーションの日は除く）
+  const avoid = new Set(editable.filter(k=>dayRule(k).type!=='rotate')
+    .map(k=>wk.days[k].mainId).filter(Boolean));
+  const ctx = planCtx(wk.start, avoid);
 
   const used = new Set();
   DAYS.forEach(d=>{ if(editable.indexOf(d.k)<0 && wk.days[d.k].mainId) used.add(wk.days[d.k].mainId); });
@@ -1620,7 +1667,7 @@ function suggestWeek(opts){
   editable.forEach(k=>{
     const rule = dayRule(k);
     let r = null;
-    if(rule.type==='rotate') r = pickRotate(rule, used);
+    if(rule.type==='rotate') r = pickRotate(rule, used, null, k, ctx);
     else if(rule.type==='pool') r = pickPool(rule, used, ctx);
     if(r){ fixed[k] = r; used.add(r.id); } else freeDays.push(k);
   });
@@ -1653,75 +1700,47 @@ function suggestWeek(opts){
 }
 
 /** 空いている曜日を埋める。
-    「同じタンパク源を2日連続にしない」を満たす組み合わせを深さ優先で探す。
-    選んでから並べ替えるのではなく、選ぶ段階で並びを見るのがポイント。
-    （月＝魚固定・金＝肉の定番、のように両端が埋まっていると、
-      スコア順に選んでから並べ替える方式では条件を満たす組み合わせを引けないため） */
+    ・同じ料理を隣り合わせない（絶対）
+    ・同じたんぱく源の連続は減点（以前は絶対禁止にしていたが、月＝魚・金＝肉のように
+      両端が決まっていると、条件を満たせる「その他」の料理が毎週固定で入り続けた。
+      毎週同じ顔ぶれになるより、たまに肉が2日続くほうがまし、という判断）
+    ・傷みやすいもの（魚→肉）を少しだけ週の前半へ
+    少しずつ揺らして数回組み、いちばん点の高い組み合わせを採る。 */
 function fillFreeDays(freeDays, base, pool, ctx, used){
   const order = DAYS.map(d=>d.k);
   const idxOf = {}; order.forEach((k,i)=>idxOf[k]=i);
   const slots = freeDays.slice().sort((a,b)=>idxOf[a]-idxOf[b]);
-  const isSlot = {}; slots.forEach(k=>isSlot[k]=true);
   const cand = pool.filter(r=>!used.has(r.id));
   if(!slots.length || !cand.length) return {};
 
   const sc = new Map(); cand.forEach(r=>sc.set(r.id, scoreRecipe(r, ctx)));
   // 登録レシピが日数より少ないときは使い回しを許す（連続はさせない）
   const allowRepeat = cand.length < slots.length;
-  const assign = {}, taken = new Set();
-  let budget = 8000;
-
-  const protAt = k => assign[k] ? assign[k].protein : (base[k] ? base[k].protein : null);
-  const idAt   = k => assign[k] ? assign[k].id      : (base[k] ? base[k].id      : null);
-  /** 同じ料理が隣り合わないこと。これだけは絶対に守る（連日おなじものは献立とは言えない） */
-  function notSameAdj(k, r){
-    const i = idxOf[k];
-    if(i>0 && idAt(order[i-1])===r.id) return false;
-    if(i<order.length-1 && !isSlot[order[i+1]] && idAt(order[i+1])===r.id) return false;
-    return true;
-  }
-  function ok(k, r){
-    if(!notSameAdj(k, r)) return false;
-    const i = idxOf[k];
-    if(i>0 && protAt(order[i-1])===r.protein) return false;
-    // 次の曜日が固定なら、そこともぶつからないようにする
-    if(i<order.length-1 && !isSlot[order[i+1]] && protAt(order[i+1])===r.protein) return false;
-    return true;
-  }
-  /** その曜日での並び順：スコア＋「傷みやすいものを週の前半へ」 */
-  function sortedFor(k){
-    const w = (DAYS.length-1-idxOf[k]) * 6;
-    return cand.filter(r=>allowRepeat || !taken.has(r.id))
-      .map(r=>({r, s: sc.get(r.id) + perishOf(r)*w}))
-      .sort((a,b)=>b.s-a.s).map(x=>x.r);
-  }
-  function dfs(si){
-    if(si>=slots.length) return true;
-    if(--budget<=0) return false;
-    const k = slots[si];
-    let tried = 0;
-    for(const r of sortedFor(k)){
-      if(!ok(k,r)) continue;
-      assign[k]=r; taken.add(r.id);
-      if(dfs(si+1)) return true;
-      delete assign[k]; taken.delete(r.id);
-      if(++tried>=8) break;              // 各曜日 上位8件まで試す
-    }
-    return false;
-  }
-  if(!dfs(0)){
-    // 条件を満たす組み合わせが無い（レシピがタンパク源に偏っている／そもそも品数が足りない）
-    // → たんぱく源の連続は妥協するが、同じ料理の連続だけは妥協しない。
-    //   どうしても置けない日は空けておく（「未定」のほうが、連日おなじものよりましなので）
-    slots.forEach(k=>{ delete assign[k]; });
-    taken.clear();
+  const CLASH = 14, TRIES = 6;
+  let best = {}, bestVal = -Infinity;
+  for(let t=0;t<TRIES;t++){
+    const assign = {}, taken = new Set();
+    let val = 0;
+    const at = k => assign[k] || base[k] || null;
     slots.forEach(k=>{
-      const list = sortedFor(k);
-      const pick = list.find(r=>ok(k,r)) || list.find(r=>notSameAdj(k,r)) || null;
-      if(pick){ assign[k]=pick; taken.add(pick.id); }
+      const i = idxOf[k];
+      const prev = i>0 ? at(order[i-1]) : null;
+      const next = i<order.length-1 ? base[order[i+1]] : null;   // 決まっている翌日だけ見る
+      let pick = null, pickS = -Infinity;
+      cand.forEach(r=>{
+        if(!allowRepeat && taken.has(r.id)) return;
+        if((prev && prev.id===r.id) || (next && next.id===r.id)) return;
+        let v = sc.get(r.id) + perishOf(r)*(DAYS.length-1-i)*2 + Math.random()*6;
+        if(prev && prev.protein===r.protein) v -= CLASH;
+        if(next && next.protein===r.protein) v -= CLASH;
+        if(taken.has(r.id)) v -= 40;
+        if(v > pickS){ pickS = v; pick = r; }
+      });
+      if(pick){ assign[k] = pick; taken.add(pick.id); val += pickS; }
     });
+    if(val > bestVal){ bestVal = val; best = assign; }
   }
-  return assign;
+  return best;
 }
 
 /** 週に魚が1回も無ければ、前半の空き曜日に入れる */
@@ -1771,12 +1790,12 @@ function assignSides(wk, dayKeys, ctx){
 /** 1日ぶん引き直す（曜日ルールを尊重する） */
 function shuffleMain(dk){
   const wk = W(), day = wk.days[dk], cur = day.mainId;
-  const ctx = { leftNames:new Set(S.leftovers.map(l=>l.name)) };
+  const ctx = planCtx(wk.start);
   const used = new Set(DAYS.filter(d=>d.k!==dk).map(d=>wk.days[d.k].mainId).filter(Boolean));
   const rule = dayRule(dk);
   let next = null;
 
-  if(rule.type==='rotate')      next = pickRotate(rule, used, cur);
+  if(rule.type==='rotate')      next = pickRotate(rule, used, cur, dk, ctx);
   else if(rule.type==='pool')   next = pickPool(rule, used, ctx, cur);
   if(!next){
     const idx  = DAYS.findIndex(d=>d.k===dk);
@@ -1801,7 +1820,7 @@ function shuffleMain(dk){
 function shuffleSides(dk){
   const wk = W();
   wk.days[dk].sideIds = [];
-  assignSides(wk, [dk], { leftNames:new Set(S.leftovers.map(l=>l.name)) });
+  assignSides(wk, [dk], planCtx(wk.start));
 }
 
 /* ---------- 承認・差戻し・その他 ---------- */
@@ -4002,7 +4021,8 @@ function ruleSummary(k){
 function openDayRule(dk){
   const w = DAYS.find(d=>d.k===dk).w;
   const rule = dayRule(dk);
-  const draftRule = {type:rule.type, ids:(rule.ids||[]).slice(), next:rule.next||0};
+  const draftRule = {type:rule.type, ids:(rule.ids||[]).slice(),
+    next: rule.type==='rotate' ? rotateIndex(rule, dk, currentWeekStart()) : (rule.next||0)};
 
   function body(){
     const list = mainPool().slice().sort((a,b)=>a.name.localeCompare(b.name,'ja'));
@@ -4057,7 +4077,18 @@ function openDayRule(dk){
   $('#drSave').onclick = ()=>{
     S.settings.dayRules[dk] = draftRule.type==='free'
       ? {type:'free', ids:[]}
-      : {type:draftRule.type, ids:draftRule.ids, next:draftRule.next};
+      : {type:draftRule.type, ids:draftRule.ids, next:draftRule.next, nextSetAt:iso(today())};
+    // ローテーションで「次」を決め直したら、まだ承認していない来週のその曜日にすぐ反映する
+    // （反映しないと、提案ずみの料理が履歴に残り、決めた「次」が飛ばされる）
+    if(draftRule.type==='rotate'){
+      const wk = getWeek(currentWeekStart()), day = wk.days[dk];
+      if(day && day.mode==='cook' && day.status==='pending' && !day.plainName){
+        const ctx = planCtx(wk.start);
+        const used = new Set(DAYS.filter(d=>d.k!==dk).map(d=>wk.days[d.k].mainId).filter(Boolean));
+        const r = pickRotate(S.settings.dayRules[dk], used, null, dk, ctx);
+        if(r && r.id!==day.mainId){ day.mainId = r.id; assignSides(wk, [dk], ctx); }
+      }
+    }
     save(); render(); openSettings(); toast(w+'曜日のルールを保存しました');
   };
 }
