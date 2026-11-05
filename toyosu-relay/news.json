@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-04T10:33:21+09:00",
+  "updated": "2026-11-05T10:39:34+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -17,18 +17,32 @@
   ],
   "items": [
     {
+      "title": "北九州市公設地方卸売市場で「市民感謝デー」 新鮮な海の味覚グルメ＆摸擬せり体験も【北九州市小倉北区】",
+      "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTE1rMXVTNmVTWU5EZFN4NV9NQVU0LXRjdkYxQktweXZ0cnJORWI1S3djeGhVSTBDcEI4WHJITUk1MXdzOGxDNE85TERuZDJBU2FMOHBBUmRaVWQ4V0s4X1RHN2U3NDFrT2w3ZGpUUTR3?oc=5",
+      "source": "au Webポータル",
+      "date": "2026-11-04",
+      "cat": "market"
+    },
+    {
+      "title": "トラックの荷物、下ろすのは誰の仕事？ 2027年の新ルールに食品卸業界が懸念（日本食糧新聞）",
+      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE5LNWJZSnk3NlJ1VUp1Ml9HemZvSlJzb2pIczFFNkl1dG8xbnFFWkkzUWtZRDdhY3hPYVJsODctTnJ3bklidGpOc1Z0RmVHdk1mdmNGZnNiQXpQS0NGOVQ1QWlSaDV3QzdkbzJyZjBuZE5jeG5QN1NCR2tHakpXSlU?oc=5",
+      "source": "Yahoo!ニュース",
+      "date": "2026-11-04",
+      "cat": "business"
+    },
+    {
+      "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年11月、東京都中央卸売市場）：関東農政局",
+      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE54NVQwX003bDVaQnlJTXJrVDB0UmZDMmE4dUdDU2h5MDE3clFid2FGQnhRaWctTFcyQ2wxaUxuTE0ycnlJRGJaLU9aVjFGMGxqVXB2ajNmb3lRM09wNnVaZi1ORTVpUjlFMm1R?oc=5",
+      "source": "農林水産省",
+      "date": "2026-10-30",
+      "cat": "market"
+    },
+    {
       "title": "今週のお手頃野菜(令和8年10月30日更新)",
       "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9CY19tYXVQRUJ5RXhiZldSUjk4SFBSbXQ0OFBicmNYSnVXeC1LWWMzc1c1Z1JqR0tOb3RkVmJ0Zjh6bGFYNW1VRUc5cU9iMVNja3p3UTBkRjVITEN4Zk5KLVZ1VUpjV0dCbm9N?oc=5",
       "source": "農林水産省",
       "date": "2026-10-30",
       "cat": "toyosu"
-    },
-    {
-      "title": "ぷりっぷり品質良し 今季カキ初入荷 仙台市中央卸売市場",
-      "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9tOC1IVUpwcUpTc1o3aUdJVFRZSkZVTzVNM0FtZ0hoUXpGUkZjU0dSVXZua1JsaVVtZUFXanJUTVFtNW8xMDUxY2Y5aFlvLWllWGZUOWxERVMxVE0?oc=5",
-      "source": "河北新報オンライン",
-      "date": "2026-10-27",
-      "cat": "market"
     },
     {
       "title": "夏休み親子市場せり見学会を開催しました！",
@@ -43,13 +57,6 @@
       "source": "日テレNEWS NNN",
       "date": "2026-10-18",
       "cat": "market"
-    },
-    {
-      "title": "食品卸(総合) 売上高ランキング 企業一覧",
-      "link": "https://news.google.com/rss/articles/CBMilwFBVV95cUxPYWNxQVJBS1V0YTYwdXpHaWc0YU5wTS1jMzk3Ni1JNHc0NWo5cUROdVRSWnVFdUs3WjdXZGd4M1RSdlpiOW5OU2xpenZLVzYtckFkaEpvREFGbXZiU0pLaHZYQjJoOTV0bDJob0Y2NUJ1ZERUOVVRNWhZa3V4WmhvSUNydTZFNDBGRTJUZUo2Z2Qwd2ROVmw0?oc=5",
-      "source": "PERAGARU",
-      "date": "2026-10-08",
-      "cat": "business"
     },
     {
       "title": "関西の花き流通を支える大阪鶴見花き地方卸売市場：近畿農政局",
@@ -74,23 +81,23 @@
     },
     {
       "title": "東京都中央卸売市場の生き残りポイントは「品質管理」と「市場ブランド」 中間まとめで存続に強い危機感 人手不足に物流問題",
-      "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5JQ0RPSVBkRm9IRi1Qd2tTMG9hQ0lCenNWWVNDckxUZndwck4xbHlSeTdxMmlfaUt0NzBpUTc0NVBON0JHOGJZVTZLbFJ1djdDdHU1dTlVUU9Uc0N2cGRj?oc=5",
+      "link": "https://news.google.com/rss/articles/CBMiTkFVX3lxTE1kSjVmOWhEejBOckM3cGJLTS1SdFg0MEFNNXNxcTJOb0RuajYzZkQyMVA5Zng0d2lYb1VNQkZrTC1YR3RGNTZSNnh5YXl6QQ?oc=5",
       "source": "FNNプライムオンライン",
       "date": "2026-09-17",
       "cat": "toyosu"
     },
     {
-      "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年9月、東京都中央卸売市場）：関東農政局",
-      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE91M1djVjVFSUZnekYweWhpUGUyWDhkeDlYejlZOEtidGdZOWNUNlVHdkt5cHpFZVMwSmlZMzdUeXloVHloNTlySl92SkNqVlVZd2h3b3NwRVowN1ppMjZRWmRWaDk5R2I4VldV?oc=5",
-      "source": "農林水産省",
-      "date": "2026-08-31",
+      "title": "卸売市場市民感謝デー（9月）を開催しました！",
+      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE11aDdET1Z2a2hwWGxFMUtPRHVNX0dwcW5LUnBSMjJNTlpYb05haUJJNzR6ZnVKejVWemZEdldIelZNWG5WdnNaVHVQamIyVy12LXhDeHltWFBqYWlkSDlVME92R0o?oc=5",
+      "source": "大分市",
+      "date": "2026-09-12",
       "cat": "market"
     },
     {
-      "title": "大手食品卸の高成長続く 新たな機能ビジネスも好業績に寄与（日本食糧新聞）",
-      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE1BRVNmcTM1bDI3ZENEZlZOWVQybkZqMG1rWTN6eXNGdGNoZW5LcVI0ay00QnZRbmxsN1BaUnU0RUdVdVoyVGgySlVxSHVLdFhsRmVVQmFOcUI2cVJaOFdTdFpVUmUxOWFXaGNHWkVWdndWdDA0NTVqU2c5NXg5cFU?oc=5",
-      "source": "Yahoo!ニュース",
-      "date": "2026-08-31",
+      "title": "【ビジナビ】昭和2年創業の米子市にある青果卸売会社 デジタル技術を活用した業務の効率化 2024年問題の物流問題への取り組みも 鳥取県米子市（2026年8月27日掲載）｜日本海テレビNEWS NNN",
+      "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxOOElqSWt2WWhCMWtXeFBoRlhGOXFvemRPVXZ1QjRjQ0xFM1pXYklMQ0xVVjNDLXNsNWxYTEtFWFNTUzA1MzM0eDY2UDlnbUpEektwUzNvYlNNTkFXZlo2TVFYdlBvcTFIQUZYejVBYi1oOW5GN3FFYVJPa1ZVM0VUTWlUYnVSd0E?oc=5",
+      "source": "日テレNEWS NNN",
+      "date": "2026-08-27",
       "cat": "business"
     },
     {
@@ -119,13 +126,6 @@
       "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFBERmVqZ0x5ZjA5S0drZXpvc1Y5RmpYNldOb3NLTG4xaGxSZDhrN3lmbUozR2prTjFYWG9yNmV3T0VuOFpNWk5QS0IyazY5TnIyR2JjWXJfLVB6Zmtz?oc=5",
       "source": "リセマム",
       "date": "2026-07-30",
-      "cat": "toyosu"
-    },
-    {
-      "title": "「新潟産えだまめ」の出荷最盛期に合わせ東京・大田市場でのトップセールスのほか県内外の消費者に向けたＰＲを実施します。",
-      "link": "https://news.google.com/rss/articles/CBMickFVX3lxTE9nYWZtTTl3azVmNUlmbTBaUU00MVhmR1U1c1pGdUxDSjIydUxzaVhoN01ybzFkNmdBc0JCOEpMQ2tTNnlwbE9uQlV6ZHVUcWFDakdpNkxrZ0U3UW15eDFIMjVNdjNqWG8xLVJtUWNENkZuQQ?oc=5",
-      "source": "新潟県",
-      "date": "2026-07-07",
       "cat": "toyosu"
     },
     {
@@ -164,17 +164,17 @@
       "cat": "toyosu"
     },
     {
-      "title": "令和8年 中央卸売市場本場「新年初市」が開催されます",
-      "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTE45dy1HMlZhSHNqRWx4eWFmRFdvZk1pWmxTc1lrX2xPWjBaNzJ3VXVOQWYzMXFzNkk3M2Q1QkNPdmN5VTEwMkNOTzRvUGNFcy1waHpYZjBXQWNpMUFJUi1GVFN4TzRhb3huSUJlVU9wTQ?oc=5",
-      "source": "名古屋市公式ウェブサイト",
-      "date": "2025-12-23",
-      "cat": "market"
+      "title": "東京都中央卸売市場・豊洲市場",
+      "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9abnUyLWI2TWtuY0tKa1FoZlMwRUtHeDVsejhNTmwwck1sZi1iZ2ZhWlQ2OHgyU2xsQUdnM05mdzdpY1hNZGhGMzZoZTlFOWxQMHBiRVFwZmM3enM?oc=5",
+      "source": "GO TOKYO, The Official Tokyo Travel Guide",
+      "date": "2025-12-25",
+      "cat": "toyosu"
     },
     {
-      "title": "「大田市場花き紹介動画」を公開します‼ 日本一の花市場 大田市場から日常に彩りを",
-      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE5jTE8yV3B5Vkhpc1FKWEtYbEdfTXBMM0RFbEVQYmlNeTk2QTFKVF9FSFZrNkN6dUR6V280SXZnSHZ5VnRuWThpMmlzUVJuTEVXcldTd2szckJuX2pNbzlISW9aY3p4UDIybTZZb3UxcWhlTXRj?oc=5",
-      "source": "都庁総合ホームページ",
-      "date": "2025-03-27",
+      "title": "【独自】デンソーが提案した「農産物流通のDX」が拒否され卸売市場が危機！大田市場を牛耳る東京青果の深刻なガバナンス問題",
+      "link": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE56TUtLeVJRX1ViMTJiTVlWTkJOQmxDbW9QTDhUVmhUOXgyZkVBMzE2VEY4ZVR3VkJRQ1l0YXdzaXcyS2NYekV0bFVOQU4?oc=5",
+      "source": "ダイヤモンド・オンライン",
+      "date": "2025-03-19",
       "cat": "toyosu"
     },
     {
