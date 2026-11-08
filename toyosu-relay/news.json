@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-07T10:02:56+09:00",
+  "updated": "2026-11-08T09:50:04+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -87,13 +87,6 @@
       "cat": "toyosu"
     },
     {
-      "title": "【ビジナビ】昭和2年創業の米子市にある青果卸売会社 デジタル技術を活用した業務の効率化 2024年問題の物流問題への取り組みも 鳥取県米子市（2026年8月27日掲載）｜日本海テレビNEWS NNN",
-      "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxOOElqSWt2WWhCMWtXeFBoRlhGOXFvemRPVXZ1QjRjQ0xFM1pXYklMQ0xVVjNDLXNsNWxYTEtFWFNTUzA1MzM0eDY2UDlnbUpEektwUzNvYlNNTkFXZlo2TVFYdlBvcTFIQUZYejVBYi1oOW5GN3FFYVJPa1ZVM0VUTWlUYnVSd0E?oc=5",
-      "source": "日テレNEWS NNN",
-      "date": "2026-08-27",
-      "cat": "business"
-    },
-    {
       "title": "青果卸５割が減収減益 ２５年度決算 営業利益率１％超はわずか１割 生産費増と節約志向の板挟み",
       "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE9tdm0yYjlra0puOU0xcnRFZy0wanNicy1CcjF5aFRuNHVuSmJ3c0IwY0VRTUhPVzRvQ1k4X0F1b0F3MVlGRktROFNLeGxKZ3E5TkRybTFPaw?oc=5",
       "source": "日本農業新聞",
@@ -136,6 +129,13 @@
       "cat": "business"
     },
     {
+      "title": "中部圏の青果卸売会社12社、共同物流インフラ確立へ共同で新会社設立",
+      "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5JcVJhUHFvZ0FzVFNDVjVnbS1NZ1ZuVENXUzl1SkJ3bF9XLUEzSTFDcElyRzIzbV8zN0U5YWpfSWZidk93RlZ2UmVjRQ?oc=5",
+      "source": "LOGI-BIZ online",
+      "date": "2026-06-17",
+      "cat": "business"
+    },
+    {
       "title": "中部圏の青果卸12社／共同物流会社を設立、2027年6月以降稼働へ",
       "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFBsVjNZdlNydVJjdUpPWXIwbW92M2ZCX21FNkYtNHVPOFNvTWtneUJmeElOMU5zT0NraDdZNTBmV09DSmdIUF9JWFBqSU5xRnVtZl95QQ?oc=5",
       "source": "物流ニュースのLNEWS",
@@ -171,17 +171,17 @@
       "cat": "market"
     },
     {
-      "title": "【独自】デンソーが提案した「農産物流通のDX」が拒否され卸売市場が危機！大田市場を牛耳る東京青果の深刻なガバナンス問題",
-      "link": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE56TUtLeVJRX1ViMTJiTVlWTkJOQmxDbW9QTDhUVmhUOXgyZkVBMzE2VEY4ZVR3VkJRQ1l0YXdzaXcyS2NYekV0bFVOQU4?oc=5",
-      "source": "ダイヤモンド・オンライン",
-      "date": "2025-03-19",
-      "cat": "toyosu"
-    },
-    {
       "title": "東京都中央卸売市場豊洲市場視察",
       "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTE1HcHJpQWN0ZERHei11MWVKWm1oeGZiNDcyTnhmRXg3SjRKZmpBSUxtVGNnOGNlRUhENnR0dmxfZlJ2SFhrOG1GcFpVb2RCay1YRGNaRmZ1MXc4aGI3b0lHci1LQ1dtZVoyaTRUS2Vn?oc=5",
       "source": "内閣府ホームページ",
       "date": "2020-01-09",
+      "cat": "toyosu"
+    },
+    {
+      "title": "東京都、中央卸売市場長を更迭へ 豊洲市場めぐり人事",
+      "link": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE11c3BwTWNzRWdjWDN5SFlwN3d0MlBscnZ1OFBMclJfZHNYMmxXanNXOFE0WjVkQ1NBRTZOMmFWV08zQ3p3eEtsdEo3bFhUTFdPXzR6RENXdG1JTmVPME8yeVJTNVpNZw?oc=5",
+      "source": "朝日新聞",
+      "date": "2016-10-13",
       "cat": "toyosu"
     }
   ]
