@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-08T09:50:04+09:00",
+  "updated": "2026-11-09T10:07:09+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -22,13 +22,6 @@
       "source": "農林水産省",
       "date": "2026-11-06",
       "cat": "toyosu"
-    },
-    {
-      "title": "北九州市公設地方卸売市場で「市民感謝デー」 新鮮な海の味覚グルメ＆摸擬せり体験も【北九州市小倉北区】",
-      "link": "https://news.google.com/rss/articles/CBMiQEFVX3lxTE9rY0s1aUV4X09QRFZ2ODVJdkZnUl9jM3FhbGVDMk5nM01QcEtndFVSSGRVbWFpcFVET3FyZEo2RWc?oc=5",
-      "source": "北九州ノコト",
-      "date": "2026-11-04",
-      "cat": "market"
     },
     {
       "title": "トラックの荷物、下ろすのは誰の仕事？ 2027年の新ルールに食品卸業界が懸念（日本食糧新聞）",
@@ -85,6 +78,13 @@
       "source": "日テレNEWS NNN",
       "date": "2026-09-08",
       "cat": "toyosu"
+    },
+    {
+      "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年9月、東京都中央卸売市場）：関東農政局",
+      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE91M1djVjVFSUZnekYweWhpUGUyWDhkeDlYejlZOEtidGdZOWNUNlVHdkt5cHpFZVMwSmlZMzdUeXloVHloNTlySl92SkNqVlVZd2h3b3NwRVowN1ppMjZRWmRWaDk5R2I4VldV?oc=5",
+      "source": "農林水産省",
+      "date": "2026-08-31",
+      "cat": "market"
     },
     {
       "title": "青果卸５割が減収減益 ２５年度決算 営業利益率１％超はわずか１割 生産費増と節約志向の板挟み",
@@ -171,17 +171,17 @@
       "cat": "market"
     },
     {
+      "title": "東京都中央卸売市場 100億円超の赤字続く 豊洲開設費や取扱高減要因、施設使用料上げ現実味",
+      "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9ZYVg3Y08tZWkzLWV1dFBpZXpNMmlxQlFMQ1BCc2o4c1kyZ0EyUFJlOHJhYW1LZW5mSFRKNVVGS0xRVDQ2b2lVbHNpNm9Lc244S3RaWC05WTV0VDQxZHBZVGttQUs4SzA3d09aOQ?oc=5",
+      "source": "日本経済新聞",
+      "date": "2024-06-07",
+      "cat": "toyosu"
+    },
+    {
       "title": "東京都中央卸売市場豊洲市場視察",
       "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTE1HcHJpQWN0ZERHei11MWVKWm1oeGZiNDcyTnhmRXg3SjRKZmpBSUxtVGNnOGNlRUhENnR0dmxfZlJ2SFhrOG1GcFpVb2RCay1YRGNaRmZ1MXc4aGI3b0lHci1LQ1dtZVoyaTRUS2Vn?oc=5",
       "source": "内閣府ホームページ",
       "date": "2020-01-09",
-      "cat": "toyosu"
-    },
-    {
-      "title": "東京都、中央卸売市場長を更迭へ 豊洲市場めぐり人事",
-      "link": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE11c3BwTWNzRWdjWDN5SFlwN3d0MlBscnZ1OFBMclJfZHNYMmxXanNXOFE0WjVkQ1NBRTZOMmFWV08zQ3p3eEtsdEo3bFhUTFdPXzR6RENXdG1JTmVPME8yeVJTNVpNZw?oc=5",
-      "source": "朝日新聞",
-      "date": "2016-10-13",
       "cat": "toyosu"
     }
   ]
