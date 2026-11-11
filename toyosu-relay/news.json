@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-10T12:42:38+09:00",
+  "updated": "2026-11-11T10:22:19+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -17,18 +17,32 @@
   ],
   "items": [
     {
+      "title": "中央卸売市場で「横浜市場まつり」 マグロ解体ショーや模擬せりも（みんなの経済新聞ネットワーク）",
+      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE81b2pzVGs0eDYwTURMUG9aNnR1NXUxVFhrRkhvQW9qaG5oNjZTMmJfMHRrbTU5NmhLWm1yRUhxclZfdHdfdnhrZ1VYdW9QcTd5M3hndkVNTGd3WXdwT2dyQmkyLWhLdlU5clUtNHFWcHgzUVdBOXlVTWdSa211ckk?oc=5",
+      "source": "Yahoo!ニュース",
+      "date": "2026-11-10",
+      "cat": "market"
+    },
+    {
+      "title": "「横浜市場まつり」の様子",
+      "link": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1KSTU5ZzZ2WTAxdlA1QldpYS1US09STGQ1cjJobmtiT0I1bnJSTkxVT01xOE10cEt5V2NHaktGaUs4N2hJT25hMGxNNUlNRXlfemJr?oc=5",
+      "source": "ヨコハマ経済新聞",
+      "date": "2026-11-10",
+      "cat": "market"
+    },
+    {
+      "title": "中央卸売市場で「横浜市場まつり」　マグロ解体ショーや模擬せりも",
+      "link": "https://news.google.com/rss/articles/CBMi0wFBVV95cUxPcTNOZGNqbU1CX0NhYmxuRVNuTjMxbWxVdmtxVjFwVmlkcFRmYklsaWpRLWoyVVZRUGh4Z2NBNXB1aXFOYlpYWkVudEFfMkVyNndTWHY4RVpXWmRETkZSY1hSWHZXellrODJaSjVzLUg0M3NkWGxyXzVVLW1HUWo0Mm9uUXR3c1JEbDhHVk9mT1VobXpRRmFOZXB2UW1SV3l2ZmlCWldLLURzQm9wS3IwaF9XNHJueE92eXFTOEpHWDN1c19FSm1JTVk3WUJ6VUM4Z1Zz0gGDAUFVX3lxTFBNYmNVMGlWY0gzc1NraTEyQ0l1TE5rVXVSM3lMbW5zNXdDa1VSZDZDdWR2RGN2cUcxZjBjcmlRMnhKUkVxUFJtR2tvT2FUSUozRTl3V1U1ODBZemVoTUhiWUlJQ0xGcFNjZE1pOVdXYWstN0xTbFdRNG9HNEZEcDNHNDVR?oc=5",
+      "source": "ｄメニューニュース",
+      "date": "2026-11-10",
+      "cat": "market"
+    },
+    {
       "title": "今週のお手頃野菜(令和8年11月6日更新)",
       "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9CY19tYXVQRUJ5RXhiZldSUjk4SFBSbXQ0OFBicmNYSnVXeC1LWWMzc1c1Z1JqR0tOb3RkVmJ0Zjh6bGFYNW1VRUc5cU9iMVNja3p3UTBkRjVITEN4Zk5KLVZ1VUpjV0dCbm9N?oc=5",
       "source": "農林水産省",
       "date": "2026-11-06",
       "cat": "toyosu"
-    },
-    {
-      "title": "北九州市公設地方卸売市場で「市民感謝デー」 新鮮な海の味覚グルメ＆摸擬せり体験も【北九州市小倉北区】",
-      "link": "https://news.google.com/rss/articles/CBMiQEFVX3lxTE9rY0s1aUV4X09QRFZ2ODVJdkZnUl9jM3FhbGVDMk5nM01QcEtndFVSSGRVbWFpcFVET3FyZEo2RWc?oc=5",
-      "source": "北九州ノコト",
-      "date": "2026-11-04",
-      "cat": "market"
     },
     {
       "title": "トラックの荷物、下ろすのは誰の仕事？ 2027年の新ルールに食品卸業界が懸念（日本食糧新聞）",
@@ -85,13 +99,6 @@
       "source": "日テレNEWS NNN",
       "date": "2026-09-08",
       "cat": "toyosu"
-    },
-    {
-      "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年9月、東京都中央卸売市場）：関東農政局",
-      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE91M1djVjVFSUZnekYweWhpUGUyWDhkeDlYejlZOEtidGdZOWNUNlVHdkt5cHpFZVMwSmlZMzdUeXloVHloNTlySl92SkNqVlVZd2h3b3NwRVowN1ppMjZRWmRWaDk5R2I4VldV?oc=5",
-      "source": "農林水産省",
-      "date": "2026-08-31",
-      "cat": "market"
     },
     {
       "title": "青果卸５割が減収減益 ２５年度決算 営業利益率１％超はわずか１割 生産費増と節約志向の板挟み",
@@ -169,13 +176,6 @@
       "source": "GO TOKYO, The Official Tokyo Travel Guide",
       "date": "2025-12-25",
       "cat": "toyosu"
-    },
-    {
-      "title": "令和8年 中央卸売市場本場「新年初市」が開催されます",
-      "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTE45dy1HMlZhSHNqRWx4eWFmRFdvZk1pWmxTc1lrX2xPWjBaNzJ3VXVOQWYzMXFzNkk3M2Q1QkNPdmN5VTEwMkNOTzRvUGNFcy1waHpYZjBXQWNpMUFJUi1GVFN4TzRhb3huSUJlVU9wTQ?oc=5",
-      "source": "名古屋市公式ウェブサイト",
-      "date": "2025-12-23",
-      "cat": "market"
     },
     {
       "title": "東京都中央卸売市場豊洲市場視察",
