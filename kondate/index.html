@@ -6,9 +6,17 @@
 <meta name="robots" content="noindex,nofollow">
 <title>月曜はお魚です — 平日5日の献立・買い物・常備品</title>
 <meta name="theme-color" content="#c25a28">
-<link rel="icon" type="image/png" sizes="180x180" href="/kondate/icon-180.png?v=2">
-<link rel="apple-touch-icon" href="/kondate/icon-180.png?v=2">
-<link rel="icon" type="image/png" sizes="512x512" href="/kondate/icon-512.png?v=2">
+<meta name="description" content="平日5日の夕飯をボタン1つで決めて、買い物リストまで作ります。登録なし。">
+<meta property="og:title" content="月曜はお魚です">
+<meta property="og:description" content="平日5日の夕飯をボタン1つで決めて、買い物リストまで作ります。登録なし。">
+<meta property="og:image" content="https://osakana.spicy-device.com/icon-512.png">
+<meta property="og:url" content="https://osakana.spicy-device.com/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<!-- アイコンは相対パス（家庭用 /kondate/ と公開版 / の両方で同じファイルを置くため） -->
+<link rel="icon" type="image/png" sizes="180x180" href="icon-180.png?v=2">
+<link rel="apple-touch-icon" href="icon-180.png?v=2">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v=2">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="月曜はお魚です">
 <style>
@@ -322,6 +330,24 @@ label.lb{display:block;font-size:12px;font-weight:800;color:var(--sub);margin:14
   padding:11px 18px;border-radius:11px;font-size:13.5px;font-weight:700;z-index:200;opacity:0;pointer-events:none;
   transition:.25s;max-width:88vw;text-align:center}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(-5px)}
+
+/* 公開版 */
+body.pub-welcome .phase, body.pub-welcome .wkbar{display:none}
+.welcome{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px 20px 20px;margin:16px 0 10px;text-align:center}
+.wl-ic{font-size:44px;line-height:1}
+.wl-h{font-size:21px;font-weight:800;line-height:1.45;margin:10px 0 8px;letter-spacing:.02em}
+.wl-p{font-size:13.5px;color:var(--sub);line-height:1.8;margin-bottom:18px}
+.wl-btn{font-size:16.5px;padding:15px 16px;border-radius:13px}
+.wl-t{margin-top:10px}
+.wl-m{text-align:center;margin:4px 8px 0}
+.pubbanner{background:var(--a-l);border:1px solid #f0e0b8;color:#6b5112;border-radius:12px;padding:11px 12px;
+  font-size:12.5px;line-height:1.65;margin:11px 0 0}
+.pubbanner[hidden]{display:none}
+.pubbanner .pba{display:flex;align-items:center;gap:7px;margin:8px 0 5px;flex-wrap:wrap}
+.pubbanner .pbx{margin-left:auto;color:#a08540;font-size:16px;padding:2px 6px}
+.pubbanner .tiny{color:#8a7135}
+.pubfb{text-align:center;margin:18px 0 6px}
+.pubfb button{font-size:12.5px;font-weight:700;color:var(--sub);text-decoration:underline;text-underline-offset:3px}
 </style>
 </head>
 <body>
@@ -344,6 +370,7 @@ label.lb{display:block;font-size:12px;font-weight:800;color:var(--sub);margin:14
 </header>
 
 <main class="wrap">
+  <div class="pubbanner" id="pubBanner" hidden></div>
   <section class="pane on" id="pane-week"></section>
   <section class="pane" id="pane-shop"></section>
   <section class="pane" id="pane-log"></section>
@@ -372,7 +399,9 @@ label.lb{display:block;font-size:12px;font-weight:800;color:var(--sub);margin:14
 "use strict";
 /* =========================================================================
    月曜はお魚です — 平日5日の献立 → 買い物リスト → 常備品 を一直線につなぐ
-   単一HTML / localStorage / 外部通信なし
+   単一HTML / localStorage / ビルドなし・外部依存なし
+   家庭用（spicy-device.com/kondate/）と公開版（osakana.spicy-device.com）は同じこのファイル。
+   ホスト名で切り替える（下の「公開版」）。公開版だけ、回数の計測と「困ったところを送る」の送信がある
    ========================================================================= */
 
 /* ---------- カテゴリ定義（＝スーパーの売り場順） ---------- */
@@ -572,6 +601,140 @@ function saveAiKey(v){
   try{ aiKey ? localStorage.setItem(AI_KEY, aiKey) : localStorage.removeItem(AI_KEY); }catch(e){}
 }
 
+/* =========================================================================
+   公開版（X・Threads で配る版）
+   同じ index.html を2か所に置き、開いたホスト名で動きを切り替える。
+     家庭用  https://spicy-device.com/kondate/   … これまでどおり
+     公開版  https://osakana.spicy-device.com/    … PUBLIC が true
+   別のホスト名なので localStorage は家庭用と混ざらない。さらに保存のキーも分ける（osakana.v1）。
+   ?public=1 を付けると家庭用の場所でも公開版を試せる（キーが別なので家庭用のデータには触らない）。
+   公開版で外すもの：Gist の共有（ペア設定の文字列に GitHub のトークンが入る。Gist の「非公開」は
+   URL を知っていれば誰でも見られる）、レシートと売り場の写真読み取り（Claude の API キーを入れさせない）。
+   ========================================================================= */
+const PUBLIC_HOST = 'osakana.spicy-device.com';
+const PUBLIC = location.hostname === PUBLIC_HOST || /[?&]public=1(?:&|$)/.test(location.search);
+const PUB_CFG = {
+  // 計測（Plausible）。サイトを登録したら 'osakana.spicy-device.com' を入れる。空のあいだは何も送らない
+  plausibleDomain: '',
+  // 「困ったところを送る」の送り先（Googleフォーム）。空のあいだはボタンを出さない
+  formAction: '',   // https://docs.google.com/forms/d/e/<フォームのID>/formResponse
+  formChoice: '',   // 「どこで困りましたか」の entry.xxxxxxxx
+  formNote:   '',   // 「補足（任意）」の entry.xxxxxxxx
+  formStage:  '',   // 「どこまで進んだか（自動）」の entry.xxxxxxxx（無くてもよい）
+};
+/* 流入元。投稿ごとにリンクを分ける：X は ?utm_source=x、Threads は ?utm_source=threads */
+const PUB_SOURCES = ['x','threads'];
+/* 計測する5段階（この順に進む）。名前は Plausible のゴール名と同じにする */
+const FUNNEL = ['first_view','plan_shown','plan_confirmed','list_shown','first_check'];
+const FUNNEL_KEY = 'osakana.funnel', SRC_KEY = 'osakana.src';
+let funnelMem = {}, saveFailTold = false;
+const UA = navigator.userAgent || '';
+/* アプリ内ブラウザ（Threads=Barcelona、Instagram、Facebook、LINE、X の Android 版など）。
+   iOS の X は UA で見分けられないので、X・Threads のリンク（utm_source）からスマホで来たら案内を出す */
+const IN_APP = /Barcelona|Instagram|FBAN|FBAV|FB_IAB|Line\/|Twitter|; wv\)/i.test(UA);
+const IS_MOBILE = /iPhone|iPad|iPod|Android/i.test(UA);
+
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function lsSet(k, v){ try{ localStorage.setItem(k, v); return true; }catch(e){ return false; } }
+const urlSource = () => { const m = location.search.match(/[?&]utm_source=([a-z]+)/i); const s = m ? m[1].toLowerCase() : ''; return PUB_SOURCES.indexOf(s)>=0 ? s : ''; };
+/** どこから来たか（x / threads / 空）。最初に来たリンクで決め、以後もその値で数える */
+function pubSource(){
+  let s = lsGet(SRC_KEY) || '';
+  if(!s && urlSource()){ s = urlSource(); lsSet(SRC_KEY, s); }
+  return s || urlSource();
+}
+function funnelDone(){
+  let d = {}; try{ d = JSON.parse(lsGet(FUNNEL_KEY) || '{}') || {}; }catch(e){}
+  return Object.assign({}, funnelMem, d);
+}
+/** 計測（公開版だけ）。決まったイベント名と、流入元つきのページURLだけを送る。
+    献立名・食材名・入力内容は送らない。ボタンを押した回数ではなく、処理ができた時点で呼ぶ。
+    「保存失敗」以外は、この端末で1回だけ数える（何人がその段階まで来たかを見るため） */
+function track(name){
+  if(!PUBLIC) return;
+  if(name !== 'save_failed'){
+    const d = funnelDone();
+    if(d[name]) return;
+    d[name] = 1; funnelMem = d; lsSet(FUNNEL_KEY, JSON.stringify(d));
+  }
+  const src = pubSource();
+  const ev = {name, url: location.origin + location.pathname + (src ? '?utm_source='+src : ''), domain: PUB_CFG.plausibleDomain};
+  (window.__events = window.__events || []).push(ev);           // 画面で確かめる用（送らない）
+  if(!PUB_CFG.plausibleDomain || location.hostname !== PUBLIC_HOST) return;   // ?public=1 の試しは送らない
+  try{
+    fetch('https://plausible.io/api/event', {method:'POST', keepalive:true,
+      headers:{'Content-Type':'text/plain'}, body: JSON.stringify(ev)}).catch(()=>{});
+  }catch(e){}
+}
+/** いつものブラウザで開き直すためのリンク（ext=1 を付けると、開いた先では案内を出さない） */
+function pubLink(){ const s = pubSource(); return location.origin + location.pathname + '?' + (s ? 'utm_source='+s+'&' : '') + 'ext=1'; }
+function copyText(txt, msg){
+  if(navigator.clipboard && navigator.clipboard.writeText)
+    navigator.clipboard.writeText(txt).then(()=>toast(msg || 'コピーしました'), ()=>fallbackCopy(txt));
+  else fallbackCopy(txt);
+}
+function shouldWarnInApp(){
+  if(!PUBLIC || /[?&]ext=1(?:&|$)/.test(location.search)) return false;
+  try{ if(sessionStorage.getItem('osakana.banner')==='off') return false; }catch(e){}
+  return IN_APP || (IS_MOBILE && !!urlSource());
+}
+/** アプリ内ブラウザで開いたときの案内。保存が消えることがあるので、いつものブラウザへ移ってもらう */
+function renderPubBanner(){
+  const el = $('#pubBanner'); if(!el) return;
+  if(!shouldWarnInApp()){ el.hidden = true; return; }
+  const q = pubLink().split('?')[1];
+  el.hidden = false;
+  el.innerHTML = '<div><b>アプリの中のブラウザでは、保存が消えることがあります。</b>'+
+      'いつものブラウザ（Safari・Chrome）で開いてください。</div>'+
+    '<div class="pba"><button class="btn sm" id="pbCopy">🔗 リンクをコピー</button>'+
+      (/Android/i.test(UA) ? '<a class="btn sub sm" href="intent://'+location.host+location.pathname+'?'+q+
+        '#Intent;scheme=https;package=com.android.chrome;end">Chrome で開く</a>' : '')+
+      '<button class="pbx" id="pbClose" aria-label="閉じる">✕</button></div>'+
+    '<div class="tiny">右上の「…」から「ブラウザで開く」でも移れます。</div>';
+  $('#pbCopy').onclick = ()=>copyText(pubLink(), 'コピーしました。Safari や Chrome に貼って開いてください');
+  $('#pbClose').onclick = ()=>{ try{ sessionStorage.setItem('osakana.banner','off'); }catch(e){} el.hidden = true; };
+}
+
+/* ---------- 困ったところを送る（公開版） ----------
+   計測で「どこで止まったか」を見て、ここで「なぜ止まったか」を拾う。選ぶだけで送れる。補足は任意 */
+const FB_CHOICES = ['献立が決まらない','買い物リストが空','保存されない','その他'];
+const canFeedback = () => PUBLIC && !!(PUB_CFG.formAction && PUB_CFG.formChoice);
+function furthestStage(){
+  const d = funnelDone(); let s = 'なし';
+  FUNNEL.forEach(k=>{ if(d[k]) s = k; });
+  return s + (pubSource() ? ' / '+pubSource() : '');
+}
+function openFeedback(){
+  let choice = '';
+  const body = '<div class="tiny" style="margin:12px 0 10px">どこで困りましたか。選んで「送る」を押すだけで届きます。</div>'+
+    '<div class="chips">'+FB_CHOICES.map(c=>'<button class="chip" data-fb="'+esc(c)+'">'+esc(c)+'</button>').join('')+'</div>'+
+    '<label class="lb">補足（任意）</label>'+
+    '<textarea class="f" id="fbNote" maxlength="400" style="min-height:90px" placeholder="例）水曜だけ「未定」になる"></textarea>'+
+    '<div class="tiny" style="margin-top:6px">名前や連絡先は書かないでください。届いた内容は、このアプリを直すためだけに使います。</div>'+
+    '<div style="height:10px"></div>';
+  sheet('困ったところを送る', body,
+    '<button class="btn sub" id="fbCancel" style="flex:none;padding:12px 15px">やめる</button><button class="btn" id="fbSend" disabled>送る</button>');
+  $('#shBody').querySelectorAll('[data-fb]').forEach(b=>b.onclick=()=>{
+    choice = b.dataset.fb;
+    $('#shBody').querySelectorAll('[data-fb]').forEach(x=>x.classList.toggle('on', x===b));
+    $('#fbSend').disabled = false;
+  });
+  $('#fbCancel').onclick = closeSheet;
+  $('#fbSend').onclick = async ()=>{
+    if(!choice || !canFeedback()) return;
+    const btn = $('#fbSend'); btn.disabled = true; btn.textContent = '送信中…';
+    const p = new URLSearchParams();
+    p.append(PUB_CFG.formChoice, choice);
+    const note = ($('#fbNote').value || '').trim();
+    if(PUB_CFG.formNote && note) p.append(PUB_CFG.formNote, note);
+    if(PUB_CFG.formStage) p.append(PUB_CFG.formStage, furthestStage());
+    try{
+      await fetch(PUB_CFG.formAction, {method:'POST', mode:'no-cors', body:p});   // Googleフォームは中身を返さない
+      closeSheet(); toast('送りました。ありがとうございます');
+    }catch(e){ btn.disabled = false; btn.textContent = '送る'; toast('送れませんでした。通信を確かめてください'); }
+  };
+}
+
 /* ---------- 曜日と週の運用タイムライン ---------- */
 const DAYS = [
   {k:'mon',w:'月'},{k:'tue',w:'火'},{k:'wed',w:'水'},{k:'thu',w:'木'},{k:'fri',w:'金'}
@@ -744,7 +907,7 @@ function phaseNow(){
 /* =========================================================================
    State
    ========================================================================= */
-const KEY = 'kondate.v1';
+const KEY = PUBLIC ? 'osakana.v1' : 'kondate.v1';   // 公開版は家庭用とキーも分ける
 let S = null, viewWeek = null, tab = 'week';
 
 /* mainId … 登録済みレシピ / plainName … まだレシピになっていない料理名（直接入力） */
@@ -929,12 +1092,21 @@ function load(){
   normalize();
   seedRecipes();
   reconcileCooked();
-  autoPlan();
+  if(!PUBLIC || pubStarted()) autoPlan();   // 公開版は、最初のボタンを押すまで勝手に献立を作らない
+  if(PUBLIC){
+    // 平日に「次の月曜から」を作った人が開き直したら、空の今週ではなくその週を見せる
+    const nx = iso(addDays(parseISO(currentWeekStart()), 7));
+    if(!weekHasPlan(viewWeek) && weekHasPlan(nx)){ viewWeek = nx; getWeek(nx); }
+  }
   save();
 }
 function save(){
   _pIdx = null;
-  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){ toast('保存できませんでした'); }
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); }
+  catch(e){
+    toast(PUBLIC ? '保存できませんでした。いつものブラウザで開いてください' : '保存できませんでした');
+    if(!saveFailTold){ saveFailTold = true; track('save_failed'); }
+  }
   schedulePush();
 }
 function getWeek(start){
@@ -966,6 +1138,56 @@ function markCooked(w, dk){
     if(!r.lastCooked || r.lastCooked < dt){ r.lastCooked = dt; r.cookCount = (r.cookCount||0)+1; }
   });
   day.cooked = true;
+}
+
+/* ---------- 公開版の最初の体験 ---------- */
+const pubStarted = () => !!(S.pub && S.pub.started);
+const weekHasPlan = ws => !!(ws && S.weeks[ws] && DAYS.some(d=>{
+  const day = S.weeks[ws].days[d.k]; return day.mode==='cook' && (day.mainId || day.plainName); }));
+/** 最初の画面を出すか。献立を一度も作っていない公開版の端末だけ */
+const showWelcome = () => PUBLIC && !pubStarted() && !Object.keys(S.weeks).some(weekHasPlan);
+/** 次の月曜（平日は来週の月曜。土日は currentWeekStart と同じ） */
+function nextMonday(){
+  const d = today().getDay();
+  return (d===0 || d===6) ? currentWeekStart() : iso(addDays(parseISO(currentWeekStart()), 7));
+}
+/** 提案のあとに数える。作る日なのに主菜が無い日が残ったら「献立が一部未定」 */
+function trackPlan(){
+  const wk = W();
+  if(!weekHasPlan(wk.start)) return;
+  track('plan_shown');
+  if(DAYS.some(d=>{ const day = wk.days[d.k]; return day.mode==='cook' && day.status!=='other' && !day.mainId && !day.plainName; }))
+    track('plan_incomplete');
+}
+/** 最初のボタン「5日分の献立を見る」。曜日の設定もレシピの登録もいらない。その場で次の月曜からを出す */
+function startFirstPlan(){
+  S.pub = Object.assign(S.pub || {}, {started:true});
+  viewWeek = nextMonday(); getWeek(viewWeek);
+  suggestWeek();
+  trackPlan();
+  render(); switchTab('week');
+}
+/** 未承認の日のうち、料理が決まっている日をまとめて承認する。承認した日数を返す */
+function approvePending(){
+  const wk = W(); let n = 0;
+  DAYS.forEach(d=>{
+    const day = wk.days[d.k];
+    if(day.status==='pending' && (day.mainId || day.plainName)){
+      day.status='approved'; day.mode='cook';
+      if(holidayName(iso(dayDate(wk.start, d.k)))) day.cookAnyway = true;
+      n++;
+    }
+  });
+  return n;
+}
+/** 「この献立で買い物リストを見る」：承認と画面の移動を1タップで */
+function confirmAndShop(){
+  approvePending();
+  if(!approvedCount()){ toast('先に献立を決めてください'); return; }
+  S.pub = Object.assign(S.pub || {}, {confirmed:true});
+  save();
+  track('plan_confirmed');
+  render(); switchTab('shop');      // 中身があれば renderShop が list_shown を数える
 }
 
 /** 土日にアプリを開いたら、まだ提案が無ければ自動で作る（＝土曜12時に提案が出る運用） */
@@ -1911,7 +2133,7 @@ function approveDay(dk){
   if(!day.mainId && !day.plainName){ toast('先に料理を決めてください'); return; }
   day.mode = 'cook'; day.status = 'approved';
   if(holidayName(iso(dayDate(wk.start, dk)))) day.cookAnyway = true;
-  save(); render();
+  save(); track('plan_confirmed'); render();
 }
 function rejectDay(dk){
   const wk = W(), day = wk.days[dk];
@@ -1926,16 +2148,8 @@ function setOther(dk, mode){
   save(); render();
 }
 function approveAll(){
-  const wk = W(); let n = 0;
-  DAYS.forEach(d=>{
-    const day = wk.days[d.k];
-    if(day.status==='pending' && (day.mainId || day.plainName)){
-      day.status='approved'; day.mode='cook';
-      if(holidayName(iso(dayDate(wk.start, d.k)))) day.cookAnyway = true;
-      n++;
-    }
-  });
-  save(); render();
+  const n = approvePending();
+  save(); if(n) track('plan_confirmed'); render();
   toast(n ? n+'日ぶん承認しました' : '承認できる日がありません');
 }
 function rateDay(dk, val){
@@ -2131,6 +2345,12 @@ function renderCounts(){
 /* ---------- フェーズ帯 ---------- */
 function renderPhase(){
   const el = $('#phaseBar');
+  if(PUBLIC && viewWeek === iso(addDays(parseISO(currentWeekStart()), 7))){
+    // 公開版は平日に「次の月曜から」を作るので、来週を見ているのがふつう
+    el.innerHTML = '<div class="wrap"><span class="dot" style="background:var(--p)"></span>来週の献立です'+
+      '<span class="sub">'+md(parseISO(viewWeek))+'〜</span></div>';
+    return;
+  }
   if(viewWeek !== currentWeekStart()){
     el.innerHTML = '<div class="wrap"><span class="dot" style="background:#c9ccd1"></span>'+
       '別の週を見ています<button class="go" id="phGo">今週へ</button></div>';
@@ -2175,8 +2395,27 @@ const ST_STYLE = {
   other:    {bg:'#e6eefa', fg:'#2f63a8', nm:'その他'}
 };
 
+/** 公開版の最初の画面。設定もレシピの登録も求めない。ボタン1つで次の月曜からの5日分を出す */
+function welcomeHTML(){
+  return '<div class="welcome">'+
+      '<div class="wl-ic">🐟</div>'+
+      '<h1 class="wl-h">平日5日の夕飯を、<br>ボタン1つで決めます</h1>'+
+      '<p class="wl-p">月曜は魚、金曜は定番、火〜木は気分で。<br>決まった献立から、買い物リストまで作ります。</p>'+
+      '<button class="btn full wl-btn" id="btnFirstPlan">5日分の献立を見る</button>'+
+      '<div class="tiny wl-t">登録はいりません。このブラウザに自動保存されます。</div>'+
+    '</div>'+
+    '<div class="tiny wl-m">使われ方を知るため、どこまで進んだかの回数だけを数えています。献立名・食材名・入力内容は送りません。</div>';
+}
+const feedbackLinkHTML = () => canFeedback() ? '<div class="pubfb"><button data-feedback>✉️ 困ったところを送る</button></div>' : '';
+
 function renderWeek(){
   const wk = W(), el = $('#pane-week');
+  document.body.classList.toggle('pub-welcome', showWelcome());
+  if(showWelcome()){
+    el.innerHTML = welcomeHTML();
+    $('#btnFirstPlan').onclick = startFirstPlan;
+    return;
+  }
   const ws = parseISO(viewWeek), t = today();
   const todayIdx = Math.round((t-ws)/86400000);
   const ph = viewWeek===currentWeekStart() ? phaseNow() : 'cook';
@@ -2239,7 +2478,7 @@ function renderWeek(){
            'おなじ料理を連日は出さないので、足りないぶんの日は<b>「未定」のまま</b>空けています。'+
            'その日は自分で書くか、📖 レシピを足してください。<br>'+
            '<span style="opacity:.85">ローテーション（月）や定番（金）に割り当てたレシピは、その曜日以外には出しません。</span></div>';
-    }else if(nFree < 8){
+    }else if(nFree < 8 && !PUBLIC){   // 公開版の最初の献立に「しかありません」と出すと、不具合に見える
       h += '<div class="note">'+freeDayNames+'（気分）に出せる主菜が<b>'+nFree+'品</b>しかありません。'+
            'ローテーションや定番に割り当てたレシピは、その曜日以外には出しません。'+
            '📖 レシピの貼り付けで増やすと、提案の幅が広がります。</div>';
@@ -2318,6 +2557,13 @@ function renderWeek(){
   });
   h += '</div>';
 
+  // --- 公開版：承認と買い物リストへの移動を1タップに ---
+  if(PUBLIC){
+    h += '<button class="btn gr full" style="margin:4px 0 6px" id="btnConfirmShop">🛒 この献立で買い物リストを見る</button>'+
+         '<div class="tiny" style="text-align:center">未承認の日をまとめて承認して、買い物リストを開きます。'+
+         (S.pub && S.pub.confirmed ? '' : '<br>💾 このブラウザに自動保存されます。')+'</div>';
+  }
+
   // --- 余り食材 ---
   h += '<div class="sec">🥕 余っている食材<span class="line"></span></div>'+
        '<div class="card"><div class="tiny" style="padding:11px 13px 4px">'+
@@ -2326,20 +2572,23 @@ function renderWeek(){
        (S.leftovers.length ? S.leftovers.map(l=>'<span class="chip"><span class="cat">'+catIc(l.cat)+'</span>'+esc(l.name)+
           '<button class="x" data-delleft="'+l.id+'">✕</button></span>').join('') : '<span class="tiny">なし</span>')+'</div></div>'+
        '<div class="addrow"><input id="leftInput" placeholder="例）キャベツ 半玉" enterkeyhint="done">'+
-       '<button class="btn sm" id="btnAddLeft">追加</button></div></div>';
+       '<button class="btn sm" id="btnAddLeft">追加</button></div></div>'+
+       feedbackLinkHTML();
 
   el.innerHTML = h;
 
   $('#btnSuggest').onclick = ()=>{
     if(!canPlan){ toast('先にレシピを登録してください'); switchTab('recipe'); return; }
-    if(suggestWeek()){ render(); toast('未承認の日を提案しました'); }
+    if(suggestWeek()){ trackPlan(); render(); toast('未承認の日を提案しました'); }
   };
   $('#btnRedo').onclick = ()=>{
     if(!canPlan){ toast('先にレシピを登録してください'); switchTab('recipe'); return; }
     if(!confirm('承認ずみの日も含めて組み直します。よろしいですか？')) return;
-    if(suggestWeek({redoApproved:true})){ render(); toast('1週間ぶん組み直しました'); }
+    if(suggestWeek({redoApproved:true})){ trackPlan(); render(); toast('1週間ぶん組み直しました'); }
   };
   $('#btnApproveAll').onclick = approveAll;
+  const cs = $('#btnConfirmShop'); if(cs) cs.onclick = confirmAndShop;
+  el.querySelectorAll('[data-feedback]').forEach(b=>b.onclick=openFeedback);
   $('#btnClearWeek').onclick = ()=>{
     DAYS.forEach(d=>{ wk.days[d.k] = blankDay(); });
     wk.generatedAt = null; save(); render();
@@ -2489,12 +2738,14 @@ function renderShop(){
       if(stp) parts.push('常備品'+stp+'件');
       return parts.length ? parts.join('・') : 'まだ何もありません';
     })()+'</div></div>'+
-    '<button class="btn sub sm" id="btnCopy">📋 コピー</button></div>';
+    '<button class="btn sub sm" id="btnCopy">📋 コピー</button></div>'+
+    (PUBLIC && total ? '<div class="tiny" style="margin:-4px 2px 0">家族に送るときは「📋 コピー」→ LINE などに貼り付け。</div>' : '');
+  if(total && tab==='shop') track('list_shown');     // 中身のある買い物リストを開いた
 
   // 週次の買い物リストの上に、その週の月〜金の献立を出す。
   // タップでその料理の食材をまとめて足せる（記録がそのまま料理に紐づく）
   h += '<div class="card" style="margin-top:12px"><div class="tiny" style="padding:11px 13px 3px">'+
-    '今週の献立（タップするとその料理の食材を足せます）</div>'+
+    (viewWeek===currentWeekStart() ? '今週' : 'この週')+'の献立（タップするとその料理の食材を足せます）</div>'+
     DAYS.map(d=>{
       const day = wk.days[d.k], nm = dayDishName(day);
       const n = nm ? dishMemoIngs(nm, wk).length : 0;
@@ -2587,7 +2838,9 @@ function renderShop(){
          '<div class="tiny" style="text-align:center;padding-bottom:8px">'+
          'チェックした常備品の「購入日」を今日に更新し、次のサイクルを実績から学習します。</div>';
   }
+  h += feedbackLinkHTML();
   el.innerHTML = h;
+  el.querySelectorAll('[data-feedback]').forEach(b=>b.onclick=openFeedback);
 
   el.querySelectorAll('[data-note]').forEach(b=>b.onclick=e=>{
     e.stopPropagation(); openIngNote(b.dataset.note);
@@ -2595,8 +2848,9 @@ function renderShop(){
   el.querySelectorAll('.row').forEach(r=>r.onclick=e=>{
     if(e.target.closest('[data-del]') || e.target.closest('[data-note]') || e.target.closest('[data-tag]')) return;
     const k = r.dataset.key;
-    if(wk.checked[k]) delete wk.checked[k]; else wk.checked[k]=true;
-    save(); renderShop(); renderCounts();
+    const on = !wk.checked[k];
+    if(on) wk.checked[k]=true; else delete wk.checked[k];
+    save(); if(on) track('first_check'); renderShop(); renderCounts();
   });
   el.querySelectorAll('[data-del]').forEach(b=>b.onclick=e=>{
     e.stopPropagation();
@@ -2725,12 +2979,13 @@ function receiptBodyHTML(){
   return '<div class="tiny" style="margin:12px 0 10px">'+
       '買ったものの値段を入れてください。入れたものだけが記録されます。'+
       '次の週からは各行に「前回 ¥198」が出て、レジ前で高いか安いか分かるようになります。</div>'+
+    (PUBLIC ? '' :   // 公開版は写真の読み取り（Claude の API キー）を外す
     '<button class="btn sub full" id="rcShot">📷 レシートの写真から読み取る</button>'+
     '<div class="tiny" style="margin:6px 0 2px">'+
       (aiKey ? 'レシートを撮るか選ぶと、Claude が品名と値段を読んで下の欄を埋めます。'
              : '<b>未設定です。</b>⚙️ 設定 → レシートの読み取り で Claude の API キーを入れると使えます。')+
     '</div>'+
-    '<input type="file" id="rcFile" accept="image/*" style="display:none">'+
+    '<input type="file" id="rcFile" accept="image/*" style="display:none">')+
     '<div id="rcMsg"></div>'+
     '<label class="lb">買ったもの</label>'+
     '<div class="card" style="margin:0;padding:3px 13px">'+
@@ -2781,13 +3036,15 @@ function drawReceipt(){
   };
   $('#rcAdd').onclick = addNew;
   $('#rcNew').onkeydown = e => { if(e.key==='Enter'){ e.preventDefault(); addNew(); } };
-  $('#rcShot').onclick = ()=>{
+  const shot = $('#rcShot');
+  if(shot) shot.onclick = ()=>{
     if(!aiKey){ closeSheet(); openSettings();
       setTimeout(()=>{ const f=$('#cfAiKey'); if(f){ f.scrollIntoView({block:'center'}); f.focus(); } }, 250);
       return; }
     $('#rcFile').click();
   };
-  $('#rcFile').onchange = e => {
+  const rf = $('#rcFile');
+  if(rf) rf.onchange = e => {
     const f = e.target.files && e.target.files[0]; e.target.value='';
     if(f) runReceiptOCR(f);
   };
@@ -4261,12 +4518,13 @@ function openSettings(){
     '<div class="tiny" style="margin-top:7px">買い物リストはこの順番で並びます。いつも行く店を歩く順に合わせておくと、'+
     '上から順に取っていくだけで済むので、売り場を行ったり来たりしなくなります。'+
     '行をタップすると、その売り場が店のどのあたりかを書けます。</div>'+
+    (PUBLIC ? '' :
     '<button class="btn sub full" style="margin-top:10px" id="cfMap">📷 売り場の案内図・写真から読み取る</button>'+
     '<input type="file" id="cfMapFile" accept="image/*" style="display:none">'+
     '<div id="cfMapMsg"></div>'+
     '<div class="tiny" style="margin-top:6px">'+
       (aiKey ? '店の案内図や売り場の写真を撮ると、Claude が順番と場所を読み取って入れます。'
-             : '下の「レシートの読み取り」で Claude の API キーを入れると使えます。')+'</div>'+
+             : '下の「レシートの読み取り」で Claude の API キーを入れると使えます。')+'</div>')+
     '<label class="lb">祝日</label>'+
     '<div class="seg" id="cfHol">'+
       '<button data-h="1" class="'+(S.settings.skipHolidays!==false?'on':'')+'">作らない</button>'+
@@ -4281,7 +4539,14 @@ function openSettings(){
       '日曜 '+DEADLINE_HOUR+':00　承認の締切<br>'+
       '日曜 '+SHOP_HOUR+':00　買い物リストを見ながら買い物<br>'+
       '月〜金　作って、任意で評価（👍😐👎）</div>'+
-    '<label class="lb">この端末の名前</label>'+
+    (PUBLIC ? pubSettingsHTML() : householdSettingsHTML());
+  sheet('設定', body, '<button class="btn" id="cfClose">閉じる</button>');
+  bindSettings();
+}
+
+/** 家庭用だけの設定（端末の名前・レシートの読み取り・Gist の共有・データ） */
+function householdSettingsHTML(){
+  return '<label class="lb">この端末の名前</label>'+
     '<input class="f" id="cfMe" value="'+esc(myName)+'" placeholder="例）わたし / つま" maxlength="12">'+
     '<div class="tiny" style="margin-top:6px">買い物メモに「誰が足したか」が残ります。空でもかまいません。'+
     'この設定は端末ごとで、共有されません。</div>'+
@@ -4312,30 +4577,57 @@ function openSettings(){
     '<input type="file" id="cfFile" accept="application/json,.json" style="display:none">'+
     '<label class="lb">共有</label>'+
     '<button class="btn sub full" id="cfShare">📤 献立＋買い物リストをコピー</button>'+
-    '<label class="lb" style="color:var(--r)">リセット</label>'+
+    settingsTailHTML(syncCfg ? '＋GitHub Gist 同期' : '・外部通信なし');
+}
+/** 公開版の設定。共有は「コピーして LINE などに送る」だけ。計測していることを書く */
+function pubSettingsHTML(){
+  return '<label class="lb">データ</label>'+
+    '<div class="tiny" style="margin-bottom:9px">このブラウザの中にだけ保存しています（登録はいりません）。'+
+      '<b>アプリの中のブラウザやプライベートブラウズでは、閉じると消えることがあります。</b>'+
+      'いつものブラウザで開いてください。別の端末へ移すときは書き出し → 読み込みしてください。</div>'+
+    '<button class="btn sub full" id="cfLink" style="margin-bottom:8px">🔗 このページのリンクをコピー</button>'+
+    '<div style="display:flex;gap:8px">'+
+      '<button class="btn sub" style="flex:1" id="cfExp">⬇︎ 書き出し</button>'+
+      '<button class="btn sub" style="flex:1" id="cfImp">⬆︎ 読み込み</button></div>'+
+    '<input type="file" id="cfFile" accept="application/json,.json" style="display:none">'+
+    '<label class="lb">家族と共有</label>'+
+    '<button class="btn sub full" id="cfShare">📤 献立＋買い物リストをコピー</button>'+
+    '<div class="tiny" style="margin-top:6px">LINE などに貼って送れます。</div>'+
+    '<label class="lb">計測について</label>'+
+    '<div class="tiny">使われ方を知るために、次の回数だけを数えています：はじめて開いた／献立を見た／献立を決めた／'+
+      '買い物リストを見た／はじめてチェックした。ほかに「献立が一部未定」「保存できなかった」が起きた回数。'+
+      '<b>献立や食材の名前、入力した内容は送りません。</b></div>'+
+    (canFeedback() ? '<button class="btn sub full" style="margin-top:12px" id="cfFb">✉️ 困ったところを送る</button>' : '')+
+    settingsTailHTML('・計測（回数のみ）');
+}
+function settingsTailHTML(note){
+  return '<label class="lb" style="color:var(--r)">リセット</label>'+
     '<button class="btn sub full" id="cfReset" style="color:var(--r)">すべてのデータを消去</button>'+
     '<label class="lb">バージョン</label>'+
     '<div class="tiny" style="margin-bottom:9px">この画面の版：<b>'+BUILD+'</b>。'+
       'アプリを開くたびに自動で新しい版を確認します。反映されないときはここから。</div>'+
     '<button class="btn sub full" id="cfUpd">🔄 最新版を確認して更新</button>'+
     '<div style="height:14px"></div>'+
-    '<div class="tiny">月曜はお魚です / 端末内保存（localStorage）'+
-      (syncCfg ? '＋GitHub Gist 同期' : '・外部通信なし')+'</div>'+
+    '<div class="tiny">月曜はお魚です / 端末内保存（localStorage）'+note+'</div>'+
     '<div style="height:8px"></div>';
-  sheet('設定', body, '<button class="btn" id="cfClose">閉じる</button>');
-
+}
+function bindSettings(){
   $('#cfClose').onclick = closeSheet;
+  const lk = $('#cfLink'); if(lk) lk.onclick = ()=>copyText(pubLink());
+  const fb = $('#cfFb');   if(fb) fb.onclick = openFeedback;
   $('#cfUpd').onclick = ()=>checkUpdate(true);
   $('#shBody').querySelectorAll('[data-rule]').forEach(b=>b.onclick=()=>openDayRule(b.dataset.rule));
   $('#shBody').querySelectorAll('#cfSv button').forEach(b=>b.onclick=()=>{
     S.settings.servings = +b.dataset.s; save();
     $('#shBody').querySelectorAll('#cfSv button').forEach(x=>x.classList.toggle('on', +x.dataset.s===S.settings.servings));
   });
-  $('#cfMap').onclick = ()=>{
+  const mp = $('#cfMap');
+  if(mp) mp.onclick = ()=>{
     if(!aiKey){ const f=$('#cfAiKey'); if(f){ f.scrollIntoView({block:'center'}); f.focus(); } return; }
     $('#cfMapFile').click();
   };
-  $('#cfMapFile').onchange = e => {
+  const mf = $('#cfMapFile');
+  if(mf) mf.onchange = e => {
     const f = e.target.files && e.target.files[0]; e.target.value='';
     if(f) runAisleOCR(f);
   };
@@ -4511,11 +4803,11 @@ $('#updGo').onclick = applyUpdate;
 
 load();
 loadMyName();
-loadAiKey();
-loadSyncCfg();
+if(!PUBLIC){ loadAiKey(); loadSyncCfg(); }   // 公開版は API キーも Gist の共有も使わない
 setSyncState(syncCfg ? 'ok' : 'off',
   syncCfg && syncCfg.lastSyncAt ? '最終同期 '+new Date(syncCfg.lastSyncAt).toLocaleTimeString('ja-JP') : '');
 render();
+if(PUBLIC){ renderPubBanner(); track('first_view'); }
 setTimeout(checkUpdate, 1200);
 if(syncCfg){ syncNow(); setInterval(()=>{ if(document.visibilityState==='visible') syncNow(); }, 60000); }
 </script>
