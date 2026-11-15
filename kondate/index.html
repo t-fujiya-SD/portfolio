@@ -124,6 +124,10 @@ label.lb{display:block;font-size:12px;font-weight:800;color:var(--sub);margin:14
 .dacts button{border:1.5px solid var(--line);border-radius:8px;padding:5px 10px;font-size:12px;font-weight:700;color:var(--sub);background:#fff}
 .dname[data-pick],.ding[data-pick]{cursor:pointer}
 .dacts button:active{background:#f3f1ee}
+.swrow{justify-content:flex-start;gap:10px;margin-bottom:8px;text-align:left}
+.swrow b{font-size:16px;width:20px}
+.swrow .swd{color:var(--sub2);font-size:12px;font-weight:600;width:42px}
+.swrow .swn{flex:1;min-width:0;font-weight:700}
 .mode3{display:flex;gap:0;border:1.5px solid var(--line);border-radius:9px;overflow:hidden;flex:none}
 .mode3 button{padding:5px 8px;font-size:11.5px;font-weight:800;color:var(--sub2);border:none;border-radius:0;background:#fff}
 .mode3 button+button{border-left:1.5px solid var(--line)}
@@ -557,7 +561,7 @@ function saveMyName(v){
    古い画面で動き続ける（配信側のキャッシュも最大10分ある）。
    開いたとき・戻ってきたときに自分自身を取り直し、BUILD が違えば更新する。
    BUILD は kondate/stamp.sh が書き換える（kondate を直したら公開前に実行）。 */
-const BUILD = '20261115-131832';
+const BUILD = '20261115-141514';
 let updNext = '', updAt = 0;
 function hideUpdBar(){ const b = $('#updBar'); if(b) b.hidden = true; }
 function applyUpdate(){
@@ -1936,19 +1940,33 @@ function manualFor(rule, dk, ref){
   const m = rule && rule.manual;
   if(!m || !m.recipeId || !m.effectiveFromWeek || !ref || ref < m.effectiveFromWeek) return null;
   if(!ruleList(rule).some(r=>r.id===m.recipeId)) return null;
+  // 入れ替えで別の曜日に動いた料理も「出た」と数える（その週のどの曜日にあっても消化）
   const done = Object.keys(S.weeks).some(ws=>
-    ws >= m.effectiveFromWeek && ws < ref && cookMainId((S.weeks[ws].days||{})[dk]) === m.recipeId);
+    ws >= m.effectiveFromWeek && ws < ref && DAYS.some(d=>cookMainId((S.weeks[ws].days||{})[d.k]) === m.recipeId));
   return done ? null : m.recipeId;
 }
+/** その週に出た「このルールの料理」の id。その曜日にあればそれ、なければ（日を入れ替えて動いた）ほかの曜日から探す */
+function ruleDishOfWeek(ws, dk, ids){
+  const days = (S.weeks[ws] && S.weeks[ws].days) || {};
+  const own = cookMainId(days[dk]);
+  if(own && ids.indexOf(own)>=0) return own;
+  for(const d of DAYS){
+    if(d.k===dk) continue;
+    const id = cookMainId(days[d.k]);
+    if(id && ids.indexOf(id)>=0) return id;
+  }
+  return null;
+}
 /** その週のその曜日にローテーションで出す料理の id。
-    手動の指定が生きていればそれ。なければ、ref より前の週でこの曜日に最後に出た料理の次。履歴がなければ先頭 */
+    手動の指定が生きていればそれ。なければ、ref より前の週に最後に出たこのルールの料理の次。履歴がなければ先頭。
+    （月曜と火曜を入れ替えても、月曜の魚が翌週もう一度月曜に来ないように、曜日が動いた料理も見る） */
 function rotateNextId(rule, dk, ref){
   const list = ruleList(rule); if(!list.length) return null;
   const man = manualFor(rule, dk, ref); if(man) return man;
   const ids = list.map(r=>r.id);
   let last = -1;
   if(dk && ref) Object.keys(S.weeks).filter(ws=>ws < ref).sort().reverse().some(ws=>{
-    const id = cookMainId((S.weeks[ws].days||{})[dk]);
+    const id = ruleDishOfWeek(ws, dk, ids);
     const i = id ? ids.indexOf(id) : -1;
     if(i<0) return false;
     last = i; return true;
@@ -2210,6 +2228,45 @@ function rejectDay(dk){
   day.status = 'pending';
   day.rejects = (day.rejects||0) + 1;
   save(); render(); toast('別の案に差し替えました');
+}
+/* ---------- 日の入れ替え ----------
+   「月曜と火曜のメニューを逆にしたい」を2タップで。料理・副菜・承認・外食などの「中身」を丸ごと入れ替える。
+   入れ替えないもの：その日の日付に紐づくもの（祝日の印 holiday、祝日でも作ると決めた印 cookAnyway）。
+   買い物リストは中身から作るので、食材は変わらず「何曜日に使うか」の表示だけが変わる。 */
+const SWAP_FIELDS = ['mode','status','mainId','plainName','sideIds','rating'];
+/** 入れ替えられる日：今日以降で、祝日などで作らない日ではなく、もう作った記録（評価）が付いていない日 */
+function dayCanSwap(wk, dk){
+  const day = wk.days[dk];
+  return !!day && iso(dayDate(wk.start, dk)) >= iso(today()) && day.mode!=='hol' && !day.cooked;
+}
+function swapDays(a, b){
+  const wk = W();
+  if(a===b || !dayCanSwap(wk, a) || !dayCanSwap(wk, b)) return false;
+  const x = wk.days[a], y = wk.days[b];
+  SWAP_FIELDS.forEach(f=>{ const t = x[f]; x[f] = y[f]; y[f] = t; });
+  save();
+  return true;
+}
+function openSwap(dk){
+  const wk = W(), w = DAYS.find(d=>d.k===dk).w;
+  if(!dayCanSwap(wk, dk)){ toast('この日は入れ替えられません（過ぎた日・作らない日）'); return; }
+  const rows = DAYS.filter(d=>d.k!==dk).map(d=>{
+    const day = wk.days[d.k], ok = dayCanSwap(wk, d.k);
+    const nm = day.mode!=='cook' ? offLabel(day) : (dayDishName(day) || '未定');
+    return '<button class="btn sub full swrow" data-sw="'+d.k+'"'+(ok?'':' disabled')+'>'+
+      '<b>'+d.w+'</b><span class="swd">'+md(dayDate(wk.start, d.k))+'</span><span class="swn">'+esc(nm)+'</span></button>';
+  }).join('');
+  const mine = wk.days[dk];
+  sheet(w+'曜日を入れ替える',
+    '<div class="tiny" style="margin:12px 0 10px">'+w+'曜日（'+esc(mine.mode!=='cook' ? offLabel(mine) : (dayDishName(mine) || '未定'))+'）と入れ替える日を選んでください。'+
+    '料理・副菜・承認の状態ごと入れ替わります。</div>'+rows+'<div style="height:6px"></div>',
+    '<button class="btn" id="swClose">閉じる</button>');
+  $('#swClose').onclick = closeSheet;
+  $('#shBody').querySelectorAll('[data-sw]').forEach(b=>b.onclick=()=>{
+    const to = b.dataset.sw, wTo = DAYS.find(d=>d.k===to).w;
+    if(swapDays(dk, to)){ closeSheet(); render(); toast(w+'曜と'+wTo+'曜を入れ替えました'); }
+    else toast('入れ替えられませんでした');
+  });
 }
 function setOther(dk, mode){
   const wk = W(), day = wk.days[dk];
@@ -2612,6 +2669,7 @@ function renderWeek(){
            '</div>'+
            (day.mode==='cook' ? '<button data-pick="'+d.k+'" title="料理を変える">✏️</button>' : '')+
            (day.mode==='cook' && r ? '<button data-view="'+r.id+'" title="作り方">📖</button>' : '')+
+           (day.mode!=='hol' && !day.cooked ? '<button data-swap="'+d.k+'" title="ほかの日と入れ替える">⇄ 入れ替え</button>' : '')+
            '</div>';
     }else if(day.mode==='cook' && r){
       h += '<div class="dacts"><button data-view="'+r.id+'">📖 作り方</button></div>';
@@ -2673,6 +2731,7 @@ function renderWeek(){
   el.querySelectorAll('[data-appr]').forEach(b=>b.onclick=()=>approveDay(b.dataset.appr));
   el.querySelectorAll('[data-rej]').forEach(b=>b.onclick=()=>rejectDay(b.dataset.rej));
   el.querySelectorAll('[data-oth]').forEach(b=>b.onclick=()=>openOther(b.dataset.oth));
+  el.querySelectorAll('[data-swap]').forEach(b=>b.onclick=()=>openSwap(b.dataset.swap));
   el.querySelectorAll('[data-pick]').forEach(b=>b.onclick=()=>openPicker(b.dataset.pick,'main'));
   el.querySelectorAll('[data-addside]').forEach(b=>b.onclick=()=>openPicker(b.dataset.addside,'side',-1));
   el.querySelectorAll('[data-pickside]').forEach(b=>b.onclick=()=>{
