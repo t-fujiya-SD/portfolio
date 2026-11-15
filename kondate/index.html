@@ -557,7 +557,7 @@ function saveMyName(v){
    古い画面で動き続ける（配信側のキャッシュも最大10分ある）。
    開いたとき・戻ってきたときに自分自身を取り直し、BUILD が違えば更新する。
    BUILD は kondate/stamp.sh が書き換える（kondate を直したら公開前に実行）。 */
-const BUILD = '20261112-074652';
+const BUILD = '20261115-131832';
 let updNext = '', updAt = 0;
 function hideUpdBar(){ const b = $('#updBar'); if(b) b.hidden = true; }
 function applyUpdate(){
@@ -626,7 +626,7 @@ const PUB_CFG = {
 const PUB_SOURCES = ['x','threads'];
 /* 計測する5段階（この順に進む）。名前は Plausible のゴール名と同じにする */
 const FUNNEL = ['first_view','plan_shown','plan_confirmed','list_shown','first_check'];
-const FUNNEL_KEY = 'osakana.funnel', SRC_KEY = 'osakana.src';
+const FUNNEL_KEY = 'osakana.funnel', SRC_KEY = 'osakana.src', OUTBOX_KEY = 'osakana.outbox';
 let funnelMem = {}, saveFailTold = false;
 const UA = navigator.userAgent || '';
 /* アプリ内ブラウザ（Threads=Barcelona、Instagram、Facebook、LINE、X の Android 版など）。
@@ -643,28 +643,56 @@ function pubSource(){
   if(!s && urlSource()){ s = urlSource(); lsSet(SRC_KEY, s); }
   return s || urlSource();
 }
+/** この端末で記録ずみの段階（送り先があるときに、記録した時点で立てる。届いたかどうかは outbox で追う） */
 function funnelDone(){
-  let d = {}; try{ d = JSON.parse(lsGet(FUNNEL_KEY) || '{}') || {}; }catch(e){}
-  return Object.assign({}, funnelMem, d);
+  try{ return JSON.parse(lsGet(FUNNEL_KEY) || '{}') || {}; }catch(e){ return {}; }
 }
+/** 計測を実際に送れる状態か。送り先（PUB_CFG）が空のとき、?public=1 の試しのときは送らない */
+const trackLive = () => PUBLIC && !!PUB_CFG.plausibleDomain && location.hostname === PUBLIC_HOST;
 /** 計測（公開版だけ）。決まったイベント名と、流入元つきのページURLだけを送る。
     献立名・食材名・入力内容は送らない。ボタンを押した回数ではなく、処理ができた時点で呼ぶ。
-    「保存失敗」以外は、この端末で1回だけ数える（何人がその段階まで来たかを見るため） */
+    「保存失敗」以外は、この端末で1回だけ数える（何人がその段階まで来たかを見るため）。
+    送り先が空のあいだは何も覚えない（あとで送り先を入れたとき、それ以前に来た人も数えられるように） */
 function track(name){
   if(!PUBLIC) return;
-  if(name !== 'save_failed'){
-    const d = funnelDone();
-    if(d[name]) return;
-    d[name] = 1; funnelMem = d; lsSet(FUNNEL_KEY, JSON.stringify(d));
+  const live = trackLive(), once = name !== 'save_failed';
+  if(once){
+    if(funnelMem[name]) return;                         // このページを開いているあいだは1回だけ
+    if(live && funnelDone()[name]) return;              // この端末で記録ずみ
+    funnelMem[name] = 1;
+    if(live){ const d = funnelDone(); d[name] = 1; lsSet(FUNNEL_KEY, JSON.stringify(d)); }
   }
   const src = pubSource();
   const ev = {name, url: location.origin + location.pathname + (src ? '?utm_source='+src : ''), domain: PUB_CFG.plausibleDomain};
-  (window.__events = window.__events || []).push(ev);           // 画面で確かめる用（送らない）
-  if(!PUB_CFG.plausibleDomain || location.hostname !== PUBLIC_HOST) return;   // ?public=1 の試しは送らない
+  (window.__events = window.__events || []).push(ev);   // 画面で確かめる用（送らない）
+  if(live) deliver(ev);
+}
+/* 送信に失敗したイベントは outbox に残し、次に開いたとき・戻ってきたときに送り直す。
+   （送る前に「記録ずみ」にしていたころは、初回の通信が失敗すると、その段階が二度と届かず、
+    実際の離脱と計測漏れを区別できなかった） */
+let outboxMem = [];
+function outboxLoad(){
+  let a = []; try{ a = JSON.parse(lsGet(OUTBOX_KEY) || '[]') || []; }catch(e){}
+  return a.length ? a : outboxMem.slice();
+}
+function outboxSave(a){
+  a = a.slice(-30);
+  outboxMem = lsSet(OUTBOX_KEY, JSON.stringify(a)) ? [] : a;   // 保存できないブラウザでは、このページのあいだだけ覚える
+}
+function deliver(ev){
+  let p;
   try{
-    fetch('https://plausible.io/api/event', {method:'POST', keepalive:true,
-      headers:{'Content-Type':'text/plain'}, body: JSON.stringify(ev)}).catch(()=>{});
-  }catch(e){}
+    p = fetch('https://plausible.io/api/event', {method:'POST', keepalive:true, headers:{'Content-Type':'text/plain'},
+      body: JSON.stringify({name:ev.name, url:ev.url, domain:ev.domain})})
+      .then(r=>{ if(r.status >= 500 || r.status === 429) throw new Error('http '+r.status); });   // 4xx は送り直しても同じなので諦める
+  }catch(e){ p = Promise.reject(e); }
+  p.catch(()=>{ const q = outboxLoad(); q.push(ev); outboxSave(q); });
+}
+function flushOutbox(){
+  if(!trackLive()) return;
+  const q = outboxLoad(); if(!q.length) return;
+  outboxSave([]);
+  q.forEach(deliver);                                          // 失敗したものは deliver が入れ直す
 }
 /** いつものブラウザで開き直すためのリンク（ext=1 を付けると、開いた先では案内を出さない） */
 function pubLink(){ const s = pubSource(); return location.origin + location.pathname + '?' + (s ? 'utm_source='+s+'&' : '') + 'ext=1'; }
@@ -700,7 +728,7 @@ function renderPubBanner(){
 const FB_CHOICES = ['献立が決まらない','買い物リストが空','保存されない','その他'];
 const canFeedback = () => PUBLIC && !!(PUB_CFG.formAction && PUB_CFG.formChoice);
 function furthestStage(){
-  const d = funnelDone(); let s = 'なし';
+  const d = Object.assign({}, funnelMem, funnelDone()); let s = 'なし';
   FUNNEL.forEach(k=>{ if(d[k]) s = k; });
   return s + (pubSource() ? ' / '+pubSource() : '');
 }
@@ -1011,27 +1039,37 @@ function migrate(o){
     前の版で「まだ効いていた」指定（有効な週以降にこの曜日でローテーションの料理が出ていない、
     または指定した料理そのものが出ている）だけを引き継ぐ。
     設定した日がその曜日で、もう別の料理を承認していたら、その翌週から（前の版ではここで指定が消えていた）。
-    同期で古い版の端末から届いても、ここで直す */
+    同期で古い版の端末から届いても、ここで直す。
+
+    古い版の端末と新しい版の端末が混ざっている間のため、next / nextSetAt は消さずに残す。
+    消すと、古い版の3方向マージが「相手が消した」と見て、古い版で変えた「次の料理」を捨ててしまう。
+    かわりに、取り込んだときの値を legacySig に控え、next / nextSetAt が変わっていたら（＝古い版の端末が
+    変えた）そのたびに取り込み直す。新しい版は next / nextSetAt を自分では書かない。
+    古い版の位置（next）は「しまった料理を除いた候補」に対する位置なので、同じ候補（ruleList）で引く */
 function migrateRules(){
   const rules = S.settings.dayRules;
   DAYS.forEach((d,i)=>{
     const rule = rules[d.k];
     if(!rule || typeof rule!=='object') return;
-    if(rule.type!=='rotate'){ delete rule.next; delete rule.nextSetAt; delete rule.manual; return; }
+    if(rule.type!=='rotate'){ delete rule.manual; return; }
     if(rule.next!==undefined || rule.nextSetAt!==undefined){
-      const ids = rule.ids || [], set = rule.nextSetAt;
-      if(set && ids.length && !rule.manual){
-        const n = ids.length, rid = ids[((rule.next|0) % n + n) % n];
-        const dateOf = ws => iso(addDays(parseISO(ws), i));
-        let ws = weekOf(parseISO(set));
-        if(dateOf(ws) < set) ws = iso(addDays(parseISO(ws), 7));
-        const same = S.weeks[ws] && S.weeks[ws].days[d.k];
-        if(dateOf(ws)===set && same && same.status==='approved' && cookMainId(same)!==rid) ws = iso(addDays(parseISO(ws), 7));
-        const after = Object.keys(S.weeks).filter(k=>k >= ws)
-          .map(k=>cookMainId(S.weeks[k].days[d.k])).filter(id=>id && ids.indexOf(id)>=0);
-        if(!after.length || after.indexOf(rid)>=0) rule.manual = {recipeId:rid, effectiveFromWeek:ws};
+      const sig = (rule.next|0)+'@'+(rule.nextSetAt||'');
+      if(rule.legacySig !== sig){
+        rule.legacySig = sig;
+        const ids = ruleList(rule).map(r=>r.id), set = rule.nextSetAt;
+        if(set && ids.length){                    // 設定日があるものだけが「決めた指定」（next:0 だけの初期値は何もしない）
+          delete rule.manual;                     // 古い版での変更のほうが新しい（先に決めた指定は置き換える）
+          const n = ids.length, rid = ids[((rule.next|0) % n + n) % n];
+          const dateOf = ws => iso(addDays(parseISO(ws), i));
+          let ws = weekOf(parseISO(set));
+          if(dateOf(ws) < set) ws = iso(addDays(parseISO(ws), 7));
+          const same = S.weeks[ws] && S.weeks[ws].days[d.k];
+          if(dateOf(ws)===set && same && same.status==='approved' && cookMainId(same)!==rid) ws = iso(addDays(parseISO(ws), 7));
+          const after = Object.keys(S.weeks).filter(k=>k >= ws)
+            .map(k=>cookMainId(S.weeks[k].days[d.k])).filter(id=>id && ids.indexOf(id)>=0);
+          if(!after.length || after.indexOf(rid)>=0) rule.manual = {recipeId:rid, effectiveFromWeek:ws};
+        }
       }
-      delete rule.next; delete rule.nextSetAt;
     }
     if(rule.manual && (!rule.manual.recipeId || !rule.manual.effectiveFromWeek)) delete rule.manual;
   });
@@ -1092,7 +1130,7 @@ function load(){
   normalize();
   seedRecipes();
   reconcileCooked();
-  if(!PUBLIC || pubStarted()) autoPlan();   // 公開版は、最初のボタンを押すまで勝手に献立を作らない
+  autoPlan();
   if(PUBLIC){
     // 平日に「次の月曜から」を作った人が開き直したら、空の今週ではなくその週を見せる
     const nx = iso(addDays(parseISO(currentWeekStart()), 7));
@@ -1192,6 +1230,9 @@ function confirmAndShop(){
 
 /** 土日にアプリを開いたら、まだ提案が無ければ自動で作る（＝土曜12時に提案が出る運用） */
 function autoPlan(){
+  // 公開版は、最初のボタン（5日分の献立を見る）を押すまで勝手に作らない。
+  // load() だけでなく tick()（日付や時刻が変わったとき）からも呼ばれるので、ここで止める
+  if(PUBLIC && !pubStarted()) return;
   const dow = new Date().getDay();
   if(dow!==PLAN_DOW && dow!==DEADLINE_DOW) return;
   const wk = getWeek(currentWeekStart());
@@ -1223,6 +1264,10 @@ const PAIR_PREFIX = 'kondate1';
 let syncCfg = null, syncState = 'off', pushTimer = null, syncing = false;
 
 function loadSyncCfg(){
+  // 公開版は Gist の共有を使わない。?public=1 を家庭用と同じ場所（spicy-device.com/kondate/）で開くと
+  // 家庭用の同期設定（kondate.sync）が同じ localStorage に見えるので、ここで読まない。
+  // （読むと、公開版のデータが家庭用の Gist に書き込まれて、家庭用のレシピが消える）
+  if(PUBLIC){ syncCfg = null; return null; }
   try{ syncCfg = JSON.parse(localStorage.getItem(SYNC_KEY) || 'null'); }catch(e){ syncCfg = null; }
   if(!syncCfg || !syncCfg.token || !syncCfg.gistId) syncCfg = null;
   return syncCfg;
@@ -1368,6 +1413,7 @@ function shoppingNames(){
 
 async function syncNow(opts){
   opts = opts || {};
+  if(PUBLIC) return false;                 // 公開版は家庭用の保存領域にも Gist にも触れない
   if(!loadSyncCfg() || syncing) return false;
   if(!opts.loud && busyEditing()) return false;
   syncing = true; setSyncState('syncing');
@@ -1413,7 +1459,7 @@ async function syncNow(opts){
 
 /* 保存のたびに呼ばれる。まとめて数秒後に1回だけ送る */
 function schedulePush(){
-  if(!syncCfg) return;
+  if(PUBLIC || !syncCfg) return;
   clearTimeout(pushTimer);
   pushTimer = setTimeout(()=>{ syncNow(); }, 3000);
 }
@@ -1881,7 +1927,9 @@ const hasRuleList = rule => !!rule && (rule.type==='rotate' || rule.type==='pool
 /* ローテーションの「次」
    手動の指定は、位置ではなく料理の id（recipeId）と、どの週から有効か（effectiveFromWeek）で持つ。
      ・有効な週より前の週を提案し直しても効かない
-     ・指定した料理が、有効な週以降にこの曜日で実際に入ったら消化（入った週を提案し直しても同じ料理のまま）
+     ・指定した料理が、有効な週から「提案する週の前の週」までのあいだに、この曜日で実際に入っていたら消化
+       （入った週そのものを提案し直しても同じ料理のまま）。提案する週より先の週は見ない。
+       先の週を先に作ったときに、あとから作る途中の週で指定が効かなくなるため
      ・候補から消えたら無視して、履歴から通常の順番を出す
    位置で持っていたころは、削除・並べ替え・同期で別の料理を指したり、同じ日付の比較で消えたりした。 */
 function manualFor(rule, dk, ref){
@@ -1889,7 +1937,7 @@ function manualFor(rule, dk, ref){
   if(!m || !m.recipeId || !m.effectiveFromWeek || !ref || ref < m.effectiveFromWeek) return null;
   if(!ruleList(rule).some(r=>r.id===m.recipeId)) return null;
   const done = Object.keys(S.weeks).some(ws=>
-    ws >= m.effectiveFromWeek && ws !== ref && cookMainId((S.weeks[ws].days||{})[dk]) === m.recipeId);
+    ws >= m.effectiveFromWeek && ws < ref && cookMainId((S.weeks[ws].days||{})[dk]) === m.recipeId);
   return done ? null : m.recipeId;
 }
 /** その週のその曜日にローテーションで出す料理の id。
@@ -1949,20 +1997,26 @@ function suggestWeek(opts){
   const used = new Set();
   DAYS.forEach(d=>{ const id = cookMainId(wk.days[d.k]); if(editable.indexOf(d.k)<0 && id) used.add(id); });
   const idxOf = {}; DAYS.forEach((d,i)=>idxOf[d.k]=i);
-  const lockedNeighbor = k => {
+  // 前後の日に入っている料理（動かさない日＋ここまでにルールで決めた日）。使い回すときに隣り合わせない
+  const fixed = {}, freeDays = [];
+  const neighborIds = k => {
     const s = new Set(), i = idxOf[k];
-    [i-1, i+1].forEach(j=>{ const d = DAYS[j]; if(d && editable.indexOf(d.k)<0){ const id = cookMainId(wk.days[d.k]); if(id) s.add(id); } });
+    [i-1, i+1].forEach(j=>{
+      const d = DAYS[j]; if(!d) return;
+      const id = fixed[d.k] ? fixed[d.k].id : (editable.indexOf(d.k)<0 ? cookMainId(wk.days[d.k]) : null);
+      if(id) s.add(id);
+    });
     return s;
   };
 
-  // 1) 曜日ルールで決まる日を先に埋める。ルールに候補がある日は、そのルールの中だけで選ぶ
-  const fixed = {}, freeDays = [];
+  // 1) 曜日ルールで決まる日を先に埋める。ルールに候補がある日は、そのルールの中だけで選ぶ。
+  //    置けない日（候補が前後の日と同じ料理しかない）は未定のまま空ける
   editable.forEach(k=>{
     const rule = dayRule(k);
     let r = null;
     if(hasRuleList(rule)){
       const pick = u => rule.type==='rotate' ? pickRotate(rule, u, null, k, ctx) : pickPool(rule, u, ctx);
-      r = pick(used) || pick(lockedNeighbor(k));   // 足りなければ、隣り合わない日での使い回しを許す
+      r = pick(used) || pick(neighborIds(k));   // 足りなければ、隣り合わない日での使い回しを許す
       if(r){ fixed[k] = r; used.add(r.id); }
     }else freeDays.push(k);
   });
@@ -2002,7 +2056,10 @@ function suggestWeek(opts){
     ・傷みやすいもの（魚→肉）を少しだけ週の前半へ
     ・その週にまだ出ていない料理を優先し、足りないときだけ、隣り合わない日での使い回しを許す
       （承認ずみの日の料理も「使い回し」として扱う。除外すると、離れた日にも置けるのに日が空いた）
-    少しずつ揺らして数回組み、いちばん点の高い組み合わせを採る。 */
+    ・埋まる日数がいちばん多い組み合わせを先に見つける。1日ずつ貪欲に選ぶと、候補が2品のとき
+      「火に未使用のBを置いたせいで、水に置ける料理が無くなる」（火A・水B・木A なら埋まる）ことがあった。
+      行き詰まったら1日戻って別の候補を試す（候補が3品以上あれば、前後の2品を除いても残るので戻らない）
+    少しずつ揺らして数回組み、埋まる日数 → 点の順で、いちばん良い組み合わせを採る。 */
 function fillFreeDays(freeDays, base, pool, ctx, used){
   const order = DAYS.map(d=>d.k);
   const idxOf = {}; order.forEach((k,i)=>idxOf[k]=i);
@@ -2011,33 +2068,45 @@ function fillFreeDays(freeDays, base, pool, ctx, used){
   if(!slots.length || !cand.length) return {};
 
   const sc = new Map(); cand.forEach(r=>sc.set(r.id, scoreRecipe(r, ctx)));
-  const CLASH = 14, TRIES = 6;
-  let best = {}, bestVal = -Infinity;
+  const CLASH = 14, TRIES = 6, BUDGET = 4000;
+  let best = null;
   for(let t=0;t<TRIES;t++){
-    const assign = {}, taken = new Set(used);
-    let val = 0;
-    const at = k => assign[k] || base[k] || null;
-    slots.forEach(k=>{
-      const i = idxOf[k];
-      const prev = i>0 ? at(order[i-1]) : null;
+    const noise = new Map(); cand.forEach(r=>noise.set(r.id, Math.random()*6));
+    const assign = {};
+    let found = null, nodes = 0;
+    // 戻り値 true＝探索を打ち切る（全部埋まった／探索が多すぎる）
+    const rec = (si, taken, val, filled)=>{
+      if(si === slots.length){
+        if(!found || filled > found.filled || (filled === found.filled && val > found.val))
+          found = {assign:Object.assign({}, assign), val, filled};
+        return found.filled === slots.length;
+      }
+      if(++nodes > BUDGET) return true;
+      const k = slots[si], i = idxOf[k];
+      const prev = i>0 ? (assign[order[i-1]] || base[order[i-1]] || null) : null;
       const next = i<order.length-1 ? base[order[i+1]] : null;   // 決まっている翌日だけ見る
-      const apart = r => !(prev && prev.id===r.id) && !(next && next.id===r.id);
-      const fresh = cand.some(r=>apart(r) && !taken.has(r.id));
-      let pick = null, pickS = -Infinity;
+      const opts = [];
       cand.forEach(r=>{
-        if(!apart(r)) return;                          // 同じ料理を隣り合わせない（絶対）
-        if(fresh && taken.has(r.id)) return;           // まだ出ていない料理があるうちは使い回さない
-        let v = sc.get(r.id) + perishOf(r)*(DAYS.length-1-i)*2 + Math.random()*6;
+        if((prev && prev.id===r.id) || (next && next.id===r.id)) return;   // 同じ料理を隣り合わせない（絶対）
+        let v = sc.get(r.id) + perishOf(r)*(DAYS.length-1-i)*2 + noise.get(r.id);
         if(prev && prev.protein===r.protein) v -= CLASH;
         if(next && next.protein===r.protein) v -= CLASH;
-        if(taken.has(r.id)) v -= 40;
-        if(v > pickS){ pickS = v; pick = r; }
+        const reuse = taken.has(r.id);
+        opts.push({r, v: reuse ? v-40 : v, reuse});
       });
-      if(pick){ assign[k] = pick; taken.add(pick.id); val += pickS; }
-    });
-    if(val > bestVal){ bestVal = val; best = assign; }
+      opts.sort((a,b)=> (a.reuse - b.reuse) || (b.v - a.v));       // まだ出ていない料理を先に、その中で点の高い順
+      for(const o of opts){
+        assign[k] = o.r;
+        const t2 = new Set(taken); t2.add(o.r.id);
+        if(rec(si+1, t2, val+o.v, filled+1)) return true;
+        delete assign[k];
+      }
+      return rec(si+1, taken, val, filled);                        // どう置いても埋まらない日は未定のまま先へ
+    };
+    rec(0, new Set(used), 0, 0);
+    if(found && (!best || found.filled > best.filled || (found.filled === best.filled && found.val > best.val))) best = found;
   }
-  return best;
+  return best ? best.assign : {};
 }
 
 /** 週に魚が1回も無ければ、前半の空き曜日に入れる */
@@ -4437,6 +4506,8 @@ function openDayRule(dk){
       nr = {type:draftRule.type, ids:draftRule.ids.slice()};
       const m = draftRule.manual;
       if(draftRule.type==='rotate' && m && nr.ids.indexOf(m.recipeId)>=0) nr.manual = m;
+      // 古い版の端末との同期のために残してある値（migrateRules）。作り直すときも引き継ぐ
+      if(draftRule.type==='rotate') ['next','nextSetAt','legacySig'].forEach(key=>{ if(before[key]!==undefined) nr[key] = before[key]; });
     }
     S.settings.dayRules[dk] = nr;
     // ローテーションを変えたら、すぐ反映する先（今日以降で未承認の最初のその曜日）にだけ反映する。
@@ -4797,7 +4868,7 @@ function tick(){
 }
 setInterval(tick, 60000);
 document.addEventListener('visibilitychange', ()=>{
-  if(document.visibilityState==='visible'){ checkUpdate(); tick(); render(); syncNow(); }
+  if(document.visibilityState==='visible'){ checkUpdate(); tick(); render(); syncNow(); if(PUBLIC) flushOutbox(); }
 });
 $('#updGo').onclick = applyUpdate;
 
@@ -4807,7 +4878,7 @@ if(!PUBLIC){ loadAiKey(); loadSyncCfg(); }   // 公開版は API キーも Gist 
 setSyncState(syncCfg ? 'ok' : 'off',
   syncCfg && syncCfg.lastSyncAt ? '最終同期 '+new Date(syncCfg.lastSyncAt).toLocaleTimeString('ja-JP') : '');
 render();
-if(PUBLIC){ renderPubBanner(); track('first_view'); }
+if(PUBLIC){ renderPubBanner(); track('first_view'); flushOutbox(); }
 setTimeout(checkUpdate, 1200);
 if(syncCfg){ syncNow(); setInterval(()=>{ if(document.visibilityState==='visible') syncNow(); }, 60000); }
 </script>
