@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-15T10:10:58+09:00",
+  "updated": "2026-11-16T10:16:58+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -17,25 +17,18 @@
   ],
   "items": [
     {
-      "title": "土付きナガイモの初せり やや高値で順調な出だし 十和田地方卸売市場（2026年11月14日掲載）｜青森放送NEWS NNN",
-      "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxNMVQta01fUVRrNzRrTFpJbFhORVJraVMyUjAySXNkOHJkMGlvRUt2U2duNnRkdnJmOTUwaGpSZ3pqOF84NUM1cC1BVEdsS05WX2xpTHc0QmZlVTFKczN6YUZ0SUJTLXNyX1NJNlRCTjMxRTAtSWxlaWNsSzcyV0c1LXhxbnNpemc?oc=5",
-      "source": "日テレNEWS NNN",
-      "date": "2026-11-14",
+      "title": "久留米市「市場まつり2026」海鮮丼、模擬せりや野菜・果物詰め放題も！食欲の秋に大解放！",
+      "link": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE1VLUY1c3hVNHRBUnZCdjhTanJIY3lSeTNsZFktYVBfYTEzUjFNeDFBUHVvdFVRaEF3MlpJZXZNNjB3bV81ajBLWms3MGt5bVJSa0hKNWRJb2VyQks4eFE?oc=5",
+      "source": "久留米ファン",
+      "date": "2026-11-13",
       "cat": "market"
     },
     {
       "title": "今週のお手頃野菜(令和8年11月13日更新)",
       "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9CY19tYXVQRUJ5RXhiZldSUjk4SFBSbXQ0OFBicmNYSnVXeC1LWWMzc1c1Z1JqR0tOb3RkVmJ0Zjh6bGFYNW1VRUc5cU9iMVNja3p3UTBkRjVITEN4Zk5KLVZ1VUpjV0dCbm9N?oc=5",
       "source": "農林水産省",
-      "date": "2026-11-14",
-      "cat": "toyosu"
-    },
-    {
-      "title": "久留米市「市場まつり2026」海鮮丼、模擬せりや野菜・果物詰め放題も！食欲の秋に大解放！",
-      "link": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE1VLUY1c3hVNHRBUnZCdjhTanJIY3lSeTNsZFktYVBfYTEzUjFNeDFBUHVvdFVRaEF3MlpJZXZNNjB3bV81ajBLWms3MGt5bVJSa0hKNWRJb2VyQks4eFE?oc=5",
-      "source": "久留米ファン",
       "date": "2026-11-13",
-      "cat": "market"
+      "cat": "toyosu"
     },
     {
       "title": "【通期決算発表】 加藤産業：独立系の総合食品卸大手。常温流通事業が主…(フィスコ)",
@@ -52,6 +45,13 @@
       "cat": "market"
     },
     {
+      "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年11月、東京都中央卸売市場）：関東農政局",
+      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE54NVQwX003bDVaQnlJTXJrVDB0UmZDMmE4dUdDU2h5MDE3clFid2FGQnhRaWctTFcyQ2wxaUxuTE0ycnlJRGJaLU9aVjFGMGxqVXB2ajNmb3lRM09wNnVaZi1ORTVpUjlFMm1R?oc=5",
+      "source": "農林水産省",
+      "date": "2026-10-30",
+      "cat": "market"
+    },
+    {
       "title": "夏休み親子市場せり見学会を開催しました！",
       "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE5xemZuXzdnYzVXUnc2WkI4VnRPSEFYbVZ4a1UzcXJOUkZ4VXVRenhLQUQ0Yzdjb3FZbUs0SVNGTnJLRjF5a1ZTMG90emtmckI0aU5MMlY1TzZpYUkxNDZpa1JYNzhoOEV6U0R5c2o5ZmgyZm5sd1pFalBMcHUxZGM?oc=5",
       "source": "新潟市",
@@ -59,10 +59,10 @@
       "cat": "market"
     },
     {
-      "title": "関西の花き流通を支える大阪鶴見花き地方卸売市場：近畿農政局",
-      "link": "https://news.google.com/rss/articles/CBMifkFVX3lxTE9KUmVIbW5KZG9fcW1BTWhSVEJRRUZ1ZHRsclNYcDNBX1c1NnRLSGQ0TzNjRlY3UFZQRDJqSVI0cndmUWpmOFFlNFg0alBTTHU3eVpwYkhQVUtaM0M2aTJPR0ViVU9mVDUyY205TmZmSGk2dWx4OWdEMU9ZQk5VUQ?oc=5",
-      "source": "農林水産省",
-      "date": "2026-09-29",
+      "title": "秋の味覚を求めて“せり”に参加 卸売市場の一般開放イベントにぎわう 秋田（2026年10月17日掲載）｜ABS NEWS NNN",
+      "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTE9qNVVyLV9Hb3o1Z2lTdmh3NnFwR2lLRVVrNW12QXJsMVhhWU95dW9RbE0zbGNDUDROME83Z1Q3OE9jbGxVaEpMTTk0c2lzMmQ3Y3lncnY5ZGRWUnpiWmR2LVBSLXBiVFB4RGNDN0JnaDh6NWcwZkFoTVA1OA?oc=5",
+      "source": "日テレNEWS NNN",
+      "date": "2026-10-17",
       "cat": "market"
     },
     {
