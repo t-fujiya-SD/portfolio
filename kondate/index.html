@@ -124,6 +124,16 @@ label.lb{display:block;font-size:12px;font-weight:800;color:var(--sub);margin:14
 .dacts button{border:1.5px solid var(--line);border-radius:8px;padding:5px 10px;font-size:12px;font-weight:700;color:var(--sub);background:#fff}
 .dname[data-pick],.ding[data-pick]{cursor:pointer}
 .dacts button:active{background:#f3f1ee}
+.tripHd{display:flex;align-items:center;gap:8px;padding:8px 13px;background:#f1efeb;font-size:12.5px;font-weight:800;
+  border-bottom:1px solid var(--line)}
+.day + .tripHd{border-top:1px solid var(--line)}
+.tripHd span{margin-left:auto;font-size:11px;color:var(--sub);font-weight:700}
+.tripchips{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0 0}
+.tripchips button{flex:1;min-width:120px;border:1.5px solid var(--line);border-radius:10px;padding:8px 6px;font-size:12.5px;
+  font-weight:800;color:var(--sub);background:#fff;line-height:1.35}
+.tripchips button small{display:block;font-size:11px;font-weight:600;color:var(--sub2)}
+.tripchips button.on{background:var(--p);border-color:var(--p);color:#fff}
+.tripchips button.on small{color:rgba(255,255,255,.85)}
 .swrow{justify-content:flex-start;gap:10px;margin-bottom:8px;text-align:left}
 .swrow b{font-size:16px;width:20px}
 .swrow .swd{color:var(--sub2);font-size:12px;font-weight:600;width:42px}
@@ -561,7 +571,7 @@ function saveMyName(v){
    古い画面で動き続ける（配信側のキャッシュも最大10分ある）。
    開いたとき・戻ってきたときに自分自身を取り直し、BUILD が違えば更新する。
    BUILD は kondate/stamp.sh が書き換える（kondate を直したら公開前に実行）。 */
-const BUILD = '20261115-141514';
+const BUILD = '20261116-064218';
 let updNext = '', updAt = 0;
 function hideUpdBar(){ const b = $('#updBar'); if(b) b.hidden = true; }
 function applyUpdate(){
@@ -768,9 +778,17 @@ function openFeedback(){
 }
 
 /* ---------- 曜日と週の運用タイムライン ---------- */
-const DAYS = [
-  {k:'mon',w:'月'},{k:'tue',w:'火'},{k:'wed',w:'水'},{k:'thu',w:'木'},{k:'fri',w:'金'}
+const ALL_DAYS = [
+  {k:'mon',w:'月'},{k:'tue',w:'火'},{k:'wed',w:'水'},{k:'thu',w:'木'},{k:'fri',w:'金'},{k:'sat',w:'土'},{k:'sun',w:'日'}
 ];
+/* DAYS は「いま作る日」の曜日（設定の「作る日」：平日だけ＝月〜金（既定）／毎日＝月〜日）。
+   配列そのものを使い回しているので、applyCookDays が中身だけを入れ替える */
+const DAYS = ALL_DAYS.slice(0,5);
+function applyCookDays(){
+  const n = (typeof S!=='undefined' && S && S.settings && S.settings.cookDays==='everyday') ? 7 : 5;
+  DAYS.length = 0;
+  ALL_DAYS.slice(0,n).forEach(d=>DAYS.push(d));
+}
 const MODES  = {cook:'作る', out:'外食', left:'残り物', hol:'作らない'};
 
 /* =========================================================================
@@ -851,8 +869,9 @@ function applyHolidays(w){
 }
 const STATUS = {pending:'未承認', approved:'承認', other:'その他'};
 
-/* 土12:00 提案 → 日08:00 承認締切 → 日09:00 買い物 → 月〜金 調理 */
-const PLAN_DOW = 6, PLAN_HOUR = 12, DEADLINE_DOW = 0, DEADLINE_HOUR = 8, SHOP_HOUR = 9;
+/* 買い物の前日12:00 提案 → 買い物の日08:00 承認締切 → 買い物の日09:00 買い物 → 翌日から調理
+   （既定は買い物が日曜なので、土12:00 提案 → 日08:00 締切 → 日09:00 買い物 → 月〜金 調理） */
+const PLAN_HOUR = 12, DEADLINE_HOUR = 8, SHOP_HOUR = 9;
 
 /* ---------- 初期レシピ ---------- */
 /* 月曜のローテーション、金曜の定番、火〜木（気分）の主菜を最初から入れておく。
@@ -920,20 +939,114 @@ function toast(msg){
   clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('on'),1900);
 }
 
-/* 月曜始まり。土日は「翌週」を見る（土曜に提案 → 日曜に買い物のため） */
-function currentWeekStart(){
-  const t = today(), w = t.getDay();
-  if(w===0) return iso(addDays(t,1));
-  if(w===6) return iso(addDays(t,2));
-  return iso(addDays(t,1-w));
+/* =========================================================================
+   作る日と買い物の日（1週間の周期）
+   ・作る日  … 平日だけ（既定）／毎日（土日も）。DAYS が今の設定ぶん
+   ・買い物の日 … 曜日を複数選べる（既定＝日曜）
+   ・「買い物ぶん」＝買い物の日の翌日から、次の買い物の日（その日を含む）までの作る日
+   ・買い物ぶんごとに、買い物の前日12:00に提案 → 買い物の日の朝8:00が承認の締切 → その日に買い物
+   既定（平日だけ・日曜に1回）は、これまでの「土曜12:00に提案 → 日曜8:00締切 → 日曜に買い物 →
+   月〜金に作る」とまったく同じ。買い物の日を増やすと、1週間がいくつかの買い物ぶんに分かれる。
+   ========================================================================= */
+const DOW_NM = ['日','月','火','水','木','金','土'];
+const dowKey = d => ALL_DAYS[(d.getDay()+6)%7];
+const isCookDate = d => DAYS.indexOf(dowKey(d)) >= 0;
+function shopDows(){
+  const a = ((typeof S!=='undefined' && S && S.settings && S.settings.shopDays) || [0]).filter(n=>Number.isInteger(n) && n>=0 && n<=6);
+  return a.length ? a : [0];
+}
+const isShopDate = d => shopDows().indexOf(d.getDay()) >= 0;
+/** d より前で、いちばん近い買い物の日 */
+function lastShopBefore(d){
+  let x = addDays(d,-1);
+  for(let i=0; i<7 && !isShopDate(x); i++) x = addDays(x,-1);
+  return x;
+}
+/** 買い物の日 D の買い物ぶん：D の翌日から次の買い物の日まで（その日を含む）の、作る日の日付 */
+function tripDates(D){
+  const out = []; let d = addDays(D,1);
+  for(let i=0; i<8; i++){ if(isCookDate(d)) out.push(d); if(isShopDate(d)) break; d = addDays(d,1); }
+  return out;
+}
+/** 買い物の日 D の買い物ぶんを、週ごとに分けたもの [{ws, days:[曜日キー], shopDate}]（週をまたぐときは2つ） */
+function tripGroups(D){
+  const by = {}, order = [];
+  tripDates(D).forEach(d=>{
+    const ws = weekOf(d);
+    if(!by[ws]){ by[ws] = {ws, days:[], shopDate:iso(D)}; order.push(ws); }
+    by[ws].days.push(dowKey(d).k);
+  });
+  return order.map(ws=>by[ws]);
+}
+/** その買い物ぶんの日数がいちばん多い週（同じなら後ろの週）。画面でその買い物ぶんを見せる週 */
+function tripMainWeek(D){
+  let best = null;
+  tripGroups(D).forEach(g=>{ if(!best || g.days.length >= best.days.length) best = g; });
+  return best ? best.ws : null;
+}
+/** 1週間（月曜はじまり）を「買い物ぶん」に分ける [{i, ws, days:[曜日キー], shopDate}]。
+    買い物の日の翌日で区切る。前の週から続くぶんも、週の境目で区切る。買い物が日曜1回なら、月〜金の1つだけ */
+function weekGroups(ws){
+  const start = parseISO(ws), gs = []; let cur = null;
+  for(let o=0; o<7; o++){
+    const d = addDays(start,o);
+    if(!cur || isShopDate(addDays(d,-1))){ cur = {days:[], shopDate:iso(lastShopBefore(d))}; gs.push(cur); }
+    if(isCookDate(d)) cur.days.push(dowKey(d).k);
+  }
+  const out = gs.filter(g=>g.days.length);
+  out.forEach((g,i)=>{ g.i = i; g.ws = ws; });
+  return out;
+}
+const groupRange = g => {
+  const f = ALL_DAYS.find(d=>d.k===g.days[0]).w, l = ALL_DAYS.find(d=>d.k===g.days[g.days.length-1]).w;
+  return f===l ? f : f+'〜'+l;
+};
+const groupTitle = g => DOW_NM[parseISO(g.shopDate).getDay()]+'曜の買い物（'+groupRange(g)+'）';
+/** まだ買い物に行っていない最初の買い物ぶん（なければ最後のぶん） */
+function autoGroup(ws){
+  const gs = weekGroups(ws); if(!gs.length) return null;
+  const t = iso(today());
+  return gs.find(g=>g.shopDate >= t) || gs[gs.length-1];
+}
+let shopSegDate = null;              // 買い物タブで選んでいる買い物ぶん（shopDate）。null なら自動
+function shopGroup(ws){
+  return weekGroups(ws).find(g=>g.shopDate===shopSegDate) || autoGroup(ws);
 }
 
-/* 今どのフェーズか */
-function phaseNow(){
-  const n = new Date(), d = n.getDay(), h = n.getHours();
-  if(d===PLAN_DOW)     return h < PLAN_HOUR ? 'pre' : 'review';
-  if(d===DEADLINE_DOW) return h < DEADLINE_HOUR ? 'review' : 'shop';
-  return 'cook';
+/** 今どこにいるか：{phase:'pre'|'review'|'shop'|'cook', D:その買い物の日}
+    pre＝買い物の前日の昼まで / review＝前日12:00〜買い物の日の朝8:00（提案を承認する）/ shop＝買い物の日の朝8:00〜 */
+function cycleNow(){
+  const n = new Date(), h = n.getHours(), t = today();
+  const rank = {shop:3, review:2, pre:1};
+  let best = null;
+  [t, addDays(t,1)].forEach((D,ahead)=>{
+    if(!isShopDate(D) || !tripDates(D).length) return;
+    const ph = ahead ? (h < PLAN_HOUR ? 'pre' : 'review') : (h < DEADLINE_HOUR ? 'review' : 'shop');
+    if(!best || rank[ph] > rank[best.phase]) best = {phase:ph, D};
+  });
+  return best || {phase:'cook', D:null};
+}
+const phaseNow = () => cycleNow().phase;
+/** 月曜始まり。提案・承認・買い物の時間帯は、その買い物ぶんの週を見る（既定では、土日に翌週を見る）。
+    作る時間帯は今週。作らない日（平日だけの土日）は次の月曜の週 */
+function currentWeekStart(){
+  const t = today(), c = cycleNow();
+  if(c.phase!=='cook'){ const ws = tripMainWeek(c.D); if(ws) return ws; }
+  return isCookDate(t) ? weekOf(t) : weekOf(addDays(t, t.getDay()===6 ? 2 : 1));
+}
+/** 買い物の日 D の買い物ぶんの、未承認・承認・その他の日数 */
+function tripCounts(D){
+  let pend=0, appr=0, other=0;
+  tripGroups(D).forEach(g=>{
+    const wk = getWeek(g.ws);
+    g.days.forEach(k=>{ const s = (wk.days[k]||{}).status; if(s==='pending') pend++; else if(s==='approved') appr++; else if(s==='other') other++; });
+  });
+  return {pend, appr, other};
+}
+/** 提案を出す相手の呼び方。来週のぶんなら「来週」、同じ週の後半などなら「次の買い物ぶん」 */
+function tripTarget(D){
+  const ws = tripMainWeek(D);
+  return ws && ws === iso(addDays(parseISO(weekOf(today())),7)) ? '来週' : '次の買い物ぶん';
 }
 
 /* =========================================================================
@@ -964,8 +1077,11 @@ function defaultSettings(){
     dayRules: {
       mon:{type:'rotate', ids:[]},
       tue:{type:'free', ids:[]}, wed:{type:'free', ids:[]}, thu:{type:'free', ids:[]},
-      fri:{type:'pool', ids:[]}
+      fri:{type:'pool', ids:[]},
+      sat:{type:'free', ids:[]}, sun:{type:'free', ids:[]}      // 「毎日」にしたときだけ使う
     },
+    cookDays: 'weekday',           // 作る日：'weekday'＝月〜金 / 'everyday'＝月〜日（土日も）
+    shopDays: [0],                 // 買い物の日（0=日〜6=土、複数可）。前日の昼に、その買い物ぶんを提案する
     sidesPerDay: 1,
     skipHolidays: true,
     catOrder: CATS.map(c=>c.k),    // 売り場をまわる順（店に合わせて並べ替えられる）
@@ -1094,6 +1210,11 @@ function normalize(){
   S.seeded   = S.seeded   || {};
   S.settings = Object.assign(defaultSettings(), S.settings||{});
   S.settings.dayRules = Object.assign(defaultSettings().dayRules, S.settings.dayRules||{});
+  // 作る日と買い物の日（読み込み・同期で変な値が入っても、既定に戻す）
+  if(S.settings.cookDays!=='everyday') S.settings.cookDays = 'weekday';
+  const sd = Array.isArray(S.settings.shopDays) ? S.settings.shopDays.filter(n=>Number.isInteger(n) && n>=0 && n<=6) : [];
+  S.settings.shopDays = sd.length ? Array.from(new Set(sd)).sort((a,b)=>a-b) : [0];
+  applyCookDays();
   // 売り場の順番：未設定や、カテゴリが増減したときを補正する
   const ord = (S.settings.catOrder||[]).filter(k=>CATS.some(c=>c.k===k));
   CATS.forEach(c=>{ if(ord.indexOf(c.k)<0) ord.push(c.k); });
@@ -1188,10 +1309,10 @@ const weekHasPlan = ws => !!(ws && S.weeks[ws] && DAYS.some(d=>{
   const day = S.weeks[ws].days[d.k]; return day.mode==='cook' && (day.mainId || day.plainName); }));
 /** 最初の画面を出すか。献立を一度も作っていない公開版の端末だけ */
 const showWelcome = () => PUBLIC && !pubStarted() && !Object.keys(S.weeks).some(weekHasPlan);
-/** 次の月曜（平日は来週の月曜。土日は currentWeekStart と同じ） */
+/** 次の月曜（今日が月曜でも、来週の月曜） */
 function nextMonday(){
-  const d = today().getDay();
-  return (d===0 || d===6) ? currentWeekStart() : iso(addDays(parseISO(currentWeekStart()), 7));
+  const t = today();
+  return iso(addDays(t, (8 - t.getDay()) % 7 || 7));
 }
 /** 提案のあとに数える。作る日なのに主菜が無い日が残ったら「献立が一部未定」 */
 function trackPlan(){
@@ -1232,19 +1353,32 @@ function confirmAndShop(){
   render(); switchTab('shop');      // 中身があれば renderShop が list_shown を数える
 }
 
-/** 土日にアプリを開いたら、まだ提案が無ければ自動で作る（＝土曜12時に提案が出る運用） */
+/** 指定した週を提案する（only があれば、その曜日だけ） */
+function suggestFor(ws, only){
+  const keep = viewWeek; viewWeek = ws; getWeek(ws);
+  try{ suggestWeek(only ? {only} : undefined); }finally{ viewWeek = keep; }
+}
+/** その買い物ぶんの提案を、もう出したか。買い物ぶんが1つの週（既定）は週の generatedAt。
+    複数の週は、買い物の日ごとの印か、どれかの日に料理が入っていれば（設定を途中で変えても、決めた献立を組み直さない） */
+const groupGenerated = (wk, g, single) => single ? !!wk.generatedAt
+  : !!((wk.genTrips && wk.genTrips[g.shopDate]) || g.days.some(k=>{ const d = wk.days[k] || {}; return d.mainId || d.plainName; }));
+/** 買い物の前日と当日にアプリを開いたら、まだ提案が無ければ自動で作る（＝買い物の前日12時に提案が出る運用）。
+    既定（買い物は日曜）なら、これまでどおり土日に翌週ぶんを作る */
 function autoPlan(){
   // 公開版は、最初のボタン（5日分の献立を見る）を押すまで勝手に作らない。
   // load() だけでなく tick()（日付や時刻が変わったとき）からも呼ばれるので、ここで止める
   if(PUBLIC && !pubStarted()) return;
-  const dow = new Date().getDay();
-  if(dow!==PLAN_DOW && dow!==DEADLINE_DOW) return;
-  const wk = getWeek(currentWeekStart());
-  if(wk.generatedAt) return;
   if(!S.recipes.some(r=>r.kind!=='side' && !r.archived)) return;
-  const keep = viewWeek; viewWeek = currentWeekStart();
-  suggestWeek();
-  viewWeek = keep;
+  const t = today();
+  [t, addDays(t,1)].forEach(D=>{
+    if(!isShopDate(D)) return;
+    tripGroups(D).forEach(g=>{
+      const wk = getWeek(g.ws), single = weekGroups(g.ws).length===1;
+      if(groupGenerated(wk, g, single)) return;
+      suggestFor(g.ws, single ? null : g.days);
+      if(!single){ wk.genTrips = wk.genTrips || {}; wk.genTrips[g.shopDate] = new Date().toISOString(); }
+    });
+  });
 }
 
 /* =========================================================================
@@ -1410,7 +1544,7 @@ function shoppingNames(){
   const keep = viewWeek;
   viewWeek = currentWeekStart();
   const out = {};
-  try{ buildShopping().forEach(g=>g.items.forEach(it=>{ out[it.name]=1; })); }catch(e){}
+  try{ buildShopping(false, 'all').forEach(g=>g.items.forEach(it=>{ out[it.name]=1; })); }catch(e){}
   viewWeek = keep;
   return out;
 }
@@ -1838,6 +1972,12 @@ async function importFromUrl(url){
    ========================================================================= */
 /** 提案に使う文脈。ref（提案する週の月曜）より前の週の献立から、各レシピが最後に出た日を集める。
     承認や「買い物おわり」を押さない使い方でも、前の週に出たものは「最近出た」と分かるようにする。 */
+/** 前の週の最後の作る日の主菜（毎日作る設定のときだけ。日曜と月曜に同じ料理を並べないため） */
+function edgePrevId(ref){
+  if(!ref || DAYS.length < 7) return null;
+  const w = S.weeks[iso(addDays(parseISO(ref),-7))];
+  return w ? (cookMainId((w.days||{})[DAYS[DAYS.length-1].k]) || null) : null;
+}
 function planCtx(ref, avoid){
   const lastUse = new Map();
   Object.keys(S.weeks).forEach(ws=>{
@@ -1852,7 +1992,7 @@ function planCtx(ref, avoid){
       });
     });
   });
-  return { leftNames:new Set(S.leftovers.map(l=>l.name)), lastUse, ref, avoid: avoid || null };
+  return { leftNames:new Set(S.leftovers.map(l=>l.name)), lastUse, ref, avoid: avoid || null, edgePrev: edgePrevId(ref) };
 }
 function scoreRecipe(r, ctx){
   let sc = 0;
@@ -2001,6 +2141,7 @@ function suggestWeek(opts){
   // 触ってよい日：「その他」にした日は動かさない。承認済みも既定では動かさない
   const editable = DAYS.map(d=>d.k).filter(k=>{
     const day = wk.days[k];
+    if(opts.only && opts.only.indexOf(k)<0) return false;      // この買い物ぶんの日だけ（ほかの日は動かさない）
     if(day.status==='other') return false;
     if(!opts.redoApproved && day.status==='approved') return false;
     return true;
@@ -2062,6 +2203,12 @@ function suggestWeek(opts){
   });
   assignSides(wk, editable, ctx);
   if(!wk.generatedAt) wk.generatedAt = new Date().toISOString();
+  // 週ぜんぶを提案したとき（手動の「提案」など）は、どの買い物ぶんも提案ずみにする。
+  // こうしておかないと、あとで買い物の前日に自動提案が走って、いま決めた献立を組み直してしまう
+  if(!opts.only){
+    const gs = weekGroups(wk.start);
+    if(gs.length > 1){ wk.genTrips = wk.genTrips || {}; gs.forEach(g=>{ if(!wk.genTrips[g.shopDate]) wk.genTrips[g.shopDate] = wk.generatedAt; }); }
+  }
   save();
   return true;
 }
@@ -2101,7 +2248,8 @@ function fillFreeDays(freeDays, base, pool, ctx, used){
       }
       if(++nodes > BUDGET) return true;
       const k = slots[si], i = idxOf[k];
-      const prev = i>0 ? (assign[order[i-1]] || base[order[i-1]] || null) : null;
+      // 月曜の前は、前の週の最後の日（毎日作る設定のとき。日曜と月曜に同じ料理を並べない）
+      const prev = i>0 ? (assign[order[i-1]] || base[order[i-1]] || null) : (ctx && ctx.edgePrev ? recipeById(ctx.edgePrev) : null);
       const next = i<order.length-1 ? base[order[i+1]] : null;   // 決まっている翌日だけ見る
       const opts = [];
       cand.forEach(r=>{
@@ -2179,7 +2327,7 @@ function shuffleMain(dk){
   const ctx = planCtx(wk.start);
   const used = new Set(DAYS.filter(d=>d.k!==dk).map(d=>cookMainId(wk.days[d.k])).filter(Boolean));
   const idx  = DAYS.findIndex(d=>d.k===dk);
-  const prev = idx>0 ? recipeById(cookMainId(wk.days[DAYS[idx-1].k])) : null;
+  const prev = idx>0 ? recipeById(cookMainId(wk.days[DAYS[idx-1].k])) : recipeById(edgePrevId(wk.start));
   const nxt  = idx<DAYS.length-1 ? recipeById(cookMainId(wk.days[DAYS[idx+1].k])) : null;
   const apart = r => r.id!==cur && (!prev || r.id!==prev.id) && (!nxt || r.id!==nxt.id);
   const rule = dayRule(dk);
@@ -2390,35 +2538,49 @@ function priceBadge(name, start){
          ' <i>'+(df<0?'▼':'▲')+yen(Math.abs(df))+'</i></span>';
 }
 
-function buildShopping(includeHidden){
-  const wk = W();
-  const map = new Map();
-  DAYS.forEach(d=>{
-    const day = wk.days[d.k];
-    if(day.mode!=='cook' || day.status!=='approved') return;
-    const list = [day.mainId].concat(day.sideIds||[]).filter(Boolean);
-    list.forEach((id,li)=>{
-      const r = recipeById(id); if(!r) return;
-      r.ings.forEach(i=>{
-        const key = 'ing:'+i.name;
-        if(!map.has(key)) map.set(key, {key, name:i.name, cat:i.cat, kind:'ing', uses:[]});
-        map.get(key).uses.push({w:d.w, recipe:r.name, side: li>0});
+/** 買い物リストを作る。seg … 買い物ぶん（weekGroups の要素）。省略すると買い物タブで選んでいるぶん、'all' なら全部。
+    買い物の日が日曜1回（既定）なら、買い物ぶんは月〜金の1つで、これまでどおり。
+    複数のときは、買い物ぶんごとに献立の食材・チェック・消した印を分ける（2番目以降の買い物ぶんのキーに
+    買い物の日の印を付ける）。同じ食材を、1回目と2回目の買い物で別々に買えるように */
+function buildShopping(includeHidden, seg){
+  const wk = W(), gs = weekGroups(wk.start), multi = gs.length>1;
+  const targets = seg==='all' ? gs : [seg || shopGroup(wk.start)];
+  const stapleG = autoGroup(wk.start);        // 常備品は、まだ買い物に行っていない最初の買い物ぶんに出す
+  let items = [];
+  targets.forEach(g=>{
+    if(!g) return;
+    const pre = (multi && g.i>0) ? 's'+g.shopDate+':' : '';
+    const map = new Map();
+    g.days.forEach(k=>{
+      const d = ALL_DAYS.find(x=>x.k===k), day = wk.days[k];
+      if(!day || day.mode!=='cook' || day.status!=='approved') return;
+      const list = [day.mainId].concat(day.sideIds||[]).filter(Boolean);
+      list.forEach((id,li)=>{
+        const r = recipeById(id); if(!r) return;
+        r.ings.forEach(i=>{
+          const key = pre+'ing:'+i.name;
+          if(!map.has(key)) map.set(key, {key, name:i.name, cat:i.cat, kind:'ing', uses:[]});
+          map.get(key).uses.push({w:d.w, recipe:r.name, side: li>0});
+        });
       });
     });
-  });
-  const items = Array.from(map.values());
-  S.leftovers.forEach(l=>{ const it = items.find(x=>x.name===l.name); if(it) it.leftover = true; });
+    const part = Array.from(map.values());
+    S.leftovers.forEach(l=>{ const it = part.find(x=>x.name===l.name); if(it) it.leftover = true; });
 
-  S.staples.filter(stapleNeeded).forEach(st=>{
-    const stt = stapleStatus(st);
-    const why = (st.needBuy ? (st.needNote==='next' ? '次買う' : '切らしてる') : (stt.level==='out' ? '切れてるかも' : 'そろそろ')) +
-                (st.lastBought ? '・前回'+daysSince(st.lastBought)+'日前' : '');
-    const dup = items.find(x=>x.kind==='ing' && x.name===st.name);
-    if(dup){ dup.staple = st; dup.why = why; return; }
-    items.push({key:'stp:'+st.id, name:st.name, cat:st.cat, kind:'staple', staple:st, why});
-  });
-  (wk.extras||[]).forEach(e=>{
-    items.push({key:'ext:'+e.id, name:e.name, cat:e.cat, kind:'extra', extra:e});
+    if(!stapleG || g.i===stapleG.i) S.staples.filter(stapleNeeded).forEach(st=>{
+      const stt = stapleStatus(st);
+      const why = (st.needBuy ? (st.needNote==='next' ? '次買う' : '切らしてる') : (stt.level==='out' ? '切れてるかも' : 'そろそろ')) +
+                  (st.lastBought ? '・前回'+daysSince(st.lastBought)+'日前' : '');
+      const dup = part.find(x=>x.kind==='ing' && x.name===st.name);
+      if(dup){ dup.staple = st; dup.why = why; return; }
+      part.push({key:'stp:'+st.id, name:st.name, cat:st.cat, kind:'staple', staple:st, why});
+    });
+    (wk.extras||[]).forEach(e=>{
+      // 自分で足したメモは、足したときの買い物ぶんに出す（買い物ぶんが1つなら、どの週のメモも出す）
+      if(multi && (e.trip ? e.trip!==g.shopDate : g.i!==0)) return;
+      part.push({key:'ext:'+e.id, name:e.name, cat:e.cat, kind:'extra', extra:e});
+    });
+    items = items.concat(part);
   });
 
   const hid = wk.hidden || {};
@@ -2445,27 +2607,29 @@ function hiddenList(){
   buildShopping(true).forEach(g=>g.items.forEach(it=>{ if(it.hidden) out.push(it); }));
   return out;
 }
-const pendingCount = () => DAYS.filter(d=>W().days[d.k].status==='pending').length;
-const approvedCount = () => DAYS.filter(d=>W().days[d.k].status==='approved').length;
+const pendingCount  = dks => (dks || DAYS.map(d=>d.k)).filter(k=>(W().days[k]||{}).status==='pending').length;
+const approvedCount = dks => (dks || DAYS.map(d=>d.k)).filter(k=>(W().days[k]||{}).status==='approved').length;
 
 /* =========================================================================
    描画
    ========================================================================= */
 function render(){
   const ws = parseISO(viewWeek);
-  $('#wkLabel').textContent = md(ws)+'(月) 〜 '+md(addDays(ws,4))+'(金)' +
+  const last = DAYS[DAYS.length-1];
+  $('#wkLabel').textContent = md(ws)+'(月) 〜 '+md(addDays(ws,DAYS.length-1))+'('+last.w+')' +
     (viewWeek===currentWeekStart() ? '　今週' : '');
   renderPhase(); renderWeek(); renderShop(); renderLog(); renderStock(); renderRecipes(); renderCounts();
 }
 function renderCounts(){
-  let n=0; buildShopping().forEach(g=>g.items.forEach(it=>{ if(!isChecked(it.key)) n++; }));
+  let n=0; buildShopping(false, autoGroup(viewWeek)).forEach(g=>g.items.forEach(it=>{ if(!isChecked(it.key)) n++; }));
   const c1=$('#cntShop'); c1.textContent=n; c1.hidden = n===0;
   const ns = S.staples.filter(stapleNeeded).length;
   const c2=$('#cntStock'); c2.textContent=ns; c2.hidden = ns===0;
   const nu = logItems('month').filter(e=>!e.purpose).length;
   const c4=$('#cntLog'); c4.textContent=nu; c4.hidden = nu===0;
-  const np = viewWeek===currentWeekStart() ? pendingCount() : 0;
-  const c3=$('#cntWeek'); c3.textContent=np; c3.hidden = np===0 || phaseNow()==='cook';
+  const cy = cycleNow();
+  const np = viewWeek===currentWeekStart() ? (cy.D ? tripCounts(cy.D).pend : pendingCount()) : 0;
+  const c3=$('#cntWeek'); c3.textContent=np; c3.hidden = np===0 || cy.phase==='cook';
 }
 
 /* ---------- フェーズ帯 ---------- */
@@ -2483,30 +2647,34 @@ function renderPhase(){
     $('#phGo').onclick = ()=>{ viewWeek = currentWeekStart(); getWeek(viewWeek); save(); render(); };
     return;
   }
-  const ph = phaseNow(), pend = pendingCount(), appr = approvedCount();
+  const cy = cycleNow(), ph = cy.phase;
+  const tc = cy.D ? tripCounts(cy.D) : null;           // いまの買い物ぶん（既定では来週の月〜金）の承認の状況
+  const pend = tc ? tc.pend : pendingCount(), appr = tc ? tc.appr : approvedCount();
+  const shopNm = cy.D ? DOW_NM[cy.D.getDay()]+'曜' : '';                  // 買い物の日
+  const planNm = cy.D ? DOW_NM[(cy.D.getDay()+6)%7]+'曜' : '';            // その前日（提案が出る日）
   let dot='var(--p)', txt='', sub='', go='', goTab='';
   if(ph==='pre'){
-    dot='var(--sub2)'; txt='土曜 — お昼に来週の提案が出ます';
+    dot='var(--sub2)'; txt=planNm+' — お昼に'+tripTarget(cy.D)+'の提案が出ます';
     sub='いま見ることもできます'; go='提案を見る'; goTab='week';
   }else if(ph==='review'){
     dot='var(--a)';
     txt = pend ? '承認してください（残り'+pend+'日ぶん）' : '全'+appr+'日ぶん承認ずみ';
-    sub = '締切 日曜 '+DEADLINE_HOUR+':00';
+    sub = '締切 '+shopNm+' '+DEADLINE_HOUR+':00';
     go  = pend ? '献立へ' : '買い物へ'; goTab = pend ? 'week' : 'shop';
   }else if(ph==='shop'){
     dot='var(--g)';
     txt = pend ? '未承認が'+pend+'日ぶん残っています' : '買い物リストができています';
-    sub = '日曜 '+SHOP_HOUR+':00〜';
+    sub = shopNm+' '+SHOP_HOUR+':00〜';
     go='買い物へ'; goTab='shop';
   }else{
     const t = today(), idx = Math.round((t - parseISO(viewWeek))/86400000);
-    const day = (idx>=0 && idx<=4) ? W().days[DAYS[idx].k] : null;
+    const day = (idx>=0 && idx<DAYS.length) ? W().days[DAYS[idx].k] : null;
     const r = day && day.mode==='cook' ? recipeById(day.mainId) : null;
     dot='var(--p)';
     txt = day ? (day.mode!=='cook' ? '今日は'+(day.mode==='hol' ? (day.holiday||'作らない日') : MODES[day.mode])
                  : (r ? '今日：'+r.name : (day.plainName ? '今日：'+day.plainName : '今日の献立は未設定')))
               : '今週の献立';
-    sub = '月〜金';
+    sub = DAYS[0].w+'〜'+DAYS[DAYS.length-1].w;
   }
   el.innerHTML = '<div class="wrap"><span class="dot" style="background:'+dot+'"></span>'+esc(txt)+
     (go ? '<button class="go" id="phGo">'+go+'</button>' : '<span class="sub">'+esc(sub)+'</span>')+'</div>';
@@ -2534,6 +2702,18 @@ function welcomeHTML(){
 }
 const feedbackLinkHTML = () => canFeedback() ? '<div class="pubfb"><button data-feedback>✉️ 困ったところを送る</button></div>' : '';
 
+/** 来週を見ている間も、今日の夕食が分かるように（毎日作る設定で、土日に次の週を見ているとき） */
+function todayStripHTML(){
+  const w = S.weeks[weekOf(today())]; if(!w) return '';
+  const day = w.days[dowKey(today()).k]; if(!day) return '';
+  const r = day.mode==='cook' ? recipeById(day.mainId) : null;
+  const nm = day.mode!=='cook' ? offLabel(day) : (dayDishName(day) || 'まだ決まっていません');
+  return '<div class="card" style="padding:11px 13px;display:flex;align-items:center;gap:10px">'+
+    '<div style="flex:1;min-width:0"><div class="tiny">🍳 今日（'+DOW_NM[today().getDay()]+'）の夕食</div>'+
+    '<div style="font-size:15px;font-weight:800">'+esc(nm)+'</div></div>'+
+    (r ? '<button class="btn sub sm" data-view="'+r.id+'">📖 作り方</button>' : '')+'</div>';
+}
+
 function renderWeek(){
   const wk = W(), el = $('#pane-week');
   document.body.classList.toggle('pub-welcome', showWelcome());
@@ -2544,11 +2724,15 @@ function renderWeek(){
   }
   const ws = parseISO(viewWeek), t = today();
   const todayIdx = Math.round((t-ws)/86400000);
-  const ph = viewWeek===currentWeekStart() ? phaseNow() : 'cook';
+  const cy = viewWeek===currentWeekStart() ? cycleNow() : {phase:'cook', D:null};
+  const ph = cy.phase;
+  const todayIn = todayIdx>=0 && todayIdx<DAYS.length;     // 今日がこの週の作る日
+  const planning = ph==='pre' || ph==='review' || ph==='shop';
   let h = '';
 
   // --- ヒーロー ---
-  if(ph==='cook' && todayIdx>=0 && todayIdx<=4){
+  // 今日がこの週の作る日なら「今日の献立」。提案・承認・買い物の時間帯でも（買い物の日を複数にした／毎日作る設定のとき）出す
+  if(todayIn){
     const dk = DAYS[todayIdx].k, day = wk.days[dk], r = day.mode==='cook' ? recipeById(day.mainId) : null;
     h += evLineHTML(iso(today()));
     if(day.mode!=='cook'){
@@ -2572,13 +2756,18 @@ function renderWeek(){
     }else{
       h += '<div class="hero rest"><div class="lb2">TODAY</div><div class="nm">まだ決まっていません</div></div>';
     }
-  }else if(ph==='pre' || ph==='review' || ph==='shop'){
-    const pend = pendingCount(), appr = approvedCount();
-    const other = DAYS.filter(d=>wk.days[d.k].status==='other').length;
-    h += '<div class="hero"><div class="lb2">'+(ph==='shop'?'SUNDAY':'SATURDAY')+'</div>'+
-         '<div class="nm">'+md(ws)+'からの1週間</div>'+
-         '<div class="ing">承認 '+appr+'　未承認 '+pend+'　その他 '+other+
-         '　／　'+(ph==='shop' ? '買い物へ' : '締切 日曜'+DEADLINE_HOUR+':00')+'</div></div>';
+  }else if(planning && isCookDate(t)){
+    h += todayStripHTML();                                  // 今日はこの週ではない（来週を見ている）が、今日も作る日
+  }
+  if(planning){
+    const tc = tripCounts(cy.D), groups = tripGroups(cy.D), dates = tripDates(cy.D);
+    const whole = groups.length===1 && groups[0].days.length===DAYS.length;     // 週ぜんぶ（既定）
+    const ENG = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
+    const shopNm = DOW_NM[cy.D.getDay()]+'曜';
+    h += '<div class="hero"><div class="lb2">'+(ph==='shop' ? ENG[cy.D.getDay()] : ENG[(cy.D.getDay()+6)%7])+'</div>'+
+         '<div class="nm">'+(whole ? md(ws)+'からの1週間' : md(dates[0])+'〜'+md(dates[dates.length-1])+'の買い物ぶん')+'</div>'+
+         '<div class="ing">承認 '+tc.appr+'　未承認 '+tc.pend+'　その他 '+tc.other+
+         '　／　'+(ph==='shop' ? '買い物へ' : '締切 '+shopNm+DEADLINE_HOUR+':00')+'</div></div>';
   }
 
   // --- 操作 ---
@@ -2613,9 +2802,16 @@ function renderWeek(){
 
   // --- 曜日カード ---
   h += '<div class="card">';
+  const wgs = weekGroups(viewWeek), multiG = wgs.length > 1;       // 買い物の日が複数なら、買い物ぶんごとに見出しを入れる
   DAYS.forEach((d,i)=>{
     const day = wk.days[d.k], r = recipeById(day.mainId);
     const date = addDays(ws,i);
+    const g0 = multiG ? wgs.find(g=>g.days[0]===d.k) : null;
+    if(g0){
+      const planNm = DOW_NM[(parseISO(g0.shopDate).getDay()+6)%7]+'曜';
+      h += '<div class="tripHd"><b>🛒 '+groupTitle(g0)+'</b>'+
+           (groupGenerated(wk, g0, false) ? '' : '<span>提案は '+planNm+' '+PLAN_HOUR+':00</span>')+'</div>';
+    }
     const isToday = i===todayIdx;
     const isPast  = iso(date) < iso(t);
     const stl = ST_STYLE[day.status] || ST_STYLE.pending;
@@ -2718,7 +2914,7 @@ function renderWeek(){
   el.querySelectorAll('[data-feedback]').forEach(b=>b.onclick=openFeedback);
   $('#btnClearWeek').onclick = ()=>{
     DAYS.forEach(d=>{ wk.days[d.k] = blankDay(); });
-    wk.generatedAt = null; save(); render();
+    wk.generatedAt = null; wk.genTrips = {}; save(); render();
   };
   el.querySelectorAll('[data-cal]').forEach(b=>b.onclick=()=>openCalendar(b.dataset.cal));
   el.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>openRecipeView(b.dataset.view));
@@ -2785,6 +2981,8 @@ function addLogItem(name, purpose, dish){
     dish: dish || '',
     by: myName || '', at: iso(today())
   };
+  // 買い物の日が複数のときは、いま見ている買い物ぶんに足す
+  if(weekGroups(wk.start).length > 1){ const g = shopGroup(wk.start); if(g) e.trip = g.shopDate; }
   wk.extras.push(e);
   return e;
 }
@@ -2852,9 +3050,15 @@ function renderShop(){
   const el = $('#pane-shop'), wk = W(), groups = buildShopping();
   let total=0, done=0;
   groups.forEach(g=>g.items.forEach(it=>{ total++; if(isChecked(it.key)) done++; }));
-  const pend = pendingCount();
+  // 買い物の日が複数なら、買い物ぶん（○曜の買い物）を切り替える。1つなら何も出さない（既定）
+  const wgs = weekGroups(viewWeek), multiS = wgs.length > 1, sg = shopGroup(viewWeek);
+  const sgDays = multiS ? sg.days : DAYS.map(d=>d.k);
+  const pend = pendingCount(sgDays);
 
-  let h = '<div class="card" style="padding:13px;display:flex;align-items:center;gap:12px">'+
+  let h = (multiS ? '<div class="tripchips">'+wgs.map(g=>
+      '<button class="'+(g.shopDate===sg.shopDate?'on':'')+'" data-seg="'+g.shopDate+'">'+
+      DOW_NM[parseISO(g.shopDate).getDay()]+'曜の買い物<small>'+groupRange(g)+'ぶん</small></button>').join('')+'</div>' : '')+
+    '<div class="card" style="padding:13px;display:flex;align-items:center;gap:12px'+(multiS?';margin-top:12px':'')+'">'+
     '<div style="flex:1"><div style="font-size:15px;font-weight:800">買い物リスト '+done+' / '+total+'</div>'+
     '<div class="tiny">'+(()=>{
       let ing=0, stp=0, ext=0;
@@ -2873,8 +3077,8 @@ function renderShop(){
   // 週次の買い物リストの上に、その週の月〜金の献立を出す。
   // タップでその料理の食材をまとめて足せる（記録がそのまま料理に紐づく）
   h += '<div class="card" style="margin-top:12px"><div class="tiny" style="padding:11px 13px 3px">'+
-    (viewWeek===currentWeekStart() ? '今週' : 'この週')+'の献立（タップするとその料理の食材を足せます）</div>'+
-    DAYS.map(d=>{
+    (multiS ? 'この買い物ぶん' : (viewWeek===currentWeekStart() ? '今週' : 'この週'))+'の献立（タップするとその料理の食材を足せます）</div>'+
+    DAYS.filter(d=>sgDays.indexOf(d.k)>=0).map(d=>{
       const day = wk.days[d.k], nm = dayDishName(day);
       const n = nm ? dishMemoIngs(nm, wk).length : 0;
       const body = day.mode!=='cook'
@@ -2895,7 +3099,7 @@ function renderShop(){
     }).join('')+'</div>';
 
   // 「品名を書く → 何用かを選ぶ」を上から順に、続けて打てる形にする
-  const menuDishes = DAYS.filter(d=>wk.days[d.k].mode==='cook' && dayDishName(wk.days[d.k]))
+  const menuDishes = DAYS.filter(d=>sgDays.indexOf(d.k)>=0 && wk.days[d.k].mode==='cook' && dayDishName(wk.days[d.k]))
     .map(d=>({w:d.w, name:dayDishName(wk.days[d.k])}));
   const selIs = (pp,dd)=> addSel && addSel.p===pp && (dd===undefined || addSel.dish===dd);
   h += '<div class="addbox">'+
@@ -2970,6 +3174,7 @@ function renderShop(){
   el.innerHTML = h;
   el.querySelectorAll('[data-feedback]').forEach(b=>b.onclick=openFeedback);
 
+  el.querySelectorAll('[data-seg]').forEach(b=>b.onclick=()=>{ shopSegDate = b.dataset.seg; renderShop(); renderCounts(); });
   el.querySelectorAll('[data-note]').forEach(b=>b.onclick=e=>{
     e.stopPropagation(); openIngNote(b.dataset.note);
   });
@@ -3029,8 +3234,13 @@ function renderShop(){
 
 function listAsText(){
   const ws = parseISO(viewWeek), wk = W();
-  let out = '🛒 買い物リスト '+md(ws)+'〜'+md(addDays(ws,4))+'\n\n【今週の献立】\n';
-  DAYS.forEach(d=>{
+  // 買い物の日が複数なら、いま見ている買い物ぶんだけ。1つなら週ぜんぶ（既定）
+  const multiS = weekGroups(viewWeek).length > 1, sg = multiS ? shopGroup(viewWeek) : null;
+  const days = multiS ? DAYS.filter(d=>sg.days.indexOf(d.k)>=0) : DAYS;
+  const i0 = DAYS.indexOf(days[0]), i1 = DAYS.indexOf(days[days.length-1]);
+  let out = multiS ? '🛒 買い物リスト '+md(addDays(ws,i0))+'〜'+md(addDays(ws,i1))+'（'+groupTitle(sg).replace(/（.*$/,'')+'）\n\n【この買い物ぶんの献立】\n'
+                   : '🛒 買い物リスト '+md(ws)+'〜'+md(addDays(ws,DAYS.length-1))+'\n\n【今週の献立】\n';
+  days.forEach(d=>{
     const day = wk.days[d.k];
     if(day.mode!=='cook'){ out += d.w+'：'+(day.mode==='hol' ? (day.holiday||'作らない') : MODES[day.mode])+'\n'; return; }
     const nm = dayDishName(day);
@@ -4623,8 +4833,36 @@ function openCatSpot(k){
   setTimeout(()=>{ if($('#csIn')) $('#csIn').focus(); }, 150);
 }
 
+/** 設定：作る日と買い物の日 */
+function cycleSettingsHTML(){
+  const ck = S.settings.cookDays==='everyday' ? 'everyday' : 'weekday', sd = shopDows();
+  return '<label class="lb">作る日</label>'+
+    '<div class="seg" id="cfDays">'+
+      '<button data-d="weekday" class="'+(ck==='weekday'?'on':'')+'">平日だけ（月〜金）</button>'+
+      '<button data-d="everyday" class="'+(ck==='everyday'?'on':'')+'">毎日（土日も）</button></div>'+
+    '<div class="tiny" style="margin-top:7px">土日も作る人は「毎日」に。祝日を作るかどうかは、下の「祝日」で決めます。</div>'+
+    '<label class="lb">買い物の日</label>'+
+    '<div class="chips" id="cfShop">'+
+      [1,2,3,4,5,6,0].map(n=>'<button class="chip'+(sd.indexOf(n)>=0?' on':'')+'" data-n="'+n+'">'+DOW_NM[n]+'</button>').join('')+'</div>'+
+    '<div class="tiny" style="margin-top:7px">買い物に行く曜日を選びます（何日でも）。<b>その前日の12時に、その買い物ぶんの献立を提案します</b>。'+
+    '買い物の日の翌日から、次の買い物の日までが1回ぶんです。承認の締切は買い物の日の朝'+DEADLINE_HOUR+'時。'+
+    '週に何回か行く人は、行く日を増やしてください（買い物リストも回ごとに分かれます）。</div>';
+}
+/** 設定：1週間の流れ（買い物の日ごとに、いつ何が起きるか） */
+function flowText(){
+  const t = today();
+  const lines = shopDows().map(n=>{
+    const D = addDays(t, ((n - t.getDay()) + 7) % 7);               // 次にその曜日が来る日（今日を含む）
+    if(!tripDates(D).length) return '';                              // 作る日が1日も無い買い物ぶん（例：平日だけで、土と日だけ買い物）
+    const plan = DOW_NM[(n+6)%7]+'曜', shop = DOW_NM[n]+'曜';
+    return plan+' '+PLAN_HOUR+':00　'+tripTarget(D)+'の献立が提案される（アプリを開いた時点で生成）<br>'+
+      shop+' '+DEADLINE_HOUR+':00　承認の締切<br>'+shop+' '+SHOP_HOUR+':00　買い物リストを見ながら買い物<br>';
+  }).join('');
+  return lines+DAYS[0].w+'〜'+DAYS[DAYS.length-1].w+'　作って、任意で評価（👍😐👎）';
+}
 function openSettings(){
   const body =
+    cycleSettingsHTML()+
     '<label class="lb">曜日ごとの決め方</label>'+
     '<div class="card" style="margin:0">'+
       DAYS.map(d=>'<div class="ruleRow" data-rule="'+d.k+'"><div class="w2">'+d.w+'</div>'+
@@ -4664,11 +4902,7 @@ function openSettings(){
     '「作らない」にします。まだ何も書いていない日だけが対象なので、書いたものが消えることはありません。'+
     '個別に「作る」に戻すこともできます。</div>'+
     '<label class="lb">1週間の流れ</label>'+
-    '<div class="tiny" style="line-height:2">'+
-      '土曜 '+PLAN_HOUR+':00　来週の献立が提案される（アプリを開いた時点で生成）<br>'+
-      '日曜 '+DEADLINE_HOUR+':00　承認の締切<br>'+
-      '日曜 '+SHOP_HOUR+':00　買い物リストを見ながら買い物<br>'+
-      '月〜金　作って、任意で評価（👍😐👎）</div>'+
+    '<div class="tiny" style="line-height:2">'+flowText()+'</div>'+
     (PUBLIC ? pubSettingsHTML() : householdSettingsHTML());
   sheet('設定', body, '<button class="btn" id="cfClose">閉じる</button>');
   bindSettings();
@@ -4774,6 +5008,19 @@ function bindSettings(){
     });
   };
   bindOrd();
+  $('#shBody').querySelectorAll('#cfDays button').forEach(b=>b.onclick=()=>{
+    if(S.settings.cookDays===b.dataset.d) return;
+    S.settings.cookDays = b.dataset.d;
+    applyCookDays(); normalize();               // 土日の日を作る／見る週を選び直す。平日だけに戻しても、土日に入れた献立は消えない
+    autoPlan(); save(); render(); openSettings();
+  });
+  $('#shBody').querySelectorAll('#cfShop button').forEach(b=>b.onclick=()=>{
+    const n = +b.dataset.n, set = new Set(shopDows());
+    if(set.has(n)){ if(set.size<=1){ toast('買い物の日は1日以上選んでください'); return; } set.delete(n); } else set.add(n);
+    S.settings.shopDays = Array.from(set).sort((x,y)=>x-y);
+    shopSegDate = null; viewWeek = currentWeekStart(); getWeek(viewWeek);
+    autoPlan(); save(); render(); openSettings();
+  });
   $('#shBody').querySelectorAll('#cfHol button').forEach(b=>b.onclick=()=>{
     S.settings.skipHolidays = b.dataset.h==='1';
     if(S.settings.skipHolidays) Object.values(S.weeks).forEach(applyHolidays);
