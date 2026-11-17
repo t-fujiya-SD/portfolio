@@ -415,7 +415,7 @@ body.pub-welcome .phase, body.pub-welcome .wkbar{display:none}
    月曜はお魚です — 平日5日の献立 → 買い物リスト → 常備品 を一直線につなぐ
    単一HTML / localStorage / ビルドなし・外部依存なし
    家庭用（spicy-device.com/kondate/）と公開版（osakana.spicy-device.com）は同じこのファイル。
-   ホスト名で切り替える（下の「公開版」）。公開版だけ、回数の計測と「困ったところを送る」の送信がある
+   ホスト名で切り替える（下の「公開版」）。公開版だけ、回数の計測・使い始めた数・「困ったところを送る」の送信がある
    ========================================================================= */
 
 /* ---------- カテゴリ定義（＝スーパーの売り場順） ---------- */
@@ -571,7 +571,7 @@ function saveMyName(v){
    古い画面で動き続ける（配信側のキャッシュも最大10分ある）。
    開いたとき・戻ってきたときに自分自身を取り直し、BUILD が違えば更新する。
    BUILD は kondate/stamp.sh が書き換える（kondate を直したら公開前に実行）。 */
-const BUILD = '20261117-062949';
+const BUILD = '20261117-175548';
 let updNext = '', updAt = 0;
 function hideUpdBar(){ const b = $('#updBar'); if(b) b.hidden = true; }
 function applyUpdate(){
@@ -637,13 +637,18 @@ const PUB_CFG = {
   formChoice: 'entry.1512341770',   // 「どこで困りましたか」（ラジオ・必須）
   formNote:   'entry.961436645',    // 「補足（任意）」（段落）
   formStage:  'entry.1072049811',   // 「どこまで進んだか（自動）」（短文）
+  // 「使い始めた数」を数えるフォーム（Googleフォーム「月曜はお魚です 使い始めた数」・2026-11-18 作成）。
+  // 初期設定が終わった（献立を初めて決めた）端末ごとに、1件だけ「plan_confirmed / 流入元」を送る。空のあいだは何も送らない。
+  // 回答の件数が、使い始めた人の数。個人を特定する情報は送らない。ID は公開されたフォームのページに載っているもので、秘密ではない。
+  startAction: 'https://docs.google.com/forms/d/e/1FAIpQLSdnMs1ozeiwvr3oXcsTeG9xsYd-5C3CapQKfnEwjnrkQaz2wA/formResponse',
+  startEntry:  'entry.510503995',   // 「どこまで進んだか（自動）」（短文）
 };
 /* 流入元。投稿ごとにリンクを分ける：X は ?utm_source=x、Threads は ?utm_source=threads */
 const PUB_SOURCES = ['x','threads'];
 /* 計測する5段階（この順に進む）。名前は Plausible のゴール名と同じにする */
 const FUNNEL = ['first_view','plan_shown','plan_confirmed','list_shown','first_check'];
-const FUNNEL_KEY = 'osakana.funnel', SRC_KEY = 'osakana.src', OUTBOX_KEY = 'osakana.outbox';
-let funnelMem = {}, saveFailTold = false;
+const FUNNEL_KEY = 'osakana.funnel', SRC_KEY = 'osakana.src', OUTBOX_KEY = 'osakana.outbox', START_KEY = 'osakana.start';
+let funnelMem = {}, saveFailTold = false, startMem = '', startBusy = false;
 const UA = navigator.userAgent || '';
 /* アプリ内ブラウザ（Threads=Barcelona、Instagram、Facebook、LINE、X の Android 版など）。
    iOS の X は UA で見分けられないので、X・Threads のリンク（utm_source）からスマホで来たら案内を出す */
@@ -671,6 +676,7 @@ const trackLive = () => PUBLIC && !!PUB_CFG.plausibleDomain && location.hostname
     送り先が空のあいだは何も覚えない（あとで送り先を入れたとき、それ以前に来た人も数えられるように） */
 function track(name){
   if(!PUBLIC) return;
+  if(name === 'plan_confirmed') markStart();            // 計測（Plausible）の有無とは別に、使い始めた数を数える
   const live = trackLive(), once = name !== 'save_failed';
   if(once){
     if(funnelMem[name]) return;                         // このページを開いているあいだは1回だけ
@@ -705,10 +711,33 @@ function deliver(ev){
   p.catch(()=>{ const q = outboxLoad(); q.push(ev); outboxSave(q); });
 }
 function flushOutbox(){
+  sendStart();                                                 // 使い始めた数の送り直し（届いていなければ）
   if(!trackLive()) return;
   const q = outboxLoad(); if(!q.length) return;
   outboxSave([]);
   q.forEach(deliver);                                          // 失敗したものは deliver が入れ直す
+}
+/* 使い始めた数（公開版・本番のホスト名のときだけ）。初期設定が終わった（献立を初めて決めた）端末ごとに1件。
+   送る中身は「plan_confirmed / x」のような段階と流入元の文字だけ。
+   状態は '' → 'pending'（送る前に立てる）→ 'done'（届いたあと）。届くまで pending で残り、次に開いたとき・戻ってきたときに送り直す。
+   保存が使えないブラウザでは、そのページを開いているあいだだけ覚える */
+const startLive = () => PUBLIC && !!(PUB_CFG.startAction && PUB_CFG.startEntry) && location.hostname === PUBLIC_HOST;
+const startState = () => lsGet(START_KEY) || startMem;
+function setStart(v){ startMem = v; lsSet(START_KEY, v); }
+function markStart(){
+  if(!startLive() || startState()) return;                     // 送り先が空・試しの場所・この端末で記録ずみ
+  setStart('pending');
+  sendStart();
+}
+function sendStart(){
+  if(!startLive() || startBusy || startState() !== 'pending') return;
+  startBusy = true;
+  const p = new URLSearchParams();
+  p.append(PUB_CFG.startEntry, 'plan_confirmed' + (pubSource() ? ' / '+pubSource() : ''));
+  let q;
+  try{ q = fetch(PUB_CFG.startAction, {method:'POST', mode:'no-cors', keepalive:true, body:p}); }   // Googleフォームは中身を返さない
+  catch(e){ q = Promise.reject(e); }
+  q.then(()=>setStart('done'), ()=>{}).then(()=>{ startBusy = false; });
 }
 /** いつものブラウザで開き直すためのリンク（ext=1 を付けると、開いた先では案内を出さない） */
 function pubLink(){ const s = pubSource(); return location.origin + location.pathname + '?' + (s ? 'utm_source='+s+'&' : '') + 'ext=1'; }
@@ -4962,6 +4991,7 @@ function pubSettingsHTML(){
     '<label class="lb">計測について</label>'+
     '<div class="tiny">使われ方を知るために、次の回数だけを数えています：はじめて開いた／献立を見た／献立を決めた／'+
       '買い物リストを見た／はじめてチェックした。ほかに「献立が一部未定」「保存できなかった」が起きた回数。'+
+      '初期設定が終わったこと（献立をはじめて決めたこと）は、使い始めた人の数として、この端末で1回だけ数えます。'+
       '<b>献立や食材の名前、入力した内容は送りません。</b></div>'+
     (canFeedback() ? '<button class="btn sub full" style="margin-top:12px" id="cfFb">✉️ 困ったところを送る</button>' : '')+
     settingsTailHTML('・計測（回数のみ）');
