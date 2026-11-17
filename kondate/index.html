@@ -571,7 +571,7 @@ function saveMyName(v){
    古い画面で動き続ける（配信側のキャッシュも最大10分ある）。
    開いたとき・戻ってきたときに自分自身を取り直し、BUILD が違えば更新する。
    BUILD は kondate/stamp.sh が書き換える（kondate を直したら公開前に実行）。 */
-const BUILD = '20261116-064218';
+const BUILD = '20261117-062949';
 let updNext = '', updAt = 0;
 function hideUpdBar(){ const b = $('#updBar'); if(b) b.hidden = true; }
 function applyUpdate(){
@@ -631,10 +631,12 @@ const PUB_CFG = {
   // 計測（Plausible）。サイトを登録したら 'osakana.spicy-device.com' を入れる。空のあいだは何も送らない
   plausibleDomain: '',
   // 「困ったところを送る」の送り先（Googleフォーム）。空のあいだはボタンを出さない
-  formAction: '',   // https://docs.google.com/forms/d/e/<フォームのID>/formResponse
-  formChoice: '',   // 「どこで困りましたか」の entry.xxxxxxxx
-  formNote:   '',   // 「補足（任意）」の entry.xxxxxxxx
-  formStage:  '',   // 「どこまで進んだか（自動）」の entry.xxxxxxxx（無くてもよい）
+  // フォーム「月曜はお魚です 困ったところ」（2026-11-17 作成・回答は Google のアカウント不要・メールは集めない）。
+  // ここにある ID は、公開されたフォームのページに載っているもので、秘密ではない。
+  formAction: 'https://docs.google.com/forms/d/e/1FAIpQLScdnQw-AGkIApLCIyHAVOLRNDyRgEZshV2t4WDN3GhslE3PwA/formResponse',
+  formChoice: 'entry.1512341770',   // 「どこで困りましたか」（ラジオ・必須）
+  formNote:   'entry.961436645',    // 「補足（任意）」（段落）
+  formStage:  'entry.1072049811',   // 「どこまで進んだか（自動）」（短文）
 };
 /* 流入元。投稿ごとにリンクを分ける：X は ?utm_source=x、Threads は ?utm_source=threads */
 const PUB_SOURCES = ['x','threads'];

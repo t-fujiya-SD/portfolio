@@ -797,15 +797,18 @@ Plausible の**イベント API に直接送ります**（外部スクリプト�
 ### 公開までの準備（一度だけ）
 
 `index.html` の `PUB_CFG` を埋めます。空のあいだは、計測は送らず、「困ったところを送る」も出しません。
+**フォームは作成ずみ（2026-11-17）で、`PUB_CFG` に入っています。計測（Plausible）の送り先だけが空です。**
 
 1. **Plausible** … サイト `osakana.spicy-device.com` を登録し、上の7つをカスタムイベントのゴールに登録。
    `PUB_CFG.plausibleDomain` に `'osakana.spicy-device.com'` を入れる。
    流入元は Sources（utm_source）で、段階は各ゴールの訪問者数で見る
-2. **Google フォーム** … 質問を3つ作る：
-   「どこで困りましたか」（ラジオボタン：献立が決まらない／買い物リストが空／保存されない／その他）、
-   「補足（任意）」（段落）、「どこまで進んだか（自動）」（記述式）。
-   「事前入力した URL を取得」で各項目の `entry.xxxxxxxx` を調べ、`PUB_CFG.formAction`
-   （`https://docs.google.com/forms/d/e/<フォームのID>/formResponse`）と `formChoice` / `formNote` / `formStage` に入れる
+2. **Google フォーム** … **作成ずみ（2026-11-17）**。フォーム「月曜はお魚です 困ったところ」（藤谷さんの spicydevice のアカウント）。
+   質問は3つ：「どこで困りましたか」（ラジオボタン・必須：献立が決まらない／買い物リストが空／保存されない／その他）、
+   「補足（任意）」（段落）、「どこまで進んだか（自動）」（記述式）。回答は Google のアカウント不要（リンクを知っている全員）・
+   メールアドレスは集めない・回答数の制限なし。`PUB_CFG` の `formAction` と3つの `entry.…` は、公開されたフォームのページに
+   載っている番号で、秘密ではない（質問を作り直すと番号が変わるので、そのときは `PUB_CFG` も直す）。
+   アプリの実際のコードから本物のフォームへテスト回答を1件送り、回答に残ることを確認ずみ（「その他」・補足・
+   「どこまで進んだか」＝`plan_shown / x`）。そのテスト回答は消してある。
 3. **公開用のリポジトリ** … GitHub Pages を有効にし、カスタムドメインを `osakana.spicy-device.com` に
 4. **DNS** … `osakana` の CNAME を `t-fujiya-sd.github.io` に向ける
 5. **写す** … `sh kondate/stamp.sh` → portfolio 側を commit → `sh kondate/publish-public.sh <公開用リポジトリのフォルダ>`
