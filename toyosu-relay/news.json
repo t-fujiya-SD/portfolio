@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-16T10:16:58+09:00",
+  "updated": "2026-11-17T13:04:58+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -16,6 +16,20 @@
     }
   ],
   "items": [
+    {
+      "title": "中央卸売市場で「横浜市場まつり」 マグロ解体ショーや模擬せりも（みんなの経済新聞ネットワーク）",
+      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE81b2pzVGs0eDYwTURMUG9aNnR1NXUxVFhrRkhvQW9qaG5oNjZTMmJfMHRrbTU5NmhLWm1yRUhxclZfdHdfdnhrZ1VYdW9QcTd5M3hndkVNTGd3WXdwT2dyQmkyLWhLdlU5clUtNHFWcHgzUVdBOXlVTWdSa211ckk?oc=5",
+      "source": "Yahoo!ニュース",
+      "date": "2026-11-14",
+      "cat": "market"
+    },
+    {
+      "title": "土付きナガイモの初せり　やや高値で順調な出だし　十和田地方卸売市場",
+      "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTE9GX3FfWHVKQnpXLXYyMHNBME11TVU5MWhKcHctN0NwcXVWaG9CWEIzUUMtcEw4QW9EdkVnUUt2Sk9TY0l0S2UxUGdPaVJXMFJ1ejM0Y2tqZ3M2eWtvekMwZUQwWGdwS0JQLW5lMVRzb1Jlc0pKb1pwZEo2QdIBgAFBVV95cUxNSlZQMWVncmFCMzFKbUpJamRvZ0VzX2dReUlvUDRTTjBJcE53M3FodjllRDhWMmtLRUZYOWVKeHl5T29lcE1KT2ctV1RjSF9peG1FbDlhVnFDSHVkWnEza2F4Ri1HWXNqT0pvRXhBVjVqSnQzdTM4VzZmNEhYWDB1Uw?oc=5",
+      "source": "ｄメニューニュース",
+      "date": "2026-11-14",
+      "cat": "market"
+    },
     {
       "title": "久留米市「市場まつり2026」海鮮丼、模擬せりや野菜・果物詰め放題も！食欲の秋に大解放！",
       "link": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE1VLUY1c3hVNHRBUnZCdjhTanJIY3lSeTNsZFktYVBfYTEzUjFNeDFBUHVvdFVRaEF3MlpJZXZNNjB3bV81ajBLWms3MGt5bVJSa0hKNWRJb2VyQks4eFE?oc=5",
@@ -36,20 +50,6 @@
       "source": "Yahoo!ファイナンス",
       "date": "2026-11-12",
       "cat": "business"
-    },
-    {
-      "title": "中央卸売市場で「横浜市場まつり」 マグロ解体ショーや模擬せりも",
-      "link": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE9HMEJPX256V1JtY3NBRjZfdmF1ckhUZDNBck9BMnAxWmNQeEFXUUtVUnhiZWpjbFNRdFlaUDE5ZnR0OEVGUzNVd2V3elM5dV9X?oc=5",
-      "source": "ヨコハマ経済新聞",
-      "date": "2026-11-10",
-      "cat": "market"
-    },
-    {
-      "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年11月、東京都中央卸売市場）：関東農政局",
-      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE54NVQwX003bDVaQnlJTXJrVDB0UmZDMmE4dUdDU2h5MDE3clFid2FGQnhRaWctTFcyQ2wxaUxuTE0ycnlJRGJaLU9aVjFGMGxqVXB2ajNmb3lRM09wNnVaZi1ORTVpUjlFMm1R?oc=5",
-      "source": "農林水産省",
-      "date": "2026-10-30",
-      "cat": "market"
     },
     {
       "title": "夏休み親子市場せり見学会を開催しました！",
@@ -80,18 +80,18 @@
       "cat": "market"
     },
     {
+      "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年9月、東京都中央卸売市場）：関東農政局",
+      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE91M1djVjVFSUZnekYweWhpUGUyWDhkeDlYejlZOEtidGdZOWNUNlVHdkt5cHpFZVMwSmlZMzdUeXloVHloNTlySl92SkNqVlVZd2h3b3NwRVowN1ppMjZRWmRWaDk5R2I4VldV?oc=5",
+      "source": "農林水産省",
+      "date": "2026-08-31",
+      "cat": "market"
+    },
+    {
       "title": "青果卸５割が減収減益 ２５年度決算 営業利益率１％超はわずか１割 生産費増と節約志向の板挟み",
       "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE9tdm0yYjlra0puOU0xcnRFZy0wanNicy1CcjF5aFRuNHVuSmJ3c0IwY0VRTUhPVzRvQ1k4X0F1b0F3MVlGRktROFNLeGxKZ3E5TkRybTFPaw?oc=5",
       "source": "日本農業新聞",
       "date": "2026-08-20",
       "cat": "business"
-    },
-    {
-      "title": "秋の味覚サンマ 仙台市中央卸売市場に入荷 入荷少なく高値で取引",
-      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE91MWV5eXpJay1SYnE5VmFEalJqdFZpcDhEVVVHazFkZjFNWG9wUWRRYVgwaGpxZVJtTDNlempPQzNYY3hDVzV3bTI4ck9iY1k?oc=5",
-      "source": "khb東日本放送",
-      "date": "2026-08-18",
-      "cat": "market"
     },
     {
       "title": "食品卸が営業と物流を代行 人手不足に悩む地方メーカーの販路拡大を支える新ビジネス",
