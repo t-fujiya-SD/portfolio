@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-18T12:02:49+09:00",
+  "updated": "2026-11-19T11:43:00+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -17,18 +17,25 @@
   ],
   "items": [
     {
+      "title": "卸売市場市民感謝デー（11月）を開催しました！",
+      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBZd0tNSnlrcmZ1SU11dUdlamxKRXc3TXFjTDBHM3lQc1pCZjN0NzhhZFdZQnNTTU1HSC1NbGF0QU9pTTdSWUYwcUZrU25EUWpfWE1GWk5fLUZnYW5qZU9mQmRqQVE?oc=5",
+      "source": "大分市",
+      "date": "2026-11-14",
+      "cat": "market"
+    },
+    {
+      "title": "土付きナガイモの初せり　やや高値で順調な出だし　十和田地方卸売市場",
+      "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTE9GX3FfWHVKQnpXLXYyMHNBME11TVU5MWhKcHctN0NwcXVWaG9CWEIzUUMtcEw4QW9EdkVnUUt2Sk9TY0l0S2UxUGdPaVJXMFJ1ejM0Y2tqZ3M2eWtvekMwZUQwWGdwS0JQLW5lMVRzb1Jlc0pKb1pwZEo2QdIBgAFBVV95cUxNSlZQMWVncmFCMzFKbUpJamRvZ0VzX2dReUlvUDRTTjBJcE53M3FodjllRDhWMmtLRUZYOWVKeHl5T29lcE1KT2ctV1RjSF9peG1FbDlhVnFDSHVkWnEza2F4Ri1HWXNqT0pvRXhBVjVqSnQzdTM4VzZmNEhYWDB1Uw?oc=5",
+      "source": "ｄメニューニュース",
+      "date": "2026-11-14",
+      "cat": "market"
+    },
+    {
       "title": "久留米市「市場まつり2026」海鮮丼、模擬せりや野菜・果物詰め放題も！食欲の秋に大解放！",
       "link": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE1VLUY1c3hVNHRBUnZCdjhTanJIY3lSeTNsZFktYVBfYTEzUjFNeDFBUHVvdFVRaEF3MlpJZXZNNjB3bV81ajBLWms3MGt5bVJSa0hKNWRJb2VyQks4eFE?oc=5",
       "source": "久留米ファン",
       "date": "2026-11-13",
       "cat": "market"
-    },
-    {
-      "title": "今週のお手頃野菜(令和8年11月13日更新)",
-      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9CY19tYXVQRUJ5RXhiZldSUjk4SFBSbXQ0OFBicmNYSnVXeC1LWWMzc1c1Z1JqR0tOb3RkVmJ0Zjh6bGFYNW1VRUc5cU9iMVNja3p3UTBkRjVITEN4Zk5KLVZ1VUpjV0dCbm9N?oc=5",
-      "source": "農林水産省",
-      "date": "2026-11-13",
-      "cat": "toyosu"
     },
     {
       "title": "【通期決算発表】 加藤産業：独立系の総合食品卸大手。常温流通事業が主…(フィスコ)",
@@ -78,20 +85,6 @@
       "source": "FNNプライムオンライン",
       "date": "2026-09-17",
       "cat": "toyosu"
-    },
-    {
-      "title": "卸売市場市民感謝デー（9月）を開催しました！",
-      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE11aDdET1Z2a2hwWGxFMUtPRHVNX0dwcW5LUnBSMjJNTlpYb05haUJJNzR6ZnVKejVWemZEdldIelZNWG5WdnNaVHVQamIyVy12LXhDeHltWFBqYWlkSDlVME92R0o?oc=5",
-      "source": "大分市",
-      "date": "2026-09-12",
-      "cat": "market"
-    },
-    {
-      "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年9月、東京都中央卸売市場）：関東農政局",
-      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE91M1djVjVFSUZnekYweWhpUGUyWDhkeDlYejlZOEtidGdZOWNUNlVHdkt5cHpFZVMwSmlZMzdUeXloVHloNTlySl92SkNqVlVZd2h3b3NwRVowN1ppMjZRWmRWaDk5R2I4VldV?oc=5",
-      "source": "農林水産省",
-      "date": "2026-08-31",
-      "cat": "market"
     },
     {
       "title": "青果卸５割が減収減益 ２５年度決算 営業利益率１％超はわずか１割 生産費増と節約志向の板挟み",
@@ -168,6 +161,13 @@
       "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9ZYVg3Y08tZWkzLWV1dFBpZXpNMmlxQlFMQ1BCc2o4c1kyZ0EyUFJlOHJhYW1LZW5mSFRKNVVGS0xRVDQ2b2lVbHNpNm9Lc244S3RaWC05WTV0VDQxZHBZVGttQUs4SzA3d09aOQ?oc=5",
       "source": "日本経済新聞",
       "date": "2024-06-07",
+      "cat": "toyosu"
+    },
+    {
+      "title": "豊洲開場2年、世界最大の水産物中央卸売市場の揺らぐ「存在意義」",
+      "link": "https://news.google.com/rss/articles/CBMiTEFVX3lxTFBWbmNFMVRkOGdZTTFWbjA1ekJSOEFUSVp6Z0xSa1NnVE80VWRMWWVxYlVUMzVQcGlIZXNLNXlsbW0tc29XWVVwTnFSd3g?oc=5",
+      "source": "ダイヤモンド・オンライン",
+      "date": "2020-11-01",
       "cat": "toyosu"
     },
     {
