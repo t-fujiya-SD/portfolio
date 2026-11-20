@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-19T11:43:00+09:00",
+  "updated": "2026-11-20T11:28:46+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -17,32 +17,25 @@
   ],
   "items": [
     {
-      "title": "卸売市場市民感謝デー（11月）を開催しました！",
-      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBZd0tNSnlrcmZ1SU11dUdlamxKRXc3TXFjTDBHM3lQc1pCZjN0NzhhZFdZQnNTTU1HSC1NbGF0QU9pTTdSWUYwcUZrU25EUWpfWE1GWk5fLUZnYW5qZU9mQmRqQVE?oc=5",
-      "source": "大分市",
-      "date": "2026-11-14",
-      "cat": "market"
+      "title": "近くも遠くもなった 卸売市場 鬼頭弥生 農学博士 連載「口福の源」",
+      "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBlSEQwNGhlVDBxX01sYkRJUW0zd0tzR05oS2pYRGdKVk9WZFlvSE9BOXZWa2lmVmZGVzh6NEdYdkp2MmVBbG9DdXZGY2psYjlrbUxsWkxjZUNpdw?oc=5",
+      "source": "株式会社共同通信社",
+      "date": "2026-11-11",
+      "cat": "toyosu"
     },
     {
-      "title": "土付きナガイモの初せり　やや高値で順調な出だし　十和田地方卸売市場",
-      "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTE9GX3FfWHVKQnpXLXYyMHNBME11TVU5MWhKcHctN0NwcXVWaG9CWEIzUUMtcEw4QW9EdkVnUUt2Sk9TY0l0S2UxUGdPaVJXMFJ1ejM0Y2tqZ3M2eWtvekMwZUQwWGdwS0JQLW5lMVRzb1Jlc0pKb1pwZEo2QdIBgAFBVV95cUxNSlZQMWVncmFCMzFKbUpJamRvZ0VzX2dReUlvUDRTTjBJcE53M3FodjllRDhWMmtLRUZYOWVKeHl5T29lcE1KT2ctV1RjSF9peG1FbDlhVnFDSHVkWnEza2F4Ri1HWXNqT0pvRXhBVjVqSnQzdTM4VzZmNEhYWDB1Uw?oc=5",
-      "source": "ｄメニューニュース",
-      "date": "2026-11-14",
-      "cat": "market"
-    },
-    {
-      "title": "久留米市「市場まつり2026」海鮮丼、模擬せりや野菜・果物詰め放題も！食欲の秋に大解放！",
-      "link": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE1VLUY1c3hVNHRBUnZCdjhTanJIY3lSeTNsZFktYVBfYTEzUjFNeDFBUHVvdFVRaEF3MlpJZXZNNjB3bV81ajBLWms3MGt5bVJSa0hKNWRJb2VyQks4eFE?oc=5",
-      "source": "久留米ファン",
-      "date": "2026-11-13",
-      "cat": "market"
-    },
-    {
-      "title": "【通期決算発表】 加藤産業：独立系の総合食品卸大手。常温流通事業が主…(フィスコ)",
-      "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxOQ2d1WEdZZHl0ajVuSHlUa1JQZFpHY1VPOW4xRjZ6LUJKekFBQk5pTFJNbGRaNm5mWXlJSjAzUXhrWGxGNzhQb1N2NkRQY2h4eERHMlNCU0hfRnRaaEtYR3JOSm9JdFdCYXRoS0RpV0JvYVEza0lRaHNOOWxqay1MNEJNenpwanM?oc=5",
-      "source": "Yahoo!ファイナンス",
-      "date": "2026-11-12",
+      "title": "トラックの荷物、下ろすのは誰の仕事？ 2027年の新ルールに食品卸業界が懸念（日本食糧新聞）",
+      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE5LNWJZSnk3NlJ1VUp1Ml9HemZvSlJzb2pIczFFNkl1dG8xbnFFWkkzUWtZRDdhY3hPYVJsODctTnJ3bklidGpOc1Z0RmVHdk1mdmNGZnNiQXpQS0NGOVQ1QWlSaDV3QzdkbzJyZjBuZE5jeG5QN1NCR2tHakpXSlU?oc=5",
+      "source": "Yahoo!ニュース",
+      "date": "2026-11-04",
       "cat": "business"
+    },
+    {
+      "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年11月、東京都中央卸売市場）：関東農政局",
+      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE54NVQwX003bDVaQnlJTXJrVDB0UmZDMmE4dUdDU2h5MDE3clFid2FGQnhRaWctTFcyQ2wxaUxuTE0ycnlJRGJaLU9aVjFGMGxqVXB2ajNmb3lRM09wNnVaZi1ORTVpUjlFMm1R?oc=5",
+      "source": "農林水産省",
+      "date": "2026-10-30",
+      "cat": "toyosu"
     },
     {
       "title": "夏休み親子市場せり見学会を開催しました！",
@@ -80,11 +73,39 @@
       "cat": "market"
     },
     {
+      "title": "市場からのお知らせ",
+      "link": "https://news.google.com/rss/articles/CBMihgFBVV95cUxNVURMNWVJVk81M3IxU0ZRUkQtV290VE9oN3JnQ0lpbW4xNTVVTFREUHM4TnplV3d2QlJKUzFJc0l5XzViOFBneHN2Qk1WSDJ5TC1HZTdTSGhjSC1ScmUxYlV3czNwcjNGWTRuY0M3SEJOMzVBWDZ6cjVwUS1WdGVYTThpd2c5Zw?oc=5",
+      "source": "木更津市",
+      "date": "2026-09-18",
+      "cat": "toyosu"
+    },
+    {
       "title": "東京都中央卸売市場の生き残りポイントは「品質管理」と「市場ブランド」 中間まとめで存続に強い危機感 人手不足に物流問題",
       "link": "https://news.google.com/rss/articles/CBMiTkFVX3lxTE1kSjVmOWhEejBOckM3cGJLTS1SdFg0MEFNNXNxcTJOb0RuajYzZkQyMVA5Zng0d2lYb1VNQkZrTC1YR3RGNTZSNnh5YXl6QQ?oc=5",
       "source": "FNNプライムオンライン",
       "date": "2026-09-17",
       "cat": "toyosu"
+    },
+    {
+      "title": "卸売市場市民感謝デー（9月）を開催しました！",
+      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE11aDdET1Z2a2hwWGxFMUtPRHVNX0dwcW5LUnBSMjJNTlpYb05haUJJNzR6ZnVKejVWemZEdldIelZNWG5WdnNaVHVQamIyVy12LXhDeHltWFBqYWlkSDlVME92R0o?oc=5",
+      "source": "大分市",
+      "date": "2026-09-12",
+      "cat": "market"
+    },
+    {
+      "title": "山梨産ブドウ 東京で販促 大田市場でトップセールス",
+      "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE41UUlNZS1tMXJMV0RkQVVhYUtyYWQ4OVk2UXRDYm1YZjVock43dHo2VGR1NC1pMW5wQlpFeTJ4RS1VMGlfTE5xdG8tLU9ETlVtLW1TRFJvNA?oc=5",
+      "source": "日本農業新聞",
+      "date": "2026-09-05",
+      "cat": "toyosu"
+    },
+    {
+      "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年9月、東京都中央卸売市場）：関東農政局",
+      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE91M1djVjVFSUZnekYweWhpUGUyWDhkeDlYejlZOEtidGdZOWNUNlVHdkt5cHpFZVMwSmlZMzdUeXloVHloNTlySl92SkNqVlVZd2h3b3NwRVowN1ppMjZRWmRWaDk5R2I4VldV?oc=5",
+      "source": "農林水産省",
+      "date": "2026-08-31",
+      "cat": "market"
     },
     {
       "title": "青果卸５割が減収減益 ２５年度決算 営業利益率１％超はわずか１割 生産費増と節約志向の板挟み",
@@ -99,6 +120,13 @@
       "source": "月刊「事業構想」オンライン",
       "date": "2026-08-07",
       "cat": "business"
+    },
+    {
+      "title": "令和8年度 トップセールス・国内外への訪問",
+      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5lT2g2dXo4Z3ZGWDZuNGlKUTk2S042RDdJNzdQcFV0V0FHM2U3ei0teGw5VWxqUGJaSWxxVG0taDF6TEhlX3Y1Zmp1YmlVUjZjWThMbDdyaXM3YjJvQXpmeDR2dklQMW0zX0lJ?oc=5",
+      "source": "福島県ホームページ",
+      "date": "2026-07-31",
+      "cat": "toyosu"
     },
     {
       "title": "食品卸 メーカー支援の新たな形 営業や物流を代行",
@@ -129,10 +157,10 @@
       "cat": "business"
     },
     {
-      "title": "東京都中央卸売市場大田市場で、香川県産青果物のトップセールスを行いました",
-      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE9Yc2piSXdfZHc0bHZacHBYWnJzR3JwZ1oxcVRUMmRPdm9wYjNwelNjeEViWjBSRTZHS1Y1aGpjV3dRbTY2MGthWXhNRThCTl9kQ3RGMzUwYU5FNHZVT1A4d18wUTZiWkNwZnR6LUtyVmdnRzhBSkRnSU9TZEtEQjA?oc=5",
-      "source": "香川県公式ホームページ",
-      "date": "2026-02-13",
+      "title": "インターネット都政モニターアンケート結果 生鮮食料品等の購買意識 〉 Q16 東京都中央卸売市場の認知|1月",
+      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE4wNEFBMThJRExadlJ6WDQ2d25pVXhNck1ldHBrcG1KVXhndDdkcWNfU2tlSW9lM0EzTGZMN2pSQlRTQjliU2JLVG1ZMlVSa3ljOWpxcTBaNmNzdUlEWFlrTXZTWmNDVzlLYmEtaGxTWWRGM3FQ?oc=5",
+      "source": "都庁総合ホームページ",
+      "date": "2026-01-21",
       "cat": "toyosu"
     },
     {
@@ -150,39 +178,11 @@
       "cat": "market"
     },
     {
-      "title": "「大田市場花き紹介動画」を公開します‼ 日本一の花市場 大田市場から日常に彩りを",
-      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE5jTE8yV3B5Vkhpc1FKWEtYbEdfTXBMM0RFbEVQYmlNeTk2QTFKVF9FSFZrNkN6dUR6V280SXZnSHZ5VnRuWThpMmlzUVJuTEVXcldTd2szckJuX2pNbzlISW9aY3p4UDIybTZZb3UxcWhlTXRj?oc=5",
-      "source": "都庁総合ホームページ",
-      "date": "2025-03-27",
-      "cat": "toyosu"
-    },
-    {
-      "title": "東京都中央卸売市場 100億円超の赤字続く 豊洲開設費や取扱高減要因、施設使用料上げ現実味",
-      "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9ZYVg3Y08tZWkzLWV1dFBpZXpNMmlxQlFMQ1BCc2o4c1kyZ0EyUFJlOHJhYW1LZW5mSFRKNVVGS0xRVDQ2b2lVbHNpNm9Lc244S3RaWC05WTV0VDQxZHBZVGttQUs4SzA3d09aOQ?oc=5",
-      "source": "日本経済新聞",
-      "date": "2024-06-07",
-      "cat": "toyosu"
-    },
-    {
-      "title": "豊洲開場2年、世界最大の水産物中央卸売市場の揺らぐ「存在意義」",
-      "link": "https://news.google.com/rss/articles/CBMiTEFVX3lxTFBWbmNFMVRkOGdZTTFWbjA1ekJSOEFUSVp6Z0xSa1NnVE80VWRMWWVxYlVUMzVQcGlIZXNLNXlsbW0tc29XWVVwTnFSd3g?oc=5",
-      "source": "ダイヤモンド・オンライン",
-      "date": "2020-11-01",
-      "cat": "toyosu"
-    },
-    {
-      "title": "東京都中央卸売市場豊洲市場視察",
-      "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTE1HcHJpQWN0ZERHei11MWVKWm1oeGZiNDcyTnhmRXg3SjRKZmpBSUxtVGNnOGNlRUhENnR0dmxfZlJ2SFhrOG1GcFpVb2RCay1YRGNaRmZ1MXc4aGI3b0lHci1LQ1dtZVoyaTRUS2Vn?oc=5",
-      "source": "内閣府ホームページ",
-      "date": "2020-01-09",
-      "cat": "toyosu"
-    },
-    {
-      "title": "東京都、中央卸売市場長を更迭へ 豊洲市場めぐり人事",
-      "link": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE11c3BwTWNzRWdjWDN5SFlwN3d0MlBscnZ1OFBMclJfZHNYMmxXanNXOFE0WjVkQ1NBRTZOMmFWV08zQ3p3eEtsdEo3bFhUTFdPXzR6RENXdG1JTmVPME8yeVJTNVpNZw?oc=5",
-      "source": "朝日新聞",
-      "date": "2016-10-13",
-      "cat": "toyosu"
+      "title": "姫路市中央卸売市場における出荷・仕入れ",
+      "link": "https://news.google.com/rss/articles/CBMiYkFVX3lxTFA5d1preVNtb2RlaVBmRE12ZTNJZjhqbHNfbzBLSUNfZzZsWDdTck9MS3VxU241OUFhaXpfLXU2aE1veG4ybEQwaVZXSkVNZE42TGFkelR5UlpDWUZ0S09tY3BR?oc=5",
+      "source": "姫路市",
+      "date": "2025-09-01",
+      "cat": "market"
     }
   ]
 }
