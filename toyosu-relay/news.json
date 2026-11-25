@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-24T14:25:22+09:00",
+  "updated": "2026-11-25T13:27:44+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -16,6 +16,13 @@
     }
   ],
   "items": [
+    {
+      "title": "寝ろ！青果卸の仕事は、AIがやる。DXONE、受注から配車までを担うAI業務基盤へ",
+      "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE44U1hudVZHWWhzV2d4eW9DMEFEajdVeVBrNkdKWHNpMHRUR1J3NDJzSmhENGZmdlhScXVUNUIweWFCUXBlZU1aV29tbURxQ1NwUWY1R05HUXI2YUs5QXhUdVVDdER2eHd4?oc=5",
+      "source": "ニコニコニュース",
+      "date": "2026-11-24",
+      "cat": "business"
+    },
     {
       "title": "【久留米市】市場まつり 11/22開催！模擬せりや野菜・果物詰め放題！海鮮丼も販売",
       "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE1CRDJDSHZ4ZW5ZOXNMdHhSYlJJbUF4UzZ4NHI5clhTX3JhMlRjNzhxbE5IaHpFMTUtamRKTWJFS2dlanhGRDBkM0tNWnQ1TU94WHlRYk1WZnZpUUph?oc=5",
@@ -129,13 +136,6 @@
       "cat": "business"
     },
     {
-      "title": "特集「食品卸 商社系VS民族系頂上決戦の幕開け」③ 国分グループ本社／持続可能な食の付加価値を地域と世界に届ける",
-      "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTFBEUVFKQnhXUHcwelc4TFlLaHVuT3MyMEFOYWRIeWdLdnpaRHJhSUY0MFM0eGU5Mnp2S3RPTEkzZzhoNnY3ZDZyTW54dXd1SFEySWc?oc=5",
-      "source": "激流オンライン",
-      "date": "2026-07-31",
-      "cat": "business"
-    },
-    {
       "title": "令和8年度 トップセールス・国内外への訪問",
       "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5lT2g2dXo4Z3ZGWDZuNGlKUTk2S042RDdJNzdQcFV0V0FHM2U3ei0teGw5VWxqUGJaSWxxVG0taDF6TEhlX3Y1Zmp1YmlVUjZjWThMbDdyaXM3YjJvQXpmeDR2dklQMW0zX0lJ?oc=5",
       "source": "福島県ホームページ",
@@ -164,13 +164,6 @@
       "cat": "business"
     },
     {
-      "title": "２６２０ 資金ショートは２０５６年度に８年前倒し 東京都中央卸売市場会計、２０２６年経営レポート どらったら！！",
-      "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1Xb0xLYTJ6eDV1WkxhbzgzTnFqVWRNcmxMMGc1OUVEMDZoZHJzQU1oaXlFdV9GYjNQbmxER0tmR1BnOGg0MGpEWmlOWVFhR25MS1hxZ084bFJpdUFIaU1xSERBWGVwT0E5dkE?oc=5",
-      "source": "どらったら！！",
-      "date": "2026-06-07",
-      "cat": "toyosu"
-    },
-    {
       "title": "東京都中央卸売市場大田市場で、香川県産青果物のトップセールスを行いました",
       "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE9Yc2piSXdfZHc0bHZacHBYWnJzR3JwZ1oxcVRUMmRPdm9wYjNwelNjeEViWjBSRTZHS1Y1aGpjV3dRbTY2MGthWXhNRThCTl9kQ3RGMzUwYU5FNHZVT1A4d18wUTZiWkNwZnR6LUtyVmdnRzhBSkRnSU9TZEtEQjA?oc=5",
       "source": "香川県公式ホームページ",
@@ -182,6 +175,13 @@
       "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE4wNEFBMThJRExadlJ6WDQ2d25pVXhNck1ldHBrcG1KVXhndDdkcWNfU2tlSW9lM0EzTGZMN2pSQlRTQjliU2JLVG1ZMlVSa3ljOWpxcTBaNmNzdUlEWFlrTXZTWmNDVzlLYmEtaGxTWWRGM3FQ?oc=5",
       "source": "都庁総合ホームページ",
       "date": "2026-01-21",
+      "cat": "toyosu"
+    },
+    {
+      "title": "東京都中央卸売市場・豊洲市場",
+      "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9abnUyLWI2TWtuY0tKa1FoZlMwRUtHeDVsejhNTmwwck1sZi1iZ2ZhWlQ2OHgyU2xsQUdnM05mdzdpY1hNZGhGMzZoZTlFOWxQMHBiRVFwZmM3enM?oc=5",
+      "source": "GO TOKYO, The Official Tokyo Travel Guide",
+      "date": "2025-12-25",
       "cat": "toyosu"
     }
   ]
