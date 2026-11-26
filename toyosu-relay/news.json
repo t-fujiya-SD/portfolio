@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-25T13:27:44+09:00",
+  "updated": "2026-11-26T12:41:40+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -17,11 +17,11 @@
   ],
   "items": [
     {
-      "title": "寝ろ！青果卸の仕事は、AIがやる。DXONE、受注から配車までを担うAI業務基盤へ",
-      "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE44U1hudVZHWWhzV2d4eW9DMEFEajdVeVBrNkdKWHNpMHRUR1J3NDJzSmhENGZmdlhScXVUNUIweWFCUXBlZU1aV29tbURxQ1NwUWY1R05HUXI2YUs5QXhUdVVDdER2eHd4?oc=5",
-      "source": "ニコニコニュース",
+      "title": "今週のお手頃野菜(令和8年11月24日更新)",
+      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9CY19tYXVQRUJ5RXhiZldSUjk4SFBSbXQ0OFBicmNYSnVXeC1LWWMzc1c1Z1JqR0tOb3RkVmJ0Zjh6bGFYNW1VRUc5cU9iMVNja3p3UTBkRjVITEN4Zk5KLVZ1VUpjV0dCbm9N?oc=5",
+      "source": "農林水産省",
       "date": "2026-11-24",
-      "cat": "business"
+      "cat": "toyosu"
     },
     {
       "title": "【久留米市】市場まつり 11/22開催！模擬せりや野菜・果物詰め放題！海鮮丼も販売",
@@ -31,10 +31,10 @@
       "cat": "market"
     },
     {
-      "title": "京都の“じゃないほう市場”？「京都市中央市場」の早朝せり見学に行ってみた(1/2)",
-      "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9GSjJ5Z0Nwbmg1UlM4ZDJNVFE3ZUZma3ZmUFFwRzQyV2FCcHlxTW5qOU9ReHdNdFA3Mko1RFEwRkVvcTVIV2dRbjM3UTc0NjVFS08ydnRR0gFbQVVfeXFMTndWSm5nVjlRTzRBdkpOeHZ5Vnlvb1VlRXY2X2NoWlJJd1JyMi02YjZPM0dqWmFjOUd5Q25Yc1pEeE1CMjZJNkVkRnYyS0JwN1FrdlJsUnNDTkRZVQ?oc=5",
-      "source": "ウォーカープラス",
-      "date": "2026-11-19",
+      "title": "卸売市場市民感謝デー（11月）を開催しました！",
+      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBZd0tNSnlrcmZ1SU11dUdlamxKRXc3TXFjTDBHM3lQc1pCZjN0NzhhZFdZQnNTTU1HSC1NbGF0QU9pTTdSWUYwcUZrU25EUWpfWE1GWk5fLUZnYW5qZU9mQmRqQVE?oc=5",
+      "source": "大分市",
+      "date": "2026-11-14",
       "cat": "market"
     },
     {
@@ -45,31 +45,24 @@
       "cat": "toyosu"
     },
     {
-      "title": "中央卸売市場で「横浜市場まつり」 マグロ解体ショーや模擬せりも",
-      "link": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE9HMEJPX256V1JtY3NBRjZfdmF1ckhUZDNBck9BMnAxWmNQeEFXUUtVUnhiZWpjbFNRdFlaUDE5ZnR0OEVGUzNVd2V3elM5dV9X?oc=5",
-      "source": "ヨコハマ経済新聞",
-      "date": "2026-11-10",
-      "cat": "market"
-    },
-    {
-      "title": "中央卸売市場で「横浜市場まつり」 マグロ解体ショーや模擬せりも (みんなの経済新聞ネットワーク)",
-      "link": "https://news.google.com/rss/articles/CBMijgFBVV95cUxORGRvdVo0NlQ0MG1EakNuMnpjRTBESk5jY1JzSG9EWkYtZlpPYzhtQ3FwcFlqazhGU2thTFhIWmNrdDlpeUxvN0UxQmttdGg1UXB1M3REY3dQODFwTlpmdk1VdXBMclRiQ293eG5OZFByenNnaEg4dVEtdnlHam14SkhlcEhXZHBVWE5iNUx3?oc=5",
-      "source": "Yahoo!ニュース",
-      "date": "2026-11-10",
-      "cat": "market"
-    },
-    {
-      "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年11月、東京都中央卸売市場）：関東農政局",
-      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE54NVQwX003bDVaQnlJTXJrVDB0UmZDMmE4dUdDU2h5MDE3clFid2FGQnhRaWctTFcyQ2wxaUxuTE0ycnlJRGJaLU9aVjFGMGxqVXB2ajNmb3lRM09wNnVaZi1ORTVpUjlFMm1R?oc=5",
-      "source": "農林水産省",
-      "date": "2026-10-30",
-      "cat": "market"
-    },
-    {
       "title": "夏休み親子市場せり見学会を開催しました！",
       "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE5xemZuXzdnYzVXUnc2WkI4VnRPSEFYbVZ4a1UzcXJOUkZ4VXVRenhLQUQ0Yzdjb3FZbUs0SVNGTnJLRjF5a1ZTMG90emtmckI0aU5MMlY1TzZpYUkxNDZpa1JYNzhoOEV6U0R5c2o5ZmgyZm5sd1pFalBMcHUxZGM?oc=5",
       "source": "新潟市",
       "date": "2026-10-21",
+      "cat": "market"
+    },
+    {
+      "title": "卸売市場市民感謝デー（10月）を開催しました！",
+      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBaY0tzWjNheE9zU25ZUU9INXpzaHctSmhwQUlCUkoyWk5IZy1VeVZ1Z1JqZnVVaktxQ3RsTWF6N3h6aFNZMnk1T2dJSi1VSE8tbjgyLThOVDJFSFlYbTlyUk5Ibm8?oc=5",
+      "source": "大分市",
+      "date": "2026-10-10",
+      "cat": "market"
+    },
+    {
+      "title": "関西の花き流通を支える大阪鶴見花き地方卸売市場：近畿農政局",
+      "link": "https://news.google.com/rss/articles/CBMifkFVX3lxTE9KUmVIbW5KZG9fcW1BTWhSVEJRRUZ1ZHRsclNYcDNBX1c1NnRLSGQ0TzNjRlY3UFZQRDJqSVI0cndmUWpmOFFlNFg0alBTTHU3eVpwYkhQVUtaM0M2aTJPR0ViVU9mVDUyY205TmZmSGk2dWx4OWdEMU9ZQk5VUQ?oc=5",
+      "source": "農林水産省",
+      "date": "2026-09-29",
       "cat": "market"
     },
     {
@@ -122,18 +115,18 @@
       "cat": "business"
     },
     {
-      "title": "秋の味覚サンマ 仙台市中央卸売市場に入荷 入荷少なく高値で取引",
-      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE91MWV5eXpJay1SYnE5VmFEalJqdFZpcDhEVVVHazFkZjFNWG9wUWRRYVgwaGpxZVJtTDNlempPQzNYY3hDVzV3bTI4ck9iY1k?oc=5",
-      "source": "khb東日本放送",
-      "date": "2026-08-18",
-      "cat": "market"
-    },
-    {
       "title": "食品卸が営業と物流を代行 人手不足に悩む地方メーカーの販路拡大を支える新ビジネス",
       "link": "https://news.google.com/rss/articles/CBMihgFBVV95cUxPcS1CLW4xaExiSFpIYXI0UndaU3NPUFcyNGJOS1lPRDcwTS12RU5Fa3JxTWg1MDdHX210aFRvTzF2QmVPa1h4ZkQ0TGptam44cmVreXJKLUFKdEJyZ1R4aTloZ0h2N2tPb0Y1dXhFd3NHT1BfTGxVOElTbTRLN002MFU2RVdDQQ?oc=5",
       "source": "月刊「事業構想」オンライン",
       "date": "2026-08-07",
       "cat": "business"
+    },
+    {
+      "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年8月、東京都中央卸売市場）：関東農政局",
+      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE1XR0xFTVBvQW5ZbE5BZkJSRE04cmN4dFJwQlkwVjU2NkhDdUFJdnZtS0tJbFBLU3BiNnlXcmpiOW50cXNnam43TThCblVNY0NVWnVYQkdHcjhydnhtSmtjc18zd19taTE2Z1dR?oc=5",
+      "source": "農林水産省",
+      "date": "2026-07-31",
+      "cat": "market"
     },
     {
       "title": "令和8年度 トップセールス・国内外への訪問",
@@ -164,6 +157,13 @@
       "cat": "business"
     },
     {
+      "title": "三菱食品 伊藤社長インタビュー　新たな経営体制で「食品卸」の価値を最大化する",
+      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBwcUl2UXF5OTA3Sjc2b19LSzVZQTNWeklNcklKeFc0bW9NNUpZeDQ4UkVRZ1Z1Rmt4VUg5SWl3M0l1MXhyWTJ2SVYySVA4b1pXWXQ0eHNrZlpISmdRMXFJQktyd0LSAWpBVV95cUxQdnBuenZXVUhIR3NMaTYzVDJYNnJoeG9IZS1aSHVUU0lNVmtBQko1ZFhlYVBISjkwdGxXdHFuV3RYUmpRQ1hoTEZCVHh0eTVRbURJaENDY3NhdzNSbVZJUldDb2VqVnJoMWVn?oc=5",
+      "source": "ダイヤモンド・チェーンストアオンライン",
+      "date": "2026-06-15",
+      "cat": "business"
+    },
+    {
       "title": "東京都中央卸売市場大田市場で、香川県産青果物のトップセールスを行いました",
       "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE9Yc2piSXdfZHc0bHZacHBYWnJzR3JwZ1oxcVRUMmRPdm9wYjNwelNjeEViWjBSRTZHS1Y1aGpjV3dRbTY2MGthWXhNRThCTl9kQ3RGMzUwYU5FNHZVT1A4d18wUTZiWkNwZnR6LUtyVmdnRzhBSkRnSU9TZEtEQjA?oc=5",
       "source": "香川県公式ホームページ",
@@ -178,11 +178,11 @@
       "cat": "toyosu"
     },
     {
-      "title": "東京都中央卸売市場・豊洲市場",
-      "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9abnUyLWI2TWtuY0tKa1FoZlMwRUtHeDVsejhNTmwwck1sZi1iZ2ZhWlQ2OHgyU2xsQUdnM05mdzdpY1hNZGhGMzZoZTlFOWxQMHBiRVFwZmM3enM?oc=5",
-      "source": "GO TOKYO, The Official Tokyo Travel Guide",
-      "date": "2025-12-25",
-      "cat": "toyosu"
+      "title": "令和8年 中央卸売市場本場「新年初市」が開催されます",
+      "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTE45dy1HMlZhSHNqRWx4eWFmRFdvZk1pWmxTc1lrX2xPWjBaNzJ3VXVOQWYzMXFzNkk3M2Q1QkNPdmN5VTEwMkNOTzRvUGNFcy1waHpYZjBXQWNpMUFJUi1GVFN4TzRhb3huSUJlVU9wTQ?oc=5",
+      "source": "名古屋市公式ウェブサイト",
+      "date": "2025-12-23",
+      "cat": "market"
     }
   ]
 }
