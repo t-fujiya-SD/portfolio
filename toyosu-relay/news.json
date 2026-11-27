@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-26T12:41:40+09:00",
+  "updated": "2026-11-27T12:43:03+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -24,18 +24,11 @@
       "cat": "toyosu"
     },
     {
-      "title": "【久留米市】市場まつり 11/22開催！模擬せりや野菜・果物詰め放題！海鮮丼も販売",
-      "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE1CRDJDSHZ4ZW5ZOXNMdHhSYlJJbUF4UzZ4NHI5clhTX3JhMlRjNzhxbE5IaHpFMTUtamRKTWJFS2dlanhGRDBkM0tNWnQ1TU94WHlRYk1WZnZpUUph?oc=5",
-      "source": "久留米ファン",
-      "date": "2026-11-21",
-      "cat": "market"
-    },
-    {
-      "title": "卸売市場市民感謝デー（11月）を開催しました！",
-      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBZd0tNSnlrcmZ1SU11dUdlamxKRXc3TXFjTDBHM3lQc1pCZjN0NzhhZFdZQnNTTU1HSC1NbGF0QU9pTTdSWUYwcUZrU25EUWpfWE1GWk5fLUZnYW5qZU9mQmRqQVE?oc=5",
-      "source": "大分市",
-      "date": "2026-11-14",
-      "cat": "market"
+      "title": "【通期決算発表】 加藤産業：独立系の総合食品卸大手。常温流通事業が主…(フィスコ)",
+      "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxOQ2d1WEdZZHl0ajVuSHlUa1JQZFpHY1VPOW4xRjZ6LUJKekFBQk5pTFJNbGRaNm5mWXlJSjAzUXhrWGxGNzhQb1N2NkRQY2h4eERHMlNCU0hfRnRaaEtYR3JOSm9JdFdCYXRoS0RpV0JvYVEza0lRaHNOOWxqay1MNEJNenpwanM?oc=5",
+      "source": "Yahoo!ファイナンス",
+      "date": "2026-11-12",
+      "cat": "business"
     },
     {
       "title": "近くも遠くもなった 卸売市場 鬼頭弥生 農学博士 連載「口福の源」",
@@ -43,6 +36,13 @@
       "source": "株式会社共同通信社",
       "date": "2026-11-11",
       "cat": "toyosu"
+    },
+    {
+      "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年11月、東京都中央卸売市場）：関東農政局",
+      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE54NVQwX003bDVaQnlJTXJrVDB0UmZDMmE4dUdDU2h5MDE3clFid2FGQnhRaWctTFcyQ2wxaUxuTE0ycnlJRGJaLU9aVjFGMGxqVXB2ajNmb3lRM09wNnVaZi1ORTVpUjlFMm1R?oc=5",
+      "source": "農林水産省",
+      "date": "2026-10-30",
+      "cat": "market"
     },
     {
       "title": "夏休み親子市場せり見学会を開催しました！",
@@ -101,13 +101,6 @@
       "cat": "toyosu"
     },
     {
-      "title": "大手食品卸の高成長続く 新たな機能ビジネスも好業績に寄与（日本食糧新聞）",
-      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE1BRVNmcTM1bDI3ZENEZlZOWVQybkZqMG1rWTN6eXNGdGNoZW5LcVI0ay00QnZRbmxsN1BaUnU0RUdVdVoyVGgySlVxSHVLdFhsRmVVQmFOcUI2cVJaOFdTdFpVUmUxOWFXaGNHWkVWdndWdDA0NTVqU2c5NXg5cFU?oc=5",
-      "source": "Yahoo!ニュース",
-      "date": "2026-08-31",
-      "cat": "business"
-    },
-    {
       "title": "【ビジナビ】昭和2年創業の米子市にある青果卸売会社 デジタル技術を活用した業務の効率化 2024年問題の物流問題への取り組みも 鳥取県米子市（2026年8月27日掲載）",
       "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxOOElqSWt2WWhCMWtXeFBoRlhGOXFvemRPVXZ1QjRjQ0xFM1pXYklMQ0xVVjNDLXNsNWxYTEtFWFNTUzA1MzM0eDY2UDlnbUpEektwUzNvYlNNTkFXZlo2TVFYdlBvcTFIQUZYejVBYi1oOW5GN3FFYVJPa1ZVM0VUTWlUYnVSd0E?oc=5",
       "source": "日テレNEWS NNN",
@@ -164,10 +157,10 @@
       "cat": "business"
     },
     {
-      "title": "東京都中央卸売市場大田市場で、香川県産青果物のトップセールスを行いました",
-      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE9Yc2piSXdfZHc0bHZacHBYWnJzR3JwZ1oxcVRUMmRPdm9wYjNwelNjeEViWjBSRTZHS1Y1aGpjV3dRbTY2MGthWXhNRThCTl9kQ3RGMzUwYU5FNHZVT1A4d18wUTZiWkNwZnR6LUtyVmdnRzhBSkRnSU9TZEtEQjA?oc=5",
-      "source": "香川県公式ホームページ",
-      "date": "2026-02-13",
+      "title": "２６２０ 資金ショートは２０５６年度に８年前倒し 東京都中央卸売市場会計、２０２６年経営レポート どらったら！！",
+      "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1Xb0xLYTJ6eDV1WkxhbzgzTnFqVWRNcmxMMGc1OUVEMDZoZHJzQU1oaXlFdV9GYjNQbmxER0tmR1BnOGg0MGpEWmlOWVFhR25MS1hxZ084bFJpdUFIaU1xSERBWGVwT0E5dkE?oc=5",
+      "source": "どらったら！！",
+      "date": "2026-06-07",
       "cat": "toyosu"
     },
     {
@@ -182,6 +175,13 @@
       "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTE45dy1HMlZhSHNqRWx4eWFmRFdvZk1pWmxTc1lrX2xPWjBaNzJ3VXVOQWYzMXFzNkk3M2Q1QkNPdmN5VTEwMkNOTzRvUGNFcy1waHpYZjBXQWNpMUFJUi1GVFN4TzRhb3huSUJlVU9wTQ?oc=5",
       "source": "名古屋市公式ウェブサイト",
       "date": "2025-12-23",
+      "cat": "market"
+    },
+    {
+      "title": "姫路市中央卸売市場における出荷・仕入れ",
+      "link": "https://news.google.com/rss/articles/CBMiYkFVX3lxTFA5d1preVNtb2RlaVBmRE12ZTNJZjhqbHNfbzBLSUNfZzZsWDdTck9MS3VxU241OUFhaXpfLXU2aE1veG4ybEQwaVZXSkVNZE42TGFkelR5UlpDWUZ0S09tY3BR?oc=5",
+      "source": "姫路市",
+      "date": "2025-09-01",
       "cat": "market"
     }
   ]
