@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-27T12:43:03+09:00",
+  "updated": "2026-11-28T12:26:00+09:00",
   "source": "Google ニュース",
   "cats": [
     {
@@ -17,11 +17,25 @@
   ],
   "items": [
     {
-      "title": "今週のお手頃野菜(令和8年11月24日更新)",
-      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9CY19tYXVQRUJ5RXhiZldSUjk4SFBSbXQ0OFBicmNYSnVXeC1LWWMzc1c1Z1JqR0tOb3RkVmJ0Zjh6bGFYNW1VRUc5cU9iMVNja3p3UTBkRjVITEN4Zk5KLVZ1VUpjV0dCbm9N?oc=5",
-      "source": "農林水産省",
-      "date": "2026-11-24",
-      "cat": "toyosu"
+      "title": "【久留米市】市場まつり 11/22開催！模擬せりや野菜・果物詰め放題！海鮮丼も販売",
+      "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE1CRDJDSHZ4ZW5ZOXNMdHhSYlJJbUF4UzZ4NHI5clhTX3JhMlRjNzhxbE5IaHpFMTUtamRKTWJFS2dlanhGRDBkM0tNWnQ1TU94WHlRYk1WZnZpUUph?oc=5",
+      "source": "久留米ファン",
+      "date": "2026-11-21",
+      "cat": "market"
+    },
+    {
+      "title": "卸売市場市民感謝デー（11月）を開催しました！",
+      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBZd0tNSnlrcmZ1SU11dUdlamxKRXc3TXFjTDBHM3lQc1pCZjN0NzhhZFdZQnNTTU1HSC1NbGF0QU9pTTdSWUYwcUZrU25EUWpfWE1GWk5fLUZnYW5qZU9mQmRqQVE?oc=5",
+      "source": "大分市",
+      "date": "2026-11-14",
+      "cat": "market"
+    },
+    {
+      "title": "土付きナガイモの初せり やや高値で順調な出だし 十和田地方卸売市場",
+      "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTFBka3NyYXBYUmdjRk1GNFZSNUFMVC1ERUtRUjJZb1h3VkEza0VpaDNIZHg5Y21HUktIU0NHc25xX21nbklZbnA3aUpJYw?oc=5",
+      "source": "TVer",
+      "date": "2026-11-14",
+      "cat": "market"
     },
     {
       "title": "【通期決算発表】 加藤産業：独立系の総合食品卸大手。常温流通事業が主…(フィスコ)",
@@ -38,6 +52,20 @@
       "cat": "toyosu"
     },
     {
+      "title": "中央卸売市場で「横浜市場まつり」 マグロ解体ショーや模擬せりも",
+      "link": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE9HMEJPX256V1JtY3NBRjZfdmF1ckhUZDNBck9BMnAxWmNQeEFXUUtVUnhiZWpjbFNRdFlaUDE5ZnR0OEVGUzNVd2V3elM5dV9X?oc=5",
+      "source": "ヨコハマ経済新聞",
+      "date": "2026-11-10",
+      "cat": "market"
+    },
+    {
+      "title": "北九州市公設地方卸売市場で「市民感謝デー」 新鮮な海の味覚グルメ＆摸擬せり体験も【北九州市小倉北区】",
+      "link": "https://news.google.com/rss/articles/CBMiQEFVX3lxTE9rY0s1aUV4X09QRFZ2ODVJdkZnUl9jM3FhbGVDMk5nM01QcEtndFVSSGRVbWFpcFVET3FyZEo2RWc?oc=5",
+      "source": "北九州ノコト",
+      "date": "2026-11-05",
+      "cat": "market"
+    },
+    {
       "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年11月、東京都中央卸売市場）：関東農政局",
       "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE54NVQwX003bDVaQnlJTXJrVDB0UmZDMmE4dUdDU2h5MDE3clFid2FGQnhRaWctTFcyQ2wxaUxuTE0ycnlJRGJaLU9aVjFGMGxqVXB2ajNmb3lRM09wNnVaZi1ORTVpUjlFMm1R?oc=5",
       "source": "農林水産省",
@@ -52,32 +80,11 @@
       "cat": "market"
     },
     {
-      "title": "卸売市場市民感謝デー（10月）を開催しました！",
-      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBaY0tzWjNheE9zU25ZUU9INXpzaHctSmhwQUlCUkoyWk5IZy1VeVZ1Z1JqZnVVaktxQ3RsTWF6N3h6aFNZMnk1T2dJSi1VSE8tbjgyLThOVDJFSFlYbTlyUk5Ibm8?oc=5",
-      "source": "大分市",
-      "date": "2026-10-10",
-      "cat": "market"
-    },
-    {
-      "title": "関西の花き流通を支える大阪鶴見花き地方卸売市場：近畿農政局",
-      "link": "https://news.google.com/rss/articles/CBMifkFVX3lxTE9KUmVIbW5KZG9fcW1BTWhSVEJRRUZ1ZHRsclNYcDNBX1c1NnRLSGQ0TzNjRlY3UFZQRDJqSVI0cndmUWpmOFFlNFg0alBTTHU3eVpwYkhQVUtaM0M2aTJPR0ViVU9mVDUyY205TmZmSGk2dWx4OWdEMU9ZQk5VUQ?oc=5",
-      "source": "農林水産省",
-      "date": "2026-09-29",
-      "cat": "market"
-    },
-    {
       "title": "トモシア、食品卸3社の物流・販売基盤を共通化",
       "link": "https://news.google.com/rss/articles/CBMiSkFVX3lxTE5TNkNPQXdVcDJNRzZLQy1uM21HTDJhTUdCUjZ6ZldubGNGNE1vVUllbW1CamJqWTZ2WjFiZUZ1aDRGSWxWOWMxeFdn?oc=5",
       "source": "LOGISTICS TODAY",
       "date": "2026-09-29",
       "cat": "business"
-    },
-    {
-      "title": "卸売市場の社会見学が始まりました！",
-      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE1UZHo1bXpUeklVTEp4M0xkUXJSaW9kMWZ2REZVWVY5dGVoTXRkOTdOMHJZeldTX2YtZHJyTWZoeHE2OTFUWUJLcjVRbUpib2d5dXpidEVRSGpCb1VzNlp2ZEFTVFA?oc=5",
-      "source": "大分市",
-      "date": "2026-09-24",
-      "cat": "market"
     },
     {
       "title": "市場からのお知らせ",
@@ -108,18 +115,18 @@
       "cat": "business"
     },
     {
+      "title": "秋の味覚サンマ 仙台市中央卸売市場に入荷 入荷少なく高値で取引",
+      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE91MWV5eXpJay1SYnE5VmFEalJqdFZpcDhEVVVHazFkZjFNWG9wUWRRYVgwaGpxZVJtTDNlempPQzNYY3hDVzV3bTI4ck9iY1k?oc=5",
+      "source": "khb東日本放送",
+      "date": "2026-08-18",
+      "cat": "market"
+    },
+    {
       "title": "食品卸が営業と物流を代行 人手不足に悩む地方メーカーの販路拡大を支える新ビジネス",
       "link": "https://news.google.com/rss/articles/CBMihgFBVV95cUxPcS1CLW4xaExiSFpIYXI0UndaU3NPUFcyNGJOS1lPRDcwTS12RU5Fa3JxTWg1MDdHX210aFRvTzF2QmVPa1h4ZkQ0TGptam44cmVreXJKLUFKdEJyZ1R4aTloZ0h2N2tPb0Y1dXhFd3NHT1BfTGxVOElTbTRLN002MFU2RVdDQQ?oc=5",
       "source": "月刊「事業構想」オンライン",
       "date": "2026-08-07",
       "cat": "business"
-    },
-    {
-      "title": "指定野菜の入荷量及び卸売価格の見通し（令和8年8月、東京都中央卸売市場）：関東農政局",
-      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE1XR0xFTVBvQW5ZbE5BZkJSRE04cmN4dFJwQlkwVjU2NkhDdUFJdnZtS0tJbFBLU3BiNnlXcmpiOW50cXNnam43TThCblVNY0NVWnVYQkdHcjhydnhtSmtjc18zd19taTE2Z1dR?oc=5",
-      "source": "農林水産省",
-      "date": "2026-07-31",
-      "cat": "market"
     },
     {
       "title": "令和8年度 トップセールス・国内外への訪問",
@@ -164,25 +171,18 @@
       "cat": "toyosu"
     },
     {
+      "title": "東京都中央卸売市場大田市場で、香川県産青果物のトップセールスを行いました",
+      "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE9Yc2piSXdfZHc0bHZacHBYWnJzR3JwZ1oxcVRUMmRPdm9wYjNwelNjeEViWjBSRTZHS1Y1aGpjV3dRbTY2MGthWXhNRThCTl9kQ3RGMzUwYU5FNHZVT1A4d18wUTZiWkNwZnR6LUtyVmdnRzhBSkRnSU9TZEtEQjA?oc=5",
+      "source": "香川県公式ホームページ",
+      "date": "2026-02-13",
+      "cat": "toyosu"
+    },
+    {
       "title": "インターネット都政モニターアンケート結果 生鮮食料品等の購買意識 〉 Q16 東京都中央卸売市場の認知|1月",
       "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE4wNEFBMThJRExadlJ6WDQ2d25pVXhNck1ldHBrcG1KVXhndDdkcWNfU2tlSW9lM0EzTGZMN2pSQlRTQjliU2JLVG1ZMlVSa3ljOWpxcTBaNmNzdUlEWFlrTXZTWmNDVzlLYmEtaGxTWWRGM3FQ?oc=5",
       "source": "都庁総合ホームページ",
       "date": "2026-01-21",
       "cat": "toyosu"
-    },
-    {
-      "title": "令和8年 中央卸売市場本場「新年初市」が開催されます",
-      "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTE45dy1HMlZhSHNqRWx4eWFmRFdvZk1pWmxTc1lrX2xPWjBaNzJ3VXVOQWYzMXFzNkk3M2Q1QkNPdmN5VTEwMkNOTzRvUGNFcy1waHpYZjBXQWNpMUFJUi1GVFN4TzRhb3huSUJlVU9wTQ?oc=5",
-      "source": "名古屋市公式ウェブサイト",
-      "date": "2025-12-23",
-      "cat": "market"
-    },
-    {
-      "title": "姫路市中央卸売市場における出荷・仕入れ",
-      "link": "https://news.google.com/rss/articles/CBMiYkFVX3lxTFA5d1preVNtb2RlaVBmRE12ZTNJZjhqbHNfbzBLSUNfZzZsWDdTck9MS3VxU241OUFhaXpfLXU2aE1veG4ybEQwaVZXSkVNZE42TGFkelR5UlpDWUZ0S09tY3BR?oc=5",
-      "source": "姫路市",
-      "date": "2025-09-01",
-      "cat": "market"
     }
   ]
 }
